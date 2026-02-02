@@ -26,7 +26,8 @@ export default function Students() {
 	const handleRowClick = (studentId) => {
 		navigate(`/students/${studentId}`);
 	};
-
+   console.log(students);
+   
 	if (loading) return <Loader />;
 	if (error) return <div>Error</div>;
 	return (
@@ -49,6 +50,7 @@ export default function Students() {
 				<thead>
 					<tr>
 						<th><FaUserGraduate /> Full Name</th>
+						<th><FaUsers /> Group Name</th>
 						<th><FaPhone /> Phone</th>
 						<th><FaBirthdayCake /> Birthday</th>
 						<th><FaUsers /> Parents</th>
@@ -66,12 +68,17 @@ export default function Students() {
 							};
 
 							return (
-								<tr key={s.id} onClick={() => handleRowClick(s.id)} style={{ cursor: 'pointer' }}>
+								<tr
+									key={s.id}
+									onClick={() => handleRowClick(s.id)}
+									style={{ cursor: "pointer" }}
+								>
 									<td>{s.full_name}</td>
+									<td>{s.groups[0] || "No Group"}</td>
 									<td>{s.phone}</td>
 									<td>{formatDate(s.birthday)}</td>
 									<td>{s.parents_name}</td>
-									<td>{s.balance?.toLocaleString() ?? 0} so&apos;m</td>
+									<td>{s.monthly_paid?.toLocaleString() ?? 0} so&apos;m</td>
 									<td onClick={(e) => e.stopPropagation()}>
 										<button
 											className="icon-button"
@@ -79,7 +86,10 @@ export default function Students() {
 												const rect = e.currentTarget.getBoundingClientRect();
 												setActionMenu({
 													isOpen: true,
-													position: { top: rect.bottom + window.scrollY + 8 + "px", left: rect.right + window.scrollX - 150 + "px" },
+													position: {
+														top: rect.bottom + window.scrollY + 8 + "px",
+														left: rect.right + window.scrollX - 150 + "px",
+													},
 													student: s,
 												});
 											}}
@@ -87,8 +97,8 @@ export default function Students() {
 											<FaEllipsisV />
 										</button>
 									</td>
-									</tr>
-								);
+								</tr>
+							);
 							})}
 				</tbody>
 			</table>
