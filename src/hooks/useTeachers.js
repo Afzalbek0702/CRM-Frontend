@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { teacherService } from "../services/teacher-service";
+import toast from "react-hot-toast";
 
 export const useTeachers = () => {
 	const TEACHERS_QUERY_KEY = "teachers";
@@ -24,18 +25,21 @@ export const useTeachers = () => {
    const createTeacherMutation = useMutation({
       mutationFn: (data) => teacherService.create(data).then((res) => res.data),
       onSuccess: () => {
+         toast.success("O'qituvchi muvaffaqiyatli qo'shildi")
          queryClient.invalidateQueries({ queryKey: [TEACHERS_QUERY_KEY] });
       },
    });
    const updateTeacherMutation = useMutation({
       mutationFn: ({id, data}) => teacherService.update(id, data).then((res) => res.data),
       onSuccess: () => {
+         toast.success("O'qituvchi muvaffaqiyatli yangilandi")
          queryClient.invalidateQueries({ queryKey: [TEACHERS_QUERY_KEY] });
       },
    });
    const deleteTeacherMutation = useMutation({
       mutationFn: (id) => teacherService.delete(id),
       onSuccess: () => {
+         toast.success("O'qituvchi muvaffaqiyatli o'chirildi")
          queryClient.invalidateQueries({ queryKey: [TEACHERS_QUERY_KEY] });
       },
    });

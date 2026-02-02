@@ -2,12 +2,13 @@ import { useDashboard } from "../hooks/useDashboard";
 import StatsCards from "../components/Statscards";
 import { useStudents } from "../hooks/useStudents.js";
 import { useGroups } from "../hooks/useGroups.js";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
 	const { monthlyIncomeQuery, topDebtorsQuery, todayLessons } = useDashboard(
-		"2025-08-01",
-		"2026-01-31",
-		"2026-01-01",
+		new Date().toISOString().slice(0, 7) + "-01",
+		new Date().toISOString().slice(0, 7) + "-31",
+		new Date().toISOString().slice(0, 7) + "-01",
 	);
 
 	const data = monthlyIncomeQuery.data;
@@ -15,7 +16,8 @@ export default function Dashboard() {
 	const todayLessonsData = todayLessons.data;
 	const { students } = useStudents();
 	const { groups } = useGroups();
-
+	const navigate = useNavigate();
+	if (!localStorage.getItem("token")) return navigate("/login");
 	return (
 		<>
 			<div className="dashboard-header">

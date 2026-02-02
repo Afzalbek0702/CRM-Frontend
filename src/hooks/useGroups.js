@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 import { groupsService } from "../services/groups-service.js";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -26,7 +27,8 @@ export const useGroups = () => {
 	// Yangi guruh qo'shish
 	const createGroupMutation = useMutation({
 		mutationFn: (data) => groupsService.create(data).then((res) => res.data),
-		onMutate: async (newGroup) => {
+      onMutate: async (newGroup) => {
+         toast.success("Guruh muvaffaqiyatli qo'shildi")
 			// Optimistik yangilanish: dastlabki ma'lumotlarni saqlash
 			await queryClient.cancelQueries({ queryKey: [GROUPS_QUERY_KEY] });
 			const previousGroups = queryClient.getQueryData([GROUPS_QUERY_KEY]);
@@ -52,7 +54,8 @@ export const useGroups = () => {
 	const updateGroupMutation = useMutation({
 		mutationFn: ({id, data}) =>
 			groupsService.update(id, data).then((res) => res.data),
-		onSuccess: () => {
+      onSuccess: () => {
+         toast.success("Guruh muvaffaqiyatli yangilandi")
 			queryClient.invalidateQueries({ queryKey: [GROUPS_QUERY_KEY] });
 		},
 	});
@@ -60,7 +63,8 @@ export const useGroups = () => {
 	// Guruhni o'chirish
 	const deleteGroupMutation = useMutation({
 		mutationFn: (id) => groupsService.delete(id),
-		onMutate: async (id) => {
+      onMutate: async (id) => {
+         toast.success("Guruh muvaffaqiyatli o'chirildi")
 			await queryClient.cancelQueries({ queryKey: [GROUPS_QUERY_KEY] });
 			const previousGroups = queryClient.getQueryData([GROUPS_QUERY_KEY]);
 

@@ -1,23 +1,40 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from "react";
-import { FaUser, FaUsers, FaDollarSign, FaCreditCard, FaSave, FaPlus, FaTimes } from "react-icons/fa";
+import toast from "react-hot-toast";
+import {
+	FaUser,
+	FaUsers,
+	FaDollarSign,
+	FaCreditCard,
+	FaSave,
+	FaPlus,
+	FaTimes,
+} from "react-icons/fa";
 
-export default function PaymentModal({ isOpen, onClose, onSubmit, initialData }) {
+export default function PaymentModal({
+	isOpen,
+	onClose,
+	onSubmit,
+	initialData,
+}) {
 	const [formData, setFormData] = useState({
 		student_id: "",
 		group_id: "",
 		amount: "",
-		method: "cash",
+		method: "Cash",
 		paid_at: "",
 	});
 
 	useEffect(() => {
 		if (initialData) {
-			const paidDate = initialData.paid_at ? String(initialData.paid_at).split("T")[0] : "";
+			const paidDate = initialData.paid_at
+				? String(initialData.paid_at).split("T")[0]
+				: "";
 			setFormData({
 				student_id: initialData.student_id || "",
 				group_id: initialData.group_id || "",
 				amount: initialData.amount || "",
-				method: initialData.method || "cash",
+				method: initialData.method || "Cash",
 				paid_at: paidDate,
 			});
 		} else {
@@ -26,7 +43,7 @@ export default function PaymentModal({ isOpen, onClose, onSubmit, initialData })
 				student_id: "",
 				group_id: "",
 				amount: "",
-				method: "cash",
+				method: "Cash",
 				paid_at: today,
 			});
 		}
@@ -42,7 +59,7 @@ export default function PaymentModal({ isOpen, onClose, onSubmit, initialData })
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		if (!formData.amount || parseFloat(formData.amount) <= 0) {
-			alert("To'lov miqdori 0 dan katta bo'lishi kerak");
+			toast.error("To'lov miqdori 0 dan katta bo'lishi kerak");
 			return;
 		}
 		const payload = {
@@ -54,7 +71,7 @@ export default function PaymentModal({ isOpen, onClose, onSubmit, initialData })
 			student_id: "",
 			group_id: "",
 			amount: "",
-			method: "cash",
+			method: "Cash",
 			paid_at: new Date().toISOString().split("T")[0],
 		});
 	};
@@ -67,50 +84,109 @@ export default function PaymentModal({ isOpen, onClose, onSubmit, initialData })
 			<div className="side-panel" onClick={stop}>
 				<div className="panel-header">
 					<div className="panel-title-section">
-						<div className="panel-icon">{initialData ? <FaSave /> : <FaPlus />}</div>
+						<div className="panel-icon">
+							{initialData ? <FaSave /> : <FaPlus />}
+						</div>
 						<div>
 							<h2>{initialData ? "Edit Payment" : "New Payment"}</h2>
-							<p className="panel-subtitle">{initialData ? "Update payment details" : "Record a new payment"}</p>
+							<p className="panel-subtitle">
+								{initialData
+									? "Update payment details"
+									: "Record a new payment"}
+							</p>
 						</div>
 					</div>
-					<button className="close-button" onClick={onClose}><FaTimes /></button>
+					<button className="close-button" onClick={onClose}>
+						<FaTimes />
+					</button>
 				</div>
 
 				<form onSubmit={handleSubmit} className="modal-form">
 					<div className="form-grid">
 						<div className="form-group">
-							<label className="form-label"><FaUser className="field-icon" /> Student ID</label>
-							<input name="student_id" className="form-input" required value={formData.student_id} onChange={handleChange} />
+							<label className="form-label">
+								<FaUser className="field-icon" /> Student ID
+							</label>
+							<input
+								name="student_id"
+								className="form-input"
+								required
+								value={formData.student_id}
+								onChange={handleChange}
+							/>
 						</div>
 
 						<div className="form-group">
-							<label className="form-label"><FaUsers className="field-icon" /> Group ID</label>
-							<input name="group_id" className="form-input" required value={formData.group_id} onChange={handleChange} />
+							<label className="form-label">
+								<FaUsers className="field-icon" /> Group ID
+							</label>
+							<input
+								name="group_id"
+								className="form-input"
+								required
+								value={formData.group_id}
+								onChange={handleChange}
+							/>
 						</div>
 
 						<div className="form-group">
-							<label className="form-label"><FaDollarSign className="field-icon" /> Amount</label>
-							<input name="amount" type="number" className="form-input" required value={formData.amount} onChange={handleChange} />
+							<label className="form-label">
+								<FaDollarSign className="field-icon" /> Amount
+							</label>
+							<input
+								name="amount"
+								type="number"
+								className="form-input"
+								required
+								value={formData.amount}
+								onChange={handleChange}
+							/>
 						</div>
 
 						<div className="form-group">
-							<label className="form-label"><FaCreditCard className="field-icon" /> Method</label>
-							<select name="method" className="form-input" value={formData.method} onChange={handleChange}>
-								<option value="cash">Cash</option>
-								<option value="card">Card</option>
-								<option value="transfer">Transfer</option>
+							<label className="form-label">
+								<FaCreditCard className="field-icon" /> Method
+							</label>
+							<select
+								name="method"
+								className="form-input"
+								value={formData.method}
+								onChange={handleChange}
+							>
+								<option value="Cash">Cash</option>
+								<option value="Card">Card</option>
+								<option value="Transfer">Transfer</option>
 							</select>
 						</div>
 
 						<div className="form-group full-width">
-							<label className="form-label">Payment Date</label>
-							<input name="paid_at" type="date" className="form-input" required value={formData.paid_at} onChange={handleChange} />
+							<label className="form-label">Payment For Month</label>
+							<input
+								name="paid_at"
+								type="month"
+								className="form-input"
+								required
+								value={formData.paid_at}
+								onChange={handleChange}
+							/>
 						</div>
 					</div>
 
 					<div className="panel-buttons">
-						<button type="button" className="btn-cancel" onClick={onClose}><FaTimes /> Cancel</button>
-						<button type="submit" className="btn-submit">{initialData ? <><FaSave /> Save</> : <><FaPlus /> Create</>}</button>
+						<button type="button" className="btn-cancel" onClick={onClose}>
+							<FaTimes /> Cancel
+						</button>
+						<button type="submit" className="btn-submit">
+							{initialData ? (
+								<>
+									<FaSave /> Save
+								</>
+							) : (
+								<>
+									<FaPlus /> Create
+								</>
+							)}
+						</button>
 					</div>
 				</form>
 			</div>

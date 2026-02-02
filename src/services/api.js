@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({
-   baseURL: "https://crm-app-data-space.vercel.app/api",
-   timeout: 10000,
+	baseURL: "https://api-crm-data-space.vercel.app/api",
+	timeout: 10000,
 });
 
 api.interceptors.request.use((config) => {

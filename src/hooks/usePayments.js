@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 import {paymentService} from "../services/payment-service.js";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 const PAYMENTS_KEY = "payments";
@@ -16,21 +17,24 @@ export const usePayments = () => {
 
 	const createPaymentMutation = useMutation({
 		mutationFn: (data) => paymentService.create(data).then((res) => res.data),
-		onSuccess: () => {
+      onSuccess: () => {
+         toast.success("To'lov muvaffaqiyatli qo'shildi")
 			queryClient.invalidateQueries({ queryKey: [PAYMENTS_KEY] });
 		},
 	});
 
 	const updatePaymentMutation = useMutation({
 		mutationFn: ({ id, data }) => paymentService.update(id, data).then((res) => res.data),
-		onSuccess: () => {
+      onSuccess: () => {
+         toast.success("To'lov muvaffaqiyatli yangilandi")
 			queryClient.invalidateQueries({ queryKey: [PAYMENTS_KEY] });
 		},
 	});
 
 	const deletePaymentMutation = useMutation({
 		mutationFn: (id) => paymentService.delete(id),
-		onSuccess: () => {
+      onSuccess: () => {
+         toast.success("To'lov muvaffaqiyatli o'chirildi")
 			queryClient.invalidateQueries({ queryKey: [PAYMENTS_KEY] });
 		},
 	});

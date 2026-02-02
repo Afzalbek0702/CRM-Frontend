@@ -7,6 +7,7 @@ import { useStudents } from "../hooks/useStudents";
 import { usePayments } from "../hooks/usePayments";
 import PaymentModal from "../components/PaymentModal";
 import { FaArrowLeft, FaEllipsisV, FaSearch } from "react-icons/fa";
+import toast from "react-hot-toast";
 
 export default function GuruhlarInfo() {
 	const { id } = useParams();
@@ -87,7 +88,7 @@ export default function GuruhlarInfo() {
 			setActionMenu((s) => ({ ...s, isOpen: false }));
 		} catch (err) {
 			console.error("Failed to remove student", err);
-			alert("Talabani guruhdan olib tashlashda xatolik yuz berdi");
+			toast.error("Talabani guruhdan olib tashlashda xatolik yuz berdi");
 		}
 	};
 
@@ -103,10 +104,9 @@ export default function GuruhlarInfo() {
 			setStudents((prev) => prev.filter((s) => s.id !== transferStudent.id));
 			setShowTransferModal(false);
 			setTransferStudent(null);
-			alert("Talaba muvaffaqiyatli o'tkazildi");
 		} catch (err) {
 			console.error("Failed to transfer student", err);
-			alert("Talabani o'tkazishda xatolik yuz berdi");
+			toast.error("Talabani o'tkazishda xatolik yuz berdi");
 		}
 	};
 
@@ -114,17 +114,16 @@ export default function GuruhlarInfo() {
 		try {
 			await createPayment({
 				student_id: selectedStudentForPayment.id,
-				group_id: id,
+				group_id: Number(id),
 				amount: formData.amount,
 				method: formData.method,
-				paid_at: formData.paid_at,
+				paid_month: formData.paid_at + '-01',
 			});
 			setShowPaymentModal(false);
 			setSelectedStudentForPayment(null);
-			alert("To'lov muvaffaqiyatli qo'shildi");
 		} catch (err) {
 			console.error("Failed to create payment", err);
-			alert("To'lovni qo'shishda xatolik yuz berdi");
+			toast.error("To'lovni qo'shishda xatolik yuz berdi");
 		}
 	};
 
