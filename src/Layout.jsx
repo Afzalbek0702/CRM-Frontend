@@ -4,7 +4,9 @@ import {
 	Navigate,
 	useLocation,
 } from "react-router-dom";
+import { useState } from "react";
 import Sidebar from "./components/Sidebar";
+import { FaBars } from "react-icons/fa";
 
 import Dashboard from "./pages/Dashboard";
 import Groups from "./pages/Groups";
@@ -20,10 +22,32 @@ export default function Layout() {
 	const location = useLocation();
 	const token = localStorage.getItem("token");
 	const hideSidebar = location.pathname === "/login";
+	const [sidebarOpen, setSidebarOpen] = useState(true);
+
 	return (
 		<>
 			<div className="app-layout">
-				{!hideSidebar && <Sidebar />}
+				{!hideSidebar && (
+					<>
+						<button
+							className="hamburger-button"
+							onClick={() => setSidebarOpen(!sidebarOpen)}
+							aria-label="Toggle sidebar"
+						>
+							<FaBars />
+						</button>
+						<Sidebar
+							isOpen={sidebarOpen}
+							onClose={() => setSidebarOpen(false)}
+						/>
+						{sidebarOpen && (
+							<div
+								className="sidebar-backdrop"
+								onClick={() => setSidebarOpen(false)}
+							/>
+						)}
+					</>
+				)}
 				<main className="content">
 					<Routes>
 						<Route path="/login" element={<Login />} />
