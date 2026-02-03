@@ -16,7 +16,9 @@ export default function Payments() {
 
 	return (
 		<div className="table-container">
-			<h2><FaMoneyBillWave /> Payments</h2>
+			<div className="payments-header">
+				<h2><FaMoneyBillWave /> Payments</h2>
+			</div>
 
 			<div className="table-actions">
 				<div className="search-box">

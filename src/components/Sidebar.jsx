@@ -14,15 +14,19 @@ export default function Sidebar({ isOpen = true, onClose = () => {} }) {
 			onClose();
 		}
 	};
+	
+
+	
 
 	return (
-		<aside className={`sidebar ${isOpen ? "open" : "closed"}`}>
+		
+		<aside className={ `sidebar ${isOpen ? "open" : "closed"}`} >
 			<div className="sidebar-header">
 				<div className="logo">
 					<img src="/logo.jpg" alt="" className="logo-img" />
 					<h2>Data Space</h2>
 				</div>
-				<button
+				<button 
 					className="sidebar-close-button"
 					onClick={onClose}
 					aria-label="Close sidebar"

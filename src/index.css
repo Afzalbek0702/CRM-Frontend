@@ -648,6 +648,7 @@ body {
 .app-layout {
     display: flex;
     height: 100vh;
+    position: relative;
 }
 
 .sidebar {
@@ -658,7 +659,11 @@ body {
     border-right: 1px solid #2c230e;
     display: flex;
     flex-direction: column;
-    position: relative;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 1030;
     transition: all 0.3s ease;
 }
 
@@ -759,6 +764,16 @@ body {
     padding: 24px;
     background: var(--background-color);
     overflow: auto;
+    transition: all 0.3s ease;
+    margin-left: 0;
+}
+
+.content.sidebar-open {
+    margin-left: 280px;
+}
+
+.content.sidebar-closed {
+    margin-left: 0;
 }
 
 .hamburger-button {
@@ -1291,9 +1306,9 @@ body {
 
     .hamburger-button {
         display: flex;
-        position: absolute;
+        position: fixed;
         top: 16px;
-        right: 16px;
+        left: 16px;
         z-index: 1050;
         width: 44px;
         height: 44px;
@@ -1319,7 +1334,7 @@ body {
     }
 
     .sidebar {
-        position: absolute;
+        position: fixed;
         top: 0;
         left: 0;
         height: 100vh;
@@ -1336,8 +1351,7 @@ body {
     }
 
     .sidebar.closed {
-        width: 280px;
-        border-right: 1px solid #2c230e;
+        transform: translateX(-100%);
     }
 
     .sidebar-close-button {
@@ -1357,35 +1371,31 @@ body {
         z-index: 1025;
     }
 
-    .sidebar-nav {
-        overflow-y: visible;
-        max-height: calc(100vh - 80px);
-    }
-
-    .sidebar-nav::-webkit-scrollbar {
-        width: 4px;
-    }
-
-    .sidebar-nav::-webkit-scrollbar-track {
-        background: transparent;
-    }
-
-    .sidebar-nav::-webkit-scrollbar-thumb {
-        background: rgba(255, 208, 12, 0.3);
-        border-radius: 2px;
-    }
-
-    .sidebar-nav::-webkit-scrollbar-thumb:hover {
-        background: rgba(255, 208, 12, 0.5);
-    }
-
     .content {
         padding: 16px;
         padding-top: 70px;
+        margin-left: 0;
+    }
+
+    .content.sidebar-open {
+        margin-left: 0;
+    }
+
+    .content.sidebar-closed {
+        margin-left: 0;
+    }
+
+    .table-actions {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .search-box {
+        flex: 1;
+        min-width: 200px;
     }
 }
 
-/* Larger Screens (769px and up) - Collapse/Expand */
 @media (min-width: 769px) {
     .hamburger-button {
         display: flex;
@@ -1407,28 +1417,49 @@ body {
         justify-content: center;
     }
 
+
     .hamburger-button:hover {
         transform: translateY(-2px);
         box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
     }
 
+    .hamburger-button:active {
+        transform: translateY(0);
+    }
+
     .sidebar {
-        transition: width 0.3s ease;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        z-index: 1030;
+        transition: all 0.3s ease;
     }
 
     .sidebar.closed {
         width: 0;
         overflow: hidden;
         border-right: none;
+        transform: translateX(-100%);
     }
 
     .sidebar.open {
         width: 280px;
         border-right: 1px solid #2c230e;
+        transform: translateX(0);
     }
 
     .content {
         transition: all 0.3s ease;
+        margin-left: 44px;
+    }
+
+    .content.sidebar-open {
+        margin-left: 280px;
+    }
+
+    .content.sidebar-closed {
+        margin-left: 44px;
     }
 
     .sidebar-backdrop {
@@ -1451,6 +1482,34 @@ body {
         width: 100%;
     }
 
+    
+    .dashboard-header  {
+        margin-left: 70px;
+
+    }
+
+
+    .groups-header {
+        margin-left: 70px;
+
+
+    }
+
+
+    .students-header {
+        margin-left: 70px;
+    }
+
+    .teachers-header {
+        margin-left: 70px;
+    }
+
+    .payments-header {
+        margin-left: 70px;
+    }
+
+
+
     .card {
         width: 100% !important;
         max-width: 100% !important;
@@ -1458,6 +1517,81 @@ body {
         min-height: 150px;
         flex: 1 1 100%;
         box-sizing: border-box;
+    }
+}
+
+/* Extra small screens (425px and below) */
+@media (max-width: 426px) {
+    .hamburger-button {
+        top: 12px;
+        left: 12px;
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .dashboard-header  {
+        margin-left: 70px;
+
+    }
+
+
+    .groups-header {
+        margin-left: 70px;
+
+
+    }
+
+
+    .students-header {
+        margin-left: 70px;
+    }
+
+    .teachers-header {
+        margin-left: 70px;
+    }
+
+    .payments-header {
+        margin-left: 70px;
+    }
+
+
+    .content {
+        padding: 16px;
+        padding-top: 60px;
+        margin-left: 0;
+    }
+
+    .content.sidebar-open {
+        margin-left: 0;
+    }
+
+    .content.sidebar-closed {
+        margin-left: 0;
+    }
+
+    .sidebar {
+        width: 260px;
+    }
+
+    .sidebar.open {
+        width: 260px;
+    }
+
+    .table-actions {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+
+    .search-box {
+        max-width: 100%;
+    }
+
+    .btn1 {
+        width: 100%;
+        margin-bottom: 15px;
     }
 }
 

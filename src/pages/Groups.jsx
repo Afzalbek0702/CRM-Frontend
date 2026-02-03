@@ -64,7 +64,9 @@ export default function Groups() {
     if (loading) return <Loader />;
     return (
         <div className="table-container">
-         <h2><FaUsers /> Guruhlar</h2>
+         <div className="groups-header">
+            <h2><FaUsers /> Guruhlar</h2>
+         </div>
             <button className="btn1 " onClick={handleCreate}><FaPlus /> Guruh yaratish</button>
             
             <Modal

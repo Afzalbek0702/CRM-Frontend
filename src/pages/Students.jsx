@@ -32,7 +32,9 @@ export default function Students() {
 	if (error) return <div>Error</div>;
 	return (
 		<div className="table-container">
-			<h2><FaUserGraduate /> Students</h2>
+			<div className="students-header">
+				<h2><FaUserGraduate /> Students</h2>
+			</div>
 
 			<div className="table-actions">
 				<div className="search-box">

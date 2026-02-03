@@ -27,7 +27,9 @@ export default function Teachers() {
 	return (
 		<div className="table-container">
 
-			<h2><FaChalkboardTeacher /> Teachers</h2>
+			<div className="teachers-header">
+				<h2><FaChalkboardTeacher /> Teachers</h2>
+			</div>
 
 			<div className="table-actions">
 				<div className="search-box">
