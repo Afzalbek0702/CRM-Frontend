@@ -1229,6 +1229,27 @@ body {
     }
 }
 
+/* Dashboard cards responsive design */
+@media (max-width: 480px) {
+    .dashboard-cards {
+        flex-direction: column !important;
+        flex-wrap: nowrap !important;
+        justify-content: flex-start !important;
+        align-items: stretch !important;
+        gap: 16px;
+        width: 100%;
+    }
+    
+    .card {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto;
+        min-height: 150px;
+        flex: 1 1 100%;
+        box-sizing: border-box;
+    }
+}
+
 /* Table Actions and Search */
 .table-actions {
     display: flex;
@@ -1751,7 +1772,6 @@ opacity: 1;
         margin-left: 20px;
         padding-bottom: 4px;
     }
-    
     /* Tables */
     .table-container h2 {
         font-size: 16px;
