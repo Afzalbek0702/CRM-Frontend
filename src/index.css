@@ -1250,6 +1250,55 @@ body {
     }
 }
 
+/* GroupInfo page responsive design */
+@media (max-width: 768px) {
+    /* GroupInfo main container */
+    div[style*="display: flex"][style*="gap: 30px"] {
+        flex-direction: column !important;
+        gap: 20px !important;
+    }
+    
+    /* Left panel - Group Info and Students */
+    div[style*="flex: 0 0 500px"] {
+        flex: 1 1 100% !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+    
+    /* Right panel - Attendance */
+    div[style*="flex: 1"][style*="overflowY: auto"]:not([style*="flex-direction"]) {
+        flex: 1 1 100% !important;
+        width: 100% !important;
+    }
+    
+    /* Group info grid */
+    div[style*="gridTemplateColumns: 1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+        gap: 8px !important;
+    }
+    
+    /* Attendance table responsive */
+    .attendance-scroll {
+        overflow-x: auto !important;
+        max-width: 100% !important;
+    }
+    
+    .attendance-table {
+        min-width: 600px !important;
+        width: 100% !important;
+    }
+    
+    /* Students table */
+    table[style*="width: 100%"] {
+        font-size: 12px !important;
+    }
+    
+    table[style*="width: 100%"] th,
+    table[style*="width: 100%"] td {
+        padding: 8px !important;
+    }
+}
+
 /* Table Actions and Search */
 .table-actions {
     display: flex;
@@ -1727,11 +1776,15 @@ opacity: 1;
     .sidebar a {
         padding: 6px 8px;
         font-size: 13px;
+        display: flex !important;
+        align-items: center !important;
+        flex-direction: row !important;
     }
     
     .sidebar .sidebar-icon {
         font-size: 16px;
         margin-right: 8px;
+        flex-shrink: 0;
     }
     
     /* Content */
@@ -1935,11 +1988,15 @@ opacity: 1;
     .sidebar a {
         padding: 5px 6px;
         font-size: 12px;
+        display: flex !important;
+        align-items: center !important;
+        flex-direction: row !important;
     }
     
     .sidebar .sidebar-icon {
         font-size: 14px;
         margin-right: 6px;
+        flex-shrink: 0;
     }
     
     /* Content */
