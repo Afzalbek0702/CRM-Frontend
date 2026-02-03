@@ -26,8 +26,8 @@ export default function Students() {
 	const handleRowClick = (studentId) => {
 		navigate(`/students/${studentId}`);
 	};
-   console.log(students);
-   
+	console.log(students);
+
 	if (loading) return <Loader />;
 	if (error) return <div>Error</div>;
 	return (
@@ -75,7 +75,24 @@ export default function Students() {
 								>
 									<td>{s.full_name}</td>
 									<td>{s.groups[0] || "No Group"}</td>
-									<td>{s.phone}</td>
+									<td
+										onClick={(e) => {
+											e.stopPropagation();
+											navigator.clipboard.writeText(s.phone);
+
+											const el = e.currentTarget;
+											el.dataset.copied = "true";
+
+											setTimeout(() => {
+												el.dataset.copied = "false";
+											}, 2000);
+										}}
+										data-copied="false"
+										className="copy-phone"
+									>
+										{s.phone}
+									</td>
+
 									<td>{formatDate(s.birthday)}</td>
 									<td>{s.parents_name}</td>
 									<td>{s.monthly_paid?.toLocaleString() ?? 0} so&apos;m</td>
@@ -99,7 +116,7 @@ export default function Students() {
 									</td>
 								</tr>
 							);
-							})}
+						})}
 				</tbody>
 			</table>
 
