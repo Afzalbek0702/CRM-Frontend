@@ -40,7 +40,9 @@ export const useGroups = () => {
 
 			return { previousGroups };
 		},
-		onError: (err, newGroup, context) => {
+      onError: (err, newGroup, context) => {
+         toast.error("Guruh qo'shishda xatolik yuz berdi")
+         console.log(err.response?.data);
 			// Xatolikda eski holatga qaytarish
 			queryClient.setQueryData([GROUPS_QUERY_KEY], context.previousGroups);
 		},
@@ -52,11 +54,15 @@ export const useGroups = () => {
 
 	// Guruhni tahrirlash
 	const updateGroupMutation = useMutation({
-		mutationFn: ({id, data}) =>
+		mutationFn: ({ id, data }) =>
 			groupsService.update(id, data).then((res) => res.data),
-      onSuccess: () => {
-         toast.success("Guruh muvaffaqiyatli yangilandi")
+		onSuccess: () => {
+			toast.success("Guruh muvaffaqiyatli yangilandi");
 			queryClient.invalidateQueries({ queryKey: [GROUPS_QUERY_KEY] });
+		},
+		onError: (error) => {
+			toast.error("Guruhni yangilashda xatolik yuz berdi");
+			console.log(error.response?.data);
 		},
 	});
 
@@ -74,7 +80,9 @@ export const useGroups = () => {
 
 			return { previousGroups };
 		},
-		onError: (err, id, context) => {
+      onError: (err, id, context) => {
+         toast.error("Guruhni o'chirishda xatolik yuz berdi")
+         console.log(err.response?.data);
 			queryClient.setQueryData([GROUPS_QUERY_KEY], context.previousGroups);
 		},
 		onSettled: () => {

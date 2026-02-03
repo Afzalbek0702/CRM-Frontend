@@ -17,25 +17,38 @@ export const usePayments = () => {
 
 	const createPaymentMutation = useMutation({
 		mutationFn: (data) => paymentService.create(data).then((res) => res.data),
-      onSuccess: () => {
-         toast.success("To'lov muvaffaqiyatli qo'shildi")
+		onSuccess: () => {
+			toast.success("To'lov muvaffaqiyatli qo'shildi");
 			queryClient.invalidateQueries({ queryKey: [PAYMENTS_KEY] });
+		},
+		onError: (error) => {
+			toast.error("To'lov qo'shishda xatolik yuz berdi");
+			console.log(error.response?.data);
 		},
 	});
 
 	const updatePaymentMutation = useMutation({
-		mutationFn: ({ id, data }) => paymentService.update(id, data).then((res) => res.data),
-      onSuccess: () => {
-         toast.success("To'lov muvaffaqiyatli yangilandi")
+		mutationFn: ({ id, data }) =>
+			paymentService.update(id, data).then((res) => res.data),
+		onSuccess: () => {
+			toast.success("To'lov muvaffaqiyatli yangilandi");
 			queryClient.invalidateQueries({ queryKey: [PAYMENTS_KEY] });
+		},
+		onError: (error) => {
+			toast.error("To'lov yangilashda xatolik yuz berdi");
+			console.log(error.response?.data);
 		},
 	});
 
 	const deletePaymentMutation = useMutation({
 		mutationFn: (id) => paymentService.delete(id),
-      onSuccess: () => {
-         toast.success("To'lov muvaffaqiyatli o'chirildi")
+		onSuccess: () => {
+			toast.success("To'lov muvaffaqiyatli o'chirildi");
 			queryClient.invalidateQueries({ queryKey: [PAYMENTS_KEY] });
+		},
+		onError: (error) => {
+			toast.error("To'lovni o'chirishda xatolik yuz berdi");
+			console.log(error.response?.data);
 		},
 	});
 

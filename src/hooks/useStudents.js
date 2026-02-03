@@ -44,7 +44,9 @@ export const useStudents = () => {
 		},
       onError: (err, newStudent, context) => {
          toast.error("Talaba qo'shishda xatolik yuz berdi")
-			// Xatolikda eski holatga qaytarish
+         // Xatolikda eski holatga qaytarish
+         console.log(err);
+         
 			queryClient.setQueryData([STUDENTS_QUERY_KEY], context.previousStudents);
 		},
 		onSettled: () => {
@@ -57,9 +59,13 @@ export const useStudents = () => {
 	const updateStudentMutation = useMutation({
 		mutationFn: ({ id, data }) =>
 			studentService.update(id, data).then((res) => res.data),
-      onSuccess: () => {
-         toast.success("Talaba muvaffaqiyatli yangilandi")
+		onSuccess: () => {
+			toast.success("Talaba muvaffaqiyatli yangilandi");
 			queryClient.invalidateQueries({ queryKey: [STUDENTS_QUERY_KEY] });
+		},
+		onError: (error) => {
+			toast.error("Talaba yangilashda xatolik yuz berdi");
+			console.log(error.response?.data);
 		},
 	});
 
@@ -67,9 +73,13 @@ export const useStudents = () => {
 	const updateStatusMutation = useMutation({
 		mutationFn: ({ id, status }) =>
 			studentService.updateStatus(id, status).then((res) => res.data),
-      onSuccess: () => {
-         toast.success("Talaba statusi muvaffaqiyatli yangilandi")
+		onSuccess: () => {
+			toast.success("Talaba statusi muvaffaqiyatli yangilandi");
 			queryClient.invalidateQueries({ queryKey: [STUDENTS_QUERY_KEY] });
+		},
+		onError: (error) => {
+			toast.error("Talaba statusini yangilashda xatolik yuz berdi");
+			console.log(error.response?.data);
 		},
 	});
 
@@ -87,7 +97,9 @@ export const useStudents = () => {
 
 			return { previousStudents };
 		},
-		onError: (err, id, context) => {
+      onError: (err, id, context) => {
+         toast.error("Talaba o'chirishda xatolik yuz berdi")
+         console.log(err);
 			queryClient.setQueryData([STUDENTS_QUERY_KEY], context.previousStudents);
 		},
 		onSettled: () => {
@@ -97,10 +109,15 @@ export const useStudents = () => {
 
 	// 7. Talabani guruhga qo'shish
 	const addToGroupMutation = useMutation({
-		mutationFn: ({ studentId, groupId }) => studentService.addToGroup(studentId, groupId),
-      onSuccess: () => {
-         toast.success("Talaba guruhga muvaffaqiyatli qo'shildi")
+		mutationFn: ({ studentId, groupId }) =>
+			studentService.addToGroup(studentId, groupId),
+		onSuccess: () => {
+			toast.success("Talaba guruhga muvaffaqiyatli qo'shildi");
 			queryClient.invalidateQueries({ queryKey: [STUDENTS_QUERY_KEY] });
+		},
+		onError: (error) => {
+			toast.error("Talaba guruhga qo'shishda xatolik yuz berdi");
+			console.log(error.response?.data);
 		},
 	});
 

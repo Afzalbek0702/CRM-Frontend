@@ -19,16 +19,16 @@ export default function Sidebar() {
 				<FaTachometerAlt className="sidebar-icon"/> Dashboard
 			</NavLink>
 			<NavLink to="/groups">
-				<FaUsers className="sidebar-icon"/> Groups
+				<FaUsers className="sidebar-icon"/> Guruhlar
 			</NavLink>
 			<NavLink to="/students">
-				<FaUserGraduate className="sidebar-icon"/> Students
+				<FaUserGraduate className="sidebar-icon"/> O'quvchilar
 			</NavLink>
 			<NavLink to="/teachers">
-				<FaChalkboardTeacher className="sidebar-icon"/> Teachers
+				<FaChalkboardTeacher className="sidebar-icon"/> O'qituvchilar
 			</NavLink>
 			<NavLink to="/payments">
-				<FaMoneyBillWave className="sidebar-icon"/> Payments
+				<FaMoneyBillWave className="sidebar-icon"/> To'lovlar
 			</NavLink>
 		</aside>
 	);

@@ -1,6 +1,8 @@
 import Loader from "../components/Loader";
 import { usePayments } from "../hooks/usePayments";
-import { FaEllipsisV, FaMoneyBillWave, FaSearch } from "react-icons/fa";
+import { FaEllipsisV,FaUserGraduate, FaMoneyBillWave, FaSearch, FaUsers } from "react-icons/fa";
+import { MdAccessTime } from "react-icons/md";
+import { BsCalendar2DateFill, BsCreditCard2BackFill } from "react-icons/bs";
 import { useState } from "react";
 import PaymentModal from "../components/PaymentModal";
 import ActionMenu from "../components/ActionMenu";
@@ -16,14 +18,16 @@ export default function Payments() {
 
 	return (
 		<div className="table-container">
-			<h2><FaMoneyBillWave /> Payments</h2>
+			<h2>
+				<FaMoneyBillWave /> To'lovlar
+			</h2>
 
 			<div className="table-actions">
 				<div className="search-box">
 					<FaSearch />
 					<input
 						type="text"
-						placeholder="Search payment by student..."
+						placeholder="To'lovlarni o'quvchi bo'yicha qidirish..."
 						value={searchTerm}
 						onChange={(e) => setSearchTerm(e.target.value)}
 					/>
@@ -33,17 +37,31 @@ export default function Payments() {
 			<table>
 				<thead>
 					<tr>
-						<th>Date</th>
-						<th>Student</th>
-						<th>Group</th>
-						<th>Amount</th>
-						<th>Type</th>
+						<th>
+							<BsCalendar2DateFill /> Sana
+						</th>
+						<th>
+							<FaUserGraduate /> O'quvchi
+						</th>
+						<th>
+							<FaUsers /> Guruh
+						</th>
+						<th>
+							<FaMoneyBillWave /> Miqdor
+						</th>
+						<th>
+							<BsCreditCard2BackFill /> Tur
+						</th>
 						<th></th>
 					</tr>
 				</thead>
 				<tbody>
 					{(payments || [])
-						.filter((p) => p.student_name && p.student_name.toLowerCase().includes(searchTerm.toLowerCase()))
+						.filter(
+							(p) =>
+								p.student_name &&
+								p.student_name.toLowerCase().includes(searchTerm.toLowerCase()),
+						)
 						.map((p) => {
 							const formatDate = (d) => {
 								if (!d) return "";
@@ -57,14 +75,17 @@ export default function Payments() {
 									<td>{p.group_name}</td>
 									<td>{p.amount.toLocaleString()} so'm</td>
 									<td>{p.method}</td>
-									<td>
+									<td style={{width:"10px"}}>
 										<button
 											className="icon-button"
 											onClick={(e) => {
 												const rect = e.currentTarget.getBoundingClientRect();
 												setActionMenu({
 													isOpen: true,
-													position: { top: rect.bottom + window.scrollY + 8 + "px", left: rect.right + window.scrollX - 150 + "px" },
+													position: {
+														top: rect.bottom + window.scrollY + 8 + "px",
+														left: rect.right + window.scrollX - 150 + "px",
+													},
 													payment: p,
 												});
 											}}

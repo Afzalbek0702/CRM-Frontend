@@ -3,6 +3,8 @@ import StatsCards from "../components/Statscards";
 import { useStudents } from "../hooks/useStudents.js";
 import { useGroups } from "../hooks/useGroups.js";
 import { useNavigate } from "react-router-dom";
+import { FaUsers, FaClock, FaBook, FaChalkboardTeacher } from "react-icons/fa";
+import { MdDashboard } from "react-icons/md";
 
 export default function Dashboard() {
 	const { monthlyIncomeQuery, topDebtorsQuery, todayLessons } = useDashboard(
@@ -21,7 +23,9 @@ export default function Dashboard() {
 	return (
 		<>
 			<div className="dashboard-header">
-				<h1>Dashboard</h1>
+				<h1>
+					<MdDashboard style={{marginTop:'0px'}}/> Dashboard
+				</h1>
 				<p>Xush kelibsiz {"Admin"}</p>
 			</div>
 			<div className="dashboard-cards">
@@ -44,10 +48,18 @@ export default function Dashboard() {
 						<table style={{ maxWidth: "600px" }}>
 							<thead>
 								<tr>
-									<th>Guruh Nomi</th>
-									<th>Kurs</th>
-									<th>O'qituvchi</th>
-									<th>Dars Vaqti</th>
+									<th>
+										<FaUsers /> Guruh Nomi
+									</th>
+									<th>
+										<FaBook /> Kurs
+									</th>
+									<th>
+										<FaChalkboardTeacher /> O'qituvchi
+									</th>
+									<th>
+										<FaClock /> Dars Vaqti
+									</th>
 								</tr>
 							</thead>
 							<tbody>

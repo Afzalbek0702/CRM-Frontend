@@ -32,35 +32,64 @@ export default function Students() {
 	if (error) return <div>Error</div>;
 	return (
 		<div className="table-container">
-			<h2><FaUserGraduate /> Students</h2>
+			<h2>
+				<FaUserGraduate /> O'quvchilar
+			</h2>
 
 			<div className="table-actions">
 				<div className="search-box">
 					<FaSearch />
 					<input
 						type="text"
-						placeholder="Search student by name..."
+						placeholder="O'quvchilarni ismi bo'yicha qidirish ..."
 						value={searchTerm}
 						onChange={(e) => setSearchTerm(e.target.value)}
 					/>
 				</div>
-				<button className="btn1" onClick={() => { setEditingStudent(null); setIsModalOpen(true); }}>New Student</button>
+				<button
+					className="btn1"
+					onClick={() => {
+						setEditingStudent(null);
+						setIsModalOpen(true);
+					}}
+				>
+					Yangi O'quvchi
+				</button>
 			</div>
 			<table>
 				<thead>
 					<tr>
-						<th><FaUserGraduate /> Full Name</th>
-						<th><FaUsers /> Group Name</th>
-						<th><FaPhone /> Phone</th>
-						<th><FaBirthdayCake /> Birthday</th>
-						<th><FaUsers /> Parents</th>
-						<th><FaWallet /> Balance</th>
+						<th>
+							<FaUserGraduate /> Ism
+						</th>
+						<th>
+							<FaUsers /> Guruh nomi
+						</th>
+						<th>
+							<FaPhone /> Telefon
+						</th>
+						<th>
+							<FaBirthdayCake /> Tug'ilgan kun
+						</th>
+						<th>
+							<FaUsers /> Ota-onasi
+						</th>
+						<th>
+							<FaPhone /> Ota-onasi telefon
+						</th>
+						<th>
+							<FaWallet /> Balance
+						</th>
 						<th></th>
 					</tr>
 				</thead>
 				<tbody>
 					{(students || [])
-						.filter((s) => s.full_name && s.full_name.toLowerCase().includes(searchTerm.toLowerCase()))
+						.filter(
+							(s) =>
+								s.full_name &&
+								s.full_name.toLowerCase().includes(searchTerm.toLowerCase()),
+						)
 						.map((s) => {
 							const formatDate = (d) => {
 								if (!d) return "";
@@ -78,8 +107,9 @@ export default function Students() {
 									<td>{s.phone}</td>
 									<td>{formatDate(s.birthday)}</td>
 									<td>{s.parents_name}</td>
+									<td>{s.parents_phone}</td>
 									<td>{s.monthly_paid?.toLocaleString() ?? 0} so&apos;m</td>
-									<td onClick={(e) => e.stopPropagation()}>
+									<td style={{width:"10px"}} onClick={(e) => e.stopPropagation()}>
 										<button
 											className="icon-button"
 											onClick={(e) => {
@@ -99,7 +129,7 @@ export default function Students() {
 									</td>
 								</tr>
 							);
-							})}
+						})}
 				</tbody>
 			</table>
 
@@ -146,7 +176,10 @@ export default function Students() {
 
 			<AddToGroupModal
 				isOpen={addToGroupOpen}
-				onClose={() => { setAddToGroupOpen(false); setAddToGroupStudent(null); }}
+				onClose={() => {
+					setAddToGroupOpen(false);
+					setAddToGroupStudent(null);
+				}}
 				initialGroupId={addToGroupStudent?.group_id}
 				onConfirm={async (groupId) => {
 					if (!addToGroupStudent) return;

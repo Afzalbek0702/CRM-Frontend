@@ -25,7 +25,7 @@ export default function TeacherDetail() {
 		};
 
 		loadTeacher();
-	}, [id, fetchById]);
+	}, []);
 
 	if (loading) return <Loader />;
 	if (error) return <p>Error: {error}</p>;

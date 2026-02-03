@@ -27,26 +27,26 @@ export default function Teachers() {
 	return (
 		<div className="table-container">
 
-			<h2><FaChalkboardTeacher /> Teachers</h2>
+			<h2><FaChalkboardTeacher /> O'qituvchilar</h2>
 
 			<div className="table-actions">
 				<div className="search-box">
 					<FaSearch />
 					<input
 						type="text"
-						placeholder="Search teacher by name..."
+						placeholder="O'qituvchilarni ismi bo'yicha qidirish ..."
 						value={searchTerm}
 						onChange={(e) => setSearchTerm(e.target.value)}
 					/>
 				</div>
-				<button className="btn1" onClick={() => { setEditingTeacher(null); setIsModalOpen(true); }}>New Teacher</button>
+				<button className="btn1" onClick={() => { setEditingTeacher(null); setIsModalOpen(true); }}>Yangi O'qituvchi</button>
 			</div>
 
 			<table>
 				<thead>
 					<tr>
-						<th><FaChalkboardTeacher /> Full Name</th>
-						<th><FaPhone /> Phone</th>
+						<th><FaChalkboardTeacher /> Ism</th>
+						<th><FaPhone /> Telefon</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -57,7 +57,7 @@ export default function Teachers() {
 							<tr key={t.id} onClick={() => handleRowClick(t.id)} style={{ cursor: 'pointer' }}>
 								<td className="teacher">{t.full_name}</td>
 								<td>{t.phone}</td>
-								<td onClick={(e) => e.stopPropagation()}>
+								<td style={{width:"10px"}} onClick={(e) => e.stopPropagation()}>
 									<button
 										className="icon-button"
 										onClick={(e) => {

@@ -5,16 +5,18 @@ import { useGroups } from "../hooks/useGroups";
 import { useAttendance } from "../hooks/useAttendance";
 import { useStudents } from "../hooks/useStudents";
 import { usePayments } from "../hooks/usePayments";
+import {useTeachers} from "../hooks/useTeachers";
 import PaymentModal from "../components/PaymentModal";
 import { FaArrowLeft, FaEllipsisV, FaSearch } from "react-icons/fa";
-import toast from "react-hot-toast";
+
 
 export default function GuruhlarInfo() {
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const { loading, error, fetchById, groups } = useGroups();
 	const { transferToGroup, removeFromGroup } = useStudents();
-	const { createPayment } = usePayments();
+   const { createPayment } = usePayments();
+   const { teachers} = useTeachers();
 	const [group, setGroup] = useState(null);
 	const [students, setStudents] = useState([]);
 	const [searchTerm, setSearchTerm] = useState("");
@@ -88,7 +90,6 @@ export default function GuruhlarInfo() {
 			setActionMenu((s) => ({ ...s, isOpen: false }));
 		} catch (err) {
 			console.error("Failed to remove student", err);
-			toast.error("Talabani guruhdan olib tashlashda xatolik yuz berdi");
 		}
 	};
 
@@ -106,7 +107,6 @@ export default function GuruhlarInfo() {
 			setTransferStudent(null);
 		} catch (err) {
 			console.error("Failed to transfer student", err);
-			toast.error("Talabani o'tkazishda xatolik yuz berdi");
 		}
 	};
 
@@ -123,7 +123,6 @@ export default function GuruhlarInfo() {
 			setSelectedStudentForPayment(null);
 		} catch (err) {
 			console.error("Failed to create payment", err);
-			toast.error("To'lovni qo'shishda xatolik yuz berdi");
 		}
 	};
 
@@ -223,7 +222,7 @@ export default function GuruhlarInfo() {
 									O'qituvchi
 								</p>
 								<p style={{ color: "white", fontWeight: "600" }}>
-									{group.teacher_id}
+									{teachers.find(t => t.id === group.teacher_id)?.full_name || 'Noma\'lum'}
 								</p>
 							</div>
 							<div style={{ gridColumn: "1 / -1" }}>
