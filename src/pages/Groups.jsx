@@ -66,8 +66,8 @@ export default function Groups() {
         <div className="table-container">
          <div className="groups-header">
             <h2><FaUsers /> Guruhlar</h2>
-         </div>
             <button className="btn1 " onClick={handleCreate}><FaPlus /> Guruh yaratish</button>
+         </div>
             
             <Modal
                 isOpen={isModalOpen}
