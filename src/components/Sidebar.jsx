@@ -19,12 +19,6 @@ export default function Sidebar({ isOpen = true, onClose = () => {} }) {
 	
 
 	return (
-<<<<<<< HEAD
-		<aside className="sidebar">
-			<div className="logo">
-				<img src="/logo.jpg" alt="" className="logo-img" />
-				<h2>Data Space</h2>
-=======
 		
 		<aside className={ `sidebar ${isOpen ? "open" : "closed"}`} >
 			<div className="sidebar-header">
@@ -39,7 +33,6 @@ export default function Sidebar({ isOpen = true, onClose = () => {} }) {
 				>
 					<FaTimes />
 				</button>
->>>>>>> 6c3052e492e0d4d1457f79a67a084802207f0e36
 			</div>
 			<NavLink to="/dashboard">
 				<FaTachometerAlt className="sidebar-icon"/> Dashboard

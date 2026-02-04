@@ -3,23 +3,41 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useStudents } from "../hooks/useStudents.js";
 
-import { FaEllipsisV, FaUserGraduate, FaPhone, FaBirthdayCake, FaUsers, FaWallet } from "react-icons/fa"
-import { FaSearch } from "react-icons/fa"
+import {
+	FaEllipsisV,
+	FaUserGraduate,
+	FaPhone,
+	FaBirthdayCake,
+	FaUsers,
+	FaWallet,
+} from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 import StudentModal from "../components/StudentModal.jsx";
 import ActionMenu from "../components/ActionMenu.jsx";
 import AddToGroupModal from "../components/AddToGroupModal.jsx";
 
-
 export default function Students() {
 	const navigate = useNavigate();
-	const { students, loading, error, createStudent, updateStudent, deleteStudent, addToGroup } = useStudents();
+	const {
+		students,
+		loading,
+		error,
+		createStudent,
+		updateStudent,
+		deleteStudent,
+		addToGroup,
+	} = useStudents();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [editingStudent, setEditingStudent] = useState(null);
 
 	const [searchTerm, setSearchTerm] = useState("");
 
 	// action menu state
-	const [actionMenu, setActionMenu] = useState({ isOpen: false, position: { top: 0, left: 0 }, student: null });
+	const [actionMenu, setActionMenu] = useState({
+		isOpen: false,
+		position: { top: 0, left: 0 },
+		student: null,
+	});
 	const [addToGroupOpen, setAddToGroupOpen] = useState(false);
 	const [addToGroupStudent, setAddToGroupStudent] = useState(null);
 
@@ -32,15 +50,11 @@ export default function Students() {
 	if (error) return <div>Error</div>;
 	return (
 		<div className="table-container">
-<<<<<<< HEAD
-			<h2>
-				<FaUserGraduate /> O'quvchilar
-			</h2>
-=======
 			<div className="students-header">
-				<h2><FaUserGraduate /> Students</h2>
+				<h2>
+					<FaUserGraduate /> O'quvchilar
+				</h2>
 			</div>
->>>>>>> 6c3052e492e0d4d1457f79a67a084802207f0e36
 
 			<div className="table-actions">
 				<div className="search-box">
@@ -132,7 +146,10 @@ export default function Students() {
 									<td>{s.parents_name}</td>
 									<td>{s.parents_phone}</td>
 									<td>{s.monthly_paid?.toLocaleString() ?? 0} so&apos;m</td>
-									<td style={{width:"10px"}} onClick={(e) => e.stopPropagation()}>
+									<td
+										style={{ width: "10px" }}
+										onClick={(e) => e.stopPropagation()}
+									>
 										<button
 											className="icon-button"
 											onClick={(e) => {

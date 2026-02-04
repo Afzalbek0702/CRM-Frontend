@@ -2,21 +2,25 @@ import Loader from "../components/Loader";
 import { useTeachers } from "../hooks/useTeachers";
 import { useNavigate } from "react-router-dom";
 
-import { FaEllipsisV, FaChalkboardTeacher, FaPhone } from "react-icons/fa"
+import { FaEllipsisV, FaChalkboardTeacher, FaPhone } from "react-icons/fa";
 
 import { FaSearch } from "react-icons/fa";
 import { useState } from "react";
 import TeacherModal from "../components/TeacherModal";
 import ActionMenu from "../components/ActionMenu";
 
-
 export default function Teachers() {
 	const navigate = useNavigate();
-	const { teachers, isLoading, createTeacher, updateTeacher, deleteTeacher } = useTeachers();
+	const { teachers, isLoading, createTeacher, updateTeacher, deleteTeacher } =
+		useTeachers();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [editingTeacher, setEditingTeacher] = useState(null);
 	const [searchTerm, setSearchTerm] = useState("");
-	const [actionMenu, setActionMenu] = useState({ isOpen: false, position: { top: 0, left: 0 }, teacher: null });
+	const [actionMenu, setActionMenu] = useState({
+		isOpen: false,
+		position: { top: 0, left: 0 },
+		teacher: null,
+	});
 
 	const handleRowClick = (teacherId) => {
 		navigate(`/teachers/${teacherId}`);
@@ -26,14 +30,11 @@ export default function Teachers() {
 
 	return (
 		<div className="table-container">
-
-<<<<<<< HEAD
-			<h2><FaChalkboardTeacher /> O'qituvchilar</h2>
-=======
 			<div className="teachers-header">
-				<h2><FaChalkboardTeacher /> Teachers</h2>
+				<h2>
+					<FaChalkboardTeacher /> O'qituvchilar
+				</h2>
 			</div>
->>>>>>> 6c3052e492e0d4d1457f79a67a084802207f0e36
 
 			<div className="table-actions">
 				<div className="search-box">
@@ -45,32 +46,58 @@ export default function Teachers() {
 						onChange={(e) => setSearchTerm(e.target.value)}
 					/>
 				</div>
-				<button className="btn1" onClick={() => { setEditingTeacher(null); setIsModalOpen(true); }}>Yangi O'qituvchi</button>
+				<button
+					className="btn1"
+					onClick={() => {
+						setEditingTeacher(null);
+						setIsModalOpen(true);
+					}}
+				>
+					Yangi O'qituvchi
+				</button>
 			</div>
 
 			<table>
 				<thead>
 					<tr>
-						<th><FaChalkboardTeacher /> Ism</th>
-						<th><FaPhone /> Telefon</th>
+						<th>
+							<FaChalkboardTeacher /> Ism
+						</th>
+						<th>
+							<FaPhone /> Telefon
+						</th>
 						<th></th>
 					</tr>
 				</thead>
 				<tbody>
 					{(teachers || [])
-						.filter((t) => t.full_name && t.full_name.toLowerCase().includes(searchTerm.toLowerCase()))
+						.filter(
+							(t) =>
+								t.full_name &&
+								t.full_name.toLowerCase().includes(searchTerm.toLowerCase()),
+						)
 						.map((t) => (
-							<tr key={t.id} onClick={() => handleRowClick(t.id)} style={{ cursor: 'pointer' }}>
+							<tr
+								key={t.id}
+								onClick={() => handleRowClick(t.id)}
+								style={{ cursor: "pointer" }}
+							>
 								<td className="teacher">{t.full_name}</td>
 								<td>{t.phone}</td>
-								<td style={{width:"10px"}} onClick={(e) => e.stopPropagation()}>
+								<td
+									style={{ width: "10px" }}
+									onClick={(e) => e.stopPropagation()}
+								>
 									<button
 										className="icon-button"
 										onClick={(e) => {
 											const rect = e.currentTarget.getBoundingClientRect();
 											setActionMenu({
 												isOpen: true,
-												position: { top: rect.bottom + window.scrollY + 8 + "px", left: rect.right + window.scrollX - 150 + "px" },
+												position: {
+													top: rect.bottom + window.scrollY + 8 + "px",
+													left: rect.right + window.scrollX - 150 + "px",
+												},
 												teacher: t,
 											});
 										}}

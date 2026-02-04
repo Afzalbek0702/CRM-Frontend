@@ -1,6 +1,12 @@
 import Loader from "../components/Loader";
 import { usePayments } from "../hooks/usePayments";
-import { FaEllipsisV,FaUserGraduate, FaMoneyBillWave, FaSearch, FaUsers } from "react-icons/fa";
+import {
+	FaEllipsisV,
+	FaUserGraduate,
+	FaMoneyBillWave,
+	FaSearch,
+	FaUsers,
+} from "react-icons/fa";
 import { MdAccessTime } from "react-icons/md";
 import { BsCalendar2DateFill, BsCreditCard2BackFill } from "react-icons/bs";
 import { useState } from "react";
@@ -8,25 +14,31 @@ import PaymentModal from "../components/PaymentModal";
 import ActionMenu from "../components/ActionMenu";
 
 export default function Payments() {
-	const { payments, isLoading: loading, createPayment, updatePayment, deletePayment } = usePayments();
+	const {
+		payments,
+		isLoading: loading,
+		createPayment,
+		updatePayment,
+		deletePayment,
+	} = usePayments();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [editingPayment, setEditingPayment] = useState(null);
 	const [searchTerm, setSearchTerm] = useState("");
-	const [actionMenu, setActionMenu] = useState({ isOpen: false, position: { top: 0, left: 0 }, payment: null });
+	const [actionMenu, setActionMenu] = useState({
+		isOpen: false,
+		position: { top: 0, left: 0 },
+		payment: null,
+	});
 
 	if (loading) return <Loader />;
 
 	return (
 		<div className="table-container">
-<<<<<<< HEAD
-			<h2>
-				<FaMoneyBillWave /> To'lovlar
-			</h2>
-=======
 			<div className="payments-header">
-				<h2><FaMoneyBillWave /> Payments</h2>
+				<h2>
+					<FaMoneyBillWave /> To'lovlar
+				</h2>
 			</div>
->>>>>>> 6c3052e492e0d4d1457f79a67a084802207f0e36
 
 			<div className="table-actions">
 				<div className="search-box">
@@ -81,7 +93,7 @@ export default function Payments() {
 									<td>{p.group_name}</td>
 									<td>{p.amount.toLocaleString()} so'm</td>
 									<td>{p.method}</td>
-									<td style={{width:"10px"}}>
+									<td style={{ width: "10px" }}>
 										<button
 											className="icon-button"
 											onClick={(e) => {
