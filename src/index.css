@@ -426,6 +426,7 @@ body {
     justify-content: center;
     align-items: center;
     gap: 4px;
+    z-index: 99999;
 
 }
 
@@ -706,7 +707,9 @@ body {
 }
 
 .sidebar-close-button {
-    display: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: none;
     border: none;
     color: var(--primary-color);
@@ -715,11 +718,15 @@ body {
     padding: 8px;
     border-radius: 6px;
     transition: all 0.3s ease;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
 }
 
 .sidebar-close-button:hover {
     background: rgba(255, 208, 12, 0.1);
     color: white;
+    transform: rotate(90deg);
 }
 
 .sidebar-nav {
@@ -788,7 +795,7 @@ body {
 }
 
 .hamburger-button {
-    display: none;
+    display: flex;
 }
 
 .sidebar-backdrop {
@@ -1347,8 +1354,15 @@ body {
         transition: all 0.3s ease;
         align-items: center;
         justify-content: center;
+        opacity: 1;
+        pointer-events: auto;
     }
 
+    .hamburger-button.hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
+.btn1
     .hamburger-button:hover {
         transform: translateY(-2px);
         box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
@@ -1440,8 +1454,14 @@ body {
         transition: all 0.3s ease;
         align-items: center;
         justify-content: center;
+        opacity: 1;
+        pointer-events: auto;
     }
 
+    .hamburger-button.hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
 
     .hamburger-button:hover {
         transform: translateY(-2px);
@@ -1900,6 +1920,13 @@ body {
         transition: all 0.3s ease;
         align-items: center;
         justify-content: center;
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .hamburger-button.hidden {
+        opacity: 0;
+        pointer-events: none;
     }
 
     .hamburger-button:hover {
@@ -2723,3 +2750,14 @@ body {
 .copy-phone[data-copied="true"]::after {
     opacity: 1;
 }
+option {
+    color: var(--primary-color);
+    background-color: var(--background-color);
+    border-radius: 20px;
+
+}
+option:hover {
+    color: var(--background-color);
+    background-color: var(--primary-color);
+}
+/* hover iwlamadi option ga wuni bir narsa qilelik */

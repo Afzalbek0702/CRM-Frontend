@@ -3,11 +3,11 @@ import StatsCards from "../components/Statscards";
 import { useStudents } from "../hooks/useStudents.js";
 import { useGroups } from "../hooks/useGroups.js";
 import { useNavigate } from "react-router-dom";
-import { FaUsers, FaClock, FaBook, FaChalkboardTeacher } from "react-icons/fa";
+import { FaUsers, FaClock, FaBook, FaChalkboardTeacher, FaPhone, FaExclamationTriangle } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
 
 export default function Dashboard() {
-	const { monthlyIncomeQuery, topDebtorsQuery, todayLessons } = useDashboard(
+	const { monthlyIncomeQuery, topDebtorsQuery, todayLessons, absentStudentsQuery } = useDashboard(
 		new Date().toISOString().slice(0, 7) + "-01",
 		new Date().toISOString().slice(0, 7) + "-31",
 		new Date().toISOString().slice(0, 7) + "-01",
@@ -16,6 +16,7 @@ export default function Dashboard() {
 	const data = monthlyIncomeQuery.data;
 	const debtorsData = topDebtorsQuery.data;
 	const todayLessonsData = todayLessons.data;
+	const absentStudentsData = absentStudentsQuery.data;
 	const { students } = useStudents();
 	const { groups } = useGroups();
 	const navigate = useNavigate();
@@ -73,6 +74,64 @@ export default function Dashboard() {
 								))}
 							</tbody>
 						</table>
+					)}
+				</div>
+			</div>
+
+			<div className="dashboard-today-lesson">
+				<h2><FaExclamationTriangle /> Bugun kelmagan o'quvchilar</h2>
+				<div className="table-container">
+					{absentStudentsQuery.isLoading ? (
+						<p>Yuklanmoqda...</p>
+					) : absentStudentsQuery.isError ? (
+						<p>Xatolik yuz berdi</p>
+					) : absentStudentsData && absentStudentsData.length > 0 ? (
+						<table>
+							<thead>
+								<tr>
+									<th>
+										<FaUsers /> O'quvchi Nomi
+									</th>
+									<th>
+										<FaUsers /> Guruh
+									</th>
+									<th>
+										<FaPhone /> Telefon
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								{absentStudentsData.map((student) => (
+									<tr
+										key={student.student_id}
+										onClick={() => navigate(`/groups/${student.group_id}`)}
+										style={{ cursor: "pointer" }}
+									>
+										<td>{student.student_name}</td>
+										<td>{student.group_name}</td>
+										<td
+											onClick={(e) => {
+												e.stopPropagation();
+												navigator.clipboard.writeText(student.phone);
+
+												const el = e.currentTarget;
+												el.dataset.copied = "true";
+
+												setTimeout(() => {
+													el.dataset.copied = "false";
+												}, 2000);
+											}}
+											data-copied="false"
+											className="copy-phone"
+										>
+											{student.phone}
+										</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+					) : (
+						<p>Bugun hamma o'quvchilar kelib qolipdi! 🎉</p>
 					)}
 				</div>
 			</div>

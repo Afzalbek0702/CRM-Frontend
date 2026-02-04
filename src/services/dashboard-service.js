@@ -10,5 +10,9 @@ export const dashboardService = {
 			params: { month },
       }),
    getTodayLessons: () => api.get(endpoints.DASHBOARD + "/today-lessons"),
+   
+   // Fetch attendance records
+   getAttendance: (group_id, month) =>
+		api.get(endpoints.ATTENDANCE, { params: { group_id, month } }),
 };
 // from=2025-08-01&to=2026-01-31

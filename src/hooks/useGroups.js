@@ -13,29 +13,26 @@ export const useGroups = () => {
 	} = useQuery({
 		queryKey: [GROUPS_QUERY_KEY],
 		queryFn: () => groupsService.getAll().then((res) => res.data),
-		staleTime: 5 * 60 * 1000, // 5 daqiqa cache
+		staleTime: 5 * 60 * 1000, 
 		refetchOnWindowFocus: false, 
 	});
 
-	// Bitta guruhni ID bo'yicha olish
 	const fetchById = async (id) => {
       const groups = await groupsService.getById(id);
       const students = await groupsService.getStudentsInGroup(id);
 		return { ...groups.data, students: students.data };
 	};
 
-	// Yangi guruh qo'shish
 	const createGroupMutation = useMutation({
 		mutationFn: (data) => groupsService.create(data).then((res) => res.data),
       onMutate: async (newGroup) => {
          toast.success("Guruh muvaffaqiyatli qo'shildi")
-			// Optimistik yangilanish: dastlabki ma'lumotlarni saqlash
 			await queryClient.cancelQueries({ queryKey: [GROUPS_QUERY_KEY] });
 			const previousGroups = queryClient.getQueryData([GROUPS_QUERY_KEY]);
-			// Yangi talabani cache ga qo'shish
+		
 			queryClient.setQueryData([GROUPS_QUERY_KEY], (old) => [
 				...(old || []),
-				{ ...newGroup, id: Date.now() }, // id serverdan kelguncha vaqtinchalik
+				{ ...newGroup, id: Date.now() }, 
 			]);
 
 			return { previousGroups };
@@ -43,16 +40,16 @@ export const useGroups = () => {
       onError: (err, newGroup, context) => {
          toast.error("Guruh qo'shishda xatolik yuz berdi")
          console.log(err.response?.data);
-			// Xatolikda eski holatga qaytarish
+			
 			queryClient.setQueryData([GROUPS_QUERY_KEY], context.previousGroups);
 		},
 		onSettled: () => {
-			// Muvaffaqiyatli yoki xatolik — har ikkala holatda ham yangilash
+			
 			queryClient.invalidateQueries({ queryKey: [GROUPS_QUERY_KEY] });
 		},
 	});
 
-	// Guruhni tahrirlash
+
 	const updateGroupMutation = useMutation({
 		mutationFn: ({ id, data }) =>
 			groupsService.update(id, data).then((res) => res.data),
@@ -66,7 +63,6 @@ export const useGroups = () => {
 		},
 	});
 
-	// Guruhni o'chirish
 	const deleteGroupMutation = useMutation({
 		mutationFn: (id) => groupsService.delete(id),
       onMutate: async (id) => {

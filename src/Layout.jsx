@@ -30,7 +30,7 @@ export default function Layout() {
 				{!hideSidebar && (
 					<>
 						<button
-							className="hamburger-button"
+							className={`hamburger-button ${sidebarOpen ? 'hidden' : ''}`}
 							onClick={() => setSidebarOpen(!sidebarOpen)}
 							aria-label="Toggle sidebar"
 						>
