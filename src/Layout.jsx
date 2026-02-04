@@ -22,7 +22,7 @@ export default function Layout() {
 	const location = useLocation();
 	const token = localStorage.getItem("token");
 	const hideSidebar = location.pathname === "/login";
-	const [sidebarOpen, setSidebarOpen] = useState(true);
+	const [sidebarOpen, setSidebarOpen] = useState(false);
 
 	return (
 		<>
@@ -48,7 +48,7 @@ export default function Layout() {
 						)}
 					</>
 				)}
-				<main className="content">
+				<main className={`content ${sidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
 					<Routes>
 						<Route path="/login" element={<Login />} />
 						<Route

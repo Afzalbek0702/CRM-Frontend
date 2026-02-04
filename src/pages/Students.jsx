@@ -32,9 +32,15 @@ export default function Students() {
 	if (error) return <div>Error</div>;
 	return (
 		<div className="table-container">
+<<<<<<< HEAD
 			<h2>
 				<FaUserGraduate /> O'quvchilar
 			</h2>
+=======
+			<div className="students-header">
+				<h2><FaUserGraduate /> Students</h2>
+			</div>
+>>>>>>> 6c3052e492e0d4d1457f79a67a084802207f0e36
 
 			<div className="table-actions">
 				<div className="search-box">

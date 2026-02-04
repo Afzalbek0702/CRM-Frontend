@@ -27,7 +27,13 @@ export default function Teachers() {
 	return (
 		<div className="table-container">
 
+<<<<<<< HEAD
 			<h2><FaChalkboardTeacher /> O'qituvchilar</h2>
+=======
+			<div className="teachers-header">
+				<h2><FaChalkboardTeacher /> Teachers</h2>
+			</div>
+>>>>>>> 6c3052e492e0d4d1457f79a67a084802207f0e36
 
 			<div className="table-actions">
 				<div className="search-box">

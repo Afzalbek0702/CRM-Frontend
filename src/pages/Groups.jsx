@@ -66,6 +66,7 @@ export default function Groups() {
 		navigate(`/groups/${groupId}`);
 	};
 
+<<<<<<< HEAD
 	const handleSubmit = (formData) => {
 		if (isEditMode && selectedGroup) {
 			updateGroup(selectedGroup.id, formData);
@@ -76,6 +77,27 @@ export default function Groups() {
 		setSelectedGroup(null);
 		setIsEditMode(false);
 	};
+=======
+    if (loading) return <Loader />;
+    return (
+        <div className="table-container">
+         <div className="groups-header">
+            <h2><FaUsers /> Guruhlar</h2>
+            <button className="btn1 " onClick={handleCreate}><FaPlus /> Guruh yaratish</button>
+         </div>
+            
+            <Modal
+                isOpen={isModalOpen}
+                onClose={() => {
+                    setIsModalOpen(false);
+                    setSelectedGroup(null);
+                    setIsEditMode(false);
+                }}
+                onSubmit={handleSubmit}
+                title={isEditMode ? "Guruhni tahrirlash" : "Yangi guruh yaratish"}
+                initialData={selectedGroup}
+            />
+>>>>>>> 6c3052e492e0d4d1457f79a67a084802207f0e36
 
 	if (loading) return <Loader />;
 	return (

@@ -18,9 +18,15 @@ export default function Payments() {
 
 	return (
 		<div className="table-container">
+<<<<<<< HEAD
 			<h2>
 				<FaMoneyBillWave /> To'lovlar
 			</h2>
+=======
+			<div className="payments-header">
+				<h2><FaMoneyBillWave /> Payments</h2>
+			</div>
+>>>>>>> 6c3052e492e0d4d1457f79a67a084802207f0e36
 
 			<div className="table-actions">
 				<div className="search-box">

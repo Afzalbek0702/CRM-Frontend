@@ -22,10 +22,6 @@ body {
     background-color: #ffffff;
 }
 
-.dashboard-header {
-    margin-bottom: 16px;
-}
-
 .dashboard-header h1 {
    display: flex;
    align-items: center;
@@ -34,12 +30,14 @@ body {
     color: white;
 }
 
+
 .dashboard-cards {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
+    margin-top: 30px;
 }
 
 .card {
@@ -145,6 +143,17 @@ body {
     font-weight: 600;
     color: #FCD34D;
     letter-spacing: 0.3px;
+}
+
+
+.students-header {
+    
+    width: 100%;
+    height: 80px;
+    margin-bottom: 16px;
+    position: fixed;
+    background-color: var(--background-color);
+    z-index: 1000;
 }
 
 
@@ -650,6 +659,7 @@ body {
 .app-layout {
     display: flex;
     height: 100vh;
+    position: relative;
 }
 
 .sidebar {
@@ -660,7 +670,11 @@ body {
     border-right: 1px solid #2c230e;
     display: flex;
     flex-direction: column;
-    position: relative;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 1030;
     transition: all 0.3s ease;
 }
 
@@ -761,6 +775,16 @@ body {
     padding: 24px;
     background: var(--background-color);
     overflow: auto;
+    transition: all 0.3s ease;
+    margin-left: 0;
+}
+
+.content.sidebar-open {
+    margin-left: 280px;
+}
+
+.content.sidebar-closed {
+    margin-left: 0;
 }
 
 .hamburger-button {
@@ -1269,6 +1293,20 @@ body {
         max-height: 90vh;
     }
 
+        
+    .dashboard-header {
+        width: 100%;
+        height: 80px;
+        margin-bottom: 16px;
+        position: fixed;
+        background-color: var(--background-color);
+        z-index: 1000;
+        top: 0px;
+        padding-top: 10px;
+        padding-left: 60px;
+    }
+
+
     .panel-header {
         padding: 24px 20px 20px 20px;
     }
@@ -1291,104 +1329,6 @@ body {
         gap: 12px;
     }
 
-    .hamburger-button {
-        display: flex;
-        position: absolute;
-        top: 16px;
-        right: 16px;
-        z-index: 1050;
-        width: 44px;
-        height: 44px;
-        background: var(--primary-color);
-        border: none;
-        border-radius: 8px;
-        color: black;
-        font-size: 20px;
-        cursor: pointer;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        transition: all 0.3s ease;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .hamburger-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-    }
-
-    .hamburger-button:active {
-        transform: translateY(0);
-    }
-
-    .sidebar {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100vh;
-        width: 280px;
-        z-index: 1040;
-        border-radius: 0;
-        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
-        transform: translateX(-100%);
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .sidebar.open {
-        transform: translateX(0);
-    }
-
-    .sidebar.closed {
-        width: 280px;
-        border-right: 1px solid #2c230e;
-    }
-
-    .sidebar-close-button {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .sidebar-backdrop {
-        display: block;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 1025;
-    }
-
-    .sidebar-nav {
-        overflow-y: visible;
-        max-height: calc(100vh - 80px);
-    }
-
-    .sidebar-nav::-webkit-scrollbar {
-        width: 4px;
-    }
-
-    .sidebar-nav::-webkit-scrollbar-track {
-        background: transparent;
-    }
-
-    .sidebar-nav::-webkit-scrollbar-thumb {
-        background: rgba(255, 208, 12, 0.3);
-        border-radius: 2px;
-    }
-
-    .sidebar-nav::-webkit-scrollbar-thumb:hover {
-        background: rgba(255, 208, 12, 0.5);
-    }
-
-    .content {
-        padding: 16px;
-        padding-top: 70px;
-    }
-}
-
-/* Larger Screens (769px and up) - Collapse/Expand */
-@media (min-width: 769px) {
     .hamburger-button {
         display: flex;
         position: fixed;
@@ -1414,23 +1354,137 @@ body {
         box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
     }
 
+    .hamburger-button:active {
+        transform: translateY(0);
+    }
+
     .sidebar {
-        transition: width 0.3s ease;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 280px;
+        z-index: 1040;
+        border-radius: 0;
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .sidebar.closed {
+        transform: translateX(-100%);
+    }
+
+    .sidebar-close-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .sidebar-backdrop {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1025;
+    }
+
+    .content {
+        padding: 16px;
+        padding-top: 70px;
+        margin-left: 0;
+    }
+
+    .content.sidebar-open {
+        margin-left: 0;
+    }
+
+    .content.sidebar-closed {
+        margin-left: 0;
+    }
+
+    .table-actions {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .search-box {
+        flex: 1;
+        min-width: 200px;
+    }
+}
+
+@media (min-width: 769px) {
+    .hamburger-button {
+        display: flex;
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 1050;
+        width: 44px;
+        height: 44px;
+        background: var(--primary-color);
+        border: none;
+        border-radius: 8px;
+        color: black;
+        font-size: 20px;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        align-items: center;
+        justify-content: center;
+    }
+
+
+    .hamburger-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .hamburger-button:active {
+        transform: translateY(0);
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        z-index: 1030;
+        transition: all 0.3s ease;
     }
 
     .sidebar.closed {
         width: 0;
         overflow: hidden;
         border-right: none;
+        transform: translateX(-100%);
     }
 
     .sidebar.open {
         width: 280px;
         border-right: 1px solid #2c230e;
+        transform: translateX(0);
     }
 
     .content {
         transition: all 0.3s ease;
+        margin-left: 44px;
+    }
+
+    .content.sidebar-open {
+        margin-left: 280px;
+    }
+
+    .content.sidebar-closed {
+        margin-left: 44px;
     }
 
     .sidebar-backdrop {
@@ -1453,6 +1507,42 @@ body {
         width: 100%;
     }
 
+    
+    .dashboard-header  {
+        margin-left: 70px;
+        
+        width: 100%;
+        height: 80px;
+        margin-bottom: 16px;
+        position: fixed;
+        background-color: var(--background-color);
+        z-index: 1000;
+        top: 0;
+        right: 0;
+    }
+
+
+    .groups-header {
+        margin-left: 70px;
+
+
+    }
+
+
+    .students-header {
+        margin-left: 70px;
+    }
+
+    .teachers-header {
+        margin-left: 70px;
+    }
+
+    .payments-header {
+        margin-left: 70px;
+    }
+
+
+
     .card {
         width: 100% !important;
         max-width: 100% !important;
@@ -1460,6 +1550,130 @@ body {
         min-height: 150px;
         flex: 1 1 100%;
         box-sizing: border-box;
+    }
+}
+
+/* Extra small screens (425px and below) */
+@media (max-width: 426px) {
+    .hamburger-button {
+        top: 12px;
+        left: 12px;
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .dashboard-header  {
+        margin-left: 70px;
+
+    }
+
+
+    .groups-header {
+        margin-left: 70px;
+
+
+    }
+
+
+    .students-header {
+        margin-left: 70px;
+    }
+
+    .teachers-header {
+        margin-left: 70px;
+    }
+
+    .payments-header {
+        margin-left: 70px;
+    }
+
+
+    .content {
+        padding: 16px;
+        padding-top: 60px;
+        margin-left: 0;
+    }
+
+    .content.sidebar-open {
+        margin-left: 0;
+    }
+
+    .content.sidebar-closed {
+        margin-left: 0;
+    }
+
+    .sidebar {
+        width: 260px;
+    }
+
+    .sidebar.open {
+        width: 260px;
+    }
+
+    .table-actions {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+
+    .search-box {
+        max-width: 100%;
+    }
+
+    .btn1 {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+}
+
+/* GroupInfo page responsive design */
+@media (max-width: 768px) {
+    /* GroupInfo main container */
+    div[style*="display: flex"][style*="gap: 30px"] {
+        flex-direction: column !important;
+        gap: 20px !important;
+    }
+    
+    /* Left panel - Group Info and Students */
+    div[style*="flex: 0 0 500px"] {
+        flex: 1 1 100% !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+    
+    /* Right panel - Attendance */
+    div[style*="flex: 1"][style*="overflowY: auto"]:not([style*="flex-direction"]) {
+        flex: 1 1 100% !important;
+        width: 100% !important;
+    }
+    
+    /* Group info grid */
+    div[style*="gridTemplateColumns: 1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+        gap: 8px !important;
+    }
+    
+    /* Attendance table responsive */
+    .attendance-scroll {
+        overflow-x: auto !important;
+        max-width: 100% !important;
+    }
+    
+    .attendance-table {
+        min-width: 600px !important;
+        width: 100% !important;
+    }
+    
+    /* Students table */
+    table[style*="width: 100%"] {
+        font-size: 12px !important;
+    }
+    
+    table[style*="width: 100%"] th,
+    table[style*="width: 100%"] td {
+        padding: 8px !important;
     }
 }
 
@@ -2004,11 +2218,15 @@ body {
     .sidebar a {
         padding: 6px 8px;
         font-size: 13px;
+        display: flex !important;
+        align-items: center !important;
+        flex-direction: row !important;
     }
 
     .sidebar .sidebar-icon {
         font-size: 16px;
         margin-right: 8px;
+        flex-shrink: 0;
     }
 
     .content {
@@ -2212,11 +2430,15 @@ body {
     .sidebar a {
         padding: 5px 6px;
         font-size: 12px;
+        display: flex !important;
+        align-items: center !important;
+        flex-direction: row !important;
     }
 
     .sidebar .sidebar-icon {
         font-size: 14px;
         margin-right: 6px;
+        flex-shrink: 0;
     }
 
     /* Content */
@@ -2484,19 +2706,6 @@ body {
         min-height: 16px;
     }
 }
-
-@media (max-width:1025px) {
-    .card {
-        width: 200px;
-    }
-
-    /* .dashboard-header {
-    bu yerga nima yozmoqchi edilar? bo'sh qopketgan ekan commentga opqoydim
-        
-    } */
-
-}
-
 .copy-phone {
     cursor: pointer;
     position: relative;
