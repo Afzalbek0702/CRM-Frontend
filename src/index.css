@@ -529,6 +529,7 @@ body {
 #logo_a_href {
     background-color: inherit;
     color: var(--secondary-text);
+    transform: none;
 }
 
 
