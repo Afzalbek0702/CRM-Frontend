@@ -526,6 +526,12 @@ body {
 }
 
 
+#logo_a_href {
+    background-color: inherit;
+    color: var(--secondary-text);
+}
+
+
 /* .student-table {
     width: 100%;
     border: 1px solid var(--text-color);
@@ -737,6 +743,7 @@ body {
     padding-top: 30px;
     border-bottom: 1px solid var(--text-color);
     margin-bottom: 33px;
+    background: transparent;
 }
 
 .sidebar .logo {
