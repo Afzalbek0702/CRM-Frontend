@@ -221,7 +221,7 @@ body {
     font-size: 24px;
     font-weight: 600;
     color: white;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     display: flex;
     align-items: center;
     gap: 5px;
@@ -1398,8 +1398,8 @@ body {
         top: 20px;
         left: 16px;
         z-index: 1050;
-        width: 24px;
-        height: 24px;
+        width: 44px;
+        height: 44px;
         background: var(--primary-color);
         border: none;
         border-radius: 8px;
@@ -1418,6 +1418,7 @@ body {
         opacity: 0;
         pointer-events: none;
     }
+.btn1
     .hamburger-button:hover {
         transform: translateY(-2px);
         box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
@@ -2816,28 +2817,3 @@ option:hover {
     background-color: var(--primary-color);
 }
 /* hover iwlamadi option ga wuni bir narsa qilelik */
-#logo_a_href {
-    background-color: inherit;
-    color: inherit;
-    transform: none;
-}
-#logo_a_href:hover {
-    background-color: inherit;
-    transform: none;
-    color: inherit;
-
-}
-#logo_a_href:active {
-    background-color: inherit;
-    transform: none;
-}
-
-/* Logoni qande qilib dashboardga olish boradagan qilishni bilmadim. shunaqa qib qoydim 
-CSS ni to'g'irlab qo'yasilar. men qilolmadim. "logo_a_href" shu ID ga stil berib to'g'irlasa bo'ladi
-*/
-.dashboard-cards a {
-    text-decoration: none;
-}
-#studentCounter {
-    color: var(--primary-color);
-}
