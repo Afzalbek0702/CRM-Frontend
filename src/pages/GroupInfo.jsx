@@ -138,7 +138,7 @@ export default function GuruhlarInfo() {
 			<button
 				onClick={() => navigate(-1)}
 				className="btn1"
-				style={{ marginBottom: "20px" }}
+				style={{ marginBottom: "20px" , cursor : "pointer"}}
 			>
 				<FaArrowLeft /> Back
 			</button>

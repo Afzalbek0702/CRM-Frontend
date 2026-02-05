@@ -4,6 +4,7 @@ import Loader from "../components/Loader";
 import Modal from "../components/Modal";
 import ActionMenu from "../components/ActionMenu";
 import { useGroups } from "../hooks/useGroups.js";
+import { useStudents } from "../hooks/useStudents.js";
 import {
 	FaEllipsisV,
 	FaPlus,
@@ -28,6 +29,27 @@ export default function Groups() {
 	});
 	const [selectedGroup, setSelectedGroup] = useState(null);
 	const [isEditMode, setIsEditMode] = useState(false);
+	const { students } = useStudents();
+
+	const studentCountMap = students.reduce((acc, student) => {
+		if (!Array.isArray(student.groups)) return acc;
+
+		student.groups.forEach(groupName => {
+			acc[groupName] = (acc[groupName] || 0) + 1;
+		});
+
+		return acc;
+	}, {});
+
+	const groupsWithCount = groups.map(group => ({
+		...group,
+		studentCount: studentCountMap[group.name] || 0
+	}));
+
+
+
+
+
 
 	const handleCreate = () => {
 		setIsEditMode(false);
@@ -76,6 +98,7 @@ export default function Groups() {
 		setSelectedGroup(null);
 		setIsEditMode(false);
 	};
+	// console.log(students[0]);
 
 	if (loading) return <Loader />;
 	return (
@@ -132,13 +155,13 @@ export default function Groups() {
 					</tr>
 				</thead>
 				<tbody>
-					{groups.map((g) => (
+					{groupsWithCount.map((g) => (
 						<tr
 							key={g.id}
 							onClick={() => handleRowClick(g.id)}
 							style={{ cursor: "pointer" }}
 						>
-							<td>{g.name}</td>
+							<td>{g.name} <span id="studentCounter">[{g.studentCount}]</span></td>
 							<td>{g.price} ming so'm</td>
 							<td>{g.lesson_time}</td>
 							<td>{g.course_type}</td>
