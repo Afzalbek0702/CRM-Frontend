@@ -2,7 +2,7 @@ import { useDashboard } from "../hooks/useDashboard";
 import StatsCards from "../components/Statscards";
 import { useStudents } from "../hooks/useStudents.js";
 import { useGroups } from "../hooks/useGroups.js";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 import { FaUsers, FaClock, FaBook, FaChalkboardTeacher, FaPhone, FaExclamationTriangle } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
 
@@ -12,6 +12,10 @@ export default function Dashboard() {
 		new Date().toISOString().slice(0, 7) + "-31",
 		new Date().toISOString().slice(0, 7) + "-01",
 	);
+
+	const handleRowClick = (groupId) => {
+		navigate(`/groups/${groupId}`);
+	};
 
 	const data = monthlyIncomeQuery.data;
 	const debtorsData = topDebtorsQuery.data;
@@ -25,18 +29,31 @@ export default function Dashboard() {
 		<>
 			<div className="dashboard-header">
 				<h1>
-					<MdDashboard style={{marginTop:'0px'}}/> Dashboard
+					<MdDashboard style={{ marginTop: '0px' }} /> Dashboard
 				</h1>
 				<p>Xush kelibsiz {"Admin"}</p>
 			</div>
 			<div className="dashboard-cards">
-				<StatsCards
-					data={data ? data[0]?.total_income : ""}
-					type={"Oylik Tushum"}
-				/>
-				<StatsCards data={debtorsData?.length} type={"Qarzdor"} />
-				<StatsCards data={students?.length} type={"O'quvchi"} />
-				<StatsCards data={groups?.length} type={"Guruh"} />
+				<NavLink to="/payments">
+					<StatsCards
+						data={data ? data[0]?.total_income : ""}
+						type={"Oylik Tushum"} />
+				</NavLink>
+
+				<NavLink to="/">
+					<StatsCards className="statcards" data={debtorsData?.length} type={"Qarzdor"} />
+				</NavLink>
+
+				<NavLink to="/students">
+					<StatsCards className="statcards" data={students?.length} type={"O'quvchi"} />
+				</NavLink>
+
+				<NavLink to="/groups">
+					<StatsCards className="statcards" data={groups?.length} type={"Guruh"} />
+				</NavLink>
+
+				
+				
 			</div>
 			<div className="dashboard-today-lesson">
 				<h2>Bugungi darslar</h2>
@@ -65,7 +82,8 @@ export default function Dashboard() {
 							</thead>
 							<tbody>
 								{todayLessonsData?.map((lesson) => (
-									<tr key={lesson.id}>
+									<tr key={lesson.id} onClick={() => handleRowClick(lesson.id)}
+										style={{ cursor: "pointer" }}>
 										<td>{lesson.group_name}</td>
 										<td>{lesson.course_type}</td>
 										<td>{lesson.teacher_name}</td>

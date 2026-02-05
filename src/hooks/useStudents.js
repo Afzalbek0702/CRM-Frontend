@@ -28,29 +28,27 @@ export const useStudents = () => {
 	// 3. Yangi talaba qo'shish
 	const createStudentMutation = useMutation({
 		mutationFn: (data) => studentService.create(data).then((res) => res.data),
-      onMutate: async (newStudent) => {
-         toast.success("Talaba muvaffaqiyatli qo'shildi")
-			// Optimistik yangilanish: dastlabki ma'lumotlarni saqlash
+		onMutate: async (newStudent) => {
+			// Don't show toast here - wait for onSuccess
 			await queryClient.cancelQueries({ queryKey: [STUDENTS_QUERY_KEY] });
 			const previousStudents = queryClient.getQueryData([STUDENTS_QUERY_KEY]);
 
-			// Yangi talabani cache ga qo'shish
 			queryClient.setQueryData([STUDENTS_QUERY_KEY], (old) => [
 				...(old || []),
-				{ ...newStudent, id: Date.now() }, // id serverdan kelguncha vaqtinchalik
+				{ ...newStudent, id: Date.now() },
 			]);
 
 			return { previousStudents };
 		},
-      onError: (err, newStudent, context) => {
-         toast.error("Talaba qo'shishda xatolik yuz berdi")
-         // Xatolikda eski holatga qaytarish
-         console.log(err);
-         
+		onSuccess: () => {
+			toast.success("Talaba muvaffaqiyatli qo'shildi");  // ← Show only on success
+			queryClient.invalidateQueries({ queryKey: [STUDENTS_QUERY_KEY] });
+		},
+		onError: (err, newStudent, context) => {
+			toast.error("Talaba qo'shishda xatolik yuz berdi");
 			queryClient.setQueryData([STUDENTS_QUERY_KEY], context.previousStudents);
 		},
 		onSettled: () => {
-			// Muvaffaqiyatli yoki xatolik — har ikkala holatda ham yangilash
 			queryClient.invalidateQueries({ queryKey: [STUDENTS_QUERY_KEY] });
 		},
 	});
@@ -86,8 +84,8 @@ export const useStudents = () => {
 	// 6. Talabani o'chirish
 	const deleteStudentMutation = useMutation({
 		mutationFn: (id) => studentService.delete(id),
-      onMutate: async (id) => {
-         toast.success("Talaba muvaffaqiyatli o'chirildi")
+		onMutate: async (id) => {
+			toast.success("Talaba muvaffaqiyatli o'chirildi")
 			await queryClient.cancelQueries({ queryKey: [STUDENTS_QUERY_KEY] });
 			const previousStudents = queryClient.getQueryData([STUDENTS_QUERY_KEY]);
 
@@ -97,9 +95,9 @@ export const useStudents = () => {
 
 			return { previousStudents };
 		},
-      onError: (err, id, context) => {
-         toast.error("Talaba o'chirishda xatolik yuz berdi")
-         console.log(err);
+		onError: (err, id, context) => {
+			toast.error("Talaba o'chirishda xatolik yuz berdi")
+			console.log(err);
 			queryClient.setQueryData([STUDENTS_QUERY_KEY], context.previousStudents);
 		},
 		onSettled: () => {
@@ -125,8 +123,8 @@ export const useStudents = () => {
 	const removeFromGroupMutation = useMutation({
 		mutationFn: ({ studentId, groupId }) =>
 			studentService.removeFromGroup(studentId, groupId).then((res) => res.data),
-      onSuccess: () => {
-         toast.success("Talaba guruhdan muvaffaqiyatli olib tashlandi")
+		onSuccess: () => {
+			toast.success("Talaba guruhdan muvaffaqiyatli olib tashlandi")
 			queryClient.invalidateQueries({ queryKey: [STUDENTS_QUERY_KEY] });
 		},
 		onError: (error) => {
@@ -139,12 +137,12 @@ export const useStudents = () => {
 	const transferToGroupMutation = useMutation({
 		mutationFn: ({ studentId, toGroupId }) =>
 			studentService.transferToGroup(studentId, toGroupId).then((res) => res.data),
-      onSuccess: () => {
-         toast.success("Talaba muvaffaqiyatli boshqa guruhga ko'chirildi")
+		onSuccess: () => {
+			toast.success("Talaba muvaffaqiyatli boshqa guruhga ko'chirildi")
 			queryClient.invalidateQueries({ queryKey: [STUDENTS_QUERY_KEY] });
 		},
-      onError: (error) => {
-         toast.error("Talabani boshqa guruhga ko'chirishda xatolik yuz berdi")
+		onError: (error) => {
+			toast.error("Talabani boshqa guruhga ko'chirishda xatolik yuz berdi")
 			console.error("Transfer error:", error);
 		},
 	});
@@ -163,7 +161,7 @@ export const useStudents = () => {
 		deleteStudent: deleteStudentMutation.mutateAsync,
 		addToGroup: (studentId, groupId) => addToGroupMutation.mutateAsync({ studentId, groupId }),
 		removeFromGroup: (studentId, groupId) => removeFromGroupMutation.mutateAsync({ studentId, groupId }),
-		transferToGroup: (studentId, toGroupId) => 
+		transferToGroup: (studentId, toGroupId) =>
 			transferToGroupMutation.mutateAsync({ studentId, toGroupId }),
 	};
 };

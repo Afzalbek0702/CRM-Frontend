@@ -15,7 +15,6 @@ export function useCountUp(end, duration = 2000, start = 0) {
       const progress = timestamp - startTimeRef.current;
       const progressPercentage = Math.min(progress / duration, 1);
 
-      // Easing function for smooth animation
       const easeOutQuart = 1 - Math.pow(1 - progressPercentage, 4);
       
       const currentCount = Math.floor(start + (end - start) * easeOutQuart);

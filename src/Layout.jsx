@@ -32,8 +32,7 @@ export default function Layout() {
 						<button
 							className={`hamburger-button ${sidebarOpen ? 'hidden' : ''}`}
 							onClick={() => setSidebarOpen(!sidebarOpen)}
-							aria-label="Toggle sidebar"
-						>
+							aria-label="Toggle sidebar">
 							<FaBars />
 						</button>
 						<Sidebar

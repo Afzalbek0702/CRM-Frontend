@@ -38,7 +38,7 @@ export default function StudentDetail() {
 
 	return (
 		<div className="table-container">
-			<button onClick={() => navigate(-1)} className="btn1" style={{ marginBottom: "20px" }}>
+			<button onClick={() => navigate(-1)} className="btn1" style={{ marginBottom: "20px", cursor: "pointer"}}>
 				<FaArrowLeft /> Back
 			</button>
 
