@@ -6,5 +6,7 @@ export const endpoints = {
    TEACHERS: "/teachers",
 	PAYMENTS: "/payments",
 	DASHBOARD: "/dashboard",
-	ENROLLMENTS: "/enrollments",
+   ENROLLMENTS: "/enrollments",
+   LEADS: "/leads",
+   ARCHIVE: "/archive",
 };

@@ -17,6 +17,8 @@ import Teachers from "./pages/Teachers";
 import TeacherDetail from "./pages/TeacherDetail";
 import Payments from "./pages/Payments";
 import Login from "./pages/Login";
+import Leads from "./pages/Leads";
+import Archive from "./pages/Archive";
 
 export default function Layout() {
 	const location = useLocation();
@@ -61,6 +63,8 @@ export default function Layout() {
 							}
 						/>
 						<Route path="/dashboard" element={<Dashboard />} />
+						<Route path="/leads" element={<Leads />} />
+						<Route path="/archive" element={<Archive />} />
 						<Route path="/groups" element={<Groups />} />
 						<Route path="/groups/:id" element={<GroupInfo />} />
 						<Route path="/students" element={<Students />} />
