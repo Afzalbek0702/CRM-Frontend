@@ -8,11 +8,11 @@ export const dashboardService = {
 	getTopDebtors: (month) =>
 		api.get(endpoints.DASHBOARD + "/top-debtors", {
 			params: { month },
-      }),
-   getTodayLessons: () => api.get(endpoints.DASHBOARD + "/today-lessons"),
-   
-   // Fetch attendance records
-   getAttendance: (group_id, month) =>
-		api.get(endpoints.ATTENDANCE, { params: { group_id, month } }),
+		}),
+	getTodayLessons: () => api.get(endpoints.DASHBOARD + "/today-lessons"),
+
+	// Fetch attendance records
+	getAbsentStudents: () =>
+		api.get(endpoints.DASHBOARD + "/absent-students"),
 };
 // from=2025-08-01&to=2026-01-31

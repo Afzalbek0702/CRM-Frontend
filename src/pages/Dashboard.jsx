@@ -20,7 +20,9 @@ export default function Dashboard() {
 	const data = monthlyIncomeQuery.data;
 	const debtorsData = topDebtorsQuery.data;
 	const todayLessonsData = todayLessons.data;
-	const absentStudentsData = absentStudentsQuery.data;
+   const absentStudentsData = absentStudentsQuery.data;
+   console.log(absentStudentsData);
+   
 	const { students } = useStudents();
 	const { groups } = useGroups();
 	const navigate = useNavigate();
@@ -125,7 +127,7 @@ export default function Dashboard() {
 										onClick={() => navigate(`/groups/${student.group_id}`)}
 										style={{ cursor: "pointer" }}
 									>
-										<td>{student.student_name}</td>
+										<td>{student.full_name}</td>
 										<td>{student.group_name}</td>
 										<td
 											onClick={(e) => {
