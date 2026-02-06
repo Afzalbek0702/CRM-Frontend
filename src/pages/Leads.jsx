@@ -17,7 +17,7 @@ export default function Leads() {
       // id bu student ID si group_id guruhniki. Xuddi shu holatda jo'natasiz!
 	}
 	return (
-		<div>
+		<div className="leads-header">
 			{leads.map((l) => (
 				<div key={l.id}>
 					{l.full_name} - {l.phone}

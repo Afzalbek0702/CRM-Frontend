@@ -67,7 +67,7 @@ export default function Sidebar({ isOpen = true, onClose = () => { } }) {
 			</NavLink>
 			<div className="sidebar-parent">
 				<button
-					className="sidebar-link parent"
+					className="sidebar-link-parent"
 					onClick={() => setArchiveOpen(!archiveOpen)}
 				>
 					<FaArchive className="sidebar-icon" />

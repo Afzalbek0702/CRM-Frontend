@@ -719,6 +719,18 @@ body {
     position: relative;
 }
 
+.leads-header {
+    width: 100%;
+    height: 80px;
+    margin-bottom: 16px;
+    position: fixed;
+    background-color: var(--background-color);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    padding-left: 60px;
+}
+
 .sidebar {
     width: 280px;
     background: var(--background-color);
@@ -743,9 +755,11 @@ body {
     padding: 16px;
     padding-top: 30px;
     border-bottom: 1px solid var(--text-color);
-    margin-bottom: 33px;
+    margin-bottom: 23px;
     background: transparent;
 }
+
+
 
 .sidebar .logo {
     display: flex;
@@ -835,6 +849,31 @@ body {
     transition: all 0.3s ease;
     color: white;
 }
+
+.sidebar-link-parent {
+    display: flex;
+    align-items: center;
+    padding: 10px 12px;
+    color: grey;
+    font-size: 16px;
+    font-family: var(--font-family);
+    text-decoration: none;
+    border-radius: 2px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.sidebar-link-parent:hover {
+    background-color: #1f2937;
+    transform: translateY(-2px);
+    box-shadow: var(--box-shadow);
+    transition: all 0.3s ease;
+    color: white;
+}
+
+
+
 
 .content {
     flex: 1;
@@ -2839,4 +2878,37 @@ option:hover {
 .sidebar-submenu{
     display: flex;
     flex-direction: column;
+    margin-left: 33px;
 }
+
+/* Table Row Fade In Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.table-container tbody tr {
+    animation: fadeIn 0.4s ease forwards;
+}
+
+.table-container tbody tr:nth-child(1) { animation-delay: 0.05s; }
+.table-container tbody tr:nth-child(2) { animation-delay: 0.1s; }
+.table-container tbody tr:nth-child(3) { animation-delay: 0.15s; }
+.table-container tbody tr:nth-child(4) { animation-delay: 0.2s; }
+.table-container tbody tr:nth-child(5) { animation-delay: 0.25s; }
+.table-container tbody tr:nth-child(6) { animation-delay: 0.3s; }
+.table-container tbody tr:nth-child(7) { animation-delay: 0.35s; }
+.table-container tbody tr:nth-child(8) { animation-delay: 0.4s; }
+.table-container tbody tr:nth-child(9) { animation-delay: 0.45s; }
+.table-container tbody tr:nth-child(10) { animation-delay: 0.5s; }
+.table-container tbody tr:nth-child(11) { animation-delay: 0.55s; }
+.table-container tbody tr:nth-child(12) { animation-delay: 0.6s; }
+.table-container tbody tr:nth-child(13) { animation-delay: 0.65s; }
+.table-container tbody tr:nth-child(14) { animation-delay: 0.7s; }
+.table-container tbody tr:nth-child(15) { animation-delay: 0.75s; }
