@@ -27,8 +27,8 @@ body {
 }
 
 .dashboard-header h1 {
-   display: flex;
-   align-items: center;
+    display: flex;
+    align-items: center;
     font-size: 24px;
     font-weight: 600;
     color: white;
@@ -91,15 +91,15 @@ body {
         flex-direction: column;
         gap: 30px;
     }
-    
+
     .dashboard-content-wrapper .dashboard-today-lesson {
         min-width: auto;
     }
-    
+
     .dashboard-content-wrapper .absent-students {
         order: 1;
     }
-    
+
     .dashboard-content-wrapper .today-lessons {
         order: 2;
     }
@@ -194,7 +194,7 @@ body {
 
 
 .students-header {
-    
+
     width: 100%;
     height: 80px;
     margin-bottom: 16px;
@@ -1364,7 +1364,7 @@ body {
         max-height: 90vh;
     }
 
-        
+
     .dashboard-header {
         width: 100%;
         height: 80px;
@@ -1426,8 +1426,8 @@ body {
         opacity: 0;
         pointer-events: none;
     }
-.btn1
-    .hamburger-button:hover {
+
+    .btn1 .hamburger-button:hover {
         transform: translateY(-2px);
         box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
     }
@@ -1591,10 +1591,10 @@ body {
         width: 100%;
     }
 
-    
-    .dashboard-header  {
+
+    .dashboard-header {
         margin-left: 70px;
-        
+
         width: 100%;
         height: 80px;
         margin-bottom: 16px;
@@ -1648,7 +1648,7 @@ body {
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
 
-    .dashboard-header  {
+    .dashboard-header {
         margin-left: 70px;
 
     }
@@ -1714,47 +1714,48 @@ body {
 
 /* GroupInfo page responsive design */
 @media (max-width: 768px) {
+
     /* GroupInfo main container */
     div[style*="display: flex"][style*="gap: 30px"] {
         flex-direction: column !important;
         gap: 20px !important;
     }
-    
+
     /* Left panel - Group Info and Students */
     div[style*="flex: 0 0 500px"] {
         flex: 1 1 100% !important;
         max-width: 100% !important;
         width: 100% !important;
     }
-    
+
     /* Right panel - Attendance */
     div[style*="flex: 1"][style*="overflowY: auto"]:not([style*="flex-direction"]) {
         flex: 1 1 100% !important;
         width: 100% !important;
     }
-    
+
     /* Group info grid */
     div[style*="gridTemplateColumns: 1fr 1fr"] {
         grid-template-columns: 1fr !important;
         gap: 8px !important;
     }
-    
+
     /* Attendance table responsive */
     .attendance-scroll {
         overflow-x: auto !important;
         max-width: 100% !important;
     }
-    
+
     .attendance-table {
         min-width: 600px !important;
         width: 100% !important;
     }
-    
+
     /* Students table */
     table[style*="width: 100%"] {
         font-size: 12px !important;
     }
-    
+
     table[style*="width: 100%"] th,
     table[style*="width: 100%"] td {
         padding: 8px !important;
@@ -2797,6 +2798,7 @@ body {
         min-height: 16px;
     }
 }
+
 .copy-phone {
     cursor: pointer;
     position: relative;
@@ -2814,14 +2816,27 @@ body {
 .copy-phone[data-copied="true"]::after {
     opacity: 1;
 }
+
 option {
     color: var(--primary-color);
     background-color: var(--background-color);
     border-radius: 20px;
 
 }
+
 option:hover {
     color: var(--background-color);
     background-color: var(--primary-color);
 }
-/* hover iwlamadi option ga wuni bir narsa qilelik */
+
+.dashboard-cards a {
+    text-decoration: none;
+}
+
+#studentCounter {
+    color: var(--primary-color);
+}
+.sidebar-submenu{
+    display: flex;
+    flex-direction: column;
+}

@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import {
 	FaTachometerAlt,
 	FaUsers,
@@ -7,14 +7,25 @@ import {
 	FaMoneyBillWave,
 	FaTimes,
 	FaThList,
-   FaArchive,
+	FaArchive,
 } from "react-icons/fa";
+import { useState, useEffect } from "react";
+
 export default function Sidebar({ isOpen = true, onClose = () => { } }) {
 	const handleNavClick = () => {
 		if (window.innerWidth <= 768) {
 			onClose();
 		}
 	};
+
+	const location = useLocation();
+	const [archiveOpen, setArchiveOpen] = useState(false);
+
+	useEffect(() => {
+		if (location.pathname.startsWith("/archive")) {
+			setArchiveOpen(true);
+		}
+	}, [location.pathname]);
 
 
 
@@ -54,9 +65,37 @@ export default function Sidebar({ isOpen = true, onClose = () => { } }) {
 			<NavLink to="/payments">
 				<FaMoneyBillWave className="sidebar-icon" /> Payments
 			</NavLink>
-			<NavLink to="/archive">
-				<FaArchive className="sidebar-icon" /> Archive
-			</NavLink>
+			<div className="sidebar-parent">
+				<button
+					className="sidebar-link parent"
+					onClick={() => setArchiveOpen(!archiveOpen)}
+				>
+					<FaArchive className="sidebar-icon" />
+					Archive
+					<span className={`arrow ${archiveOpen ? "open" : ""}`}>▾</span>
+				</button>
+
+				{archiveOpen && (
+					<div className="sidebar-submenu">
+						<NavLink to="/archive/leads" onClick={handleNavClick}>
+							Lidlar
+						</NavLink>
+						<NavLink to="/archive/students" onClick={handleNavClick}>
+							Talabalar
+						</NavLink>
+						<NavLink to="/archive/teachers" onClick={handleNavClick}>
+							O‘qituvchilar
+						</NavLink>
+						<NavLink to="/archive/groups" onClick={handleNavClick}>
+							Guruhlar
+						</NavLink>
+						<NavLink to="/archive/payments" onClick={handleNavClick}>
+							Moliya
+						</NavLink>
+					</div>
+				)}
+			</div>
+
 		</aside>
 	);
 }

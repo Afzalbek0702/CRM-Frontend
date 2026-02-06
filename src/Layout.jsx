@@ -64,7 +64,7 @@ export default function Layout() {
 						/>
 						<Route path="/dashboard" element={<Dashboard />} />
 						<Route path="/leads" element={<Leads />} />
-						<Route path="/archive" element={<Archive />} />
+						<Route path="/archive/:category" element={<Archive />} />
 						<Route path="/groups" element={<Groups />} />
 						<Route path="/groups/:id" element={<GroupInfo />} />
 						<Route path="/students" element={<Students />} />

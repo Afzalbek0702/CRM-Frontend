@@ -32,7 +32,6 @@ export default function Students() {
 
 	const [searchTerm, setSearchTerm] = useState("");
 
-	// action menu state
 	const [actionMenu, setActionMenu] = useState({
 		isOpen: false,
 		position: { top: 0, left: 0 },
