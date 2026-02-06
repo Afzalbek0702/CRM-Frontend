@@ -42,7 +42,7 @@ export default function Dashboard() {
 						type={"Oylik Tushum"} />
 				</NavLink>
 
-				<NavLink to="/">
+				<NavLink to="/dashboard">
 					<StatsCards className="statcards" data={debtorsData?.length} type={"Qarzdor"} />
 				</NavLink>
 
@@ -53,106 +53,104 @@ export default function Dashboard() {
 				<NavLink to="/groups">
 					<StatsCards className="statcards" data={groups?.length} type={"Guruh"} />
 				</NavLink>
-
-				
-				
 			</div>
-			<div className="dashboard-today-lesson">
-				<h2>Bugungi darslar</h2>
-				<div className="table-container">
-					{todayLessons.isLoading ? (
-						<p>Yuklanmoqda...</p>
-					) : todayLessons.isError ? (
-						<p>Xatolik yuz berdi</p>
-					) : (
-						<table style={{ maxWidth: "600px" }}>
-							<thead>
-								<tr>
-									<th>
-										<FaUsers /> Guruh Nomi
-									</th>
-									<th>
-										<FaBook /> Kurs
-									</th>
-									<th>
-										<FaChalkboardTeacher /> O'qituvchi
-									</th>
-									<th>
-										<FaClock /> Dars Vaqti
-									</th>
-								</tr>
-							</thead>
-							<tbody>
-								{todayLessonsData?.map((lesson) => (
-									<tr key={lesson.id} onClick={() => handleRowClick(lesson.id)}
-										style={{ cursor: "pointer" }}>
-										<td>{lesson.group_name}</td>
-										<td>{lesson.course_type}</td>
-										<td>{lesson.teacher_name}</td>
-										<td>{lesson.lesson_time}</td>
+			<div className="dashboard-content-wrapper">
+				<div className="dashboard-today-lesson absent-students">
+					<h2><FaExclamationTriangle /> Bugun kelmagan o'quvchilar</h2>
+					<div className="table-container">
+						{absentStudentsQuery.isLoading ? (
+							<p>Yuklanmoqda...</p>
+						) : absentStudentsQuery.isError ? (
+							<p>Xatolik yuz berdi</p>
+						) : absentStudentsData && absentStudentsData.length > 0 ? (
+							<table>
+								<thead>
+									<tr>
+										<th>
+											<FaUsers /> O'quvchi Nomi
+										</th>
+										<th>
+											<FaUsers /> Guruh
+										</th>
+										<th>
+											<FaPhone /> Telefon
+										</th>
 									</tr>
-								))}
-							</tbody>
-						</table>
-					)}
-				</div>
-			</div>
-
-			<div className="dashboard-today-lesson">
-				<h2><FaExclamationTriangle /> Bugun kelmagan o'quvchilar</h2>
-				<div className="table-container">
-					{absentStudentsQuery.isLoading ? (
-						<p>Yuklanmoqda...</p>
-					) : absentStudentsQuery.isError ? (
-						<p>Xatolik yuz berdi</p>
-					) : absentStudentsData && absentStudentsData.length > 0 ? (
-						<table>
-							<thead>
-								<tr>
-									<th>
-										<FaUsers /> O'quvchi Nomi
-									</th>
-									<th>
-										<FaUsers /> Guruh
-									</th>
-									<th>
-										<FaPhone /> Telefon
-									</th>
-								</tr>
-							</thead>
-							<tbody>
-								{absentStudentsData.map((student) => (
-									<tr
-										key={student.student_id}
-										onClick={() => navigate(`/groups/${student.group_id}`)}
-										style={{ cursor: "pointer" }}
-									>
-										<td>{student.full_name}</td>
-										<td>{student.group_name}</td>
-										<td
-											onClick={(e) => {
-												e.stopPropagation();
-												navigator.clipboard.writeText(student.phone);
-
-												const el = e.currentTarget;
-												el.dataset.copied = "true";
-
-												setTimeout(() => {
-													el.dataset.copied = "false";
-												}, 2000);
-											}}
-											data-copied="false"
-											className="copy-phone"
+								</thead>
+								<tbody>
+									{absentStudentsData.map((student) => (
+										<tr
+											key={student.student_id}
+											onClick={() => handleRowClick(student.group_id)}
+											style={{ cursor: "pointer" }}
 										>
-											{student.phone}
-										</td>
+											<td>{student.student_name}</td>
+											<td>{student.group_name}</td>
+											<td
+												onClick={(e) => {
+													e.stopPropagation();
+													navigator.clipboard.writeText(student.phone);
+
+													const el = e.currentTarget;
+													el.dataset.copied = "true";
+
+													setTimeout(() => {
+														el.dataset.copied = "false";
+													}, 2000);
+												}}
+												data-copied="false"
+												className="copy-phone"
+											>
+												{student.phone}
+											</td>
+										</tr>
+									))}
+								</tbody>
+							</table>
+						) : (
+							<p>Bugun hamma o'quvchilar kelib qolipdi! 🎉</p>
+						)}
+					</div>
+				</div>
+
+				<div className="dashboard-today-lesson today-lessons">
+					<h2>Bugungi darslar</h2>
+					<div className="table-container">
+						{todayLessons.isLoading ? (
+							<p>Yuklanmoqda...</p>
+						) : todayLessons.isError ? (
+							<p>Xatolik yuz berdi</p>
+						) : (
+							<table style={{ maxWidth: "600px" }}>
+								<thead>
+									<tr>
+										<th>
+											<FaUsers /> Guruh Nomi
+										</th>
+										<th>
+											<FaBook /> Kurs
+										</th>
+										<th>
+											<FaChalkboardTeacher /> O'qituvchi
+										</th>
+										<th>
+											<FaClock /> Dars Vaqti
+										</th>
 									</tr>
-								))}
-							</tbody>
-						</table>
-					) : (
-						<p>Bugun hamma o'quvchilar kelib qolipdi! 🎉</p>
-					)}
+								</thead>
+								<tbody>
+									{todayLessonsData?.map((lesson) => (
+										<tr key={lesson.id}>
+											<td>{lesson.group_name}</td>
+											<td>{lesson.course_type}</td>
+											<td>{lesson.teacher_name}</td>
+											<td>{lesson.lesson_time}</td>
+										</tr>
+									))}
+								</tbody>
+							</table>
+						)}
+					</div>
 				</div>
 			</div>
 		</>
