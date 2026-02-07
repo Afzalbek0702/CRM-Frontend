@@ -200,7 +200,9 @@ body {
     margin-bottom: 16px;
     position: fixed;
     background-color: var(--background-color);
-    z-index: 1000;
+    z-index: 100;
+    top: 0;
+    left: 0;
 }
 
 
@@ -1481,11 +1483,13 @@ body {
         left: 0;
         height: 100vh;
         width: 280px;
-        z-index: 1040;
+        z-index: 9999;
         border-radius: 0;
         box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
         transform: translateX(-100%);
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow-y: auto;
+        overflow-x: hidden;
     }
 
     .sidebar.open {
@@ -1510,35 +1514,22 @@ body {
         right: 0;
         bottom: 0;
         background: rgba(0, 0, 0, 0.5);
-        z-index: 1025;
+        z-index: 9998;
     }
 
     .content {
         padding: 16px;
         padding-top: 70px;
         margin-left: 0;
+        position: relative;
+        z-index: 1;
     }
 
     .content.sidebar-open {
         margin-left: 0;
     }
 
-    .content.sidebar-closed {
-        margin-left: 0;
-    }
 
-    .table-actions {
-        flex-wrap: wrap;
-        gap: 15px;
-    }
-
-    .search-box {
-        flex: 1;
-        min-width: 200px;
-    }
-}
-
-@media (min-width: 769px) {
     .hamburger-button {
         display: flex;
         position: fixed;
@@ -2881,6 +2872,244 @@ option:hover {
     margin-left: 33px;
 }
 
+/* Responsive Design for Tablets */
+@media (max-width: 1024px) {
+    .table-container h2 {
+        margin-left: 40px;
+        font-size: 22px;
+    }
+    
+    .table-container table {
+        min-width: 600px;
+    }
+    
+    .table-container th,
+    .table-container td {
+        padding: 12px 14px;
+        font-size: 13px;
+    }
+    
+    .search-box {
+        margin-left: 40px;
+        width: calc(100% - 80px);
+        max-width: 400px;
+    }
+    
+    .table-container {
+        margin-left: 0;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}
+
+/* Responsive Design for Tablets Portrait */
+@media (max-width: 768px) {
+    .table-container {
+        padding: 15px 10px;
+    }
+    
+    .table-container h2 {
+        margin-left: 20px;
+        margin-top: 0;
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .table-container table {
+        min-width: 500px;
+    }
+    
+    .table-container th,
+    .table-container td {
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+    
+    .table-container thead th {
+        font-size: 11px;
+        padding: 12px 10px;
+    }
+    
+    .search-box {
+        margin-left: 20px;
+        margin-right: 20px;
+        margin-bottom: 15px;
+        width: calc(100% - 40px);
+        padding: 10px 14px;
+    }
+    
+    .search-box input {
+        font-size: 14px;
+    }
+    
+    .table-actions {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+    
+    .table-actions button {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Responsive Design for Mobile Landscape */
+@media (max-width: 600px) {
+    .table-container h2 {
+        margin-left: 15px;
+        font-size: 18px;
+    }
+    
+    .table-container table {
+        min-width: 450px;
+    }
+    
+    .table-container th,
+    .table-container td {
+        padding: 8px 10px;
+        font-size: 11px;
+    }
+    
+    .table-container thead th {
+        font-size: 10px;
+        padding: 10px 8px;
+    }
+    
+    .search-box {
+        margin-left: 15px;
+        margin-right: 15px;
+        width: calc(100% - 30px);
+        padding: 10px 12px;
+    }
+    
+    .balance-badge {
+        padding: 4px 8px;
+        font-size: 10px;
+    }
+    
+    .day-pill {
+        padding: 4px 8px;
+        font-size: 10px;
+    }
+    
+    .action-menu-btn {
+        padding: 6px 8px;
+        font-size: 12px;
+    }
+}
+
+/* Responsive Design for Mobile Portrait */
+@media (max-width: 480px) {
+    .table-container {
+        padding: 10px 5px;
+    }
+    
+    .table-container h2 {
+        margin-left: 10px;
+        margin-right: 10px;
+        font-size: 16px;
+        gap: 8px;
+    }
+    
+    .table-container table {
+        min-width: 400px;
+        border-radius: 6px;
+    }
+    
+    .table-container th,
+    .table-container td {
+        padding: 8px;
+        font-size: 10px;
+    }
+    
+    .table-container thead th {
+        padding: 8px;
+        font-size: 9px;
+    }
+    
+    .search-box {
+        margin-left: 10px;
+        margin-right: 10px;
+        width: calc(100% - 20px);
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+    
+    .search-box input {
+        font-size: 13px;
+    }
+    
+    .balance-badge {
+        padding: 3px 6px;
+        font-size: 9px;
+    }
+    
+    .day-pill {
+        padding: 3px 6px;
+        font-size: 9px;
+        margin-right: 3px;
+        margin-bottom: 3px;
+    }
+    
+    .action-menu-btn {
+        padding: 4px 6px;
+        font-size: 10px;
+    }
+    
+    .group-link {
+        font-size: 11px;
+    }
+    
+    .teacher {
+        font-size: 10px;
+    }
+}
+
+/* Responsive Design for Small Mobile */
+@media (max-width: 360px) {
+    .table-container h2 {
+        font-size: 14px;
+        margin-left: 8px;
+    }
+    
+    .table-container table {
+        min-width: 350px;
+    }
+    
+    .table-container th,
+    .table-container td {
+        padding: 6px;
+        font-size: 9px;
+    }
+    
+    .table-container thead th {
+        padding: 6px;
+        font-size: 8px;
+    }
+    
+    .search-box {
+        margin-left: 8px;
+        margin-right: 8px;
+        width: calc(100% - 16px);
+        padding: 6px 10px;
+    }
+    
+    .search-box input {
+        font-size: 12px;
+    }
+    
+    .balance-badge {
+        padding: 2px 5px;
+        font-size: 8px;
+    }
+    
+    .day-pill {
+        padding: 2px 5px;
+        font-size: 8px;
+    }
+}
+
 /* Table Row Fade In Animation */
 @keyframes fadeIn {
     from {
@@ -2912,3 +3141,22 @@ option:hover {
 .table-container tbody tr:nth-child(13) { animation-delay: 0.65s; }
 .table-container tbody tr:nth-child(14) { animation-delay: 0.7s; }
 .table-container tbody tr:nth-child(15) { animation-delay: 0.75s; }
+
+/* Scrollbar Styling */
+.table-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: var(--background-color);
+    border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: #e5c14c;
+}
