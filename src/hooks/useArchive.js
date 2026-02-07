@@ -24,7 +24,7 @@ export const useArchive = () => {
 				const studentsRes = await archiveService.getAllArchivedGroupsStudents(id);
 				return { ...groupRes.data, students: studentsRes.data };
 			},
-			enabled: !!id, // faqat id mavjud bo'lsa so'rov yuborilsin
+			enabled: !!id,
 			staleTime: 5 * 60 * 1000,
 			refetchOnWindowFocus: false,
 		});

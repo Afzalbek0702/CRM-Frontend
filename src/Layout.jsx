@@ -72,6 +72,7 @@ export default function Layout() {
 						<Route path="/teachers" element={<Teachers />} />
 						<Route path="/teachers/:id" element={<TeacherDetail />} />
 						<Route path="/payments" element={<Payments />} />
+						<Route path="/payments/:category" element={<Payments />} />
 					</Routes>
 				</main>
 			</div>

@@ -8,6 +8,7 @@ import {
 	FaTimes,
 	FaThList,
 	FaArchive,
+	FaWallet
 } from "react-icons/fa";
 import { useState, useEffect } from "react";
 
@@ -20,6 +21,7 @@ export default function Sidebar({ isOpen = true, onClose = () => { } }) {
 
 	const location = useLocation();
 	const [archiveOpen, setArchiveOpen] = useState(false);
+	const [paymentsOpen, setPaymentsOpen] = useState(false);
 
 	useEffect(() => {
 		if (location.pathname.startsWith("/archive")) {
@@ -42,8 +44,8 @@ export default function Sidebar({ isOpen = true, onClose = () => { } }) {
 				<button
 					className="sidebar-close-button"
 					onClick={onClose}
-					aria-label="Close sidebar"
-				>
+					aria-label="Close sidebar">
+
 					<FaTimes />
 				</button>
 			</div>
@@ -62,9 +64,34 @@ export default function Sidebar({ isOpen = true, onClose = () => { } }) {
 			<NavLink to="/teachers">
 				<FaChalkboardTeacher className="sidebar-icon" /> Teachers
 			</NavLink>
-			<NavLink to="/payments">
-				<FaMoneyBillWave className="sidebar-icon" /> Payments
-			</NavLink>
+			<div className="sidebar-parent">
+				<button
+					className="sidebar-link-parent"
+					onClick={() => setPaymentsOpen(!paymentsOpen)}
+				>
+					<FaWallet className="sidebar-icon" />
+					Moliya
+					<span className={`arrow ${paymentsOpen ? "open" : ""}`}>▾</span>
+				</button>
+
+				{paymentsOpen && (
+					<div className="sidebar-submenu">
+						<NavLink to="/payments/income" onClick={handleNavClick}>
+							To'lovlar
+						</NavLink>
+						<NavLink to="/payments/salary" onClick={handleNavClick}>
+							Ish haqi
+						</NavLink>
+						<NavLink to="/payments/debtors" onClick={handleNavClick}>
+							Qarzdorlar
+						</NavLink>
+						<NavLink to="/payments/expenses" onClick={handleNavClick}>
+							Xarajatlar
+						</NavLink>
+					</div>
+				)}
+			</div>
+
 			<div className="sidebar-parent">
 				<button
 					className="sidebar-link-parent"
