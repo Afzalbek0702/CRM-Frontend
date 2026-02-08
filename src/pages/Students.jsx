@@ -50,9 +50,10 @@ export default function Students() {
 	return (
 		<div className="table-container">
 			<div className="students-header">
-				<h2>
-					<FaUserGraduate /> O'quvchilar
-				</h2>
+				<h1>
+					<FaUserGraduate style={{ marginTop: '0px' }} /> O'quvchilar
+				</h1>
+				<p>Barcha o'quvchilar ro'yxati</p>
 			</div>
 
 			<div className="table-actions">
@@ -72,7 +73,7 @@ export default function Students() {
 						setIsModalOpen(true);
 					}}
 				>
-					Yangi O'quvchi
+					<FaPlus /> O'quvchi qo'shish
 				</button>
 			</div>
 			<table>

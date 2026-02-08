@@ -31,9 +31,10 @@ export default function Teachers() {
 	return (
 		<div className="table-container">
 			<div className="teachers-header">
-				<h2>
-					<FaChalkboardTeacher /> O'qituvchilar
-				</h2>
+				<h1>
+					<FaChalkboardTeacher style={{ marginTop: '0px' }} /> O'qituvchilar
+				</h1>
+				<p>Barcha o'qituvchilar ro'yxati</p>
 			</div>
 
 			<div className="table-actions">

@@ -71,9 +71,10 @@ export default function Payments() {
 				{category === "payments" && (
 					<div className="table-container">
 						<div className="payments-header">
-							<h2>
-								<FaMoneyBillWave /> To'lovlar
-							</h2>
+							<h1>
+								<FaMoneyBillWave style={{ marginTop: '0px' }} /> To'lovlar
+							</h1>
+							<p>Barcha to'lovlar ro'yxati</p>
 						</div>
 
 						<div className="table-actions">

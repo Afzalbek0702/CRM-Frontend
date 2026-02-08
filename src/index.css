@@ -24,6 +24,18 @@ body {
 
 .dashboard-header {
     margin-left: 60px;
+    transition: all 0.3s ease;
+}
+
+/* Sidebar ochiq bo'lganda header marginlari 0 */
+.content.sidebar-open .dashboard-header,
+.content.sidebar-open .students-header,
+.content.sidebar-open .teachers-header,
+.content.sidebar-open .payments-header,
+.content.sidebar-open .groups-header,
+.content.sidebar-open .leads-header {
+    margin-left: 0 !important;
+    transition: all 0.3s ease;
 }
 
 .dashboard-header h1 {
@@ -42,10 +54,11 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-top: 30px;
+    
 }
 
 .card {
-    width: 300px;
+    width: 292px;
     height: 150px;
     padding: 24px;
     text-transform: uppercase;
@@ -194,7 +207,6 @@ body {
 
 
 .students-header {
-
     width: 100%;
     height: 80px;
     margin-bottom: 16px;
@@ -203,6 +215,62 @@ body {
     z-index: 100;
     top: 0;
     left: 0;
+}
+
+.teachers-header {
+    width: 100%;
+    height: 80px;
+    margin-bottom: 16px;
+    position: fixed;
+    background-color: var(--background-color);
+    z-index: 100;
+    top: 0;
+    left: 0;
+}
+
+.payments-header {
+    width: 100%;
+    height: 80px;
+    margin-bottom: 16px;
+    position: fixed;
+    background-color: var(--background-color);
+    z-index: 100;
+    top: 0;
+    left: 0;
+}
+
+.groups-header {
+    width: 100%;
+    height: 80px;
+    margin-bottom: 16px;
+    position: fixed;
+    background-color: var(--background-color);
+    z-index: 100;
+    top: 0;
+    left: 0;
+}
+
+.students-header h1,
+.teachers-header h1,
+.payments-header h1,
+.groups-header h1 {
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    font-weight: 600;
+    color: white;
+    padding: 20px;
+    margin: 0;
+}
+
+.students-header p,
+.teachers-header p,
+.payments-header p,
+.groups-header p {
+    color: var(--text-color);
+    margin: 0;
+    padding: 0 20px;
+    font-size: 14px;
 }
 
 
@@ -747,6 +815,15 @@ body {
     height: 100vh;
     z-index: 1030;
     transition: all 0.3s ease;
+    transform: translateX(0);
+}
+
+.sidebar.open {
+    transform: translateX(0);
+}
+
+.sidebar.closed {
+    transform: translateX(-100%);
 }
 
 .sidebar-header {
@@ -879,11 +956,11 @@ body {
 
 .content {
     flex: 1;
-    padding: 24px;
+    padding: 40px;
     background: var(--background-color);
     overflow: auto;
     transition: all 0.3s ease;
-    margin-left: 0;
+    margin-left: 280px;
 }
 
 .content.sidebar-open {
@@ -894,8 +971,9 @@ body {
     margin-left: 0;
 }
 
-.hamburger-button {
-    display: flex;
+.content.login-page {
+    margin-left: 0 !important;
+    padding: 0 !important;
 }
 
 .sidebar-backdrop {
@@ -1013,8 +1091,42 @@ body {
 
 /* Enhanced Modal Styles */
 .hamburger-button {
-    margin-top: 20px;
-    margin-left: 50px;
+    display: flex;
+    position: fixed;
+    top: 50px;
+    left: 40px;
+    width: 44px;
+    height: 44px;
+    background: var(--primary-color);
+    border: none;
+    border-radius: 8px;
+    color: black;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.hamburger-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    background: #ffc500;
+}
+
+.hamburger-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.hamburger-button.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.8);
 }
 
 .side-panel-backdrop {
@@ -1623,7 +1735,7 @@ body {
 
 
     .dashboard-header {
-        margin-left: 70px;
+        margin-left: 0;
 
         width: 100%;
         height: 80px;
@@ -1637,22 +1749,20 @@ body {
 
 
     .groups-header {
-        margin-left: 70px;
-
-
+        margin-left: 0;
     }
 
 
     .students-header {
-        margin-left: 70px;
+        margin-left: 0;
     }
 
     .teachers-header {
-        margin-left: 70px;
+        margin-left: 0;
     }
 
     .payments-header {
-        margin-left: 70px;
+        margin-left: 0;
     }
 
 
@@ -1685,22 +1795,20 @@ body {
 
 
     .groups-header {
-        margin-left: 70px;
-
-
+        margin-left: 0;
     }
 
 
     .students-header {
-        margin-left: 70px;
+        margin-left: 0;
     }
 
     .teachers-header {
-        margin-left: 70px;
+        margin-left: 0;
     }
 
     .payments-header {
-        margin-left: 70px;
+        margin-left: 0;
     }
 
 
@@ -2070,6 +2178,11 @@ body {
         bottom: 0;
         background: rgba(0, 0, 0, 0.5);
         z-index: 1025;
+    }
+
+    .content {
+        margin-left: 0 !important;
+        padding: 16px;
     }
 
     .sidebar-nav {
