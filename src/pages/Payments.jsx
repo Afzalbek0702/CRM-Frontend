@@ -10,10 +10,10 @@ import {
 } from "react-icons/fa";
 import { MdAccessTime } from "react-icons/md";
 import { BsCalendar2DateFill, BsCreditCard2BackFill } from "react-icons/bs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PaymentModal from "../components/PaymentModal";
 import ActionMenu from "../components/ActionMenu";
-
+import { useDashboard } from "../hooks/useDashboard";
 export default function Payments() {
 	const { category: rawCategory } = useParams();
 	const category = rawCategory ?? "payments";
@@ -22,11 +22,19 @@ export default function Payments() {
 	const {
 		payments,
 		isLoading,
-		error,
 		createPayment,
 		updatePayment,
 		deletePayment,
 	} = usePayments();
+	const { topDebtorsQuery } = useDashboard('','','2026-02-01');
+	const [debtorsData, setDebtorsData] = useState([]);
+	useEffect(() => {
+		const fetchDebtors = async () => {
+			const {data} = await topDebtorsQuery;
+			setDebtorsData(data || []);
+		};
+		fetchDebtors();
+   }, []);
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [editingPayment, setEditingPayment] = useState(null);
@@ -68,7 +76,7 @@ export default function Payments() {
 			)}
 
 			<div className="payments-table-container">
-				{category === "payments" && (
+				{category === "income" && (
 					<div className="table-container">
 						<div className="payments-header">
 							<h1>
@@ -193,7 +201,7 @@ export default function Payments() {
 							</tr>
 						</thead>
 						<tbody>
-							{salaries?.map(s => (
+							{salaries?.map((s) => (
 								<tr key={s.id}>
 									<td>{s.teacher_name}</td>
 									<td>{s.amount?.toLocaleString()} so'm</td>
@@ -202,7 +210,7 @@ export default function Payments() {
 							))}
 						</tbody>
 					</table>
-				)}
+				)} */}
 
 				{category === "debtors" && (
 					<table>
@@ -213,7 +221,7 @@ export default function Payments() {
 							</tr>
 						</thead>
 						<tbody>
-							{debtors
+							{debtorsData
 								?.filter(d =>
 									d.student_name?.toLowerCase().includes(searchTerm.toLowerCase())
 								)
@@ -228,7 +236,7 @@ export default function Payments() {
 						</tbody>
 					</table>
 				)}
-
+            {/* 
 				{category === "expenses" && (
 					<table>
 						<thead>
@@ -239,7 +247,7 @@ export default function Payments() {
 							</tr>
 						</thead>
 						<tbody>
-							{expenses?.map(e => (
+							{expenses?.map((e) => (
 								<tr key={e.id}>
 									<td>{e.title}</td>
 									<td>{e.amount?.toLocaleString()} so'm</td>

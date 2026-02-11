@@ -7,25 +7,17 @@ import { FaArrowLeft, FaUsers } from "react-icons/fa";
 export default function StudentDetail() {
 	const { id } = useParams();
 	const navigate = useNavigate();
-	const { fetchById } = useStudents();
+	const { fetchById,loading,error } = useStudents();
 	const [student, setStudent] = useState(null);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(null);
+
 
 	useEffect(() => {
 		const loadStudent = async () => {
-			try {
 				const data = await fetchById(id);
-				setStudent(data);
-			} catch (err) {
-				setError(err.message);
-			} finally {
-				setLoading(false);
-			}
+            setStudent(data);
 		};
-
 		loadStudent();
-	}, [id, fetchById]);
+	}, [ ]);
 
 	if (loading) return <Loader />;
 	if (error) return <p>Error: {error}</p>;

@@ -10,6 +10,7 @@ import {
 	FaBirthdayCake,
 	FaUsers,
 	FaWallet,
+   FaPlus,
 } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
 import StudentModal from "../components/StudentModal.jsx";
