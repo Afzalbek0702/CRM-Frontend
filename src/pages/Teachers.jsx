@@ -2,7 +2,7 @@ import Loader from "../components/Loader";
 import { useTeachers } from "../hooks/useTeachers";
 import { useNavigate } from "react-router-dom";
 
-import { FaEllipsisV, FaChalkboardTeacher, FaPhone } from "react-icons/fa";
+import { FaEllipsisV, FaChalkboardTeacher, FaPhone, FaPlus } from "react-icons/fa";
 
 import { FaSearch } from "react-icons/fa";
 import { useState } from "react";
@@ -30,19 +30,15 @@ export default function Teachers() {
 
 	return (
 		<div className="table-container">
-			<div className="teachers-header">
-				<h1>
-					<FaChalkboardTeacher style={{ marginTop: '0px' }} /> O'qituvchilar
-				</h1>
-				<p>Barcha o'qituvchilar ro'yxati</p>
-			</div>
-
+			<h2>
+				<FaChalkboardTeacher /> O'qituvchilar
+			</h2>
 			<div className="table-actions">
 				<div className="search-box">
 					<FaSearch />
 					<input
 						type="text"
-						placeholder="O'qituvchilarni ismi bo'yicha qidirish ..."
+						placeholder="O'qituvchilarni ismi bo'yicha qidirsh ..."
 						value={searchTerm}
 						onChange={(e) => setSearchTerm(e.target.value)}
 					/>
@@ -54,7 +50,7 @@ export default function Teachers() {
 						setIsModalOpen(true);
 					}}
 				>
-					Yangi O'qituvchi
+					<FaPlus /> O'qituvchi qo'shish
 				</button>
 			</div>
 

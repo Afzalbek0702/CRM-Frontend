@@ -50,19 +50,15 @@ export default function Students() {
 	if (error) return <div>Error</div>;
 	return (
 		<div className="table-container">
-			<div className="students-header">
-				<h1>
-					<FaUserGraduate style={{ marginTop: '0px' }} /> O'quvchilar
-				</h1>
-				<p>Barcha o'quvchilar ro'yxati</p>
-			</div>
-
+			<h2>
+				<FaUserGraduate /> O'quvchilar
+			</h2>
 			<div className="table-actions">
 				<div className="search-box">
 					<FaSearch />
 					<input
 						type="text"
-						placeholder="O'quvchilarni ismi bo'yicha qidirish ..."
+						placeholder="O'quvchilarni ismi bo'yicha qidirsh ..."
 						value={searchTerm}
 						onChange={(e) => setSearchTerm(e.target.value)}
 					/>

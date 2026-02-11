@@ -14,6 +14,7 @@ import {
 	FaBook,
 	FaChalkboardTeacher,
 	FaCalendarAlt,
+	FaSearch,
 } from "react-icons/fa";
 import { HiOutlinePencilAlt } from "react-icons/hi";
 
@@ -29,6 +30,7 @@ export default function Groups() {
 	});
 	const [selectedGroup, setSelectedGroup] = useState(null);
 	const [isEditMode, setIsEditMode] = useState(false);
+	const [searchTerm, setSearchTerm] = useState("");
 	const { students } = useStudents();
 
 	const studentCountMap = students.reduce((acc, student) => {
@@ -103,15 +105,23 @@ export default function Groups() {
 	if (loading) return <Loader />;
 	return (
 		<div className="table-container">
-			<div className="groups-header">
-				<h1>
-					<FaUsers style={{ marginTop: '0px' }} /> Guruhlar
-				</h1>
-				<p>Barcha guruhlar ro'yxati</p>
+			<h2>
+				<FaUsers /> Guruhlar
+			</h2>
+			<div className="table-actions">
+				<div className="search-box">
+					<FaSearch />
+					<input
+						type="text"
+						placeholder="Guruhlarni nomi bo'yicha qidirsh ..."
+						value={searchTerm}
+						onChange={(e) => setSearchTerm(e.target.value)}
+					/>
+				</div>
+				<button className="btn1" onClick={handleCreate}>
+					<FaPlus /> Guruh yaratish
+				</button>
 			</div>
-			<button className="btn1 " onClick={handleCreate}>
-				<FaPlus /> Guruh yaratish
-			</button>
 
 			<Modal
 				isOpen={isModalOpen}
@@ -158,7 +168,11 @@ export default function Groups() {
 					</tr>
 				</thead>
 				<tbody>
-					{groupsWithCount.map((g) => (
+					{groupsWithCount
+						.filter((g) =>
+							g.name && g.name.toLowerCase().includes(searchTerm.toLowerCase())
+						)
+						.map((g) => (
 						<tr
 							key={g.id}
 							onClick={() => handleRowClick(g.id)}
