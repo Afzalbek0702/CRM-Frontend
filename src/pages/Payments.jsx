@@ -58,38 +58,28 @@ export default function Payments() {
 	}
 
 	return (
-		<div className="payments-container">
+		<div className="table-container">
 			<h2>
 				<FaMoneyBillWave /> {category}
 			</h2>
 
 			{(category === "payments" || category === "debtors") && (
-				<div className="payments-search-box">
-					<FaSearch />
-					<input
-						type="text"
-						placeholder="Search by student name..."
-						value={searchTerm}
-						onChange={(e) => setSearchTerm(e.target.value)}
-					/>
+				<div className="table-actions">
+					<div className="search-box">
+						<FaSearch />
+						<input
+							type="text"
+							placeholder="Search by student name..."
+							value={searchTerm}
+							onChange={(e) => setSearchTerm(e.target.value)}
+						/>
+					</div>
 				</div>
 			)}
 
 			<div className="payments-table-container">
 				{category === "income" && (
 					<div className="table-container">
-						<div className="table-actions">
-							<div className="search-box">
-								<FaSearch />
-								<input
-									type="text"
-									placeholder="To'lovlarni o'quvchi bo'yicha qidirish..."
-									value={searchTerm}
-									onChange={(e) => setSearchTerm(e.target.value)}
-								/>
-							</div>
-						</div>
-
 						<table>
 							<thead>
 								<tr>
