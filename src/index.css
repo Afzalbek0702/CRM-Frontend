@@ -38,12 +38,6 @@ body {
     transition: all 0.3s ease;
 }
 
-/* Sidebar ochiq bo'lganda h2 marginlari 0 */
-.content.sidebar-open .table-container h2 {
-    margin-left: 0 !important;
-    transition: all 0.3s ease;
-}
-
 .dashboard-header h1 {
     display: flex;
     align-items: center;
@@ -60,7 +54,7 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-top: 30px;
-    
+
 }
 
 .card {
@@ -283,7 +277,8 @@ body {
 .table-container {
     width: 100%;
     height: auto;
-    background-color: transparent;
+    /* height: calc(100vh - 80px); */
+    background-color: var(--background-color);
     font-family: var(--font-family);
     color: white;
     overflow-x: auto;
@@ -300,7 +295,6 @@ body {
     display: flex;
     align-items: center;
     gap: 5px;
-    transition: all 0.3s ease;
 }
 
 .table-container thead {
@@ -323,14 +317,14 @@ body {
     font-weight: 600;
     color: black;
     border-bottom: 2px solid #e9ecef;
-    font-size: 14px;
+    font-size: 0.8rem;
     font-family: var(--font-family);
 }
 
 .table-container td {
     padding: 15px;
     color: #d1d5db;
-    font-size: 14px;
+    font-size: 0.8rem;
     overflow: visible;
 }
 
@@ -542,7 +536,6 @@ body {
     height: 35px;
     margin-bottom: 30px;
     border-radius: 8px;
-    padding: 10px;
     border: none;
     box-shadow: var(--box-shadow);
     background-color: var(--primary-color);
@@ -2986,70 +2979,144 @@ option:hover {
 #studentCounter {
     color: var(--primary-color);
 }
-.sidebar-submenu{
+
+.sidebar-submenu {
     display: flex;
     flex-direction: column;
     margin-left: 33px;
 }
 
-/* Responsive Design for Tablets */
 @media (max-width: 1024px) {
-    .table-container h2 {
-        margin-left: 40px;
-        font-size: 22px;
+
+    .dashboard-cards {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
     }
-    
-    .table-container table {
-        min-width: 600px;
+
+    .dashboard-content-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
     }
-    
-    .table-container th,
-    .table-container td {
-        padding: 12px 14px;
+
+    .dashboard-today-lesson {
+        width: 100%;
+    }
+
+    .dashboard-today-lesson table {
+        width: 100%;
+        font-size: 14px;
+    }
+
+    .table-container {
+        overflow-x: auto;
+    }
+
+    .table-container {
+        overflow-x: hidden;
+    }
+
+    table {
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: collapse;
+        font-size: 0.6rem;
+    }
+
+    th,
+    td {
+        padding: 8px 6px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: middle;
+        /* ustiga chiqmasin */
+        line-height: 1.2;
+    }
+
+    .table-container table th,
+    .table-container table td {
+        font-size: 0.6rem;
+    }
+
+    /* Ustunlarni muvozanatlash */
+    th:nth-child(1),
+    td:nth-child(1) {
+        width: 16%;
+    }
+
+    th:nth-child(2),
+    td:nth-child(2) {
+        width: 12%;
+    }
+
+    th:nth-child(3),
+    td:nth-child(3) {
+        width: 14%;
+    }
+
+    th:nth-child(4),
+    td:nth-child(4) {
+        width: 14%;
+    }
+
+    th:nth-child(5),
+    td:nth-child(5) {
+        width: 14%;
+    }
+
+    th:nth-child(6),
+    td:nth-child(6) {
+        width: 20%;
+    }
+
+    th:nth-child(7),
+    td:nth-child(7) {
+        width: 10%;
+    }
+
+    .day-pill {
+        font-size: 10px;
+        padding: 2px 6px !important;
+        display: inline-block;
+    }
+
+    .teacher {
+        font-size: 11px;
+    }
+
+    .icon-button {
         font-size: 13px;
     }
-    
-    .search-box {
-        margin-left: 40px;
-        width: calc(100% - 80px);
-        max-width: 400px;
-    }
-    
-    .table-container {
-        margin-left: 0;
-        padding-left: 20px;
-        padding-right: 20px;
-    }
+
+
+
 }
+
 
 /* Responsive Design for Tablets Portrait */
 @media (max-width: 768px) {
     .table-container {
         padding: 15px 10px;
     }
-    
+
     .table-container h2 {
         margin-left: 20px;
         margin-top: 0;
         font-size: 20px;
         margin-bottom: 20px;
     }
-    
+
     .table-container table {
         min-width: 500px;
     }
-    
-    .table-container th,
-    .table-container td {
-        padding: 10px 12px;
-        font-size: 12px;
+
+    .table-container table th,
+    .table-container table td {
+        font-size: 0.5rem;
     }
-    
-    .table-container thead th {
-        font-size: 11px;
-        padding: 12px 10px;
-    }
-    
+
     .search-box {
         margin-left: 20px;
         margin-right: 20px;
@@ -3057,17 +3124,17 @@ option:hover {
         width: calc(100% - 40px);
         padding: 10px 14px;
     }
-    
+
     .search-box input {
         font-size: 14px;
     }
-    
+
     .table-actions {
         flex-direction: column;
         gap: 10px;
         align-items: flex-start;
     }
-    
+
     .table-actions button {
         width: 100%;
         justify-content: center;
@@ -3080,39 +3147,39 @@ option:hover {
         margin-left: 15px;
         font-size: 18px;
     }
-    
+
     .table-container table {
         min-width: 450px;
     }
-    
+
     .table-container th,
     .table-container td {
         padding: 8px 10px;
         font-size: 11px;
     }
-    
+
     .table-container thead th {
         font-size: 10px;
         padding: 10px 8px;
     }
-    
+
     .search-box {
         margin-left: 15px;
         margin-right: 15px;
         width: calc(100% - 30px);
         padding: 10px 12px;
     }
-    
+
     .balance-badge {
         padding: 4px 8px;
         font-size: 10px;
     }
-    
+
     .day-pill {
         padding: 4px 8px;
         font-size: 10px;
     }
-    
+
     .action-menu-btn {
         padding: 6px 8px;
         font-size: 12px;
@@ -3124,30 +3191,30 @@ option:hover {
     .table-container {
         padding: 10px 5px;
     }
-    
+
     .table-container h2 {
         margin-left: 10px;
         margin-right: 10px;
         font-size: 16px;
         gap: 8px;
     }
-    
+
     .table-container table {
         min-width: 400px;
         border-radius: 6px;
     }
-    
+
     .table-container th,
     .table-container td {
         padding: 8px;
         font-size: 10px;
     }
-    
+
     .table-container thead th {
         padding: 8px;
         font-size: 9px;
     }
-    
+
     .search-box {
         margin-left: 10px;
         margin-right: 10px;
@@ -3155,32 +3222,32 @@ option:hover {
         padding: 8px 12px;
         font-size: 13px;
     }
-    
+
     .search-box input {
         font-size: 13px;
     }
-    
+
     .balance-badge {
         padding: 3px 6px;
         font-size: 9px;
     }
-    
+
     .day-pill {
         padding: 3px 6px;
         font-size: 9px;
         margin-right: 3px;
         margin-bottom: 3px;
     }
-    
+
     .action-menu-btn {
         padding: 4px 6px;
         font-size: 10px;
     }
-    
+
     .group-link {
         font-size: 11px;
     }
-    
+
     .teacher {
         font-size: 10px;
     }
@@ -3192,38 +3259,38 @@ option:hover {
         font-size: 14px;
         margin-left: 8px;
     }
-    
+
     .table-container table {
         min-width: 350px;
     }
-    
+
     .table-container th,
     .table-container td {
         padding: 6px;
         font-size: 9px;
     }
-    
+
     .table-container thead th {
         padding: 6px;
         font-size: 8px;
     }
-    
+
     .search-box {
         margin-left: 8px;
         margin-right: 8px;
         width: calc(100% - 16px);
         padding: 6px 10px;
     }
-    
+
     .search-box input {
         font-size: 12px;
     }
-    
+
     .balance-badge {
         padding: 2px 5px;
         font-size: 8px;
     }
-    
+
     .day-pill {
         padding: 2px 5px;
         font-size: 8px;
@@ -3236,6 +3303,7 @@ option:hover {
         opacity: 0;
         transform: translateY(10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -3246,21 +3314,65 @@ option:hover {
     animation: fadeIn 0.4s ease forwards;
 }
 
-.table-container tbody tr:nth-child(1) { animation-delay: 0.05s; }
-.table-container tbody tr:nth-child(2) { animation-delay: 0.1s; }
-.table-container tbody tr:nth-child(3) { animation-delay: 0.15s; }
-.table-container tbody tr:nth-child(4) { animation-delay: 0.2s; }
-.table-container tbody tr:nth-child(5) { animation-delay: 0.25s; }
-.table-container tbody tr:nth-child(6) { animation-delay: 0.3s; }
-.table-container tbody tr:nth-child(7) { animation-delay: 0.35s; }
-.table-container tbody tr:nth-child(8) { animation-delay: 0.4s; }
-.table-container tbody tr:nth-child(9) { animation-delay: 0.45s; }
-.table-container tbody tr:nth-child(10) { animation-delay: 0.5s; }
-.table-container tbody tr:nth-child(11) { animation-delay: 0.55s; }
-.table-container tbody tr:nth-child(12) { animation-delay: 0.6s; }
-.table-container tbody tr:nth-child(13) { animation-delay: 0.65s; }
-.table-container tbody tr:nth-child(14) { animation-delay: 0.7s; }
-.table-container tbody tr:nth-child(15) { animation-delay: 0.75s; }
+.table-container tbody tr:nth-child(1) {
+    animation-delay: 0.05s;
+}
+
+.table-container tbody tr:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.table-container tbody tr:nth-child(3) {
+    animation-delay: 0.15s;
+}
+
+.table-container tbody tr:nth-child(4) {
+    animation-delay: 0.2s;
+}
+
+.table-container tbody tr:nth-child(5) {
+    animation-delay: 0.25s;
+}
+
+.table-container tbody tr:nth-child(6) {
+    animation-delay: 0.3s;
+}
+
+.table-container tbody tr:nth-child(7) {
+    animation-delay: 0.35s;
+}
+
+.table-container tbody tr:nth-child(8) {
+    animation-delay: 0.4s;
+}
+
+.table-container tbody tr:nth-child(9) {
+    animation-delay: 0.45s;
+}
+
+.table-container tbody tr:nth-child(10) {
+    animation-delay: 0.5s;
+}
+
+.table-container tbody tr:nth-child(11) {
+    animation-delay: 0.55s;
+}
+
+.table-container tbody tr:nth-child(12) {
+    animation-delay: 0.6s;
+}
+
+.table-container tbody tr:nth-child(13) {
+    animation-delay: 0.65s;
+}
+
+.table-container tbody tr:nth-child(14) {
+    animation-delay: 0.7s;
+}
+
+.table-container tbody tr:nth-child(15) {
+    animation-delay: 0.75s;
+}
 
 /* Scrollbar Styling */
 .table-container::-webkit-scrollbar {
