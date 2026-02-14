@@ -2986,6 +2986,45 @@ option:hover {
     margin-left: 33px;
 }
 
+@media (min-width: 1024px) and (max-width: 1440px) {
+
+  /* Scrollni oldini olamiz */
+  body {
+    overflow-x: hidden;
+  }
+
+  .dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 0.9fr); 
+    /* 1fr emas — 0.9fr qildik, kichrayadi */
+
+    justify-content: center; 
+    gap: 24px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .dashboard-cards a {  
+    display: block;
+    min-width: 0;
+  }
+
+  .dashboard-content-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .dashboard-cards * {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+
+}
+
 @media (max-width: 1024px) {
 
     .dashboard-cards {
@@ -3090,9 +3129,11 @@ option:hover {
         font-size: 13px;
     }
 
-
+    
 
 }
+
+
 
 
 /* Responsive Design for Tablets Portrait */
