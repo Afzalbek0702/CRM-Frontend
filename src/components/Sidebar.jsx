@@ -31,9 +31,12 @@ export default function Sidebar({ isExpanded = true, onToggle = () => { } }) {
 					className="sidebar-toggle-button"
 					onClick={onToggle}
 					aria-label="Toggle sidebar"
-					title={isExpanded ? "Yopish" : "Ochish"}
-				>
-					{isExpanded ? <FaChevronLeft /> : <FaChevronRight />}
+					title={isExpanded ? "Yopish" : "Ochish"}>
+					<FaChevronLeft
+						style={{
+							transform: isExpanded ? "rotate(0deg)" : "rotate(180deg)",
+							transition: "transform 0.3s ease"
+						}} />
 					{isExpanded && <span>Yopish</span>}
 				</button>
 			</div>

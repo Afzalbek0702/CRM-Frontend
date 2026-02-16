@@ -7,6 +7,8 @@ import { FaUsers, FaClock, FaBook, FaChalkboardTeacher, FaPhone, FaExclamationTr
 import { MdDashboard } from "react-icons/md";
 
 export default function Dashboard() {
+	
+	const navigate = useNavigate();
 	const { monthlyIncomeQuery, topDebtorsQuery, todayLessons, absentStudentsQuery } = useDashboard(
 		new Date().toISOString().slice(0, 7) + "-01",
 		new Date().toISOString().slice(0, 7) + "-31",
@@ -20,12 +22,12 @@ export default function Dashboard() {
 	const data = monthlyIncomeQuery.data;
 	const debtorsData = topDebtorsQuery.data;
 	const todayLessonsData = todayLessons.data;
-   const absentStudentsData = absentStudentsQuery.data;
-   console.log(absentStudentsData);
+	const absentStudentsData = absentStudentsQuery.data;
+
+	console.log(todayLessonsData?.[0]);
    
 	const { students } = useStudents();
 	const { groups } = useGroups();
-	const navigate = useNavigate();
 	if (!localStorage.getItem("token")) return navigate("/login");
 	return (
 		<>
@@ -140,7 +142,11 @@ export default function Dashboard() {
 								</thead>
 								<tbody>
 									{todayLessonsData?.map((lesson) => (
-										<tr key={lesson.id}>
+										<tr
+											key={lesson.id}
+											onClick={() => handleRowClick(lesson.id)}
+											style={{ cursor: "pointer" }}
+										>
 											<td>{lesson.group_name}</td>
 											<td>{lesson.course_type}</td>
 											<td>{lesson.teacher_name}</td>
