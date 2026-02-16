@@ -568,10 +568,6 @@ body {
     margin-bottom: 30px;
     background-color: white;
 }
-
-
-
-
 .btn2 {
     background: none;
     border: none;
@@ -814,71 +810,96 @@ body {
     left: 0;
     height: 100vh;
     z-index: 1030;
-    transition: all 0.3s ease;
+    transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     transform: translateX(0);
 }
 
-.sidebar.open {
-    transform: translateX(0);
+.sidebar.expanded {
+    width: 280px;
 }
 
-.sidebar.closed {
-    transform: translateX(-100%);
+.sidebar.collapsed {
+    width: 80px;
 }
 
 .sidebar-header {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     position: relative;
-    padding: 16px;
+    padding: 16px 12px;
     padding-top: 30px;
     border-bottom: 1px solid var(--text-color);
     margin-bottom: 23px;
     background: transparent;
+    gap: 12px;
+    min-height: 62px;
 }
 
+.sidebar-toggle-button {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 10px 12px;
+    color: grey;
+    font-size: 16px;
+    font-family: var(--font-family);
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
 
+.sidebar-toggle-button:hover {
+    background-color: #1f2937;
+    transform: translateY(-2px);
+    box-shadow: var(--box-shadow);
+    transition: all 0.3s ease;
+    color: white;
+}
+
+.sidebar-toggle-button svg {
+    font-size: 20px;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+}
+
+.sidebar.collapsed .sidebar-toggle-button svg {
+    transform: rotate(180deg);
+}
+
+.sidebar-toggle-button span {
+    font-size: 16px;
+    color: grey;
+    transition: opacity 0.2s ease;
+}
+
+.sidebar.collapsed .sidebar-toggle-button span {
+    display: none;
+}
 
 .sidebar .logo {
     display: flex;
     align-items: center;
     font-family: var(--font-family);
     flex: 1;
+    gap: 10px;
 }
 
 .sidebar .logo-img {
     width: 30px;
     height: 30px;
-    margin-right: 10px;
+    flex-shrink: 0;
 }
 
 .sidebar h2 {
     margin: 0;
     font-size: 16px;
-}
-
-.sidebar-close-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: none;
-    border: none;
-    color: var(--primary-color);
-    font-size: 20px;
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 6px;
-    transition: all 0.3s ease;
-    width: 40px;
-    height: 40px;
-    flex-shrink: 0;
-}
-
-.sidebar-close-button:hover {
-    background: rgba(255, 208, 12, 0.1);
-    color: white;
-    transform: rotate(90deg);
+    white-space: nowrap;
 }
 
 .sidebar-nav {
@@ -890,7 +911,8 @@ body {
     overflow-y: auto;
 }
 
-.sidebar a {
+.sidebar a,
+.sidebar-link-parent {
     display: flex;
     align-items: center;
     padding: 10px 12px;
@@ -899,11 +921,21 @@ body {
     font-family: var(--font-family);
     text-decoration: none;
     border-radius: 2px;
+    transition: all 0.3s ease;
+    gap: 12px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.sidebar a span,
+.sidebar-link-parent span {
+    white-space: nowrap;
+    transition: opacity 0.2s ease;
 }
 
 .sidebar .sidebar-icon {
-    margin-right: 12px;
     font-size: 20px;
+    flex-shrink: 0;
 }
 
 .sidebar a.active {
@@ -917,7 +949,6 @@ body {
     background-color: var(--primary-color);
     transform: translateY(-2px);
     box-shadow: var(--box-shadow);
-    transition: all 0.3s ease;
     color: black;
 }
 
@@ -925,32 +956,92 @@ body {
     background-color: #1f2937;
     transform: translateY(-2px);
     box-shadow: var(--box-shadow);
-    transition: all 0.3s ease;
     color: white;
 }
 
 .sidebar-link-parent {
-    display: flex;
-    align-items: center;
-    padding: 10px 12px;
-    color: grey;
-    font-size: 16px;
-    font-family: var(--font-family);
-    text-decoration: none;
-    border-radius: 2px;
     background: none;
     border: none;
     cursor: pointer;
+    justify-content: space-between;
+    position: relative;
 }
 
 .sidebar-link-parent:hover {
     background-color: #1f2937;
     transform: translateY(-2px);
     box-shadow: var(--box-shadow);
-    transition: all 0.3s ease;
     color: white;
 }
 
+.sidebar-submenu {
+    display: flex;
+    flex-direction: column;
+    margin-left: 33px;
+    animation: slideDown 0.3s ease;
+    position: relative;
+}
+
+.sidebar.collapsed .sidebar-parent {
+    position: relative;
+}
+
+.sidebar.collapsed .sidebar-submenu {
+    position: absolute;
+    left: 100%;
+    top: 0;
+    margin-left: 0;
+    background: var(--background-color);
+    border: 1px solid #2c230e;
+    border-radius: 4px;
+    min-width: 200px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    flex-direction: column;
+    z-index: 1040;
+}
+
+.sidebar-submenu a {
+    padding: 8px 12px;
+    font-size: 14px;
+    color: grey;
+}
+
+.sidebar-submenu a:hover {
+    background-color: rgba(255, 208, 12, 0.1);
+    color: white;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 500px;
+    }
+}
+
+.arrow {
+    transition: transform 0.3s ease;
+    font-size: 12px;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.arrow.open {
+    transform: rotate(180deg);
+}
+
+.sidebar.collapsed .sidebar-submenu {
+    display: none;
+}
+
+.sidebar.collapsed .sidebar-link-parent {
+    justify-content: center;
+}
 
 
 
@@ -959,16 +1050,18 @@ body {
     padding: 40px;
     background: var(--background-color);
     overflow: auto;
-    transition: all 0.3s ease;
+    transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     margin-left: 280px;
 }
 
-.content.sidebar-open {
+.content.sidebar-expanded {
     margin-left: 280px;
+    padding-top: 40px;
 }
 
-.content.sidebar-closed {
-    margin-left: 0;
+.content.sidebar-collapsed {
+    margin-left: 80px;
+    padding-top: 40px;
 }
 
 .content.login-page {
@@ -976,8 +1069,17 @@ body {
     padding: 0 !important;
 }
 
+/* Remove all hamburger button styles */
+.hamburger-button {
+    display: none !important;
+}
+
+.hamburger-button.hidden {
+    display: none !important;
+}
+
 .sidebar-backdrop {
-    display: none;
+    display: none !important;
 }
 
 .add-group-button {

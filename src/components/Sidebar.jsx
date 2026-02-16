@@ -1,24 +1,19 @@
-import { NavLink, useLocation } from "react-router-dom";
+﻿import { NavLink, useLocation } from "react-router-dom";
 import {
 	FaTachometerAlt,
 	FaUsers,
 	FaUserGraduate,
 	FaChalkboardTeacher,
 	FaMoneyBillWave,
-	FaTimes,
 	FaThList,
 	FaArchive,
-	FaWallet
+	FaWallet,
+	FaChevronRight,
+	FaChevronLeft,
 } from "react-icons/fa";
 import { useState, useEffect } from "react";
 
-export default function Sidebar({ isOpen = true, onClose = () => { } }) {
-	const handleNavClick = () => {
-		if (window.innerWidth <= 768) {
-			onClose();
-		}
-	};
-
+export default function Sidebar({ isExpanded = true, onToggle = () => { } }) {
 	const location = useLocation();
 	const [archiveOpen, setArchiveOpen] = useState(false);
 	const [paymentsOpen, setPaymentsOpen] = useState(false);
@@ -29,100 +24,111 @@ export default function Sidebar({ isOpen = true, onClose = () => { } }) {
 		}
 	}, [location.pathname]);
 
-
-
-
 	return (
-		<aside className={`sidebar ${isOpen ? "open" : "closed"}`}>
+		<aside className={`sidebar ${isExpanded ? "expanded" : "collapsed"}`}>
 			<div className="sidebar-header">
-				<NavLink to="/dashboard" id="logo_a_href">
-					<div className="logo">
-						<img src="/logo.jpg" alt="" className="logo-img" />
-						<h2>Data Space</h2>
-					</div>
+				<button
+					className="sidebar-toggle-button"
+					onClick={onToggle}
+					aria-label="Toggle sidebar"
+					title={isExpanded ? "Yopish" : "Ochish"}
+				>
+					{isExpanded ? <FaChevronLeft /> : <FaChevronRight />}
+					{isExpanded && <span>Yopish</span>}
+				</button>
+			</div>
+
+			<nav className="sidebar-nav">
+				<NavLink to="/dashboard" className={({ isActive }) => isActive ? 'active' : ''}>
+					<FaTachometerAlt className="sidebar-icon" />
+					{isExpanded && <span>Dashboard</span>}
 				</NavLink>
-				<button
-					className="sidebar-close-button"
-					onClick={onClose}
-					aria-label="Close sidebar">
+				<NavLink to="/leads" className={({ isActive }) => isActive ? 'active' : ''}>
+					<FaThList className="sidebar-icon" />
+					{isExpanded && <span>Lidlar</span>}
+				</NavLink>
+				<NavLink to="/groups" className={({ isActive }) => isActive ? 'active' : ''}>
+					<FaUsers className="sidebar-icon" />
+					{isExpanded && <span>Groups</span>}
+				</NavLink>
+				<NavLink to="/students" className={({ isActive }) => isActive ? 'active' : ''}>
+					<FaUserGraduate className="sidebar-icon" />
+					{isExpanded && <span>Students</span>}
+				</NavLink>
+				<NavLink to="/teachers" className={({ isActive }) => isActive ? 'active' : ''}>
+					<FaChalkboardTeacher className="sidebar-icon" />
+					{isExpanded && <span>Teachers</span>}
+				</NavLink>
 
-					<FaTimes />
-				</button>
-			</div>
-			<NavLink to="/dashboard">
-				<FaTachometerAlt className="sidebar-icon" /> Dashboard
-			</NavLink>
-			<NavLink to="/leads">
-				<FaThList className="sidebar-icon" /> Lidlar
-			</NavLink>
-			<NavLink to="/groups">
-				<FaUsers className="sidebar-icon" /> Groups
-			</NavLink>
-			<NavLink to="/students">
-				<FaUserGraduate className="sidebar-icon" /> Students
-			</NavLink>
-			<NavLink to="/teachers">
-				<FaChalkboardTeacher className="sidebar-icon" /> Teachers
-			</NavLink>
-			<div className="sidebar-parent">
-				<button
-					className="sidebar-link-parent"
-					onClick={() => setPaymentsOpen(!paymentsOpen)}
-				>
-					<FaWallet className="sidebar-icon" />
-					Moliya
-					<span className={`arrow ${paymentsOpen ? "open" : ""}`}>▾</span>
-				</button>
+				<div className="sidebar-parent">
+					<button
+						className={`sidebar-link-parent ${paymentsOpen ? 'open' : ''}`}
+						onClick={() => setPaymentsOpen(!paymentsOpen)}
+						title={isExpanded ? "" : "Moliya"}
+					>
+						<FaWallet className="sidebar-icon" />
+						{isExpanded && (
+							<>
+								<span>Moliya</span>
+								<span className={`arrow ${paymentsOpen ? "open" : ""}`}>▾</span>
+							</>
+						)}
+					</button>
 
-				{paymentsOpen && (
-					<div className="sidebar-submenu">
-						<NavLink to="/payments/income" onClick={handleNavClick}>
-							To'lovlar
-						</NavLink>
-						<NavLink to="/payments/salary" onClick={handleNavClick}>
-							Ish haqi
-						</NavLink>
-						<NavLink to="/payments/debtors" onClick={handleNavClick}>
-							Qarzdorlar
-						</NavLink>
-						<NavLink to="/payments/expenses" onClick={handleNavClick}>
-							Xarajatlar
-						</NavLink>
-					</div>
-				)}
-			</div>
+					{paymentsOpen && (
+						<div className="sidebar-submenu">
+							<NavLink to="/payments/income">
+								To'lovlar
+							</NavLink>
+							<NavLink to="/payments/salary">
+								Ish haqi
+							</NavLink>
+							<NavLink to="/payments/debtors">
+								Qarzdorlar
+							</NavLink>
+							<NavLink to="/payments/expenses">
+								Xarajatlar
+							</NavLink>
+						</div>
+					)}
+				</div>
 
-			<div className="sidebar-parent">
-				<button
-					className="sidebar-link-parent"
-					onClick={() => setArchiveOpen(!archiveOpen)}
-				>
-					<FaArchive className="sidebar-icon" />
-					Archive
-					<span className={`arrow ${archiveOpen ? "open" : ""}`}>▾</span>
-				</button>
+				<div className="sidebar-parent">
+					<button
+						className={`sidebar-link-parent ${archiveOpen ? 'open' : ''}`}
+						onClick={() => setArchiveOpen(!archiveOpen)}
+						title={isExpanded ? "" : "Archive"}
+					>
+						<FaArchive className="sidebar-icon" />
+						{isExpanded && (
+							<>
+								<span>Archive</span>
+								<span className={`arrow ${archiveOpen ? "open" : ""}`}>▾</span>
+							</>
+						)}
+					</button>
 
-				{archiveOpen && (
-					<div className="sidebar-submenu">
-						<NavLink to="/archive/leads" onClick={handleNavClick}>
-							Lidlar
-						</NavLink>
-						<NavLink to="/archive/students" onClick={handleNavClick}>
-							Talabalar
-						</NavLink>
-						<NavLink to="/archive/teachers" onClick={handleNavClick}>
-							O‘qituvchilar
-						</NavLink>
-						<NavLink to="/archive/groups" onClick={handleNavClick}>
-							Guruhlar
-						</NavLink>
-						<NavLink to="/archive/payments" onClick={handleNavClick}>
-							Moliya
-						</NavLink>
-					</div>
-				)}
-			</div>
-
+					{archiveOpen && (
+						<div className="sidebar-submenu">
+							<NavLink to="/archive/leads">
+								Lidlar
+							</NavLink>
+							<NavLink to="/archive/students">
+								Talabalar
+							</NavLink>
+							<NavLink to="/archive/teachers">
+								O'qituvchilar
+							</NavLink>
+							<NavLink to="/archive/groups">
+								Guruhlar
+							</NavLink>
+							<NavLink to="/archive/payments">
+								Moliya
+							</NavLink>
+						</div>
+					)}
+				</div>
+			</nav>
 		</aside>
 	);
 }

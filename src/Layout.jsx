@@ -6,7 +6,6 @@ import {
 } from "react-router-dom";
 import { useState } from "react";
 import Sidebar from "./components/Sidebar";
-import { FaBars } from "react-icons/fa";
 
 import Dashboard from "./pages/Dashboard";
 import Groups from "./pages/Groups";
@@ -24,32 +23,18 @@ export default function Layout() {
 	const location = useLocation();
 	const token = localStorage.getItem("token");
 	const hideSidebar = location.pathname === "/login";
-	const [sidebarOpen, setSidebarOpen] = useState(true);
+	const [sidebarExpanded, setSidebarExpanded] = useState(true);
 
 	return (
 		<>
 			<div className="app-layout">
 				{!hideSidebar && (
-					<>
-						<button
-							className={`hamburger-button ${sidebarOpen ? 'hidden' : ''}`}
-							onClick={() => setSidebarOpen(!sidebarOpen)}
-							aria-label="Toggle sidebar">
-							<FaBars />
-						</button>
-						<Sidebar
-							isOpen={sidebarOpen}
-							onClose={() => setSidebarOpen(false)}
-						/>
-						{sidebarOpen && (
-							<div
-								className="sidebar-backdrop"
-								onClick={() => setSidebarOpen(false)}
-							/>
-						)}
-					</>
+					<Sidebar
+						isExpanded={sidebarExpanded}
+						onToggle={() => setSidebarExpanded(!sidebarExpanded)}
+					/>
 				)}
-				<main className={`content ${sidebarOpen ? 'sidebar-open' : 'sidebar-closed'} ${location.pathname === '/login' ? 'login-page' : ''}`}>
+				<main className={`content ${sidebarExpanded ? 'sidebar-expanded' : 'sidebar-collapsed'} ${location.pathname === '/login' ? 'login-page' : ''}`}>
 					<Routes>
 						<Route path="/login" element={<Login />} />
 						<Route
