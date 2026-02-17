@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import { useState } from "react";
 import Sidebar from "./components/Sidebar";
+import { FaBars, FaTimes } from "react-icons/fa";
 
 import Dashboard from "./pages/Dashboard";
 import Groups from "./pages/Groups";
@@ -24,16 +25,42 @@ export default function Layout() {
 	const token = localStorage.getItem("token");
 	const hideSidebar = location.pathname === "/login";
 	const [sidebarExpanded, setSidebarExpanded] = useState(true);
+	const [mobileOpen, setMobileOpen] = useState(false);
 
 	return (
-		<>
-			<div className="app-layout">
-				{!hideSidebar && (
-					<Sidebar
-						isExpanded={sidebarExpanded}
-						onToggle={() => setSidebarExpanded(!sidebarExpanded)}
-					/>
-				)}
+			<>
+				<div className="app-layout">
+					{!hideSidebar && (
+						<>
+							<button
+								className="hamburger-button"
+								onClick={() => setMobileOpen(!mobileOpen)}
+								aria-label={mobileOpen ? "Close sidebar" : "Open sidebar"}
+							>
+								{mobileOpen ? <FaTimes /> : <FaBars />}
+							</button>
+								<Sidebar
+									isExpanded={mobileOpen ? true : sidebarExpanded}
+									onToggle={() => setSidebarExpanded(!sidebarExpanded)}
+									mobileOpen={mobileOpen}
+									onClose={() => setMobileOpen(false)}
+								/>
+								{mobileOpen && (
+									<div
+										style={{
+											position: 'fixed',
+											top: 0,
+											left: 0,
+											right: 0,
+											bottom: 0,
+											background: 'rgba(0,0,0,0.45)',
+											zIndex: 1040
+										}}
+									onClick={() => setMobileOpen(false)}
+								/>
+								)}
+						</>
+					)}
 				<main className={`content ${sidebarExpanded ? 'sidebar-expanded' : 'sidebar-collapsed'} ${location.pathname === '/login' ? 'login-page' : ''}`}>
 					<Routes>
 						<Route path="/login" element={<Login />} />
