@@ -23,7 +23,6 @@ body {
 }
 
 .dashboard-header {
-    margin-left: 60px;
     transition: all 0.3s ease;
 }
 
@@ -33,8 +32,21 @@ body {
 .content.sidebar-open .teachers-header,
 .content.sidebar-open .payments-header,
 .content.sidebar-open .groups-header,
-.content.sidebar-open .leads-header {
+.content.sidebar-open .leads-header,
+.content.sidebar-open .archive-header {
     margin-left: 0 !important;
+    transition: all 0.3s ease;
+}
+
+/* Sidebar yopiq bo'lganda header marginlari 60px */
+.content.sidebar-closed .dashboard-header,
+.content.sidebar-closed .students-header,
+.content.sidebar-closed .teachers-header,
+.content.sidebar-closed .payments-header,
+.content.sidebar-closed .groups-header,
+.content.sidebar-closed .leads-header,
+.content.sidebar-closed .archive-header {
+    margin-left: 60px !important;
     transition: all 0.3s ease;
 }
 
@@ -286,7 +298,6 @@ body {
 }
 
 .table-container h2 {
-    margin-left: 60px;
     margin-top: 10px;
     font-size: 24px;
     font-weight: 600;
@@ -396,6 +407,8 @@ body {
     position: absolute;
     top: 100%;
     right: 0;
+
+    
     background: white;
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -844,11 +857,42 @@ body {
     min-height: 62px;
 }
 
-.sidebar.collapsed .sidebar-header {
-    padding: 16px 12px;
-    padding-top: 30px;
-    justify-content: center;
-    min-height: 62px;
+.sidebar-header h5 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-family);
+    color: white;
+    transition: color 0s ease;
+}
+
+.sidebar.expanded .sidebar-header h5 {
+    animation: textColorChange 0.9s ease-in-out forwards;
+}
+
+@keyframes textColorChange {
+    0% {
+        color: black;
+    }
+    100% {
+        color: white;
+    }
+}
+
+.sidebar.expanded .sidebar-header h5 {
+    display: flex;
+}
+
+.sidebar.expanded .sidebar-header h5 span {
+    display: inline;
+}
+
+.sidebar.collapsed .sidebar-header h5 {
+    display: none;
+}
+
+.sidebar.collapsed .sidebar-header h5 span {
+    display: none;
 }
 
 .sidebar-toggle-button {
@@ -961,6 +1005,12 @@ body {
     box-sizing: border-box;
 }
 
+.sidebar.collapsed a,
+.sidebar.collapsed .sidebar-link-parent {
+    padding: 15px 12px;
+    justify-content: center;
+}
+
 .sidebar a span,
 .sidebar-link-parent span {
     white-space: nowrap;
@@ -970,6 +1020,10 @@ body {
 .sidebar .sidebar-icon {
     font-size: 16px;
     flex-shrink: 0;
+}
+
+.sidebar.collapsed .sidebar-icon {
+    font-size: 24px;
 }
 
 .sidebar a.active {
@@ -999,6 +1053,7 @@ body {
     cursor: pointer;
     justify-content: space-between;
     position: relative;
+
 }
 
 .sidebar-link-parent:hover {
@@ -1177,7 +1232,7 @@ body {
 }
 
 .content.sidebar-collapsed {
-    margin-left: 80px;
+    margin-left: 60px;
     padding-top: 40px;
 }
 

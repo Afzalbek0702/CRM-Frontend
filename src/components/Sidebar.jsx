@@ -50,6 +50,7 @@ export default function Sidebar({ isExpanded = true, onToggle = () => { }, mobil
 	return (
 		<aside className={`sidebar ${isExpanded ? "expanded" : "collapsed"} ${mobileOpen ? 'mobile-open open' : ''}`}>
 			<div className="sidebar-header">
+				<h5><img src="../public/logo.jpg" alt="" width={21} height={21} /> Data space CRM</h5>
 				<button
 					className="sidebar-toggle-button"
 					onClick={onToggle}
