@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import { useState } from "react";
 import Sidebar from "./components/Sidebar";
-import { FaBars, FaTimes } from "react-icons/fa";
+import Header from "./components/Header";
 
 import Dashboard from "./pages/Dashboard";
 import Groups from "./pages/Groups";
@@ -28,40 +28,39 @@ export default function Layout() {
 	const [mobileOpen, setMobileOpen] = useState(false);
 
 	return (
-			<>
-				<div className="app-layout">
-					{!hideSidebar && (
-						<>
-							<button
-								className="hamburger-button"
-								onClick={() => setMobileOpen(!mobileOpen)}
-								aria-label={mobileOpen ? "Close sidebar" : "Open sidebar"}
-							>
-								{mobileOpen ? <FaTimes /> : <FaBars />}
-							</button>
-								<Sidebar
-									isExpanded={mobileOpen ? true : sidebarExpanded}
-									onToggle={() => setSidebarExpanded(!sidebarExpanded)}
-									mobileOpen={mobileOpen}
-									onClose={() => setMobileOpen(false)}
-								/>
-								{mobileOpen && (
-									<div
-										style={{
-											position: 'fixed',
-											top: 0,
-											left: 0,
-											right: 0,
-											bottom: 0,
-											background: 'rgba(0,0,0,0.45)',
-											zIndex: 1040
-										}}
-									onClick={() => setMobileOpen(false)}
-								/>
-								)}
-						</>
-					)}
-				<main className={`content ${sidebarExpanded ? 'sidebar-expanded' : 'sidebar-collapsed'} ${location.pathname === '/login' ? 'login-page' : ''}`}>
+		<>
+			<div className="app-layout">
+				{!hideSidebar && (
+					<>
+						<Header 
+							isExpanded={sidebarExpanded}
+							onToggle={() => {
+								if (window.innerWidth < 640) {
+									setMobileOpen(!mobileOpen);
+								} else {
+									setSidebarExpanded(!sidebarExpanded);
+								}
+							}}
+						/>
+						<Sidebar
+							isExpanded={mobileOpen ? true : sidebarExpanded}
+							onToggle={() => setSidebarExpanded(!sidebarExpanded)}
+							mobileOpen={mobileOpen}
+							onClose={() => setMobileOpen(false)}
+						/>
+						{mobileOpen && (
+							<div
+								className="sidebar-backdrop"
+								onClick={() => setMobileOpen(false)}
+							/>
+						)}
+					</>
+				)}
+				<main
+					className={`content ${
+						sidebarExpanded ? "sidebar-expanded" : "sidebar-collapsed"
+					} ${location.pathname === "/login" ? "login-page" : ""}`}
+				>
 					<Routes>
 						<Route path="/login" element={<Login />} />
 						<Route
@@ -83,8 +82,7 @@ export default function Layout() {
 						<Route path="/students/:id" element={<StudentDetail />} />
 						<Route path="/teachers" element={<Teachers />} />
 						<Route path="/teachers/:id" element={<TeacherDetail />} />
-						<Route path="/payments" element={<Payments />} />
-						<Route path="/payments/:category" element={<Payments />} />
+						<Route path="/payments/:page" element={<Payments />} />
 					</Routes>
 				</main>
 			</div>

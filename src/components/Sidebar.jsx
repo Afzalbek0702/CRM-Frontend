@@ -9,7 +9,6 @@ import {
 	FaArchive,
 	FaWallet,
 	FaChevronRight,
-	FaChevronLeft,
 } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 
@@ -49,22 +48,6 @@ export default function Sidebar({ isExpanded = true, onToggle = () => { }, mobil
 
 	return (
 		<aside className={`sidebar ${isExpanded ? "expanded" : "collapsed"} ${mobileOpen ? 'mobile-open open' : ''}`}>
-			<div className="sidebar-header">
-				<h5><img src="../public/logo.jpg" alt="" width={21} height={21} /> Data space CRM</h5>
-				<button
-					className="sidebar-toggle-button"
-					onClick={onToggle}
-					aria-label="Toggle sidebar"
-					title={isExpanded ? "Yopish" : "Ochish"}>
-					<FaChevronLeft
-						style={{
-							transform: isExpanded ? "rotate(0deg)" : "rotate(180deg)",
-							transition: "transform 0.3s ease"
-						}} />
-					{isExpanded && <span>Yopish</span>}
-				</button>
-			</div>
-
 			<nav className="sidebar-nav">
 				<NavLink to="/dashboard" className={({ isActive }) => isActive ? 'active' : ''}>
 					<FaTachometerAlt className="sidebar-icon" />
