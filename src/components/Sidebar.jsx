@@ -49,23 +49,23 @@ export default function Sidebar({ isExpanded = true, onToggle = () => { }, mobil
 	return (
 		<aside className={`sidebar ${isExpanded ? "expanded" : "collapsed"} ${mobileOpen ? 'mobile-open open' : ''}`}>
 			<nav className="sidebar-nav">
-				<NavLink to="/dashboard" className={({ isActive }) => isActive ? 'active' : ''}>
+				<NavLink to="/dashboard" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
 					<FaTachometerAlt className="sidebar-icon" />
 					{isExpanded && <span>Dashboard</span>}
 				</NavLink>
-				<NavLink to="/leads" className={({ isActive }) => isActive ? 'active' : ''}>
+				<NavLink to="/leads" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
 					<FaThList className="sidebar-icon" />
 					{isExpanded && <span>Lidlar</span>}
 				</NavLink>
-				<NavLink to="/groups" className={({ isActive }) => isActive ? 'active' : ''}>
+				<NavLink to="/groups" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
 					<FaUsers className="sidebar-icon" />
 					{isExpanded && <span>Groups</span>}
 				</NavLink>
-				<NavLink to="/students" className={({ isActive }) => isActive ? 'active' : ''}>
+				<NavLink to="/students" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
 					<FaUserGraduate className="sidebar-icon" />
 					{isExpanded && <span>Students</span>}
 				</NavLink>
-				<NavLink to="/teachers" className={({ isActive }) => isActive ? 'active' : ''}>
+				<NavLink to="/teachers" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
 					<FaChalkboardTeacher className="sidebar-icon" />
 					{isExpanded && <span>Teachers</span>}
 				</NavLink>
@@ -96,16 +96,16 @@ export default function Sidebar({ isExpanded = true, onToggle = () => { }, mobil
 
 				{((isExpanded && paymentsOpen) || (!isExpanded && hoveredMenu === 'payments')) && (
 					<div className={`sidebar-submenu ${!isExpanded ? 'collapsed-hover-submenu' : ''}`}>
-						<NavLink to="/payments/income" className={({ isActive }) => isActive ? 'active' : ''}>
+						<NavLink to="/payments/income" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
 							To'lovlar
 						</NavLink>
-						<NavLink to="/payments/salary" className={({ isActive }) => isActive ? 'active' : ''}>
+						<NavLink to="/payments/salary" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
 							Ish haqi
 						</NavLink>
-						<NavLink to="/payments/debtors" className={({ isActive }) => isActive ? 'active' : ''}>
+						<NavLink to="/payments/debtors" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
 							Qarzdorlar
 						</NavLink>
-						<NavLink to="/payments/expenses" className={({ isActive }) => isActive ? 'active' : ''}>
+						<NavLink to="/payments/expenses" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
 							Xarajatlar
 						</NavLink>
 					</div>
@@ -138,19 +138,19 @@ export default function Sidebar({ isExpanded = true, onToggle = () => { }, mobil
 
 				{((isExpanded && archiveOpen) || (!isExpanded && hoveredMenu === 'archive')) && (
 					<div className={`sidebar-submenu ${!isExpanded ? 'collapsed-hover-submenu' : ''}`}>
-						<NavLink to="/archive/leads" className={({ isActive }) => isActive ? 'active' : ''}>
+						<NavLink to="/archive/leads" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
 							Lidlar
 						</NavLink>
-						<NavLink to="/archive/students" className={({ isActive }) => isActive ? 'active' : ''}>
+						<NavLink to="/archive/students" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
 							Talabalar
 						</NavLink>
-						<NavLink to="/archive/teachers" className={({ isActive }) => isActive ? 'active' : ''}>
+						<NavLink to="/archive/teachers" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
 							O'qituvchilar
 						</NavLink>
-						<NavLink to="/archive/groups" className={({ isActive }) => isActive ? 'active' : ''}>
+						<NavLink to="/archive/groups" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
 							Guruhlar
 						</NavLink>
-						<NavLink to="/archive/payments" className={({ isActive }) => isActive ? 'active' : ''}>
+						<NavLink to="/archive/payments" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
 							Moliya
 						</NavLink>
 					</div>
