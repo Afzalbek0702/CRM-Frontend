@@ -1385,7 +1385,6 @@ body {
     color: white;
 }
 
-/* COLLAPSED STATE COMPREHENSIVE FIXES */
 .sidebar.collapsed a,
 .sidebar.collapsed .sidebar-link-parent {
     padding: 12px;
@@ -1433,7 +1432,6 @@ body {
     top: 0;
 }
 
-/* Collapsed state hover submenu */
 .sidebar.collapsed .sidebar-submenu.collapsed-hover-submenu {
     position: absolute;
     left: calc(100% + 8px);
@@ -2192,7 +2190,6 @@ body {
     }
 
     .sidebar {
-        position: fixed;
         top: 0;
         left: 0;
         height: 100vh;
@@ -2200,19 +2197,11 @@ body {
         z-index: 9999;
         border-radius: 0;
         box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
-        transform: translateX(-100%);
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: width 0.3s ease, transform 0.3s ease;
         overflow-y: auto;
         overflow-x: hidden;
     }
 
-    .sidebar.open {
-        transform: translateX(0);
-    }
-
-    .sidebar.closed {
-        transform: translateX(-100%);
-    }
 
     .sidebar-close-button {
         display: flex;
@@ -2761,9 +2750,6 @@ body {
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .sidebar.open {
-        transform: translateX(0);
-    }
 
     .sidebar-close-button {
         display: flex;
@@ -3952,7 +3938,6 @@ option:hover {
         transform: translateY(0);
     }
 }
-
 .table-container tbody tr {
     animation: fadeIn 0.4s ease forwards;
 }
@@ -4108,7 +4093,6 @@ option:hover {
 
     /* Sidebar: off-canvas by default on narrow screens but visible with .open/.mobile-open */
     .sidebar {
-        position: fixed !important;
         top: 0 !important;
         left: 0 !important;
         height: 100vh !important;
@@ -4116,20 +4100,13 @@ option:hover {
         z-index: 1030 !important;
         border-radius: 0 !important;
         box-shadow: 2px 0 8px rgba(0, 0, 0, .3) !important;
-        transform: translateX(-100%) !important;
-        transition: transform .28s cubic-bezier(.4, 0, .2, 1) !important;
         overflow-y: auto !important;
         overflow-x: hidden !important;
     }
 
-    .sidebar.open,
-    .sidebar.mobile-open {
-        transform: translateX(0) !important;
-    }
+    
 
-    .sidebar.closed {
-        transform: translateX(-100%) !important;
-    }
+    
 
     .sidebar-backdrop {
         display: block !important;
@@ -4213,12 +4190,11 @@ option:hover {
 
     /* Keep sidebar full height on landscape small screens */
     .sidebar {
-        top: 0 !important;
-        height: 100vh !important;
-        max-height: none !important;
+        top: 30px;
+        height: calc(100vh - 30px) ;
+        max-height: none ;
+        transition: width 0.3s ease, transform 0.3s ease;
     }
-}
 
-/* i think I found the problem. it's not about CSS, it's in the logic in sidebar toggle button.
- somehow, it's not working in 640px-768px range. and, you can't close it there either.
- and, if I bring it up to higher query, like 800px, it can't be collapsed now.  */
+
+}

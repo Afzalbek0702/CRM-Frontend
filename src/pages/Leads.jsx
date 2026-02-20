@@ -16,6 +16,7 @@ export default function Leads() {
 	});
 	const [addToGroupLead, setAddToGroupLead] = useState(null);
 	const [addToGroupOpen, setAddToGroupOpen] = useState(false);
+	
 
 	const handleActionMenu = (e, lead) => {
 		e.stopPropagation();
