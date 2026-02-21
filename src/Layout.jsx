@@ -34,6 +34,7 @@ export default function Layout() {
 					<>
 						<Header 
 							isExpanded={sidebarExpanded}
+							mobileOpen={mobileOpen}
 							onToggle={() => {
 								if (window.innerWidth < 640) {
 									setMobileOpen(!mobileOpen);

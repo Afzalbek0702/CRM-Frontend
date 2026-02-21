@@ -6,7 +6,7 @@ import { useGroups } from "../services/group/useGroups";
 import { useTeachers } from "../services/teacher/useTeachers";
 import { useLeads } from "../services/lead/useLeads";
 
-export default function Header({ isExpanded, onToggle }) {
+export default function Header({ isExpanded, onToggle, mobileOpen }) {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [searchResults, setSearchResults] = useState({
 		students: [],
@@ -110,8 +110,8 @@ export default function Header({ isExpanded, onToggle }) {
 				>
 					<FaChevronLeft
 						style={{
-							transform: isExpanded ? "rotate(0deg)" : "rotate(180deg)",
-							transition: "transform 0.3s ease",
+							transform: (isExpanded || mobileOpen) ? "rotate(0deg)" : "rotate(180deg)",
+							transition: "transform 0.28s ease",
 						}}
 					/>
 				</button>
