@@ -1447,12 +1447,11 @@ body {
     z-index: 1050;
     pointer-events: auto;
     animation: slideInRight 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-    padding: 0;
+    padding: 4%;
     max-height: 100vh;
+    height: 100%;
     overflow-y: auto;
 }
-
-/* Prevent submenu from showing in expanded mode when using collapsed styles */
 .sidebar.expanded .sidebar-submenu.collapsed-hover-submenu {
     display: none !important;
 }
@@ -1502,14 +1501,11 @@ body {
     font-weight: 600;
 }
 
-/* Parent container - prevent overflow issues */
 .sidebar-parent {
-    position: relative;
     width: 100%;
 }
 
 .sidebar.collapsed .sidebar-parent {
-    position: relative;
     width: 100%;
     margin: 0;
     padding: 0;
@@ -4147,7 +4143,7 @@ option:hover {
         padding: 20px !important;
         min-height: 120px !important;
     }
-
+.collapsed-hover-submenu
     /* Tables and search */
     .table-container {
         overflow-x: auto !important;

@@ -83,7 +83,11 @@ export default function Layout() {
 						<Route path="/students/:id" element={<StudentDetail />} />
 						<Route path="/teachers" element={<Teachers />} />
 						<Route path="/teachers/:id" element={<TeacherDetail />} />
-						<Route path="/payments/:page" element={<Payments />} />
+
+						{/* o'zgartirvormelar yoki ochirvormelar!! */}
+						<Route path="/payments" element={<Payments />} />
+						<Route path="/payments/:category" element={<Payments />} />
+						{/*  */}
 					</Routes>
 				</main>
 			</div>
