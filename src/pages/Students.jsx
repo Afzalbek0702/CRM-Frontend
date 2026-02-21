@@ -1,7 +1,7 @@
 import Loader from "../components/Loader.jsx";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useStudents } from "../hooks/useStudents.js";
+import { useStudents } from "../services/student/useStudents.js";
 
 import {
 	FaEllipsisV,
@@ -10,7 +10,7 @@ import {
 	FaBirthdayCake,
 	FaUsers,
 	FaWallet,
-   FaPlus,
+	FaPlus,
 } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
 import StudentModal from "../components/StudentModal.jsx";
@@ -120,7 +120,7 @@ export default function Students() {
 									style={{ cursor: "pointer" }}
 								>
 									<td>{s.full_name}</td>
-									<td>{s.groups[0] || "No Group"}</td>
+									<td>{s.groups?.length > 0 ? s.groups[0] : "No Group"}</td>
 									<td
 										onClick={(e) => {
 											e.stopPropagation();

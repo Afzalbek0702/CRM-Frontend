@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
 import Modal from "../components/Modal";
 import ActionMenu from "../components/ActionMenu";
-import { useGroups } from "../hooks/useGroups.js";
-import { useStudents } from "../hooks/useStudents.js";
+import { useGroups } from "../services/group/useGroups.js";
+import { useStudents } from "../services/student/useStudents.js";
 import {
 	FaEllipsisV,
 	FaPlus,

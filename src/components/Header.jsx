@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { FaSearch, FaTimes, FaChevronLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { useStudents } from "../hooks/useStudents";
-import { useGroups } from "../hooks/useGroups";
-import { useTeachers } from "../hooks/useTeachers";
-import { useLeads } from "../hooks/useLeads";
+import { useStudents } from "../services/student/useStudents";
+import { useGroups } from "../services/group/useGroups";
+import { useTeachers } from "../services/teacher/useTeachers";
+import { useLeads } from "../services/lead/useLeads";
 
 export default function Header({ isExpanded, onToggle }) {
 	const [searchTerm, setSearchTerm] = useState("");

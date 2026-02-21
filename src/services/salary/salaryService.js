@@ -1,0 +1,9 @@
+import api from "../api/apiClient";
+import { endpoints } from "../api/endpoints";
+export const salaryService = {
+	get: () => api.get(endpoints.SALARY).then((r) => r.data),
+	create: (data) => api.post(endpoints.SALARY, data).then((r) => r.data),
+	update: (id, data) =>
+		api.post(`${endpoints.SALARY}/${id}`, data).then((r) => r.data),
+	delete: (id) => api.delete(`${endpoints.SALARY}/${id}`).then((r) => r.data),
+};

@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import Loader from "../components/Loader.jsx";
-import { useArchive } from "../hooks/useArchive.js";
+import { useArchive } from "../services/archive/useArchive.js";
 import { FaSearch } from "react-icons/fa";
 import { useState } from "react";
 
@@ -14,21 +14,32 @@ export default function Archive() {
     archivedGroups = [],
     useAllArchivedStudents,
     useAllArchivedLeads,
-    useAllArchivedPayments
+     useAllArchivedPayments,
+    useAllArchivedTeachers
+    
   } = useArchive();
 
   const { data: students = [], isLoading: loadingStudents, error: errorStudents } = useAllArchivedStudents();
   const { data: leads = [], isLoading: loadingLeads, error: errorLeads } = useAllArchivedLeads();
   const { data: payments = [], isLoading: loadingPayments, error: errorPayments } = useAllArchivedPayments();
+  const { data: teachers = [], isLoading: loadingTeachers, error: errorTeachers } = useAllArchivedTeachers();
 
-  if ((category === "students" && loadingStudents) ||
-    (category === "leads" && loadingLeads) ||
-    (category === "payments" && loadingPayments)) return <Loader />;
-  if ((category === "students" && errorStudents) ||
-    (category === "leads" && errorLeads) ||
-    (category === "payments" && errorPayments)) return <div className="archive-error">Error loading {category}</div>;
+  if (
+		(category === "students" && loadingStudents) ||
+		(category === "leads" && loadingLeads) ||
+		(category === "payments" && loadingPayments) ||
+		(category === "teachers" && loadingTeachers)
+	)
+		return <Loader />;
+  if (
+		(category === "students" && errorStudents) ||
+		(category === "leads" && errorLeads) ||
+		(category === "payments" && errorPayments) ||
+		(category === "teachers" && errorTeachers)
+	)
+		return <div className="archive-error">Error loading {category}</div>;
 
-  if (!["students", "leads", "payments", "groups"].includes(category)) {
+  if (!["students", "leads", "payments", "groups", "teachers"].includes(category)) {
     return <div className="archive-error">Invalid category</div>;
   }
 
@@ -80,6 +91,25 @@ export default function Archive() {
           </table>
         )}
 
+        {category === "teachers" && (
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Source</th>
+              </tr>
+            </thead>
+            <tbody>
+              {teachers?.map(t => (
+                <tr key={t.id}>
+                  <td>{t.full_name}</td>
+                  <td>{t.phone}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
         {category === "leads" && (
           <table>
             <thead>

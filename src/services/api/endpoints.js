@@ -1,0 +1,18 @@
+export const endpoints = {
+   LOGIN: "auth/login",
+   REGISTER:"auth/register",
+	ATTENDANCE: "api/attendance",
+	STUDENTS: "api/students",
+	GROUPS: "api/groups",
+	TEACHERS: "api/teachers",
+	PAYMENTS: "api/payments",
+	DASHBOARD: "api/dashboard",
+	ENROLLMENTS: "api/enrollments",
+	LEADS: "api/leads",
+	ARCHIVE: "api/archive",
+	SALARY: "api/salary",
+	EXPENSE: "api/expense",
+	WORKER: "api/worker",
+	ROOM: "api/room",
+	COURSE: "api/course",
+};

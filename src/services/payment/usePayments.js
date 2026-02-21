@@ -1,7 +1,7 @@
 import toast from "react-hot-toast";
-import {paymentService} from "../services/payment-service.js";
+import { paymentService } from "./paymentService.js";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-const PAYMENTS_KEY = "payments";
+const PAYMENTS_KEY = ["payments"];
 export const usePayments = () => {
 	const queryClient = useQueryClient();
 	const {
@@ -9,17 +9,15 @@ export const usePayments = () => {
 		isLoading,
 		error,
 	} = useQuery({
-		queryKey: [PAYMENTS_KEY],
-		queryFn: () => paymentService.getAll().then((res) => res.data),
-		staleTime: 5 * 60 * 1000,
-		refetchOnWindowFocus: false,
+		queryKey: PAYMENTS_KEY,
+		queryFn: () => paymentService.getAll(),
 	});
 
 	const createPaymentMutation = useMutation({
-		mutationFn: (data) => paymentService.create(data).then((res) => res.data),
+		mutationFn: (data) => paymentService.create(data),
 		onSuccess: () => {
 			toast.success("To'lov muvaffaqiyatli qo'shildi");
-			queryClient.invalidateQueries({ queryKey: [PAYMENTS_KEY] });
+			queryClient.invalidateQueries({ queryKey: PAYMENTS_KEY });
 		},
 		onError: (error) => {
 			toast.error("To'lov qo'shishda xatolik yuz berdi");
@@ -28,11 +26,10 @@ export const usePayments = () => {
 	});
 
 	const updatePaymentMutation = useMutation({
-		mutationFn: ({ id, data }) =>
-			paymentService.update(id, data).then((res) => res.data),
+		mutationFn: ({ id, data }) => paymentService.update(id, data),
 		onSuccess: () => {
 			toast.success("To'lov muvaffaqiyatli yangilandi");
-			queryClient.invalidateQueries({ queryKey: [PAYMENTS_KEY] });
+			queryClient.invalidateQueries({ queryKey: PAYMENTS_KEY });
 		},
 		onError: (error) => {
 			toast.error("To'lov yangilashda xatolik yuz berdi");
@@ -44,7 +41,7 @@ export const usePayments = () => {
 		mutationFn: (id) => paymentService.delete(id),
 		onSuccess: () => {
 			toast.success("To'lov muvaffaqiyatli o'chirildi");
-			queryClient.invalidateQueries({ queryKey: [PAYMENTS_KEY] });
+			queryClient.invalidateQueries({ queryKey: PAYMENTS_KEY });
 		},
 		onError: (error) => {
 			toast.error("To'lovni o'chirishda xatolik yuz berdi");
@@ -57,7 +54,8 @@ export const usePayments = () => {
 		isLoading,
 		error,
 		createPayment: createPaymentMutation.mutateAsync,
-		updatePayment: (id, data) => updatePaymentMutation.mutateAsync({ id, data }),
+		updatePayment: (id, data) =>
+			updatePaymentMutation.mutateAsync({ id, data }),
 		deletePayment: deletePaymentMutation.mutateAsync,
 	};
 };

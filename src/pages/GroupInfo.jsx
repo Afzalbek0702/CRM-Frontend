@@ -1,22 +1,21 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
-import { useGroups } from "../hooks/useGroups";
-import { useAttendance } from "../hooks/useAttendance";
-import { useStudents } from "../hooks/useStudents";
-import { usePayments } from "../hooks/usePayments";
-import {useTeachers} from "../hooks/useTeachers";
+import { useGroups } from "../services/group/useGroups";
+import { useAttendance } from "../services/attendance/useAttendance";
+import { useStudents } from "../services/student/useStudents";
+import { usePayments } from "../services/payment/usePayments";
+import { useTeachers } from "../services/teacher/useTeachers";
 import PaymentModal from "../components/PaymentModal";
 import { FaArrowLeft, FaEllipsisV, FaSearch } from "react-icons/fa";
-
 
 export default function GuruhlarInfo() {
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const { loading, error, fetchById, groups } = useGroups();
 	const { transferToGroup, removeFromGroup } = useStudents();
-   const { createPayment } = usePayments();
-   const { teachers} = useTeachers();
+	const { createPayment } = usePayments();
+	const { teachers } = useTeachers();
 	const [group, setGroup] = useState(null);
 	const [students, setStudents] = useState([]);
 	const [searchTerm, setSearchTerm] = useState("");
@@ -29,19 +28,18 @@ export default function GuruhlarInfo() {
 	const [showTransferModal, setShowTransferModal] = useState(false);
 	const [showPaymentModal, setShowPaymentModal] = useState(false);
 	const [selectedStudentForPayment, setSelectedStudentForPayment] =
-      useState(null);
-   const [month, setMonth] = useState('')
+		useState(null);
+	const [month, setMonth] = useState("");
 	const { attendance, setAttendance } = useAttendance({
 		group_id: id,
-		month: month + '-01' || new Date().toISOString().slice(0, 7) + '-01',
+		month: month + "-01" || new Date().toISOString().slice(0, 7) + "-01",
 	});
-	console.log(month);
 
 	useEffect(() => {
 		fetchById(id).then((data) => {
 			setGroup(data);
 			setStudents(data.students || []);
-         setMonth(new Date().toISOString().slice(0, 7))
+			setMonth(new Date().toISOString().slice(0, 7));
 		});
 	}, []);
 
@@ -222,7 +220,8 @@ export default function GuruhlarInfo() {
 									O'qituvchi
 								</p>
 								<p style={{ color: "white", fontWeight: "600" }}>
-									{teachers.find(t => t.id === group.teacher_id)?.full_name || 'Noma\'lum'}
+									{teachers.find((t) => t.id === group.teacher_id)?.full_name ||
+										"Noma'lum"}
 								</p>
 							</div>
 							<div style={{ gridColumn: "1 / -1" }}>
@@ -376,11 +375,15 @@ export default function GuruhlarInfo() {
 						}}
 					>
 						<h3 style={{ color: "white", marginBottom: "15px" }}>Davomat</h3>
-						<input type="month" value={month} onChange={(e) => setMonth(e.target.value)} />
+						<input
+							type="month"
+							value={month}
+							onChange={(e) => setMonth(e.target.value)}
+						/>
 					</div>
 					{attendance.length === 0 ? (
 						<p style={{ color: "var(--text-secondary)" }}>
-                     Davomat ma'lumoti mavjud emas
+							Davomat ma'lumoti mavjud emas
 						</p>
 					) : (
 						<div className="attendance-scroll">

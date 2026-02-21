@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Loader from "../components/Loader";
-import { useTeachers } from "../hooks/useTeachers";
+import { useTeachers } from "../services/teacher/useTeachers";
 import { FaArrowLeft, FaUsers } from "react-icons/fa";
 
 export default function TeacherDetail() {

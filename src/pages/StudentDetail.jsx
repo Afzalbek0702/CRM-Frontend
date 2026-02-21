@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Loader from "../components/Loader";
-import { useStudents } from "../hooks/useStudents";
+import { useStudents } from "../services/student/useStudents";
 import { FaArrowLeft, FaUsers } from "react-icons/fa";
 
 export default function StudentDetail() {
@@ -9,7 +9,6 @@ export default function StudentDetail() {
 	const navigate = useNavigate();
 	const { fetchById,loading,error } = useStudents();
 	const [student, setStudent] = useState(null);
-
 
 	useEffect(() => {
 		const loadStudent = async () => {

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { FaUsers, FaBook, FaDollarSign, FaClock, FaCalendarAlt, FaChalkboardTeacher, FaTimes, FaSave, FaPlus } from "react-icons/fa";
-import {useTeachers} from '../hooks/useTeachers'
+import {useTeachers} from '../services/teacher/useTeachers'
 export default function Modal({ isOpen, onClose, onSubmit, title, initialData }) {
     const [formData, setFormData] = useState({
         name: "",

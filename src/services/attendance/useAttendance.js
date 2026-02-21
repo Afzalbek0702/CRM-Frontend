@@ -1,25 +1,23 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { attendanceService } from "../services/attendance-service.js";
+import { attendanceService } from "./attendanceService.js";
 
 export const useAttendance = ({ group_id, month }) => {
 	const queryClient = useQueryClient();
 
 	// 1. Davomat ro'yxatini olish
 	const attendanceQuery = useQuery({
-		queryKey: ["attendance",group_id,month],
-		queryFn: () =>
-			attendanceService.getAttendance(group_id, month).then((res) => res.data),
-		staleTime: 5 * 60 * 1000,
-		refetchOnWindowFocus: false,
+		queryKey: ["attendance", group_id, month],
+		queryFn: () => attendanceService.getAttendance(group_id, month),
 	});
 
 	// 2. Yangi davomat yozuvi qo'shish
 	const setAttendance = useMutation({
-		mutationFn: (data) =>
-			attendanceService.setAttendance(data).then((res) => res.data),
+		mutationFn: (data) => attendanceService.setAttendance(data),
 		onSuccess: () => {
 			// Keshni yangilash — davomat ro'yxati qayta yuklash
-			queryClient.invalidateQueries({ queryKey: ["attendance", group_id, month] });
+			queryClient.invalidateQueries({
+				queryKey: ["attendance", group_id, month],
+			});
 		},
 	});
 

@@ -1,8 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { studentService } from "../services/student-service.js";
+import { studentService } from "./studentService.js";
 import toast from "react-hot-toast";
 
-const STUDENTS_QUERY_KEY = "students";
+const STUDENTS_QUERY_KEY = ["students"];
 
 export const useStudents = () => {
 	const queryClient = useQueryClient();
@@ -13,10 +13,8 @@ export const useStudents = () => {
 		error,
 		refetch: fetchAll,
 	} = useQuery({
-		queryKey: [STUDENTS_QUERY_KEY],
-		queryFn: () => studentService.getAll().then((res) => res.data),
-		staleTime: 5 * 60 * 1000, // 5 daqiqa cache
-		refetchOnWindowFocus: false,
+		queryKey: STUDENTS_QUERY_KEY,
+		queryFn: () => studentService.getAll(),
 	});
 
 	// 2. Bitta talabani ID bo'yicha olish
@@ -27,13 +25,13 @@ export const useStudents = () => {
 
 	// 3. Yangi talaba qo'shish
 	const createStudentMutation = useMutation({
-		mutationFn: (data) => studentService.create(data).then((res) => res.data),
+		mutationFn: (data) => studentService.create(data),
 		onMutate: async (newStudent) => {
 			// Don't show toast here - wait for onSuccess
-			await queryClient.cancelQueries({ queryKey: [STUDENTS_QUERY_KEY] });
-			const previousStudents = queryClient.getQueryData([STUDENTS_QUERY_KEY]);
+			await queryClient.cancelQueries({ queryKey: STUDENTS_QUERY_KEY });
+			const previousStudents = queryClient.getQueryData(STUDENTS_QUERY_KEY);
 
-			queryClient.setQueryData([STUDENTS_QUERY_KEY], (old) => [
+			queryClient.setQueryData(STUDENTS_QUERY_KEY, (old) => [
 				...(old || []),
 				{ ...newStudent, id: Date.now() },
 			]);
@@ -41,25 +39,29 @@ export const useStudents = () => {
 			return { previousStudents };
 		},
 		onSuccess: () => {
-			toast.success("Talaba muvaffaqiyatli qo'shildi");  // ← Show only on success
-			queryClient.invalidateQueries({ queryKey: [STUDENTS_QUERY_KEY] });
+			toast.success("Talaba muvaffaqiyatli qo'shildi"); // ← Show only on success
+			queryClient.invalidateQueries({ queryKey: STUDENTS_QUERY_KEY });
 		},
 		onError: (err, newStudent, context) => {
 			toast.error("Talaba qo'shishda xatolik yuz berdi");
-			queryClient.setQueryData([STUDENTS_QUERY_KEY], context.previousStudents);
+			console.error(err.response?.data);
+			queryClient.setQueryData(STUDENTS_QUERY_KEY, context.previousStudents);
 		},
 		onSettled: () => {
-			queryClient.invalidateQueries({ queryKey: [STUDENTS_QUERY_KEY] });
+			queryClient.invalidateQueries({ queryKey: STUDENTS_QUERY_KEY });
 		},
 	});
 
 	// 4. Talabani tahrirlash
 	const updateStudentMutation = useMutation({
-		mutationFn: ({ id, data }) =>
-			studentService.update(id, data).then((res) => res.data),
-		onSuccess: () => {
+		mutationFn: ({ id, data }) => studentService.update(id, data),
+		onSuccess: (updatedStudent) => {
 			toast.success("Talaba muvaffaqiyatli yangilandi");
-			queryClient.invalidateQueries({ queryKey: [STUDENTS_QUERY_KEY] });
+			queryClient.setQueryData(STUDENTS_QUERY_KEY, (old) => {
+				return old?.map((student) =>
+					student.id === updatedStudent.id ? updatedStudent : student,
+				);
+			});
 		},
 		onError: (error) => {
 			toast.error("Talaba yangilashda xatolik yuz berdi");
@@ -69,11 +71,10 @@ export const useStudents = () => {
 
 	// 5. Talaba statusini yangilash
 	const updateStatusMutation = useMutation({
-		mutationFn: ({ id, status }) =>
-			studentService.updateStatus(id, status).then((res) => res.data),
+		mutationFn: ({ id, status }) => studentService.updateStatus(id, status),
 		onSuccess: () => {
 			toast.success("Talaba statusi muvaffaqiyatli yangilandi");
-			queryClient.invalidateQueries({ queryKey: [STUDENTS_QUERY_KEY] });
+			queryClient.invalidateQueries({ queryKey: STUDENTS_QUERY_KEY });
 		},
 		onError: (error) => {
 			toast.error("Talaba statusini yangilashda xatolik yuz berdi");
@@ -84,24 +85,24 @@ export const useStudents = () => {
 	// 6. Talabani o'chirish
 	const deleteStudentMutation = useMutation({
 		mutationFn: (id) => studentService.delete(id),
-		onMutate: async (id) => {
-			toast.success("Talaba muvaffaqiyatli o'chirildi")
-			await queryClient.cancelQueries({ queryKey: [STUDENTS_QUERY_KEY] });
-			const previousStudents = queryClient.getQueryData([STUDENTS_QUERY_KEY]);
+		onMutate: (id) => {
+			toast.success("Talaba muvaffaqiyatli o'chirildi");
+			queryClient.cancelQueries({ queryKey: STUDENTS_QUERY_KEY });
+			const previousStudents = queryClient.getQueryData(STUDENTS_QUERY_KEY);
 
-			queryClient.setQueryData([STUDENTS_QUERY_KEY], (old) =>
+			queryClient.setQueryData(STUDENTS_QUERY_KEY, (old) =>
 				(old || []).filter((student) => student.id !== id),
 			);
 
 			return { previousStudents };
 		},
 		onError: (err, id, context) => {
-			toast.error("Talaba o'chirishda xatolik yuz berdi")
-			console.log(err);
-			queryClient.setQueryData([STUDENTS_QUERY_KEY], context.previousStudents);
+			toast.error("Talaba o'chirishda xatolik yuz berdi");
+			console.log(err.response?.data);
+			queryClient.setQueryData(STUDENTS_QUERY_KEY, context.previousStudents);
 		},
 		onSettled: () => {
-			queryClient.invalidateQueries({ queryKey: [STUDENTS_QUERY_KEY] });
+			queryClient.invalidateQueries({ queryKey: STUDENTS_QUERY_KEY });
 		},
 	});
 
@@ -111,7 +112,7 @@ export const useStudents = () => {
 			studentService.addToGroup(studentId, groupId),
 		onSuccess: () => {
 			toast.success("Talaba guruhga muvaffaqiyatli qo'shildi");
-			queryClient.invalidateQueries({ queryKey: [STUDENTS_QUERY_KEY] });
+			queryClient.invalidateQueries({ queryKey: STUDENTS_QUERY_KEY });
 		},
 		onError: (error) => {
 			toast.error("Talaba guruhga qo'shishda xatolik yuz berdi");
@@ -122,28 +123,28 @@ export const useStudents = () => {
 	// Remove from group
 	const removeFromGroupMutation = useMutation({
 		mutationFn: ({ studentId, groupId }) =>
-			studentService.removeFromGroup(studentId, groupId).then((res) => res.data),
+			studentService.removeFromGroup(studentId, groupId),
 		onSuccess: () => {
-			toast.success("Talaba guruhdan muvaffaqiyatli olib tashlandi")
-			queryClient.invalidateQueries({ queryKey: [STUDENTS_QUERY_KEY] });
+			toast.success("Talaba guruhdan muvaffaqiyatli olib tashlandi");
+			queryClient.invalidateQueries({ queryKey: STUDENTS_QUERY_KEY });
 		},
 		onError: (error) => {
-			toast.error("Talaba guruhdan olib tashlashda xatolik yuz berdi")
-			console.error("Remove from group error:", error);
+			toast.error("Talaba guruhdan olib tashlashda xatolik yuz berdi");
+			console.error(error.response?.data);
 		},
 	});
 
 	// Transfer to another group
 	const transferToGroupMutation = useMutation({
 		mutationFn: ({ studentId, toGroupId }) =>
-			studentService.transferToGroup(studentId, toGroupId).then((res) => res.data),
+			studentService.transferToGroup(studentId, toGroupId),
 		onSuccess: () => {
-			toast.success("Talaba muvaffaqiyatli boshqa guruhga ko'chirildi")
-			queryClient.invalidateQueries({ queryKey: [STUDENTS_QUERY_KEY] });
+			toast.success("Talaba muvaffaqiyatli boshqa guruhga ko'chirildi");
+			queryClient.invalidateQueries({ queryKey: STUDENTS_QUERY_KEY });
 		},
 		onError: (error) => {
-			toast.error("Talabani boshqa guruhga ko'chirishda xatolik yuz berdi")
-			console.error("Transfer error:", error);
+			toast.error("Talabani boshqa guruhga ko'chirishda xatolik yuz berdi");
+			console.error(error.response?.data);
 		},
 	});
 
@@ -159,8 +160,10 @@ export const useStudents = () => {
 		updateStatus: (id, status) =>
 			updateStatusMutation.mutateAsync({ id, status }),
 		deleteStudent: deleteStudentMutation.mutateAsync,
-		addToGroup: (studentId, groupId) => addToGroupMutation.mutateAsync({ studentId, groupId }),
-		removeFromGroup: (studentId, groupId) => removeFromGroupMutation.mutateAsync({ studentId, groupId }),
+		addToGroup: (studentId, groupId) =>
+			addToGroupMutation.mutateAsync({ studentId, groupId }),
+		removeFromGroup: (studentId, groupId) =>
+			removeFromGroupMutation.mutateAsync({ studentId, groupId }),
 		transferToGroup: (studentId, toGroupId) =>
 			transferToGroupMutation.mutateAsync({ studentId, toGroupId }),
 	};

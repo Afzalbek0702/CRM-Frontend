@@ -1,5 +1,5 @@
 import Loader from "../components/Loader";
-import { useTeachers } from "../hooks/useTeachers";
+import { useTeachers } from "../services/teacher/useTeachers";
 import { useNavigate } from "react-router-dom";
 
 import { FaEllipsisV, FaChalkboardTeacher, FaPhone, FaPlus } from "react-icons/fa";

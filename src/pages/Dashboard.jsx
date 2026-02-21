@@ -1,7 +1,7 @@
-import { useDashboard } from "../hooks/useDashboard";
+import { useDashboard } from "../services/dashboard/useDashboard.js";
 import StatsCards from "../components/Statscards";
-import { useStudents } from "../hooks/useStudents.js";
-import { useGroups } from "../hooks/useGroups.js";
+import { useStudents } from "../services/student/useStudents.js";
+import { useGroups } from "../services/group/useGroups.js";
 import { useNavigate, NavLink } from "react-router-dom";
 import { FaUsers, FaClock, FaBook, FaChalkboardTeacher, FaPhone, FaExclamationTriangle } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
@@ -9,62 +9,68 @@ import { MdDashboard } from "react-icons/md";
 export default function Dashboard() {
 	
 	const navigate = useNavigate();
-	const { monthlyIncomeQuery, topDebtorsQuery, todayLessons, absentStudentsQuery } = useDashboard(
-		new Date().toISOString().slice(0, 7) + "-01",
-		new Date().toISOString().slice(0, 7) + "-31",
-		new Date().toISOString().slice(0, 7) + "-01",
-	);
+	const {absentStudents,monthlyIncome,todayLessons,topDebtors,isLoading,error } = useDashboard();
 
 	const handleRowClick = (groupId) => {
 		navigate(`/groups/${groupId}`);
 	};
 
-	const data = monthlyIncomeQuery.data;
-	const debtorsData = topDebtorsQuery.data;
-	const todayLessonsData = todayLessons.data;
-	const absentStudentsData = absentStudentsQuery.data;
-
-	console.log(todayLessonsData?.[0]);
    
 	const { students } = useStudents();
 	const { groups } = useGroups();
-	if (!localStorage.getItem("token")) return navigate("/login");
+   if (!localStorage.getItem("token")) return navigate("/login");
+
 	return (
 		<>
 			<div className="dashboard-header">
 				<h1>
-					<MdDashboard style={{ marginTop: '0px' }} /> Dashboard
+					<MdDashboard style={{ marginTop: "0px" }} /> Dashboard
 				</h1>
 				<p>Xush kelibsiz {"Admin"}</p>
 			</div>
 			<div className="dashboard-cards">
 				<NavLink to="/payments">
 					<StatsCards
-						data={data ? data[0]?.total_income : ""}
-						type={"Oylik Tushum"} />
+						data={monthlyIncome ? monthlyIncome.total_income : ""}
+						type={"Oylik Tushum"}
+					/>
 				</NavLink>
 
 				<NavLink to="/dashboard">
-					<StatsCards className="statcards" data={debtorsData?.length} type={"Qarzdor"} />
+					<StatsCards
+						className="statcards"
+						data={topDebtors?.length}
+						type={"Qarzdor"}
+					/>
 				</NavLink>
 
 				<NavLink to="/students">
-					<StatsCards className="statcards" data={students?.length} type={"O'quvchi"} />
+					<StatsCards
+						className="statcards"
+						data={students?.length}
+						type={"O'quvchi"}
+					/>
 				</NavLink>
 
 				<NavLink to="/groups">
-					<StatsCards className="statcards" data={groups?.length} type={"Guruh"} />
+					<StatsCards
+						className="statcards"
+						data={groups?.length}
+						type={"Guruh"}
+					/>
 				</NavLink>
 			</div>
 			<div className="dashboard-content-wrapper">
 				<div className="dashboard-today-lesson absent-students">
-					<h2><FaExclamationTriangle /> Bugun kelmagan o'quvchilar</h2>
+					<h2>
+						<FaExclamationTriangle /> Bugun kelmagan o'quvchilar
+					</h2>
 					<div className="table-container">
-						{absentStudentsQuery.isLoading ? (
+						{isLoading ? (
 							<p>Yuklanmoqda...</p>
-						) : absentStudentsQuery.isError ? (
+						) : error ? (
 							<p>Xatolik yuz berdi</p>
-						) : absentStudentsData && absentStudentsData.length > 0 ? (
+						) : absentStudents && absentStudents.length > 0 ? (
 							<table>
 								<thead>
 									<tr>
@@ -80,7 +86,7 @@ export default function Dashboard() {
 									</tr>
 								</thead>
 								<tbody>
-									{absentStudentsData.map((student) => (
+									{absentStudents.map((student) => (
 										<tr
 											key={student.student_id}
 											onClick={() => handleRowClick(student.group_id)}
@@ -118,9 +124,9 @@ export default function Dashboard() {
 				<div className="dashboard-today-lesson today-lessons">
 					<h2>Bugungi darslar</h2>
 					<div className="table-container">
-						{todayLessons.isLoading ? (
+						{isLoading ? (
 							<p>Yuklanmoqda...</p>
-						) : todayLessons.isError ? (
+						) : error ? (
 							<p>Xatolik yuz berdi</p>
 						) : (
 							<table style={{ maxWidth: "600px" }}>
@@ -141,7 +147,7 @@ export default function Dashboard() {
 									</tr>
 								</thead>
 								<tbody>
-									{todayLessonsData?.map((lesson) => (
+									{todayLessons?.map((lesson) => (
 										<tr
 											key={lesson.id}
 											onClick={() => handleRowClick(lesson.id)}

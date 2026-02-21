@@ -1,5 +1,5 @@
 import Loader from "../components/Loader";
-import { useLeads } from "../hooks/useLeads";
+import { useLeads } from "../services/lead/useLeads";
 import { useNavigate } from "react-router-dom";
 import { FaEllipsisV, FaThList, FaPlus, FaSearch, FaPhone } from "react-icons/fa";
 import { useState } from "react";

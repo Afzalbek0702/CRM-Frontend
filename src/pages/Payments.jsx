@@ -1,5 +1,5 @@
 import Loader from "../components/Loader";
-import { usePayments } from "../hooks/usePayments";
+import { usePayments } from "../services/payment/usePayments";
 import { useParams } from "react-router-dom";
 import {
 	FaEllipsisV,
@@ -13,28 +13,25 @@ import { BsCalendar2DateFill, BsCreditCard2BackFill } from "react-icons/bs";
 import { useEffect, useState } from "react";
 import PaymentModal from "../components/PaymentModal";
 import ActionMenu from "../components/ActionMenu";
-import { useDashboard } from "../hooks/useDashboard";
+import { useDashboard } from "../services/dashboard/useDashboard";
+import { useSalary } from "../services/salary/useSalary";
+import { useExpense } from "../services/expense/useExpense";
 export default function Payments() {
 	const { category: rawCategory } = useParams();
 	const category = rawCategory ?? "payments";
 
-
-	const {
-		payments,
-		isLoading,
-		createPayment,
-		updatePayment,
-		deletePayment,
-	} = usePayments();
-	const { topDebtorsQuery } = useDashboard('','','2026-02-01');
+	const { payments, isLoading, createPayment, updatePayment, deletePayment } =
+		usePayments();
+	const { topDebtors } = useDashboard();
+	const { salary } = useSalary();
+	const { expense} = useExpense();
 	const [debtorsData, setDebtorsData] = useState([]);
 	useEffect(() => {
 		const fetchDebtors = async () => {
-			const {data} = await topDebtorsQuery;
-			setDebtorsData(data || []);
+			setDebtorsData(topDebtors);
 		};
 		fetchDebtors();
-   }, []);
+	}, []);
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [editingPayment, setEditingPayment] = useState(null);
@@ -117,7 +114,8 @@ export default function Payments() {
 												<button
 													className="icon-button"
 													onClick={(e) => {
-														const rect = e.currentTarget.getBoundingClientRect();
+														const rect =
+															e.currentTarget.getBoundingClientRect();
 														setActionMenu({
 															isOpen: true,
 															position: {
@@ -135,7 +133,6 @@ export default function Payments() {
 									);
 								})}
 							</tbody>
-
 						</table>
 
 						<ActionMenu
@@ -174,7 +171,7 @@ export default function Payments() {
 					</div>
 				)}
 
-				{/* {category === "salary" && (
+				{category === "salary" && (
 					<table>
 						<thead>
 							<tr>
@@ -184,7 +181,7 @@ export default function Payments() {
 							</tr>
 						</thead>
 						<tbody>
-							{salaries?.map((s) => (
+							{salary?.map((s) => (
 								<tr key={s.id}>
 									<td>{s.teacher_name}</td>
 									<td>{s.amount?.toLocaleString()} so'm</td>
@@ -193,7 +190,7 @@ export default function Payments() {
 							))}
 						</tbody>
 					</table>
-				)} */}
+				)}
 
 				{category === "debtors" && (
 					<table>
@@ -205,21 +202,21 @@ export default function Payments() {
 						</thead>
 						<tbody>
 							{debtorsData
-								?.filter(d =>
-									d.student_name?.toLowerCase().includes(searchTerm.toLowerCase())
+								?.filter((d) =>
+									d.student_name
+										?.toLowerCase()
+										.includes(searchTerm.toLowerCase()),
 								)
-								.map(d => (
+								.map((d) => (
 									<tr key={d.id}>
 										<td>{d.student_name}</td>
-										<td className="debt">
-											{d.debt?.toLocaleString()} so'm
-										</td>
+										<td className="debt">{d.debt?.toLocaleString()} so'm</td>
 									</tr>
 								))}
 						</tbody>
 					</table>
 				)}
-            {/* 
+				
 				{category === "expenses" && (
 					<table>
 						<thead>
@@ -230,7 +227,7 @@ export default function Payments() {
 							</tr>
 						</thead>
 						<tbody>
-							{expenses?.map((e) => (
+							{expense?.map((e) => (
 								<tr key={e.id}>
 									<td>{e.title}</td>
 									<td>{e.amount?.toLocaleString()} so'm</td>
@@ -239,7 +236,7 @@ export default function Payments() {
 							))}
 						</tbody>
 					</table>
-				)} */}
+				)}
 			</div>
 		</div>
 	);

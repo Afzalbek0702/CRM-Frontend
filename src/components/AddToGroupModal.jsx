@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { FaUsers, FaTimes, FaCheck } from "react-icons/fa";
-import { useGroups } from "../hooks/useGroups.js";
+import { useGroups } from "../services/group/useGroups";
 
 export default function AddToGroupModal({ isOpen, onClose, onConfirm, initialGroupId = null }) {
   const { groups, loading } = useGroups();
