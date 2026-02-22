@@ -2,7 +2,7 @@ import { useState } from "react";
 import Loader from "../components/Loader";
 import ActionMenu from "../components/ActionMenu";
 import ExpenseModal from "../components/ExpenseModal";
-import { useExpense } from "../services/expense/useExpense";
+import { useExpenses } from "../services/expense/useExpense";
 
 import {
     FaEllipsisV,
@@ -18,7 +18,7 @@ export default function ExpensesTable() {
         createExpense,
         updateExpense,
         deleteExpense,
-    } = useExpense();
+    } = useExpenses();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingExpense, setEditingExpense] = useState(null);
@@ -31,7 +31,7 @@ export default function ExpensesTable() {
 
     if (isLoading) return <Loader />;
 
-    console.log(useExpense);
+    console.log(expenses);
     
 
     const formatDate = (d) =>
@@ -155,6 +155,7 @@ export default function ExpensesTable() {
                 }}
                 initialData={editingExpense}
                 onSubmit={async (formData) => {
+                    console.log("Submitting:", formData);
                     if (editingExpense) {
                         await updateExpense(
                             editingExpense.id,

@@ -2,7 +2,7 @@ import toast from "react-hot-toast";
 import { expenseService } from "./expenseService";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 const EXPENSE_KEY = ["expense"];
-export const useExpense = () => {
+export const useExpenses = () => {
 	const queryClient = useQueryClient();
 	const {
 		data: expense = [],
@@ -13,7 +13,7 @@ export const useExpense = () => {
 		queryFn: () => expenseService.get(),
 	});
 
-	const create = useMutation({
+	const createExpense = useMutation({
 		mutationFn: (data) => expenseService.create(data),
 		onSuccess: () => {
 			toast.success("");
@@ -25,7 +25,7 @@ export const useExpense = () => {
 		},
 	});
 
-	const update = useMutation({
+	const updateExpense = useMutation({
 		mutationFn: ({ id, data }) => expenseService.update(id, data),
 		onSuccess: () => {
 			toast.success("");
@@ -49,12 +49,12 @@ export const useExpense = () => {
 	});
 
 	return {
-		expense,
-		isLoading,
-		error,
+    expenses: expense,   
+    isLoading,
+    error,
 
-		create: create.mutate,
-		update: update.mutate,
-		delete: deleteById.mutate,
-	};
+    createExpense: createExpense.mutateAsync,
+    updateExpense: (id, data) => updateExpense.mutateAsync({ id, data }),
+    deleteExpense: deleteById.mutateAsync,
+};
 };
