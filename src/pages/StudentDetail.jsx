@@ -3,24 +3,33 @@ import { useState, useEffect } from "react";
 import Loader from "../components/Loader";
 import { useStudents } from "../services/student/useStudents";
 import { FaArrowLeft, FaUsers } from "react-icons/fa";
+import { useGroups } from "../services/group/useGroups";
 
 export default function StudentDetail() {
 	const { id } = useParams();
 	const navigate = useNavigate();
-	const { fetchById,loading,error } = useStudents();
+	const { fetchById, loading, error } = useStudents();
 	const [student, setStudent] = useState(null);
+	const { groups } = useGroups();
+	const [fullGroups, setFullGroups] = useState([]);
 
 	useEffect(() => {
 		const loadStudent = async () => {
-				const data = await fetchById(id);
-            setStudent(data);
+			const data = await fetchById(id);
+			setStudent(data);
+			if (data.groups?.length && groups?.length) {
+				const mapped = groups.filter((g) => data.groups.includes(g.name));
+				setFullGroups(mapped);
+			} else {
+				setFullGroups([]);
+			}
 		};
 		loadStudent();
-	}, [ ]);
+	}, [id, groups]);
 
 	if (loading) return <Loader />;
 	if (error) return <p>Error: {error}</p>;
-	if (!student) return <p>Student not found</p>;
+	if (!student) return <p>!!under construction!!</p>;
 
 	const formatDate = (d) => {
 		if (!d) return "";
@@ -29,7 +38,7 @@ export default function StudentDetail() {
 
 	return (
 		<div className="table-container">
-			<button onClick={() => navigate(-1)} className="btn1" style={{ marginBottom: "20px", cursor: "pointer"}}>
+			<button onClick={() => navigate(-1)} className="btn1" style={{ marginBottom: "20px", cursor: "pointer" }}>
 				<FaArrowLeft /> Back
 			</button>
 
@@ -43,7 +52,7 @@ export default function StudentDetail() {
 			</div>
 
 			<h3><FaUsers /> Groups</h3>
-			{student.groups && student.groups.length > 0 ? (
+			{fullGroups && fullGroups.length > 0 ? (
 				<table>
 					<thead>
 						<tr>
@@ -54,7 +63,7 @@ export default function StudentDetail() {
 						</tr>
 					</thead>
 					<tbody>
-						{student.groups.map((group) => (
+						{fullGroups.map((group) => (
 							<tr key={group.id}>
 								<td>{group.name}</td>
 								<td>{group.course_type}</td>

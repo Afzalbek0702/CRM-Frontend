@@ -23,6 +23,11 @@ export default function IncomeTable() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingPayment, setEditingPayment] = useState(null);
+  const [selectedStudent, setSelectedStudent] = useState("");
+  const [selectedGroup, setSelectedGroup] = useState("");
+  const [selectedTeacher, setSelectedTeacher] = useState("");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
 
   const [actionMenu, setActionMenu] = useState({
     isOpen: false,
@@ -31,6 +36,9 @@ export default function IncomeTable() {
   });
 
   if (isLoading) return <Loader />;
+
+  // console.log(payments[0]);
+  
 
   const formatDate = (d) =>
     d ? new Date(d).toLocaleDateString() : "";

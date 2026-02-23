@@ -102,16 +102,6 @@ export default function ExpenseModal({
             </select>
           </div>
 
-          <div className="form-group">
-            <label>Created By</label>
-            <input
-              type="text"
-              name="created_by"
-              value={form.created_by}
-              onChange={handleChange}
-            />
-          </div>
-
           <div className="modal-actions">
             <button type="button" onClick={onClose}>
               Cancel

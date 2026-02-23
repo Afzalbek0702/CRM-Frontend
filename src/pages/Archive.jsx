@@ -9,14 +9,15 @@ import "./Archive.css";
 export default function Archive() {
   const { category } = useParams();
   const [searchTerm, setSearchTerm] = useState("");
-
+  const [selectedTeacher, setSelectedTeacher] = useState("");
+  const [selectedGroup, setSelectedGroup] = useState("");
   const {
     archivedGroups = [],
     useAllArchivedStudents,
     useAllArchivedLeads,
-     useAllArchivedPayments,
+    useAllArchivedPayments,
     useAllArchivedTeachers
-    
+
   } = useArchive();
 
   const { data: students = [], isLoading: loadingStudents, error: errorStudents } = useAllArchivedStudents();
@@ -25,19 +26,19 @@ export default function Archive() {
   const { data: teachers = [], isLoading: loadingTeachers, error: errorTeachers } = useAllArchivedTeachers();
 
   if (
-		(category === "students" && loadingStudents) ||
-		(category === "leads" && loadingLeads) ||
-		(category === "payments" && loadingPayments) ||
-		(category === "teachers" && loadingTeachers)
-	)
-		return <Loader />;
+    (category === "students" && loadingStudents) ||
+    (category === "leads" && loadingLeads) ||
+    (category === "payments" && loadingPayments) ||
+    (category === "teachers" && loadingTeachers)
+  )
+    return <Loader />;
   if (
-		(category === "students" && errorStudents) ||
-		(category === "leads" && errorLeads) ||
-		(category === "payments" && errorPayments) ||
-		(category === "teachers" && errorTeachers)
-	)
-		return <div className="archive-error">Error loading {category}</div>;
+    (category === "students" && errorStudents) ||
+    (category === "leads" && errorLeads) ||
+    (category === "payments" && errorPayments) ||
+    (category === "teachers" && errorTeachers)
+  )
+    return <div className="archive-error">Error loading {category}</div>;
 
   if (!["students", "leads", "payments", "groups", "teachers"].includes(category)) {
     return <div className="archive-error">Invalid category</div>;
@@ -48,15 +49,50 @@ export default function Archive() {
       <h2>Archive - {category}</h2>
 
       {category === "students" && (
-        <div className="archive-search-box">
-          <FaSearch />
-          <input
-            type="text"
-            placeholder="Search students by name..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
+
+
+        <>
+
+          <div className="filters">
+            <select
+              value={selectedTeacher}
+              onChange={(e) => setSelectedTeacher(Number(e.target.value) || "")}
+            >
+              <option value="">All Teachers</option>
+              {teachers.map((t) => (
+                <option key={t.id} value={t.id}>{t.full_name}</option>
+              ))}
+            </select>
+
+            <select
+              value={selectedGroup}
+              onChange={(e) => setSelectedGroup(Number(e.target.value) || "")}
+            >
+              <option value="">All Groups</option>
+              {archivedGroups.map((g) => (
+                <option key={g.id} value={g.id}>{g.name}</option>
+              ))}
+            </select>
+          </div>
+
+
+
+
+
+          <div className="archive-search-box">
+            <FaSearch />
+            <input
+              type="text"
+              placeholder="Search students by name..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+
+
+        </>
+
+
       )}
 
       <div className="archive-table-container">
@@ -76,6 +112,21 @@ export default function Archive() {
             <tbody>
               {students
                 ?.filter(s => s.full_name?.toLowerCase().includes(searchTerm.toLowerCase()))
+                .filter((s) =>
+                  s.full_name.toLowerCase().includes(searchTerm.toLowerCase())
+                )
+                .filter((s) =>
+                  !selectedTeacher ||
+                  s.groups?.some(studentGroupName => {
+                    const groupObj = archivedGroups.find(g => g.name === studentGroupName);
+                    return groupObj?.teacher_id === selectedTeacher;
+                  })
+                )
+                .filter((s) =>
+                  !selectedGroup || s.archivedGroups?.includes(
+                    archivedGroups.find(g => g.id === selectedGroup)?.name
+                  )
+                )
                 .map(s => (
                   <tr key={s.id}>
                     <td>{s.full_name}</td>
