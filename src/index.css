@@ -4173,3 +4173,7 @@ option:hover {
 
 
 }
+
+.upperCaseHeader{
+    text-transform: capitalize;
+}

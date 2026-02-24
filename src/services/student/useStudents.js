@@ -18,9 +18,13 @@ export const useStudents = () => {
 	});
 
 	// 2. Bitta talabani ID bo'yicha olish
+	// const fetchById = async (id) => {
+	// 	const response = await studentService.getById(id);
+	// 	return response.data;
+	// };
+
 	const fetchById = async (id) => {
-		const response = await studentService.getById(id);
-		return response.data;
+		return await studentService.getById(id);
 	};
 
 	// 3. Yangi talaba qo'shish

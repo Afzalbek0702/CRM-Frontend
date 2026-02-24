@@ -1,8 +1,8 @@
 import toast from "react-hot-toast";
-import {courseService } from "./courseService";
+import { courseService } from "./courseService";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 const COURSE_KEY = ["course"];
-export const useSalary = () => {
+export const useCourse = () => {
 	const queryClient = useQueryClient();
 	const {
 		data: courseData = [],
@@ -53,8 +53,8 @@ export const useSalary = () => {
 		isLoading,
 		error,
 
-		create: create.mutate,
-		update: update.mutate,
-		delete: deleteById.mutate,
+		create: create.mutateAsync,
+		update: update.mutateAsync,
+		delete: deleteById.mutateAsync,
 	};
 };

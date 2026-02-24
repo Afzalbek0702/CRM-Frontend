@@ -9,10 +9,11 @@ import {
 	FaArchive,
 	FaWallet,
 	FaChevronRight,
+	FaCog
 } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 
-export default function Sidebar({ isExpanded = true, onToggle = () => { }, mobileOpen = false, onClose = () => {} }) {
+export default function Sidebar({ isExpanded = true, onToggle = () => { }, mobileOpen = false, onClose = () => { } }) {
 	const location = useLocation();
 	const [archiveOpen, setArchiveOpen] = useState(false);
 	const [paymentsOpen, setPaymentsOpen] = useState(false);
@@ -43,7 +44,7 @@ export default function Sidebar({ isExpanded = true, onToggle = () => { }, mobil
 	const handleMouseLeave = () => {
 		hoverTimeoutRef.current = setTimeout(() => {
 			setHoveredMenu(null);
-		}, 100); 
+		}, 100);
 	};
 
 	return (
@@ -70,92 +71,97 @@ export default function Sidebar({ isExpanded = true, onToggle = () => { }, mobil
 					{isExpanded && <span>Teachers</span>}
 				</NavLink>
 
-			<div 
-				className="sidebar-parent"
-				onMouseEnter={() => !isExpanded && handleMouseEnter('payments')}
-				onMouseLeave={() => !isExpanded && handleMouseLeave()}
-			>
-				<button
-					className={`sidebar-link-parent ${paymentsOpen ? 'open' : ''}`}
-					onClick={() => {
-						if (isExpanded) {
-							setPaymentsOpen(!paymentsOpen);
-							setHoveredMenu(null);
-						}
-					}}
-					title={isExpanded ? "" : "Moliya"}
+				<div
+					className="sidebar-parent"
+					onMouseEnter={() => !isExpanded && handleMouseEnter('payments')}
+					onMouseLeave={() => !isExpanded && handleMouseLeave()}
 				>
-					<FaWallet className="sidebar-icon" />
-					{isExpanded && (
-						<>
-							<span>Moliya</span>
-							<span className={`arrow ${paymentsOpen ? "open" : ""}`}>▾</span>
-						</>
+					<button
+						className={`sidebar-link-parent ${paymentsOpen ? 'open' : ''}`}
+						onClick={() => {
+							if (isExpanded) {
+								setPaymentsOpen(!paymentsOpen);
+								setHoveredMenu(null);
+							}
+						}}
+						title={isExpanded ? "" : "Moliya"}
+					>
+						<FaWallet className="sidebar-icon" />
+						{isExpanded && (
+							<>
+								<span>Moliya</span>
+								<span className={`arrow ${paymentsOpen ? "open" : ""}`}>▾</span>
+							</>
+						)}
+					</button>
+
+					{((isExpanded && paymentsOpen) || (!isExpanded && hoveredMenu === 'payments')) && (
+						<div className={`sidebar-submenu ${!isExpanded ? 'collapsed-hover-submenu' : ''}`}>
+							<NavLink to="/payments/income" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
+								To'lovlar
+							</NavLink>
+							<NavLink to="/payments/salary" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
+								Ish haqi
+							</NavLink>
+							<NavLink to="/payments/debtors" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
+								Qarzdorlar
+							</NavLink>
+							<NavLink to="/payments/expenses" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
+								Xarajatlar
+							</NavLink>
+						</div>
 					)}
-				</button>
+				</div>
 
-				{((isExpanded && paymentsOpen) || (!isExpanded && hoveredMenu === 'payments')) && (
-					<div className={`sidebar-submenu ${!isExpanded ? 'collapsed-hover-submenu' : ''}`}>
-						<NavLink to="/payments/income" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
-							To'lovlar
-						</NavLink>
-						<NavLink to="/payments/salary" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
-							Ish haqi
-						</NavLink>
-						<NavLink to="/payments/debtors" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
-							Qarzdorlar
-						</NavLink>
-						<NavLink to="/payments/expenses" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
-							Xarajatlar
-						</NavLink>
-					</div>
-				)}
-			</div>
-
-			<div 
-				className="sidebar-parent"
-				onMouseEnter={() => !isExpanded && handleMouseEnter('archive')}
-				onMouseLeave={() => !isExpanded && handleMouseLeave()}
-			>
-				<button
-					className={`sidebar-link-parent ${archiveOpen ? 'open' : ''}`}
-					onClick={() => {
-						if (isExpanded) {
-							setArchiveOpen(!archiveOpen);
-							setHoveredMenu(null);
-						}
-					}}
-					title={isExpanded ? "" : "Archive"}
+				<div
+					className="sidebar-parent"
+					onMouseEnter={() => !isExpanded && handleMouseEnter('archive')}
+					onMouseLeave={() => !isExpanded && handleMouseLeave()}
 				>
-					<FaArchive className="sidebar-icon" />
-					{isExpanded && (
-						<>
-							<span>Archive</span>
-							<span className={`arrow ${archiveOpen ? "open" : ""}`}>▾</span>
-						</>
-					)}
-				</button>
+					<button
+						className={`sidebar-link-parent ${archiveOpen ? 'open' : ''}`}
+						onClick={() => {
+							if (isExpanded) {
+								setArchiveOpen(!archiveOpen);
+								setHoveredMenu(null);
+							}
+						}}
+						title={isExpanded ? "" : "Archive"}
+					>
+						<FaArchive className="sidebar-icon" />
+						{isExpanded && (
+							<>
+								<span>Archive</span>
+								<span className={`arrow ${archiveOpen ? "open" : ""}`}>▾</span>
+							</>
+						)}
+					</button>
 
-				{((isExpanded && archiveOpen) || (!isExpanded && hoveredMenu === 'archive')) && (
-					<div className={`sidebar-submenu ${!isExpanded ? 'collapsed-hover-submenu' : ''}`}>
-						<NavLink to="/archive/leads" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
-							Lidlar
-						</NavLink>
-						<NavLink to="/archive/students" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
-							Talabalar
-						</NavLink>
-						<NavLink to="/archive/teachers" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
-							O'qituvchilar
-						</NavLink>
-						<NavLink to="/archive/groups" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
-							Guruhlar
-						</NavLink>
-						<NavLink to="/archive/payments" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
-							Moliya
-						</NavLink>
-					</div>
-				)}
-			</div>
+					{((isExpanded && archiveOpen) || (!isExpanded && hoveredMenu === 'archive')) && (
+						<div className={`sidebar-submenu ${!isExpanded ? 'collapsed-hover-submenu' : ''}`}>
+							<NavLink to="/archive/leads" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
+								Lidlar
+							</NavLink>
+							<NavLink to="/archive/students" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
+								Talabalar
+							</NavLink>
+							<NavLink to="/archive/teachers" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
+								O'qituvchilar
+							</NavLink>
+							<NavLink to="/archive/groups" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
+								Guruhlar
+							</NavLink>
+							<NavLink to="/archive/payments" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
+								Moliya
+							</NavLink>
+						</div>
+					)}
+				</div>
+
+				<NavLink to="/settings" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
+					<FaCog className="sidebar-icon" />
+					{isExpanded && <span>Sozlamalar</span>}
+				</NavLink>
 			</nav>
 		</aside>
 	);

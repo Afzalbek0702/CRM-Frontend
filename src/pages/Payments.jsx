@@ -39,8 +39,8 @@ export default function Payments() {
 
 	return (
 		<div className="table-container">
-			<h2>
-				<FaMoneyBillWave /> {category}
+			<h2 className="upperCaseHeader">
+				{category}
 			</h2>
 
 			{category === "debtors" && (

@@ -19,6 +19,7 @@ import Payments from "./pages/Payments";
 import Login from "./pages/Login";
 import Leads from "./pages/Leads";
 import Archive from "./pages/Archive";
+import Settings from "./pages/Settings";
 
 export default function Layout() {
 	const location = useLocation();
@@ -83,6 +84,7 @@ export default function Layout() {
 						<Route path="/students/:id" element={<StudentDetail />} />
 						<Route path="/teachers" element={<Teachers />} />
 						<Route path="/teachers/:id" element={<TeacherDetail />} />
+						<Route path="/settings" element={<Settings/>}></Route>
 
 						{/* o'zgartirvormelar yoki ochirvormelar!! */}
 						<Route path="/payments" element={<Payments />} />

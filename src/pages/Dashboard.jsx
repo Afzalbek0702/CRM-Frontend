@@ -36,7 +36,7 @@ export default function Dashboard() {
 					/>
 				</NavLink>
 
-				<NavLink to="/dashboard">
+				<NavLink to="/payments/debtors">
 					<StatsCards
 						className="statcards"
 						data={topDebtors?.length}

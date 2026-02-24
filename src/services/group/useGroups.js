@@ -16,13 +16,27 @@ export const useGroups = () => {
 		queryFn: () => groupsService.getAll(),
 	});
 
+	// const fetchById = async (id) => {
+	// 	try {
+	// 		const [groupRes, studentsRes] = await Promise.all([
+	// 			groupsService.getById(id),
+	// 			groupsService.getStudentsInGroup(id),
+	// 		]);
+	// 		return { ...groupRes.data, students: studentsRes.data };
+	// 	} catch (err) {
+	// 		console.error(err);
+	// 		throw err;
+	// 	}
+	// };
+
 	const fetchById = async (id) => {
 		try {
-			const [groupRes, studentsRes] = await Promise.all([
+			const [group, students] = await Promise.all([
 				groupsService.getById(id),
 				groupsService.getStudentsInGroup(id),
 			]);
-			return { ...groupRes.data, students: studentsRes.data };
+
+			return { ...group, students };
 		} catch (err) {
 			console.error(err);
 			throw err;

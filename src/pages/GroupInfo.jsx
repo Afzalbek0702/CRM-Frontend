@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, data } from "react-router-dom";
 import Loader from "../components/Loader";
 import { useGroups } from "../services/group/useGroups";
 import { useAttendance } from "../services/attendance/useAttendance";
@@ -39,12 +39,15 @@ export default function GuruhlarInfo() {
 		fetchById(id).then((data) => {
 			setGroup(data);
 			setStudents(data.students || []);
+			console.log("data : ", data);
 			setMonth(new Date().toISOString().slice(0, 7));
 		});
 	}, []);
 
 	if (loading || !group) return <Loader />;
 	if (error) return <p>{error}</p>;
+	
+	
 
 	const handleToggle = async (studentId, date, newStatus) => {
 		await setAttendance.mutateAsync({
@@ -123,6 +126,14 @@ export default function GuruhlarInfo() {
 			console.error("Failed to create payment", err);
 		}
 	};
+
+
+	console.log("group : ", group);
+	console.log("all groups : ", groups);
+	console.log("students : ", students);
+	
+	
+	
 
 	return (
 		<div
@@ -258,7 +269,7 @@ export default function GuruhlarInfo() {
 							flex: 1,
 							display: "flex",
 							flexDirection: "column",
-							minHeight: 0,
+							// minHeight: 0,
 						}}
 					>
 						<h3 style={{ color: "white", marginBottom: "12px" }}>
