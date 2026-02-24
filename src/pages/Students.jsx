@@ -48,9 +48,9 @@ export default function Students() {
 	const handleRowClick = (studentId) => {
 		navigate(`/students/${studentId}`);
 	};
-	console.log(students);
-	console.log(groups);
-	console.log(teachers);
+	// console.log(students);
+	// console.log(groups);
+	// console.log(teachers);
 
 
 

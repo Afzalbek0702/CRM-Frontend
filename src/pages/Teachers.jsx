@@ -27,6 +27,7 @@ export default function Teachers() {
 	};
 
 	if (isLoading) return <Loader />;
+	// console.log(teachers);
 
 	return (
 		<div className="table-container">

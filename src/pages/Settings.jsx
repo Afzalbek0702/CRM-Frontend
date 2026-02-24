@@ -14,12 +14,12 @@ export default function Settings() {
     const [selectedCourse, setSelectedCourse] = useState(null);
 
     const handleActionMenu = (e, course) => {
-        e.stopPropagation(); 
+        e.stopPropagation();
         setSelectedCourse(course);
         const rect = e.currentTarget.getBoundingClientRect();
         setActionMenuPosition({
-            top: rect.bottom + 5,
-            left: rect.left - 100,
+            top: rect.bottom + window.scrollY + 8 + "px",
+            left: rect.right + window.scrollX - 150 + "px",
         });
         setIsActionMenuOpen(true);
     };
@@ -66,16 +66,6 @@ export default function Settings() {
             setModalOpen(false);
         } catch (err) {
             console.error(err);
-        }
-    };
-
-    const handleDeleteById = async (id) => {
-        if (window.confirm("Are you sure you want to delete this course?")) {
-            try {
-                await deleteById(id);
-            } catch (err) {
-                console.error(err);
-            }
         }
     };
 

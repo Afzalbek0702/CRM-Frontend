@@ -16,11 +16,11 @@ export const useCourse = () => {
 	const create = useMutation({
 		mutationFn: (data) => courseService.create(data),
 		onSuccess: () => {
-			toast.success("");
+			toast.success("Kurs muvaffaqiyatli qo'shildi");
 			queryClient.invalidateQueries({ queryKey: COURSE_KEY });
 		},
 		onError: (error) => {
-			toast.error("");
+			toast.error("Kurs qo'shishda xatolik yuz berdi");
 			console.error(error.response);
 		},
 	});
@@ -28,22 +28,22 @@ export const useCourse = () => {
 	const update = useMutation({
 		mutationFn: ({ id, data }) => courseService.update(id, data),
 		onSuccess: () => {
-			toast.success("");
+			toast.success("Kurs muvaffaqiyatli yangilandi");
 			queryClient.invalidateQueries({ queryKey: COURSE_KEY });
 		},
 		onError: (error) => {
-			toast.error("");
+			toast.error("Kurs yangilashda xatolik yuz berdi");
 			console.error(error.response);
 		},
 	});
 	const deleteById = useMutation({
 		mutationFn: (id) => courseService.delete(id),
 		onSuccess: () => {
-			toast.success("");
+			toast.success("Kurs muvaffaqiyatli o'chirildi");
 			queryClient.invalidateQueries({ queryKey: COURSE_KEY });
 		},
 		onError: (error) => {
-			toast.error("");
+			toast.error("Kurs o'chirishda xatolik yuz berdi");
 			console.error(error.response);
 		},
 	});
@@ -55,6 +55,6 @@ export const useCourse = () => {
 
 		create: create.mutateAsync,
 		update: update.mutateAsync,
-		delete: deleteById.mutateAsync,
+		deleteById: deleteById.mutateAsync,
 	};
 };

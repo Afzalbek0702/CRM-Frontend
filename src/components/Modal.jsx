@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { FaUsers, FaBook, FaDollarSign, FaClock, FaCalendarAlt, FaChalkboardTeacher, FaTimes, FaSave, FaPlus } from "react-icons/fa";
-import {useTeachers} from '../services/teacher/useTeachers'
+import { useTeachers } from '../services/teacher/useTeachers'
+import { useCourse } from "../services/course/useCourse";
 export default function Modal({ isOpen, onClose, onSubmit, title, initialData }) {
     const [formData, setFormData] = useState({
         name: "",
@@ -11,8 +12,9 @@ export default function Modal({ isOpen, onClose, onSubmit, title, initialData })
         teacher_id: "",
     });
     const [isAnimating, setIsAnimating] = useState(false);
-   const { teachers } = useTeachers()
-   
+    const { teachers } = useTeachers()
+    const { courseData } = useCourse();
+
     useEffect(() => {
         if (initialData) {
             setFormData({
@@ -33,7 +35,7 @@ export default function Modal({ isOpen, onClose, onSubmit, title, initialData })
                 teacher_id: "",
             });
         }
-        
+
         // Trigger animation when modal opens
         if (isOpen) {
             setIsAnimating(true);
@@ -45,7 +47,7 @@ export default function Modal({ isOpen, onClose, onSubmit, title, initialData })
     const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const dayNames = {
         "Mon": "Dushanba",
-        "Tue": "Seshanba", 
+        "Tue": "Seshanba",
         "Wed": "Chorshanba",
         "Thu": "Payshanba",
         "Fri": "Juma",
@@ -54,7 +56,16 @@ export default function Modal({ isOpen, onClose, onSubmit, title, initialData })
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        setFormData((prev) => {
+            const updated = { ...prev, [name]: value };
+            if (name === "course_type") {
+                const selectedCourse = courseData.find(c => c.id.toString() === value);
+                if (selectedCourse) {
+                    updated.price = selectedCourse.price;
+                }
+            }
+            return updated;
+        });
     };
 
     const handleDayToggle = (day) => {
@@ -80,6 +91,7 @@ export default function Modal({ isOpen, onClose, onSubmit, title, initialData })
     };
 
     if (!isOpen) return null;
+
 
     const handlePanelClick = (e) => {
         e.stopPropagation();
@@ -129,15 +141,20 @@ export default function Modal({ isOpen, onClose, onSubmit, title, initialData })
                                 <FaBook className="field-icon" />
                                 Kurs turi
                             </label>
-                            <input
-                                type="text"
+                            <select
                                 name="course_type"
                                 value={formData.course_type}
                                 onChange={handleInputChange}
-                                placeholder="Masalan: Web Development"
                                 className="form-input"
                                 required
-                            />
+                            >
+                                <option value="">Kurs turini tanlang</option>
+                                {courseData.map((course) => (
+                                    <option key={course.id} value={course.id}>
+                                        {course.name}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
 
                         <div className="form-group">
@@ -182,8 +199,8 @@ export default function Modal({ isOpen, onClose, onSubmit, title, initialData })
                             </label>
                             <div className="days-grid">
                                 {days.map((day) => (
-                                    <div 
-                                        key={day} 
+                                    <div
+                                        key={day}
                                         className={`day-chip ${formData.lesson_days.includes(day) ? 'selected' : ''}`}
                                         onClick={() => handleDayToggle(day)}
                                     >
@@ -200,19 +217,19 @@ export default function Modal({ isOpen, onClose, onSubmit, title, initialData })
                                 O'qituvchi
                             </label>
                             <select
-                                 name="teacher_id"
-                                 value={formData.teacher_id || ''}
-                                 onChange={handleInputChange}
-                                 className="form-input"
-                                 required
-                             >
-                              <option value="">O'qituvchini tanlang</option>
-                              {teachers.map((teacher) => (
-                                       <option key={teacher.id} value={teacher.id}>
-                                       {teacher.full_name}
-                                       </option>
-                                       ))}
-                              </select>
+                                name="teacher_id"
+                                value={formData.teacher_id || ''}
+                                onChange={handleInputChange}
+                                className="form-input"
+                                required
+                            >
+                                <option value="">O'qituvchini tanlang</option>
+                                {teachers.map((teacher) => (
+                                    <option key={teacher.id} value={teacher.id}>
+                                        {teacher.full_name}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
                     </div>
 
