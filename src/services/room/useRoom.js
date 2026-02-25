@@ -55,6 +55,6 @@ export const useRoom = () => {
 
 		create: create.mutate,
 		update: update.mutate,
-		delete: deleteById.mutate,
+		deleteById: deleteById.mutate,
 	};
 };

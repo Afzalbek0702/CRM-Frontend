@@ -102,139 +102,149 @@ export default function Students() {
 					<FaPlus /> O'quvchi qo'shish
 				</button>
 			</div>
-			<table>
-				<thead>
-					<tr>
-						<th>
-							<FaUserGraduate /> Ism
-						</th>
-						<th>
-							<FaUsers /> Guruh nomi
-						</th>
-						<th>
-							<FaPhone /> Telefon
-						</th>
-						<th>
-							<FaBirthdayCake /> Tug'ilgan kun
-						</th>
-						<th>
-							<FaUsers /> Ota-onasi
-						</th>
-						<th>
-							<FaPhone /> Ota-onasi telefon
-						</th>
-						<th>
-							<FaWallet /> Balance
-						</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					{
-						(students || [])
-							.filter((s) =>
-								s.full_name.toLowerCase().includes(searchTerm.toLowerCase())
-							)
-							.filter((s) =>
-								!selectedTeacher ||
-								s.groups?.some(studentGroupName => {
-									const groupObj = groups.find(g => g.name === studentGroupName);
-									return groupObj?.teacher_id === selectedTeacher;
-								})
-							)
-							.filter((s) =>
-								!selectedGroup || s.groups?.includes(
-									groups.find(g => g.id === selectedGroup)?.name
+
+			{students && students.length < 1 ? (
+				<p>Studentlar yo'q</p>
+			) : (
+				<table>
+					<thead>
+						<tr>
+							<th>
+								<FaUserGraduate /> Ism
+							</th>
+							<th>
+								<FaUsers /> Guruh nomi
+							</th>
+							<th>
+								<FaPhone /> Telefon
+							</th>
+							<th>
+								<FaBirthdayCake /> Tug'ilgan kun
+							</th>
+							<th>
+								<FaUsers /> Ota-onasi
+							</th>
+							<th>
+								<FaPhone /> Ota-onasi telefon
+							</th>
+							<th>
+								<FaWallet /> Balance
+							</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						{
+							(students || [])
+								.filter((s) =>
+									s.full_name.toLowerCase().includes(searchTerm.toLowerCase())
 								)
-							)
-							.map((s) => {
-								const formatDate = (d) => {
-									if (!d) return "";
-									return String(d).split("T")[0];
-								};
+								.filter((s) =>
+									!selectedTeacher ||
+									s.groups?.some(studentGroupName => {
+										const groupObj = groups.find(g => g.name === studentGroupName);
+										return groupObj?.teacher_id === selectedTeacher;
+									})
+								)
+								.filter((s) =>
+									!selectedGroup || s.groups?.includes(
+										groups.find(g => g.id === selectedGroup)?.name
+									)
+								)
+								.map((s) => {
+									const formatDate = (d) => {
+										if (!d) return "";
+										return String(d).split("T")[0];
+									};
 
-								return (
-									<tr
-										key={s.id}
-										onClick={() => handleRowClick(s.id)}
-										style={{ cursor: "pointer" }}
-									>
-										<td>{s.full_name}</td>
-										<td>{s.groups?.length > 0 ? s.groups[0] : "No Group"}</td>
-										<td
-											onClick={(e) => {
-												e.stopPropagation();
-												navigator.clipboard.writeText(s.phone);
-
-												const el = e.currentTarget;
-												el.dataset.copied = "true";
-
-												setTimeout(() => {
-													el.dataset.copied = "false";
-												}, 2000);
-											}}
-											data-copied="false"
-											className="copy-phone"
+									return (
+										<tr
+											key={s.id}
+											onClick={() => handleRowClick(s.id)}
+											style={{ cursor: "pointer" }}
 										>
-											{s.phone}
-										</td>
-
-										<td>{formatDate(s.birthday)}</td>
-										<td>{s.parents_name}</td>
-										<td>{s.parents_phone}</td>
-										<td>{s.monthly_paid?.toLocaleString() ?? 0} so&apos;m</td>
-										<td
-											style={{ width: "10px" }}
-											onClick={(e) => e.stopPropagation()}
-										>
-											<button
-												className="icon-button"
+											<td>{s.full_name}</td>
+											<td>{s.groups?.length > 0 ? s.groups[0] : "No Group"}</td>
+											<td
 												onClick={(e) => {
-													const rect = e.currentTarget.getBoundingClientRect();
+													e.stopPropagation();
+													navigator.clipboard.writeText(s.phone);
 
-													const menuHeight = 100;
-													const menuWidth = 150;
+													const el = e.currentTarget;
+													el.dataset.copied = "true";
 
-													const scrollY = window.scrollY;
-													const scrollX = window.scrollX;
-
-													const absoluteTop = rect.top + scrollY;
-													const absoluteBottom = rect.bottom + scrollY;
-
-													const viewportBottom = scrollY + window.innerHeight;
-													const viewportRight = scrollX + window.innerWidth;
-
-													const top =
-														absoluteBottom + menuHeight > viewportBottom
-															? absoluteTop - menuHeight - 8
-															: absoluteBottom + 8;
-
-													let left = rect.right + scrollX - menuWidth;
-													if (left + menuWidth > viewportRight) {
-														left = viewportRight - menuWidth - 10;
-													}
-													if (left < scrollX) {
-														left = scrollX + 10;
-													}
-
-													setActionMenu({
-														isOpen: true,
-														position: {
-															top: top + "px",
-															left: left + "px",
-														},
-														student: s,
-													});
+													setTimeout(() => {
+														el.dataset.copied = "false";
+													}, 2000);
 												}}
+												data-copied="false"
+												className="copy-phone"
 											>
-												<FaEllipsisV />
-											</button>
-										</td>
-									</tr>
-								);
-							})}
-				</tbody>
-			</table>
+												{s.phone}
+											</td>
+
+											<td>{formatDate(s.birthday)}</td>
+											<td>{s.parents_name}</td>
+											<td>{s.parents_phone}</td>
+											<td>{s.monthly_paid?.toLocaleString() ?? 0} so&apos;m</td>
+											<td
+												style={{ width: "10px" }}
+												onClick={(e) => e.stopPropagation()}
+											>
+												<button
+													className="icon-button"
+													onClick={(e) => {
+														const rect = e.currentTarget.getBoundingClientRect();
+
+														const menuHeight = 100;
+														const menuWidth = 150;
+
+														const scrollY = window.scrollY;
+														const scrollX = window.scrollX;
+
+														const absoluteTop = rect.top + scrollY;
+														const absoluteBottom = rect.bottom + scrollY;
+
+														const viewportBottom = scrollY + window.innerHeight;
+														const viewportRight = scrollX + window.innerWidth;
+
+														const top =
+															absoluteBottom + menuHeight > viewportBottom
+																? absoluteTop - menuHeight - 8
+																: absoluteBottom + 8;
+
+														let left = rect.right + scrollX - menuWidth;
+														if (left + menuWidth > viewportRight) {
+															left = viewportRight - menuWidth - 10;
+														}
+														if (left < scrollX) {
+															left = scrollX + 10;
+														}
+
+														setActionMenu({
+															isOpen: true,
+															position: {
+																top: top + "px",
+																left: left + "px",
+															},
+															student: s,
+														});
+													}}
+												>
+													<FaEllipsisV />
+												</button>
+											</td>
+										</tr>
+									);
+								})}
+					</tbody>
+				</table>
+			)
+
+			}
+
+
+
 
 			<ActionMenu
 				isOpen={actionMenu.isOpen}

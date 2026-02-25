@@ -55,58 +55,63 @@ export default function Teachers() {
 				</button>
 			</div>
 
-			<table>
-				<thead>
-					<tr>
-						<th>
-							<FaChalkboardTeacher /> Ism
-						</th>
-						<th>
-							<FaPhone /> Telefon
-						</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					{(teachers || [])
-						.filter(
-							(t) =>
-								t.full_name &&
-								t.full_name.toLowerCase().includes(searchTerm.toLowerCase()),
-						)
-						.map((t) => (
-							<tr
-								key={t.id}
-								onClick={() => handleRowClick(t.id)}
-								style={{ cursor: "pointer" }}
-							>
-								<td className="teacher">{t.full_name}</td>
-								<td>{t.phone}</td>
-								<td
-									style={{ width: "10px" }}
-									onClick={(e) => e.stopPropagation()}
+			{teachers && teachers.length < 1 ? (
+				<p>O'qituvchilar yo'q</p>
+			) : (
+				<table>
+					<thead>
+						<tr>
+							<th>
+								<FaChalkboardTeacher /> Ism
+							</th>
+							<th>
+								<FaPhone /> Telefon
+							</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						{(teachers || [])
+							.filter(
+								(t) =>
+									t.full_name &&
+									t.full_name.toLowerCase().includes(searchTerm.toLowerCase()),
+							)
+							.map((t) => (
+								<tr
+									key={t.id}
+									onClick={() => handleRowClick(t.id)}
+									style={{ cursor: "pointer" }}
 								>
-									<button
-										className="icon-button"
-										onClick={(e) => {
-											const rect = e.currentTarget.getBoundingClientRect();
-											setActionMenu({
-												isOpen: true,
-												position: {
-													top: rect.bottom + window.scrollY + 8 + "px",
-													left: rect.right + window.scrollX - 150 + "px",
-												},
-												teacher: t,
-											});
-										}}
+									<td className="teacher">{t.full_name}</td>
+									<td>{t.phone}</td>
+									<td
+										style={{ width: "10px" }}
+										onClick={(e) => e.stopPropagation()}
 									>
-										<FaEllipsisV />
-									</button>
-								</td>
-							</tr>
-						))}
-				</tbody>
-			</table>
+										<button
+											className="icon-button"
+											onClick={(e) => {
+												const rect = e.currentTarget.getBoundingClientRect();
+												setActionMenu({
+													isOpen: true,
+													position: {
+														top: rect.bottom + window.scrollY + 8 + "px",
+														left: rect.right + window.scrollX - 150 + "px",
+													},
+													teacher: t,
+												});
+											}}
+										>
+											<FaEllipsisV />
+										</button>
+									</td>
+								</tr>
+							))}
+					</tbody>
+				</table>
+			)
+			}
 
 			<ActionMenu
 				isOpen={actionMenu.isOpen}

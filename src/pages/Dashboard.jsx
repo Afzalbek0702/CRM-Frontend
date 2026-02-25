@@ -65,11 +65,15 @@ export default function Dashboard() {
 					<h2>
 						<FaExclamationTriangle /> Bugun kelmagan o'quvchilar
 					</h2>
+
+
 					<div className="table-container">
 						{isLoading ? (
 							<p>Yuklanmoqda...</p>
 						) : error ? (
 							<p>Xatolik yuz berdi</p>
+						) : students && students.length < 1 ? (
+							<p>Studentlar yo'q</p>
 						) : absentStudents && absentStudents.length > 0 ? (
 							<table>
 								<thead>
@@ -128,7 +132,11 @@ export default function Dashboard() {
 							<p>Yuklanmoqda...</p>
 						) : error ? (
 							<p>Xatolik yuz berdi</p>
-						) : (
+						) : groups && groups.length < 1 ? (
+							<p>Guruhlar yo'q</p>
+						) :
+						
+						(
 							<table style={{ maxWidth: "600px" }}>
 								<thead>
 									<tr>
