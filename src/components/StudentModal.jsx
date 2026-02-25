@@ -59,15 +59,16 @@ export default function StudentModal({
 		e.preventDefault();
 		const payload = {
 			...formData,
-			balance: formData.balance === "" ? 0 : Number(formData.balance),
+			birthday: formData.birthday || null,
+			balance: Number(formData.balance || 0)
 		};
 		onSubmit(payload);
 		setFormData({
 			full_name: "",
 			phone: "",
 			birthday: "",
-         parents_name: "",
-         parents_phone: "",
+			parents_name: "",
+			parents_phone: "",
 			balance: "",
 		});
 	};

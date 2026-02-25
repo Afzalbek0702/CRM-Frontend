@@ -48,6 +48,7 @@ export const useLeads = () => {
 		onSuccess: () => {
 			toast.success("Lead muffafaqqiyatli o'chirildi");
 			queryClient.invalidateQueries({ queryKey: LEADS_QUERY_KEY });
+
 		},
 		onError: (error) => {
 			toast.error("Leadni o'chirishda xatolik yuz berdi");
@@ -69,11 +70,11 @@ export const useLeads = () => {
 	return {
 		leads,
 		isLoading,
-      error,
-      fetchById,
-		createLead: createLeadMutation.mutate,
-		updateLead: updateLeadMutation.mutate,
-		deleteLead: deleteLeadMutation.mutate,
-		convertLeadToGroup: convertLeadToGroupMutation.mutate,
+		error,
+		fetchById,
+		createLead: createLeadMutation.mutateAsync,
+		updateLead: updateLeadMutation.mutateAsync,
+		deleteLead: deleteLeadMutation.mutateAsync,
+		convertLeadToGroup: convertLeadToGroupMutation.mutateAsync,
 	};
 };

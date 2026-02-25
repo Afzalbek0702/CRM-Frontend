@@ -191,11 +191,37 @@ export default function Students() {
 												className="icon-button"
 												onClick={(e) => {
 													const rect = e.currentTarget.getBoundingClientRect();
+
+													const menuHeight = 100;
+													const menuWidth = 150;
+
+													const scrollY = window.scrollY;
+													const scrollX = window.scrollX;
+
+													const absoluteTop = rect.top + scrollY;
+													const absoluteBottom = rect.bottom + scrollY;
+
+													const viewportBottom = scrollY + window.innerHeight;
+													const viewportRight = scrollX + window.innerWidth;
+
+													const top =
+														absoluteBottom + menuHeight > viewportBottom
+															? absoluteTop - menuHeight - 8
+															: absoluteBottom + 8;
+
+													let left = rect.right + scrollX - menuWidth;
+													if (left + menuWidth > viewportRight) {
+														left = viewportRight - menuWidth - 10;
+													}
+													if (left < scrollX) {
+														left = scrollX + 10;
+													}
+
 													setActionMenu({
 														isOpen: true,
 														position: {
-															top: rect.bottom + window.scrollY + 8 + "px",
-															left: rect.right + window.scrollX - 150 + "px",
+															top: top + "px",
+															left: left + "px",
 														},
 														student: s,
 													});

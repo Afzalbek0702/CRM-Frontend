@@ -32,7 +32,9 @@ export default function GuruhlarInfo() {
 	const [month, setMonth] = useState("");
 	const { attendance, setAttendance } = useAttendance({
 		group_id: id,
-		month: month + "-01" || new Date().toISOString().slice(0, 7) + "-01",
+		month: month
+			? month + "-01"
+			: new Date().toISOString().slice(0, 7) + "-01",
 	});
 
 	useEffect(() => {
@@ -46,8 +48,8 @@ export default function GuruhlarInfo() {
 
 	if (loading || !group) return <Loader />;
 	if (error) return <p>{error}</p>;
-	
-	
+
+
 
 	const handleToggle = async (studentId, date, newStatus) => {
 		await setAttendance.mutateAsync({
@@ -131,9 +133,9 @@ export default function GuruhlarInfo() {
 	console.log("group : ", group);
 	console.log("all groups : ", groups);
 	console.log("students : ", students);
-	
-	
-	
+
+
+
 
 	return (
 		<div
@@ -147,7 +149,7 @@ export default function GuruhlarInfo() {
 			<button
 				onClick={() => navigate(-1)}
 				className="btn1"
-				style={{ marginBottom: "20px" , cursor : "pointer"}}
+				style={{ marginBottom: "20px", cursor: "pointer" }}
 			>
 				<FaArrowLeft /> Back
 			</button>

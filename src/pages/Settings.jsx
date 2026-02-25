@@ -9,9 +9,12 @@ export default function Settings() {
     const [modalOpen, setModalOpen] = useState(false);
     const [editingCourse, setEditingCourse] = useState(null);
     const [formData, setFormData] = useState({ name: "", price: "", lesson_count: "" });
-    const [isActionMenuOpen, setIsActionMenuOpen] = useState(false);
-    const [actionMenuPosition, setActionMenuPosition] = useState({ top: 0, left: 0 });
-    const [selectedCourse, setSelectedCourse] = useState(null);
+
+    const [actionMenu, setActionMenu] = useState({
+        isOpen: false,
+        position: { top: 0, left: 0 },
+        course: null,
+    });
 
     const handleActionMenu = (e, course) => {
         e.stopPropagation();
@@ -102,7 +105,43 @@ export default function Settings() {
                                     <td style={{ width: "10px" }} onClick={(e) => e.stopPropagation()}>
                                         <button
                                             className="icon-button"
-                                            onClick={(e) => handleActionMenu(e, course)}
+                                            onClick={(e) => {
+                                                const rect = e.currentTarget.getBoundingClientRect();
+
+                                                const menuHeight = 100;
+                                                const menuWidth = 150;
+
+                                                const scrollY = window.scrollY;
+                                                const scrollX = window.scrollX;
+
+                                                const absoluteTop = rect.top + scrollY;
+                                                const absoluteBottom = rect.bottom + scrollY;
+
+                                                const viewportBottom = scrollY + window.innerHeight;
+                                                const viewportRight = scrollX + window.innerWidth;
+
+                                                const top =
+                                                    absoluteBottom + menuHeight > viewportBottom
+                                                        ? absoluteTop - menuHeight - 8
+                                                        : absoluteBottom + 8;
+
+                                                let left = rect.right + scrollX - menuWidth;
+                                                if (left + menuWidth > viewportRight) {
+                                                    left = viewportRight - menuWidth - 10;
+                                                }
+                                                if (left < scrollX) {
+                                                    left = scrollX + 10;
+                                                }
+
+                                                setActionMenu({
+                                                    isOpen: true,
+                                                    position: {
+                                                        top: top + "px",
+                                                        left: left + "px",
+                                                    },
+                                                    course: course
+                                                });
+                                            }}
                                         >
                                             <FaEllipsisV />
                                         </button>
@@ -113,11 +152,22 @@ export default function Settings() {
                     </table>
 
                     <ActionMenu
-                        isOpen={isActionMenuOpen}
-                        position={actionMenuPosition}
-                        onEdit={handleEdit}
-                        onDelete={handleDelete}
-                        onClose={() => setIsActionMenuOpen(false)}
+                        isOpen={actionMenu.isOpen}
+                        position={actionMenu.position}
+                        onEdit={() => {
+                            openEditModal(actionMenu.course);
+                            setActionMenu(prev => ({ ...prev, isOpen: false }));
+                        }}
+                        onDelete={() => {
+                            if (!actionMenu.course) return;
+                            if (window.confirm(`Delete ${actionMenu.course.name}?`)) {
+                                deleteById(actionMenu.course.id);
+                            }
+                            setActionMenu(prev => ({ ...prev, isOpen: false }));
+                        }}
+                        onClose={() =>
+                            setActionMenu(prev => ({ ...prev, isOpen: false }))
+                        }
                         entityLabel="Course"
                     />
 

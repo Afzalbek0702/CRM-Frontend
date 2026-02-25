@@ -4189,3 +4189,7 @@ input[type=number] {
     -moz-appearance: textfield;
     appearance: none;
 }
+.copy-phone:hover{
+    color: var(--primary-color);
+    text-decoration: underline;
+}
