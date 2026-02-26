@@ -57,31 +57,6 @@ export default function Settings() {
         setRoomModalOpen(false);
     };
 
-    const handleActionMenu = (e, course) => {
-        e.stopPropagation();
-        setSelectedCourse(course);
-        const rect = e.currentTarget.getBoundingClientRect();
-        setActionMenuPosition({
-            top: rect.bottom + window.scrollY + 8 + "px",
-            left: rect.right + window.scrollX - 150 + "px",
-        });
-        setIsActionMenuOpen(true);
-    };
-
-    const handleEdit = () => {
-        if (!selectedCourse) return;
-        openEditModal(selectedCourse);
-        setIsActionMenuOpen(false);
-    };
-
-    const handleDelete = () => {
-        if (!selectedCourse) return;
-        if (window.confirm(`Are you sure you want to delete ${selectedCourse.name}?`)) {
-            deleteById(selectedCourse.id);
-            setIsActionMenuOpen(false);
-        }
-    };
-
     const openCreateModal = () => {
         setEditingCourse(null);
         setFormData({ name: "", price: "", lesson_count: "" });
@@ -114,6 +89,8 @@ export default function Settings() {
     };
 
     if (isLoading) return <Loader />;
+    console.log(roomData);
+    
 
     return (
         <div className="table-container">
@@ -221,7 +198,7 @@ export default function Settings() {
                     </thead>
                     <tbody>
                         {roomData.map((room) => (
-                            <tr key={room.name}>
+                            <tr key={room.id}>
                                 <td>{room.room_name}</td>
                                 <td>{room.capacity}</td>
                                 <td style={{ width: "10px" }} onClick={(e) => e.stopPropagation()}>

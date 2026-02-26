@@ -66,7 +66,7 @@ export default function Leads() {
 	};
 
 	if (isLoading) return <Loader />;
-	
+
 
 	return (
 		<div className="table-container">
@@ -88,71 +88,71 @@ export default function Leads() {
 				</button>
 			</div>
 
-			<table>
-				<thead>
-					<tr>
-						<th>
-							<FaThList /> Ism
-						</th>
-						<th>
-							<FaPhone /> Telefon
-						</th>
-						<th>Manba</th>
-						<th>Qiziqadigan Kurs</th>
-						<th>Izoh</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					{(leads || [])
-						.filter(
-							(l) =>
-								l.full_name &&
-								l.full_name.toLowerCase().includes(searchTerm.toLowerCase()),
-						)
-						.map((l) => (
-							<tr key={l.id}>
-								<td>{l.full_name}</td>
-								<td
+			{leads && leads.length < 1 ? (
+				<p>Lidlar yo'q</p>
+			) : (
+				<table>
+					<thead>
+						<tr>
+							<th>
+								<FaThList /> Ism
+							</th>
+							<th>
+								<FaPhone /> Telefon
+							</th>
+							<th>Manba</th>
+							<th>Qiziqadigan Kurs</th>
+							<th>Izoh</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						{(leads || [])
+							.filter(
+								(l) =>
+									l.full_name &&
+									l.full_name.toLowerCase().includes(searchTerm.toLowerCase()),
+							)
+							.map((l) => (
+								<tr key={l.id}>
+									<td>{l.full_name}</td>
+									<td><p
+										onClick={(e) => {
+											e.stopPropagation();
+											navigator.clipboard.writeText(l.phone);
 
-									onClick={(e) => {
-										e.stopPropagation();
-										navigator.clipboard.writeText(l.phone);
+											const el = e.currentTarget;
+											el.dataset.copied = "true";
 
-										const el = e.currentTarget;
-										el.dataset.copied = "true";
+											setTimeout(() => {
+												el.dataset.copied = "false";
+											}, 2000);
+										}}
+										data-copied="false"
+										className="copy-phone">{l.phone}</p></td>
+									<td>{l.source}</td>
 
-										setTimeout(() => {
-											el.dataset.copied = "false";
-										}, 2000);
-									}}
-									data-copied="false"
-									className="copy-phone"
-								>
-									{l.phone}
-								</td>
-								<td>{l.source}</td>
+									<td>
+										{courseData.find(c => c.name === l.interested_course)?.name || "-"}
+									</td>
 
-								<td>
-									{courseData.find(c => c.name === l.interested_course)?.name || "-"}
-								</td>
-
-								<td>{l.comment}</td>
-								<td
-									style={{ width: "10px" }}
-									onClick={(e) => e.stopPropagation()}
-								>
-									<button
-										className="icon-button"
-										onClick={(e) => handleActionMenu(e, l)}
+									<td>{l.comment}</td>
+									<td
+										style={{ width: "10px" }}
+										onClick={(e) => e.stopPropagation()}
 									>
-										<FaEllipsisV />
-									</button>
-								</td>
-							</tr>
-						))}
-				</tbody>
-			</table>
+										<button
+											className="icon-button"
+											onClick={(e) => handleActionMenu(e, l)}
+										>
+											<FaEllipsisV />
+										</button>
+									</td>
+								</tr>
+							))}
+					</tbody>
+				</table>
+			)}
 
 			<ActionMenu
 				isOpen={actionMenu.isOpen}
@@ -191,5 +191,3 @@ export default function Leads() {
 		</div>
 	);
 }
-// 1) lead delete is not working, but showing toast.success("")
-// 2) lead convert to group should be added

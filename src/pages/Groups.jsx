@@ -17,6 +17,7 @@ import {
 	FaSearch,
 } from "react-icons/fa";
 import { HiOutlinePencilAlt } from "react-icons/hi";
+import { useCourse } from "../services/course/useCourse.js";
 
 export default function Groups() {
 	const navigate = useNavigate();
@@ -28,16 +29,22 @@ export default function Groups() {
 		top: 0,
 		left: 0,
 	});
+	const { courseData } = useCourse();
 	const [selectedGroup, setSelectedGroup] = useState(null);
 	const [isEditMode, setIsEditMode] = useState(false);
 	const [searchTerm, setSearchTerm] = useState("");
 	const { students } = useStudent();
 
 	const studentCountMap = students.reduce((acc, student) => {
-		if (!Array.isArray(student.groups)) return acc;
+		if (!student.groups) return acc;
 
-		student.groups.forEach((groupName) => {
-			acc[groupName] = (acc[groupName] || 0) + 1;
+		const groupsArray = Array.isArray(student.groups) ? student.groups : [student.groups];
+
+		groupsArray.forEach((g) => {
+			const groupId = g?.id ?? g;
+			if (groupId != null) {
+				acc[groupId] = (acc[groupId] || 0) + 1;
+			}
 		});
 
 		return acc;
@@ -45,8 +52,10 @@ export default function Groups() {
 
 	const groupsWithCount = groups.map((group) => ({
 		...group,
-		studentCount: studentCountMap[group.name] || 0,
+		studentCount: studentCountMap[group.id] || 0,
 	}));
+
+
 
 	const handleCreate = () => {
 		setIsEditMode(false);
@@ -96,7 +105,14 @@ export default function Groups() {
 		setIsEditMode(false);
 	};
 
-	if (loading) return <Loader />;
+	if (loading || !courseData || courseData.length === 0) {
+		return <Loader />;
+	}
+
+	const courseMap = Object.fromEntries(
+		courseData.map(c => [Number(c.id), c.name])
+	);
+
 	return (
 		<div className="table-container">
 			<h2>
@@ -137,6 +153,8 @@ export default function Groups() {
 				onClose={() => setIsActionMenuOpen(false)}
 			/>
 
+
+
 			{groupsWithCount && groupsWithCount.length < 1 ? (
 				<p>Guruhlar yo'q</p>
 			) : (
@@ -170,48 +188,67 @@ export default function Groups() {
 								(g) =>
 									g.name &&
 									g.name.toLowerCase().includes(searchTerm.toLowerCase()),
+
 							)
-							.map((g) => (
-								<tr
-									key={g.id}
-									onClick={() => handleRowClick(g.id)}
-									style={{ cursor: "pointer" }}
-								>
-									<td>
-										{g.name} <span id="studentCounter">[{g.studentCount}]</span>
-									</td>
-									<td>{g.price} ming so'm</td>
-									<td>{g.lesson_time}</td>
-									<td>{g.course_type}</td>
-									<td className="teacher">{g.teacher}</td>
-									<td>
-										{Array.isArray(g.lesson_days) ? (
-											g.lesson_days.map((day) => (
-												<span
-													key={day}
-													className="day-pill"
-													style={{ padding: "3px 10px", borderRadius: "10px" }}
-												>
-													{day}
-												</span>
-											))
-										) : (
-											<span className="day-pill">{g.lesson_days}</span>
-										)}
-									</td>
-									<td
-										style={{ width: "10px" }}
-										onClick={(e) => e.stopPropagation()}
+							.map((g) => {
+								// console.log("Group:", g.name);
+								// console.log("course_type:", g.course_type);
+								// console.log("courseData:", courseData);
+								console.log('g.course_type', g.course_type, typeof g.course_type);
+								console.log('courseMap keys', Object.keys(courseMap));
+								console.log(g.studentCount);
+
+
+								return (
+									<tr
+										key={g.id}
+										onClick={() => handleRowClick(g.id)}
+										style={{ cursor: "pointer" }}
 									>
-										<button
-											className="icon-button"
-											onClick={(e) => handleActionMenu(e, g)}
+										<td>
+											{g.name} <span id="studentCounter">[{g.studentCount}]</span>
+										</td>
+										<td>{g.price} ming so'm</td>
+										<td>{g.lesson_time}</td>
+										<td>
+											{courseMap[g.course_type] ?? "-"}
+										</td>
+										<td className="teacher">{g.teacher}</td>
+										<td>
+											{Array.isArray(g.lesson_days) ? (
+												g.lesson_days.map((day) => (
+													<span
+														key={day}
+														className="day-pill"
+														style={{ padding: "3px 10px", borderRadius: "10px" }}
+													>
+														{day}
+													</span>
+												))
+											) : (
+												<span className="day-pill">{g.lesson_days}</span>
+											)}
+										</td>
+										<td
+											style={{ width: "10px" }}
+											onClick={(e) => e.stopPropagation()}
 										>
-											<FaEllipsisV />
-										</button>
-									</td>
-								</tr>
-							))}
+											<button
+												className="icon-button"
+												onClick={(e) => handleActionMenu(e, g)}
+											>
+												<FaEllipsisV />
+											</button>
+										</td>
+									</tr>)
+
+
+
+							}
+							)
+						}
+
+
 					</tbody>
 				</table>
 			)}

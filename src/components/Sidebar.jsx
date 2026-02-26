@@ -52,7 +52,7 @@ export default function Sidebar({ isExpanded = true, onToggle = () => { }, mobil
 			<nav className="sidebar-nav">
 				<NavLink to="/dashboard" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
 					<FaTachometerAlt className="sidebar-icon" />
-					{isExpanded && <span>Dashboard</span>}
+					{isExpanded && <span>Asosiy panel</span>}
 				</NavLink>
 				<NavLink to="/leads" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
 					<FaThList className="sidebar-icon" />
@@ -60,15 +60,15 @@ export default function Sidebar({ isExpanded = true, onToggle = () => { }, mobil
 				</NavLink>
 				<NavLink to="/groups" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
 					<FaUsers className="sidebar-icon" />
-					{isExpanded && <span>Groups</span>}
+					{isExpanded && <span>Guruhlar</span>}
 				</NavLink>
 				<NavLink to="/students" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
 					<FaUserGraduate className="sidebar-icon" />
-					{isExpanded && <span>Students</span>}
+					{isExpanded && <span>O'quvchilar</span>}
 				</NavLink>
 				<NavLink to="/teachers" className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
 					<FaChalkboardTeacher className="sidebar-icon" />
-					{isExpanded && <span>Teachers</span>}
+					{isExpanded && <span>O'qituvchilar</span>}
 				</NavLink>
 
 				<div
@@ -131,7 +131,7 @@ export default function Sidebar({ isExpanded = true, onToggle = () => { }, mobil
 						<FaArchive className="sidebar-icon" />
 						{isExpanded && (
 							<>
-								<span>Archive</span>
+								<span>Arxiv</span>
 								<span className={`arrow ${archiveOpen ? "open" : ""}`}>▾</span>
 							</>
 						)}

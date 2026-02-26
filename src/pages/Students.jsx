@@ -62,7 +62,7 @@ export default function Students() {
 						value={selectedTeacher}
 						onChange={(e) => setSelectedTeacher(Number(e.target.value) || "")}
 					>
-						<option value="">All Teachers</option>
+						<option value="">Hamma o'qituvchilar</option>
 						{teachers.map((t) => (
 							<option key={t.id} value={t.id}>
 								{t.full_name}
@@ -74,7 +74,7 @@ export default function Students() {
 						value={selectedGroup}
 						onChange={(e) => setSelectedGroup(Number(e.target.value) || "")} // converts to number
 					>
-						<option value="">All Groups</option>
+						<option value="">Hamma guruhlar</option>
 						{groups.map((g) => (
 							<option key={g.id} value={g.id}>
 								{g.name}
@@ -135,29 +135,28 @@ export default function Students() {
 					<tbody>
 						{(students || [])
 							.filter((s) =>
-								s.full_name.toLowerCase().includes(searchTerm.toLowerCase()),
+								s.full_name.toLowerCase().includes(searchTerm.toLowerCase())
 							)
-							.filter(
-								(s) =>
-									!selectedTeacher ||
-									s.groups?.some((studentGroupName) => {
-										const groupObj = groups.find(
-											(g) => g.name === studentGroupName,
-										);
-										return groupObj?.teacher_id === selectedTeacher;
-									}),
-							)
-							.filter(
-								(s) =>
-									!selectedGroup ||
-									s.groups?.includes(
-										groups.find((g) => g.id === selectedGroup)?.name,
-									),
-							)
+							.filter((s) => {
+								if (!selectedTeacher) return true;
+								const studentGroups = Array.isArray(s.groups) ? s.groups : s.groups ? [s.groups] : [];
+								return studentGroups.some((groupName) => {
+									const groupObj = groups.find((g) => g.name === groupName);
+									return groupObj?.teacher_id === selectedTeacher;
+								});
+							})
+							.filter((s) => {
+								if (!selectedGroup) return true;
+								const selectedGroupName = groups.find((g) => g.id === selectedGroup)?.name;
+								if (!selectedGroupName) return false;
+								const studentGroups = Array.isArray(s.groups) ? s.groups : s.groups ? [s.groups] : [];
+								return studentGroups.includes(selectedGroupName);
+							})
 							.map((s) => {
 								const formatDate = (d) => {
 									if (!d) return "";
 									return String(d).split("T")[0];
+
 								};
 
 								return (
@@ -167,28 +166,48 @@ export default function Students() {
 										style={{ cursor: "pointer" }}
 									>
 										<td>{s.full_name}</td>
-										<td>{s.groups?.length > 0 ? s.groups[0] : "No Group"}</td>
-										<td
-											onClick={(e) => {
-												e.stopPropagation();
-												navigator.clipboard.writeText(s.phone);
+										<td>
+											{Array.isArray(s.groups) && s.groups.length > 0
+												? s.groups.map(g => g.name).join(", ")
+												: s.groups && s.groups.name
+													? s.groups.name
+													: "No Group"}
+										</td>
+										<td>
+											<p
+												onClick={(e) => {
+													e.stopPropagation();
+													navigator.clipboard.writeText(s.phone);
 
-												const el = e.currentTarget;
-												el.dataset.copied = "true";
+													const el = e.currentTarget;
+													el.dataset.copied = "true";
 
-												setTimeout(() => {
-													el.dataset.copied = "false";
-												}, 2000);
-											}}
-											data-copied="false"
-											className="copy-phone"
-										>
-											{s.phone}
+													setTimeout(() => {
+														el.dataset.copied = "false";
+													}, 2000);
+												}}
+												data-copied="false"
+												className="copy-phone">{s.phone}</p>
 										</td>
 
 										<td>{formatDate(s.birthday)}</td>
 										<td>{s.parents_name}</td>
-										<td>{s.parents_phone}</td>
+										<td>
+											<p
+												onClick={(e) => {
+													e.stopPropagation();
+													navigator.clipboard.writeText(s.parents_phone);
+
+													const el = e.currentTarget;
+													el.dataset.copied = "true";
+
+													setTimeout(() => {
+														el.dataset.copied = "false";
+													}, 2000);
+												}}
+												data-copied="false"
+												className="copy-phone">{s.parents_phone}</p>
+										</td>
 										<td>{s.monthly_paid?.toLocaleString() ?? 0} so&apos;m</td>
 										<td
 											style={{ width: "10px" }}
@@ -199,7 +218,7 @@ export default function Students() {
 												onClick={(e) => {
 													const rect = e.currentTarget.getBoundingClientRect();
 
-													const menuHeight = 100;
+													const menuHeight = 110;
 													const menuWidth = 150;
 
 													const scrollY = window.scrollY;

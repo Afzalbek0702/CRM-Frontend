@@ -27,6 +27,8 @@ export default function Teachers() {
 	};
 
 	if (isLoading) return <Loader />;
+	console.log(teachers);
+
 
 	return (
 		<div className="table-container">
@@ -83,7 +85,22 @@ export default function Teachers() {
 									style={{ cursor: "pointer" }}
 								>
 									<td className="teacher">{t.full_name}</td>
-									<td>{t.phone}</td>
+									<td><p
+										onClick={(e) => {
+											e.stopPropagation();
+											navigator.clipboard.writeText(t.phone);
+
+											const el = e.currentTarget;
+											el.dataset.copied = "true";
+
+											setTimeout(() => {
+												el.dataset.copied = "false";
+											}, 2000);
+										}}
+										data-copied="false"
+										className="copy-phone">{t.phone}
+									</p>
+									</td>
 									<td
 										style={{ width: "10px" }}
 										onClick={(e) => e.stopPropagation()}

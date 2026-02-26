@@ -16,7 +16,7 @@ export default function Modal({ isOpen, onClose, onSubmit, title, initialData })
     const [isAnimating, setIsAnimating] = useState(false);
     const { teachers } = useTeachers()
     const { courseData } = useCourse();
-    const { roomData:rooms } = useRoom();
+    const { roomData: rooms } = useRoom();
     useEffect(() => {
         if (initialData) {
             setFormData({
@@ -57,20 +57,28 @@ export default function Modal({ isOpen, onClose, onSubmit, title, initialData })
         "Fri": "Juma",
         "Sat": "Shanba"
     };
-
     const handleInputChange = (e) => {
         const { name, value } = e.target;
+
         setFormData((prev) => {
-            const updated = { ...prev, [name]: value };
+            let updated = { ...prev, [name]: value };
+
+            
             if (name === "course_type") {
-                const selectedCourse = courseData.find(c => c.id.toString() === value);
+                const selectedCourse = courseData.find(
+                    (c) => c.id.toString() === value.toString()
+                );
                 if (selectedCourse) {
-                    updated.price = selectedCourse.price;
+                    updated.price = selectedCourse.price || "";
+                } else {
+                    updated.price = ""; 
                 }
             }
+
             return updated;
         });
     };
+
 
     const handleDayToggle = (day) => {
         setFormData((prev) => ({
@@ -91,6 +99,7 @@ export default function Modal({ isOpen, onClose, onSubmit, title, initialData })
             lesson_time: "",
             lesson_days: [],
             teacher_id: "",
+            room_id: "",
         });
     };
 
@@ -154,7 +163,7 @@ export default function Modal({ isOpen, onClose, onSubmit, title, initialData })
                             >
                                 <option value="">Kurs turini tanlang</option>
                                 {courseData.map((course) => (
-                                    <option key={course.id} value={course.name}>
+                                    <option key={course.id} value={course.id}>
                                         {course.name}
                                     </option>
                                 ))}
@@ -234,11 +243,11 @@ export default function Modal({ isOpen, onClose, onSubmit, title, initialData })
                                     </option>
                                 ))}
                             </select>
-                   </div>
-                   
+                        </div>
+
                         <div className="form-group full-width">
                             <label className="form-label">
-                                <FaDoorOpen  className="field-icon" />
+                                <FaDoorOpen className="field-icon" />
                                 Xona
                             </label>
                             <select

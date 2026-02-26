@@ -2,6 +2,7 @@ import { useDashboard } from "../services/dashboard/useDashboard.js";
 import StatsCards from "../components/Statscards";
 import { useStudent } from "../services/student/useStudent.js";
 import { useGroups } from "../services/group/useGroups.js";
+import { useCourse } from "../services/course/useCourse.js";
 import { useNavigate, NavLink } from "react-router-dom";
 import { FaUsers, FaClock, FaBook, FaChalkboardTeacher, FaPhone, FaExclamationTriangle } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
@@ -9,13 +10,15 @@ import { MdDashboard } from "react-icons/md";
 export default function Dashboard() {
 	const navigate = useNavigate();
 	const {absentStudents,monthlyIncome,todayLessons,topDebtors,isLoading,error } = useDashboard();
+	const { courseData } = useCourse();
+	const courseMap = Object.fromEntries(courseData.map(c => [c.id, c.name]));
 
 	const handleRowClick = (groupId) => {
 		navigate(`/groups/${groupId}`);
 	};
 
 	const { students } = useStudent();
-	const { groups } = useGroups();
+	const { fetchById, groups } = useGroups();
    if (!localStorage.getItem("token")) return navigate("/login");
 
 	return (
@@ -160,7 +163,7 @@ export default function Dashboard() {
 											style={{ cursor: "pointer" }}
 										>
 											<td>{lesson.group_name}</td>
-											<td>{lesson.course_type}</td>
+											<td>{courseMap[lesson.course_type] ?? "Noma'lum"}</td>
 											<td>{lesson.teacher_name}</td>
 											<td>{lesson.lesson_time}</td>
 										</tr>

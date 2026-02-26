@@ -3556,6 +3556,9 @@ body {
 .copy-phone {
     cursor: pointer;
     position: relative;
+    display: block;
+    width: 20%;
+
 }
 
 .copy-phone::after {

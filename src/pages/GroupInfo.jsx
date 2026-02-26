@@ -6,6 +6,7 @@ import { useAttendance } from "../services/attendance/useAttendance";
 import { useStudent } from "../services/student/useStudent";
 import { usePayments } from "../services/payment/usePayments";
 import { useTeachers } from "../services/teacher/useTeachers";
+import { useCourse } from "../services/course/useCourse";
 import PaymentModal from "../components/PaymentModal";
 import { FaArrowLeft, FaEllipsisV, FaSearch } from "react-icons/fa";
 
@@ -24,6 +25,7 @@ export default function GuruhlarInfo() {
 		position: { top: 0, left: 0 },
 		student: null,
 	});
+	const { courseData } = useCourse();
 	const [transferStudent, setTransferStudent] = useState(null);
 	const [showTransferModal, setShowTransferModal] = useState(false);
 	const [showPaymentModal, setShowPaymentModal] = useState(false);
@@ -34,6 +36,7 @@ export default function GuruhlarInfo() {
 		group_id: id,
 		month: month,
 	});
+	const courseMap = Object.fromEntries(courseData.map(c => [c.id, c.name]));
    
 	useEffect(() => {
 		fetchById(id).then((data) => {
@@ -178,7 +181,7 @@ export default function GuruhlarInfo() {
 									Kurs turi
 								</p>
 								<p style={{ color: "white", fontWeight: "600" }}>
-									{group.course_type}
+									{courseMap[group.course_type] ?? "Noma'lum"}
 								</p>
 							</div>
 							<div>

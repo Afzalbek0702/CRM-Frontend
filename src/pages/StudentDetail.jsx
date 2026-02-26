@@ -17,8 +17,9 @@ export default function StudentDetail() {
 		const loadStudent = async () => {
 			const data = await fetchById(id);
 			setStudent(data);
-			if (data.groups?.length && groups?.length) {
-				const mapped = groups.filter((g) => data.groups.includes(g.name));
+
+			if (data?.group) {
+				const mapped = groups.filter((g) => g.id === data.group.id);
 				setFullGroups(mapped);
 			} else {
 				setFullGroups([]);
@@ -29,12 +30,17 @@ export default function StudentDetail() {
 
 	if (loading) return <Loader />;
 	if (error) return <p>Error: {error}</p>;
-	if (!student) return <p>!!under construction!!</p>;
+	if (!student) return <Loader />;
 
 	const formatDate = (d) => {
 		if (!d) return "";
 		return String(d).split("T")[0];
 	};
+
+	console.log("group the student is in : ", fullGroups);
+	console.log("student : ", student);
+
+
 
 	return (
 		<div className="table-container">
