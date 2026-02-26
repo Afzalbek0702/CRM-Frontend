@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { FaPlus, FaTimes, FaMoneyBillWave } from "react-icons/fa";
 
 export default function ExpenseModal({
   isOpen,
@@ -59,60 +60,100 @@ export default function ExpenseModal({
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay">
-      <div className="modal">
-        <h3>
-          {initialData ? "Edit Expense" : "Add Expense"}
-        </h3>
+    <>
+      <div className="side-panel-backdrop" onClick={onClose}></div>
 
-        <form onSubmit={handleSubmit}>
-
-          <div className="form-group">
-            <label>Description</label>
-            <input
-              type="text"
-              name="description"
-              value={form.description}
-              onChange={handleChange}
-              required
-            />
+      <div className="side-panel" onClick={(e) => e.stopPropagation()}>
+        <div className="panel-header">
+          <div className="panel-title-section">
+            <div className="panel-icon">
+              {initialData ? <FaEdit /> : <FaPlus />}
+            </div>
+            <div>
+              <h2>{initialData ? "Edit Expense" : "New Expense"}</h2>
+              <p className="panel-subtitle">
+                {initialData
+                  ? "Update expense details"
+                  : "Record a new expense"}
+              </p>
+            </div>
           </div>
 
-          <div className="form-group">
-            <label>Amount</label>
-            <input
-              type="number"
-              name="amount"
-              value={form.amount}
-              onChange={handleChange}
-              required
-            />
+          <button className="close-button" onClick={onClose}>
+            <FaTimes />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="modal-form">
+          <div className="form-grid">
+            <div className="form-group full-width">
+              <label className="form-label">
+                <FaMoneyBillWave className="field-icon" /> Description
+              </label>
+              <input
+                type="text"
+                name="description"
+                className="form-input"
+                value={form.description}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">
+                Amount
+              </label>
+              <input
+                type="number"
+                name="amount"
+                className="form-input"
+                value={form.amount}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">
+                Method
+              </label>
+              <select
+                name="method"
+                className="form-input"
+                value={form.method}
+                onChange={handleChange}
+              >
+                <option value="cash">Cash</option>
+                <option value="card">Card</option>
+                <option value="transfer">Transfer</option>
+              </select>
+            </div>
           </div>
 
-          <div className="form-group">
-            <label>Method</label>
-            <select
-              name="method"
-              value={form.method}
-              onChange={handleChange}
+          <div className="panel-buttons">
+            <button
+              type="button"
+              className="btn-cancel"
+              onClick={onClose}
             >
-              <option value="cash">Cash</option>
-              <option value="card">Card</option>
-              <option value="transfer">Transfer</option>
-            </select>
-          </div>
-
-          <div className="modal-actions">
-            <button type="button" onClick={onClose}>
-              Cancel
+              <FaTimes /> Cancel
             </button>
-            <button type="submit">
-              {initialData ? "Update" : "Create"}
+
+            <button type="submit" className="btn-submit">
+              {initialData ? (
+                <>
+                  <FaEdit /> Update
+                </>
+              ) : (
+                <>
+                  <FaPlus /> Create
+                </>
+              )}
             </button>
           </div>
-
         </form>
       </div>
-    </div>
+    </>
   );
 }

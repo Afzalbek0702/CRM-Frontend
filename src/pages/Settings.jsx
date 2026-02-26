@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useCourse } from "../services/course/useCourse";
 import { useRoom } from "../services/room/useRoom";
 import Loader from "../components/Loader";
-import { FaPlus, FaTrash, FaEdit, FaEllipsisV } from "react-icons/fa";
+import { FaPlus, FaTrash, FaEdit, FaEllipsisV, FaTimes } from "react-icons/fa";
 import ActionMenu from "../components/ActionMenu";
 
 export default function Settings() {
@@ -90,7 +90,7 @@ export default function Settings() {
 
     if (isLoading) return <Loader />;
     console.log(roomData);
-    
+
 
     return (
         <div className="table-container">
@@ -249,106 +249,191 @@ export default function Settings() {
             {/* modal start */}
 
             {modalOpen && (
-                <div className="modal-backdrop">
-                    <div className="modal">
-                        <h2>{editingCourse ? "Edit Course" : "Add Course"}</h2>
-                        <form onSubmit={handleSubmit}>
-                            <div className="form-group">
-                                <label>Name</label>
-                                <input
-                                    type="text"
-                                    name="name"
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                    required
-                                    className="input-field"
-                                />
+                <>
+                    <div className="side-panel-backdrop" onClick={() => setModalOpen(false)}></div>
+
+                    <div className="side-panel" onClick={(e) => e.stopPropagation()}>
+                        <div className="panel-header">
+                            <div className="panel-title-section">
+                                <div className="panel-icon">
+                                    {editingCourse ? <FaEdit /> : <FaPlus />}
+                                </div>
+                                <div>
+                                    <h2>{editingCourse ? "Edit Course" : "New Course"}</h2>
+                                    <p className="panel-subtitle">
+                                        {editingCourse
+                                            ? "Update course details"
+                                            : "Create a new course"}
+                                    </p>
+                                </div>
                             </div>
-                            <div className="form-group">
-                                <label>Price</label>
-                                <input
-                                    type="number"
-                                    name="price"
-                                    value={formData.price}
-                                    onChange={handleChange}
-                                    required
-                                    className="input-field"
-                                />
+
+                            <button
+                                className="close-button"
+                                onClick={() => setModalOpen(false)}
+                            >
+                                <FaTimes />
+                            </button>
+                        </div>
+
+                        <form onSubmit={handleSubmit} className="modal-form">
+                            <div className="form-grid">
+                                <div className="form-group full-width">
+                                    <label className="form-label">
+                                        Name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        className="form-input"
+                                        value={formData.name}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <label className="form-label">
+                                        Price
+                                    </label>
+                                    <input
+                                        type="number"
+                                        name="price"
+                                        className="form-input"
+                                        value={formData.price}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <label className="form-label">
+                                        Lesson Count
+                                    </label>
+                                    <input
+                                        type="number"
+                                        name="lesson_count"
+                                        className="form-input"
+                                        value={formData.lesson_count}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
                             </div>
-                            <div className="form-group">
-                                <label>Lesson Count</label>
-                                <input
-                                    type="number"
-                                    name="lesson_count"
-                                    value={formData.lesson_count}
-                                    onChange={handleChange}
-                                    required
-                                    className="input-field"
-                                />
-                            </div>
-                            <div style={{ marginTop: "20px" }}>
-                                <button type="submit" className="btn1" style={{ marginRight: "10px" }}>
-                                    {editingCourse ? "Update" : "Create"}
+
+                            <div className="panel-buttons">
+                                <button
+                                    type="button"
+                                    className="btn-cancel"
+                                    onClick={() => setModalOpen(false)}
+                                >
+                                    <FaTimes /> Cancel
                                 </button>
-                                <button type="button" className="btn2" onClick={() => setModalOpen(false)}>
-                                    Cancel
+
+                                <button type="submit" className="btn-submit">
+                                    {editingCourse ? (
+                                        <>
+                                            <FaEdit /> Update
+                                        </>
+                                    ) : (
+                                        <>
+                                            <FaPlus /> Create
+                                        </>
+                                    )}
                                 </button>
                             </div>
                         </form>
                     </div>
-                </div>
-
-
-
+                </>
             )}
 
 
             {roomModalOpen && (
-                <div className="modal-backdrop">
-                    <div className="modal">
-                        <h2>{editingRoom ? "Edit Room" : "Add Room"}</h2>
+                <>
+                    <div
+                        className="side-panel-backdrop"
+                        onClick={() => setRoomModalOpen(false)}
+                    ></div>
 
-                        <form onSubmit={handleRoomSubmit}>
-                            <div className="form-group">
-                                <label>Name</label>
-                                <input
-                                    type="text"
-                                    name="name"
-                                    value={roomForm.name}
-                                    onChange={handleRoomChange}
-                                    required
-                                    className="input-field"
-                                />
+                    <div className="side-panel" onClick={(e) => e.stopPropagation()}>
+                        <div className="panel-header">
+                            <div className="panel-title-section">
+                                <div className="panel-icon">
+                                    {editingRoom ? <FaEdit /> : <FaPlus />}
+                                </div>
+                                <div>
+                                    <h2>{editingRoom ? "Edit Room" : "New Room"}</h2>
+                                    <p className="panel-subtitle">
+                                        {editingRoom
+                                            ? "Update room details"
+                                            : "Create a new room"}
+                                    </p>
+                                </div>
                             </div>
 
-                            <div className="form-group">
-                                <label>Capacity</label>
-                                <input
-                                    type="number"
-                                    name="capacity"
-                                    value={roomForm.capacity}
-                                    onChange={handleRoomChange}
-                                    required
-                                    className="input-field"
-                                />
+                            <button
+                                className="close-button"
+                                onClick={() => setRoomModalOpen(false)}
+                            >
+                                <FaTimes />
+                            </button>
+                        </div>
+
+                        <form onSubmit={handleRoomSubmit} className="modal-form">
+                            <div className="form-grid">
+                                <div className="form-group full-width">
+                                    <label className="form-label">
+                                        Name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        className="form-input"
+                                        value={roomForm.name}
+                                        onChange={handleRoomChange}
+                                        required
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <label className="form-label">
+                                        Capacity
+                                    </label>
+                                    <input
+                                        type="number"
+                                        name="capacity"
+                                        className="form-input"
+                                        value={roomForm.capacity}
+                                        onChange={handleRoomChange}
+                                        required
+                                    />
+                                </div>
                             </div>
 
-                            <div style={{ marginTop: "20px" }}>
-                                <button type="submit" className="btn1">
-                                    {editingRoom ? "Update" : "Create"}
-                                </button>
-
+                            <div className="panel-buttons">
                                 <button
                                     type="button"
-                                    className="btn2"
+                                    className="btn-cancel"
                                     onClick={() => setRoomModalOpen(false)}
                                 >
-                                    Cancel
+                                    <FaTimes /> Cancel
+                                </button>
+
+                                <button type="submit" className="btn-submit">
+                                    {editingRoom ? (
+                                        <>
+                                            <FaEdit /> Update
+                                        </>
+                                    ) : (
+                                        <>
+                                            <FaPlus /> Create
+                                        </>
+                                    )}
                                 </button>
                             </div>
                         </form>
                     </div>
-                </div>
+                </>
             )}
 
             {/* modal end */}

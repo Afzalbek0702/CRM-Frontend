@@ -88,13 +88,13 @@ body {
     font-family: var(--font-family);
     background-color: var(--primary-color);
     border: 1px solid var(--primary-color);
+    outline: none;
 }
 
 .filters select:hover {
-    transform: translateY(-2px);
     box-shadow: var(--box-shadow);
     color: white;
-    transition: all 0.3s ease;
+    transition: color 0.3s ease;
 }
 
 

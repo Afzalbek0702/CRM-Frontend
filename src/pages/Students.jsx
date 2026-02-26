@@ -51,6 +51,9 @@ export default function Students() {
 
 	if (loading) return <Loader />;
 	if (error) return <div>Error</div>;
+
+	// console.log();
+
 	return (
 		<div className="table-container">
 			<h2>
@@ -139,23 +142,23 @@ export default function Students() {
 							)
 							.filter((s) => {
 								if (!selectedTeacher) return true;
-								const studentGroups = Array.isArray(s.groups) ? s.groups : s.groups ? [s.groups] : [];
-								return studentGroups.some((groupName) => {
-									const groupObj = groups.find((g) => g.name === groupName);
-									return groupObj?.teacher_id === selectedTeacher;
-								});
+								if (!s.groups) return false;
+
+								const groupObj = groups.find(g => g.id === s.groups.id);
+								return groupObj?.teacher_id === selectedTeacher;
 							})
 							.filter((s) => {
 								if (!selectedGroup) return true;
-								const selectedGroupName = groups.find((g) => g.id === selectedGroup)?.name;
-								if (!selectedGroupName) return false;
-								const studentGroups = Array.isArray(s.groups) ? s.groups : s.groups ? [s.groups] : [];
-								return studentGroups.includes(selectedGroupName);
+								if (!s.groups) return false;
+
+								return s.groups.id === selectedGroup;
 							})
 							.map((s) => {
 								const formatDate = (d) => {
 									if (!d) return "";
 									return String(d).split("T")[0];
+
+
 
 								};
 

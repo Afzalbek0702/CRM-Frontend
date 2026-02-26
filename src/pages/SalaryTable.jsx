@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Loader from "../components/Loader";
 import ActionMenu from "../components/ActionMenu";
-import SalaryModal from "../components/SalaryModal";
 import { useSalary } from "../services/salary/useSalary";
 
 import {
@@ -47,16 +46,6 @@ export default function SalaryTable() {
         <strong>Total Salary Paid:</strong>{" "}
         {totalSalaryPaid.toLocaleString()} so'm
       </div>
-
-      <button
-        onClick={() => {
-          setEditingSalary(null);
-          setIsModalOpen(true);
-        }}
-        style={{ marginBottom: "15px" }}
-      >
-        Add Salary
-      </button>
 
       <table>
         <thead>
@@ -147,25 +136,6 @@ export default function SalaryTable() {
             ...m,
             isOpen: false,
           }));
-        }}
-      />
-
-      <SalaryModal
-        isOpen={isModalOpen}
-        onClose={() => {
-          setIsModalOpen(false);
-          setEditingSalary(null);
-        }}
-        initialData={editingSalary}
-        onSubmit={async (formData) => {
-          if (editingSalary) {
-            await updateSalary(editingSalary.id, formData);
-          } else {
-            await createSalary(formData);
-          }
-
-          setIsModalOpen(false);
-          setEditingSalary(null);
         }}
       />
     </div>
