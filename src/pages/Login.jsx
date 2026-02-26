@@ -19,7 +19,6 @@ const Login = () => {
 				...formData,
 				phone: formData.phone.replace(/\D/g, ""),
          });
-         console.log(data);
          
 			localStorage.setItem("token", data.token);
 			navigate("/dashboard");
@@ -35,8 +34,8 @@ const Login = () => {
 			...formData,
 			phone: phoneFormat.formatPhone(e.target.value),
 		});
-		console.log(formData);
-	};
+   };
+   
 	return (
 		<div className="login-container">
 			<div className="login-card">

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { FaSearch, FaTimes, FaChevronLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { useStudents } from "../services/student/useStudents";
+import { useStudent } from "../services/student/useStudent";
 import { useGroups } from "../services/group/useGroups";
 import { useTeachers } from "../services/teacher/useTeachers";
 import { useLeads } from "../services/lead/useLeads";
@@ -17,7 +17,7 @@ export default function Header({ isExpanded, onToggle, mobileOpen }) {
 	const [isSearchOpen, setIsSearchOpen] = useState(false);
 	const searchRef = useRef(null);
 	const navigate = useNavigate();
-	const { students = [] } = useStudents();
+	const { students = [] } = useStudent();
 	const { groups = [] } = useGroups();
 	const { teachers = [] } = useTeachers();
 	const { leads = [] } = useLeads();

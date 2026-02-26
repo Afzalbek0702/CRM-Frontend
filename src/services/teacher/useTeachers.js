@@ -23,34 +23,34 @@ export const useTeachers = () => {
 	const createTeacherMutation = useMutation({
 		mutationFn: (data) => teacherService.create(data),
 		onSuccess: () => {
-			toast.success("O'qituvchi muvaffaqiyatli qo'shildi");
 			queryClient.invalidateQueries({ queryKey: TEACHERS_QUERY_KEY });
+			toast.success("O'qituvchi muvaffaqiyatli qo'shildi");
 		},
 		onError: (error) => {
 			toast.error("O'qituvchi qo'shishda xatolik yuz berdi");
-			console.log(error.response?.data);
+			console.error(error.response?.data);
 		},
 	});
 	const updateTeacherMutation = useMutation({
 		mutationFn: ({ id, data }) => teacherService.update(id, data),
 		onSuccess: () => {
-			toast.success("O'qituvchi muvaffaqiyatli yangilandi");
 			queryClient.invalidateQueries({ queryKey: TEACHERS_QUERY_KEY });
+			toast.success("O'qituvchi muvaffaqiyatli yangilandi");
 		},
 		onError: (error) => {
 			toast.error("O'qituvchi yangilashda xatolik yuz berdi");
-			console.log(error.response?.data);
+			console.error(error.response?.data);
 		},
 	});
 	const deleteTeacherMutation = useMutation({
 		mutationFn: (id) => teacherService.delete(id),
 		onSuccess: () => {
-			toast.success("O'qituvchi muvaffaqiyatli o'chirildi");
 			queryClient.invalidateQueries({ queryKey: TEACHERS_QUERY_KEY });
+			toast.success("O'qituvchi muvaffaqiyatli o'chirildi");
 		},
 		onError: (error) => {
 			toast.error("O'qituvchi o'chirishda xatolik yuz berdi");
-			console.log(error.response?.data);
+			console.error(error.response?.data);
 		},
 	});
 
@@ -60,9 +60,8 @@ export const useTeachers = () => {
 		error,
 		fetchAll,
 		fetchById,
-		createTeacher: createTeacherMutation.mutateAsync,
-		updateTeacher: (id, data) =>
-			updateTeacherMutation.mutateAsync({ id, data }),
-		deleteTeacher: deleteTeacherMutation.mutateAsync,
+		createTeacher: createTeacherMutation.mutate,
+		updateTeacher: updateTeacherMutation.mutate,
+		deleteTeacher: deleteTeacherMutation.mutate,
 	};
 };

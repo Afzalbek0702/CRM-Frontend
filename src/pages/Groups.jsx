@@ -4,7 +4,7 @@ import Loader from "../components/Loader";
 import Modal from "../components/Modal";
 import ActionMenu from "../components/ActionMenu";
 import { useGroups } from "../services/group/useGroups.js";
-import { useStudents } from "../services/student/useStudents.js";
+import { useStudent } from "../services/student/useStudent.js";
 import {
 	FaEllipsisV,
 	FaPlus,
@@ -31,27 +31,22 @@ export default function Groups() {
 	const [selectedGroup, setSelectedGroup] = useState(null);
 	const [isEditMode, setIsEditMode] = useState(false);
 	const [searchTerm, setSearchTerm] = useState("");
-	const { students } = useStudents();
+	const { students } = useStudent();
 
 	const studentCountMap = students.reduce((acc, student) => {
 		if (!Array.isArray(student.groups)) return acc;
 
-		student.groups.forEach(groupName => {
+		student.groups.forEach((groupName) => {
 			acc[groupName] = (acc[groupName] || 0) + 1;
 		});
 
 		return acc;
 	}, {});
 
-	const groupsWithCount = groups.map(group => ({
+	const groupsWithCount = groups.map((group) => ({
 		...group,
-		studentCount: studentCountMap[group.name] || 0
+		studentCount: studentCountMap[group.name] || 0,
 	}));
-
-
-
-
-
 
 	const handleCreate = () => {
 		setIsEditMode(false);
@@ -171,8 +166,10 @@ export default function Groups() {
 					</thead>
 					<tbody>
 						{groupsWithCount
-							.filter((g) =>
-								g.name && g.name.toLowerCase().includes(searchTerm.toLowerCase())
+							.filter(
+								(g) =>
+									g.name &&
+									g.name.toLowerCase().includes(searchTerm.toLowerCase()),
 							)
 							.map((g) => (
 								<tr
@@ -180,7 +177,9 @@ export default function Groups() {
 									onClick={() => handleRowClick(g.id)}
 									style={{ cursor: "pointer" }}
 								>
-									<td>{g.name} <span id="studentCounter">[{g.studentCount}]</span></td>
+									<td>
+										{g.name} <span id="studentCounter">[{g.studentCount}]</span>
+									</td>
 									<td>{g.price} ming so'm</td>
 									<td>{g.lesson_time}</td>
 									<td>{g.course_type}</td>
@@ -215,16 +214,7 @@ export default function Groups() {
 							))}
 					</tbody>
 				</table>
-
-			)
-			}
-
-
-
-
-
-
-
+			)}
 		</div>
 	);
 }

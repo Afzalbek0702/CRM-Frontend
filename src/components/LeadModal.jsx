@@ -124,7 +124,7 @@ export default function LeadModal({ isOpen, onClose, onSubmit, initialData }) {
                             >
                                 <option value="">Interested Course</option>
                                 {courseData.map((course) => (
-                                    <option key={course.id} value={String(course.id)}>
+                                    <option key={course.id} value={String(course.name)}>
                                         {course.name}
                                     </option>
                                 ))}

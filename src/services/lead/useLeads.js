@@ -22,37 +22,36 @@ export const useLeads = () => {
 	const createLeadMutation = useMutation({
 		mutationFn: (data) => leadsService.createLead(data),
 		onSuccess: () => {
-			toast.success("Lead muffafaqqiyatli yaratildi");
 			queryClient.invalidateQueries({ queryKey: LEADS_QUERY_KEY });
+			toast.success("Lead muffafaqqiyatli yaratildi");
 		},
 		onError: (error) => {
 			toast.error("Lead yaratishda xatolik yuz berdi");
-			console.log(error.response?.data);
+			console.error(error.response?.data);
 		},
 	});
 
 	const updateLeadMutation = useMutation({
 		mutationFn: ({ id, data }) => leadsService.updateLead(id, data),
 		onSuccess: () => {
-			toast.success("Lead muffafaqqiyatli yangilandi");
 			queryClient.invalidateQueries({ queryKey: LEADS_QUERY_KEY });
+			toast.success("Lead muffafaqqiyatli yangilandi");
 		},
 		onError: (error) => {
 			toast.error("Lead yangilashda xatolik yuz berdi");
-			console.log(error.response?.data);
+			console.error(error.response?.data);
 		},
 	});
 
 	const deleteLeadMutation = useMutation({
 		mutationFn: (id) => leadsService.deleteLead(id),
 		onSuccess: () => {
-			toast.success("Lead muffafaqqiyatli o'chirildi");
 			queryClient.invalidateQueries({ queryKey: LEADS_QUERY_KEY });
-
+			toast.success("Lead muffafaqqiyatli o'chirildi");
 		},
 		onError: (error) => {
 			toast.error("Leadni o'chirishda xatolik yuz berdi");
-			console.log(error.response?.data);
+			console.error(error.response?.data);
 		},
 	});
 	const convertLeadToGroupMutation = useMutation({
@@ -64,7 +63,7 @@ export const useLeads = () => {
 		},
 		onError: (error) => {
 			toast.error("Leadni guruhga qo'shishda xatolik yuz berdi");
-			console.log(error.response?.data);
+			console.error(error.response?.data);
 		},
 	});
 	return {

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-	baseURL: "https://api-crm-data-space.vercel.app/",
+	baseURL: "http://localhost:7000/",
 	timeout: 7000,
 });
 

@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { FaUsers, FaBook, FaDollarSign, FaClock, FaCalendarAlt, FaChalkboardTeacher, FaTimes, FaSave, FaPlus } from "react-icons/fa";
+import { FaUsers, FaBook, FaDollarSign, FaClock, FaCalendarAlt, FaChalkboardTeacher, FaTimes, FaSave, FaPlus, FaDoorOpen } from "react-icons/fa";
 import { useTeachers } from '../services/teacher/useTeachers'
 import { useCourse } from "../services/course/useCourse";
+import { useRoom } from "../services/room/useRoom";
 export default function Modal({ isOpen, onClose, onSubmit, title, initialData }) {
     const [formData, setFormData] = useState({
         name: "",
@@ -10,11 +11,12 @@ export default function Modal({ isOpen, onClose, onSubmit, title, initialData })
         lesson_time: "",
         lesson_days: [],
         teacher_id: "",
+        room_id: "",
     });
     const [isAnimating, setIsAnimating] = useState(false);
     const { teachers } = useTeachers()
     const { courseData } = useCourse();
-
+    const { roomData:rooms } = useRoom();
     useEffect(() => {
         if (initialData) {
             setFormData({
@@ -24,6 +26,7 @@ export default function Modal({ isOpen, onClose, onSubmit, title, initialData })
                 lesson_time: initialData.lesson_time || "",
                 lesson_days: Array.isArray(initialData.lesson_days) ? initialData.lesson_days : [],
                 teacher_id: initialData.teacher_id ?? null,
+                room_id: initialData.room_id ?? null,
             });
         } else {
             setFormData({
@@ -33,6 +36,7 @@ export default function Modal({ isOpen, onClose, onSubmit, title, initialData })
                 lesson_time: "",
                 lesson_days: [],
                 teacher_id: "",
+                room_id: "",
             });
         }
 
@@ -150,7 +154,7 @@ export default function Modal({ isOpen, onClose, onSubmit, title, initialData })
                             >
                                 <option value="">Kurs turini tanlang</option>
                                 {courseData.map((course) => (
-                                    <option key={course.id} value={course.id}>
+                                    <option key={course.id} value={course.name}>
                                         {course.name}
                                     </option>
                                 ))}
@@ -227,6 +231,27 @@ export default function Modal({ isOpen, onClose, onSubmit, title, initialData })
                                 {teachers.map((teacher) => (
                                     <option key={teacher.id} value={teacher.id}>
                                         {teacher.full_name}
+                                    </option>
+                                ))}
+                            </select>
+                   </div>
+                   
+                        <div className="form-group full-width">
+                            <label className="form-label">
+                                <FaDoorOpen  className="field-icon" />
+                                Xona
+                            </label>
+                            <select
+                                name="room_id"
+                                value={formData.room_id || ''}
+                                onChange={handleInputChange}
+                                className="form-input"
+                                required
+                            >
+                                <option value="">Xonani tanlang</option>
+                                {rooms.map((r) => (
+                                    <option key={r.room_id} value={r.room_id}>
+                                        {r.room_name}
                                     </option>
                                 ))}
                             </select>

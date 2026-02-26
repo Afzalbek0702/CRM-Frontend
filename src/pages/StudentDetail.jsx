@@ -1,14 +1,14 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Loader from "../components/Loader";
-import { useStudents } from "../services/student/useStudents";
+import { useStudent } from "../services/student/useStudent";
 import { FaArrowLeft, FaUsers } from "react-icons/fa";
 import { useGroups } from "../services/group/useGroups";
 
 export default function StudentDetail() {
 	const { id } = useParams();
 	const navigate = useNavigate();
-	const { fetchById, loading, error } = useStudents();
+	const { fetchById, loading, error } = useStudent();
 	const [student, setStudent] = useState(null);
 	const { groups } = useGroups();
 	const [fullGroups, setFullGroups] = useState([]);
@@ -38,20 +38,42 @@ export default function StudentDetail() {
 
 	return (
 		<div className="table-container">
-			<button onClick={() => navigate(-1)} className="btn1" style={{ marginBottom: "20px", cursor: "pointer" }}>
+			<button
+				onClick={() => navigate(-1)}
+				className="btn1"
+				style={{ marginBottom: "20px", cursor: "pointer" }}
+			>
 				<FaArrowLeft /> Back
 			</button>
 
 			<h2>{student.full_name}</h2>
 
-			<div style={{ marginBottom: "30px", background: "var(--background-color-secondary)", padding: "20px", borderRadius: "8px" }}>
-				<p><strong>Phone:</strong> {student.phone}</p>
-				<p><strong>Birthday:</strong> {formatDate(student.birthday)}</p>
-				<p><strong>Parents:</strong> {student.parents_name}</p>
-				<p><strong>Balance:</strong> {student.balance?.toLocaleString() ?? 0} so'm</p>
+			<div
+				style={{
+					marginBottom: "30px",
+					background: "var(--background-color-secondary)",
+					padding: "20px",
+					borderRadius: "8px",
+				}}
+			>
+				<p>
+					<strong>Phone:</strong> {student.phone}
+				</p>
+				<p>
+					<strong>Birthday:</strong> {formatDate(student.birthday)}
+				</p>
+				<p>
+					<strong>Parents:</strong> {student.parents_name}
+				</p>
+				<p>
+					<strong>Balance:</strong> {student.balance?.toLocaleString() ?? 0}{" "}
+					so'm
+				</p>
 			</div>
 
-			<h3><FaUsers /> Groups</h3>
+			<h3>
+				<FaUsers /> Groups
+			</h3>
 			{fullGroups && fullGroups.length > 0 ? (
 				<table>
 					<thead>

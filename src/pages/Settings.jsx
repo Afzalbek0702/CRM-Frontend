@@ -114,8 +114,6 @@ export default function Settings() {
     };
 
     if (isLoading) return <Loader />;
-    console.log(roomData);
-
 
     return (
         <div className="table-container">
@@ -224,7 +222,7 @@ export default function Settings() {
                     <tbody>
                         {roomData.map((room) => (
                             <tr key={room.name}>
-                                <td>{room.name}</td>
+                                <td>{room.room_name}</td>
                                 <td>{room.capacity}</td>
                                 <td style={{ width: "10px" }} onClick={(e) => e.stopPropagation()}>
                                     <button

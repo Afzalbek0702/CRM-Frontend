@@ -26,12 +26,6 @@ export default function Payments() {
 		}
 	}
 
-
-	console.log("category:", category);
-
-
-
-
 	const validCategories = [ "income", "salary", "debtors", "expenses"];
 	if (!validCategories.includes(category)) {
 		return <p>Invalid category</p>;

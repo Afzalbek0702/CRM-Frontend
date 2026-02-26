@@ -66,8 +66,6 @@ export default function Leads() {
 	};
 
 	if (isLoading) return <Loader />;
-	console.log(leads)
-	console.log(courseData);
 	
 
 	return (
@@ -136,7 +134,7 @@ export default function Leads() {
 								<td>{l.source}</td>
 
 								<td>
-									{courseData.find(c => c.id === l.interested_course)?.name || "-"}
+									{courseData.find(c => c.name === l.interested_course)?.name || "-"}
 								</td>
 
 								<td>{l.comment}</td>

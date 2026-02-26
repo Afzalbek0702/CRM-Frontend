@@ -1,37 +1,28 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { attendanceService } from "./attendanceService.js";
+import { useState, useEffect } from "react";
+import { attendanceService } from "./attendanceService";
 
 export const useAttendance = ({ group_id, month }) => {
-	const queryClient = useQueryClient();
+	const [attendance, setAttendanceState] = useState([]);
 
-	// 1. Davomat ro'yxatini olish
-	const attendanceQuery = useQuery({
-		queryKey: ["attendance", group_id, month],
-		queryFn: () => attendanceService.getAttendance(group_id, month),
-	});
+	useEffect(() => {
+		const fetchAttendance = async () => {
+			try {
+				const data = await attendanceService.getAttendance(group_id, month);
+				setAttendanceState(data);
+			} catch (err) {
+				console.error("Failed to fetch attendance", err);
+			}
+		};
 
-	// 2. Yangi davomat yozuvi qo'shish
-	const setAttendance = useMutation({
-		mutationFn: (data) => attendanceService.setAttendance(data),
-		onSuccess: () => {
-			// Keshni yangilash — davomat ro'yxati qayta yuklash
-			queryClient.invalidateQueries({
-				queryKey: ["attendance", group_id, month],
-			});
-		},
-	});
+		fetchAttendance();
+	}, [group_id, month]);
+
+	const setAttendance = (data) => {
+		return attendanceService.setAttendance(data);
+	};
 
 	return {
-		// So'rov natijalari
-		attendance: attendanceQuery.data || [],
-		isLoading: attendanceQuery.isLoading,
-		isError: attendanceQuery.isError,
-		error: attendanceQuery.error,
-
-		// Mutatsiya
+		attendance,
 		setAttendance,
-
-		// Qo'lda qayta yuklash imkoniyati
-		refetch: attendanceQuery.refetch,
 	};
 };

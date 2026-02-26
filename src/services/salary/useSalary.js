@@ -16,11 +16,11 @@ export const useSalary = () => {
 	const create = useMutation({
 		mutationFn: (data) => salaryService.create(data),
 		onSuccess: () => {
-			toast.success("");
 			queryClient.invalidateQueries({ queryKey: SALARY_KEY });
+			toast.success("Maosh muvaffaqiyatli qo'shildi");
 		},
 		onError: (error) => {
-			toast.error("");
+			toast.error("Maosh qo'shishda xatolik yuz berdi");
 			console.error(error.response);
 		},
 	});
@@ -28,22 +28,22 @@ export const useSalary = () => {
 	const update = useMutation({
 		mutationFn: ({ id, data }) => salaryService.update(id, data),
 		onSuccess: () => {
-			toast.success("");
 			queryClient.invalidateQueries({ queryKey: SALARY_KEY });
+			toast.success("Maosh muvaffaqiyatli yangilandi");
 		},
 		onError: (error) => {
-			toast.error("");
+			toast.error("Maosh yangilashda xatolik yuz berdi");
 			console.error(error.response);
 		},
 	});
 	const deleteById = useMutation({
 		mutationFn: (id) => salaryService.delete(id),
 		onSuccess: () => {
-			toast.success("");
 			queryClient.invalidateQueries({ queryKey: SALARY_KEY });
+			toast.success("Maosh muvaffaqiyatli o'chirildi");
 		},
 		onError: (error) => {
-			toast.error("");
+			toast.error("Maosh o'chirishda xatolik yuz berdi");
 			console.error(error.response);
 		},
 	});
@@ -53,8 +53,8 @@ export const useSalary = () => {
 		isLoading,
 		error,
 
-		create: create.mutate,
-		update: update.mutate,
-		delete: deleteById.mutate,
+		createSalary: create.mutate,
+		updateSalary: update.mutate,
+		removeSalary: deleteById.mutate,
 	};
 };

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate, data } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
 import { useGroups } from "../services/group/useGroups";
 import { useAttendance } from "../services/attendance/useAttendance";
-import { useStudents } from "../services/student/useStudents";
+import { useStudent } from "../services/student/useStudent";
 import { usePayments } from "../services/payment/usePayments";
 import { useTeachers } from "../services/teacher/useTeachers";
 import PaymentModal from "../components/PaymentModal";
@@ -13,7 +13,7 @@ export default function GuruhlarInfo() {
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const { loading, error, fetchById, groups } = useGroups();
-	const { transferToGroup, removeFromGroup } = useStudents();
+	const { transferToGroup, removeFromGroup } = useStudent();
 	const { createPayment } = usePayments();
 	const { teachers } = useTeachers();
 	const [group, setGroup] = useState(null);
@@ -29,30 +29,24 @@ export default function GuruhlarInfo() {
 	const [showPaymentModal, setShowPaymentModal] = useState(false);
 	const [selectedStudentForPayment, setSelectedStudentForPayment] =
 		useState(null);
-	const [month, setMonth] = useState("");
+	const [month, setMonth] = useState((new Date().toISOString().slice(0, 7)))
 	const { attendance, setAttendance } = useAttendance({
 		group_id: id,
-		month: month
-			? month + "-01"
-			: new Date().toISOString().slice(0, 7) + "-01",
+		month: month,
 	});
-
+   
 	useEffect(() => {
 		fetchById(id).then((data) => {
 			setGroup(data);
 			setStudents(data.students || []);
-			console.log("data : ", data);
-			setMonth(new Date().toISOString().slice(0, 7));
 		});
 	}, []);
 
 	if (loading || !group) return <Loader />;
 	if (error) return <p>{error}</p>;
 
-
-
-	const handleToggle = async (studentId, date, newStatus) => {
-		await setAttendance.mutateAsync({
+	const handleToggle = (studentId, date, newStatus) => {
+		setAttendance({
 			student_id: studentId,
 			group_id: id,
 			lesson_date: date,
@@ -97,8 +91,6 @@ export default function GuruhlarInfo() {
 	};
 
 	const handleTransferStudent = async (targetGroupId) => {
-		console.log(transferStudent.id, group.id, Number(targetGroupId));
-
 		try {
 			await transferToGroup({
 				student_id: transferStudent.id,
@@ -120,7 +112,7 @@ export default function GuruhlarInfo() {
 				group_id: Number(id),
 				amount: formData.amount,
 				method: formData.method,
-				paid_month: formData.paid_at + '-01',
+				paid_month: formData.paid_at + "-01",
 			});
 			setShowPaymentModal(false);
 			setSelectedStudentForPayment(null);
@@ -128,14 +120,6 @@ export default function GuruhlarInfo() {
 			console.error("Failed to create payment", err);
 		}
 	};
-
-
-	console.log("group : ", group);
-	console.log("all groups : ", groups);
-	console.log("students : ", students);
-
-
-
 
 	return (
 		<div
@@ -416,7 +400,7 @@ export default function GuruhlarInfo() {
 									</tr>
 								</thead>
 								<tbody>
-									{attendance.map((student) => (
+									{attendance?.map((student) => (
 										<tr key={student.student_id}>
 											<td
 												style={{

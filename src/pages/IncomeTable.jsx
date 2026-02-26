@@ -37,8 +37,6 @@ export default function IncomeTable() {
 
   if (isLoading) return <Loader />;
 
-  // console.log(payments[0]);
-
 
   const formatDate = (d) =>
     d ? new Date(d).toLocaleDateString() : "";

@@ -16,19 +16,6 @@ export const useGroups = () => {
 		queryFn: () => groupsService.getAll(),
 	});
 
-	// const fetchById = async (id) => {
-	// 	try {
-	// 		const [groupRes, studentsRes] = await Promise.all([
-	// 			groupsService.getById(id),
-	// 			groupsService.getStudentsInGroup(id),
-	// 		]);
-	// 		return { ...groupRes.data, students: studentsRes.data };
-	// 	} catch (err) {
-	// 		console.error(err);
-	// 		throw err;
-	// 	}
-	// };
-
 	const fetchById = async (id) => {
 		try {
 			const [group, students] = await Promise.all([
@@ -43,70 +30,39 @@ export const useGroups = () => {
 		}
 	};
 
-	const createGroupMutation = useMutation({
+	const create = useMutation({
 		mutationFn: (data) => groupsService.create(data),
-		onMutate: async (newGroup) => {
-			// Bekor qilish
-			await queryClient.cancelQueries({ queryKey: GROUPS_QUERY_KEY });
-			const previousGroups = queryClient.getQueryData(GROUPS_QUERY_KEY);
-
-			// Optimistik yangilash
-			queryClient.setQueryData([GROUPS_QUERY_KEY], (old) => [
-				...(old || []),
-				{ ...newGroup, id: "optimistic-" + Date.now(), isOptimistic: true },
-			]);
-
-			return { previousGroups };
-		},
 		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: GROUPS_QUERY_KEY });
 			toast.success("Guruh muvaffaqiyatli qo'shildi");
 		},
-		onError: (err, newGroup, context) => {
+		onError: (err) => {
 			toast.error("Guruh qo'shishda xatolik yuz berdi");
-			console.log(err.response?.data);
-			// Xatolik bo'lsa, eski holatni qaytarish
-			queryClient.setQueryData(GROUPS_QUERY_KEY, context.previousGroups);
-		},
-		onSettled: () => {
-			queryClient.invalidateQueries({ queryKey: GROUPS_QUERY_KEY });
+			console.error(err.response?.data);
 		},
 	});
 
-	// 4. UPDATE
-	const updateGroupMutation = useMutation({
+	const update = useMutation({
 		mutationFn: ({ id, data }) => groupsService.update(id, data),
 		onSuccess: () => {
-			toast.success("Guruh muvaffaqiyatli yangilandi");
 			queryClient.invalidateQueries({ queryKey: GROUPS_QUERY_KEY });
+			toast.success("Guruh muvaffaqiyatli yangilandi");
 		},
 		onError: (error) => {
 			toast.error("Guruhni yangilashda xatolik yuz berdi");
-			console.log(error.response?.data);
+			console.error(error.response?.data);
 		},
 	});
 
-	const deleteGroupMutation = useMutation({
+	const deleteById = useMutation({
 		mutationFn: (id) => groupsService.delete(id),
-		onMutate: async (id) => {
-			await queryClient.cancelQueries({ queryKey: GROUPS_QUERY_KEY });
-			const previousGroups = queryClient.getQueryData(GROUPS_QUERY_KEY);
-
-			queryClient.setQueryData(GROUPS_QUERY_KEY, (old) =>
-				(old || []).filter((group) => group.id !== id),
-			);
-
-			return { previousGroups };
-		},
 		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: GROUPS_QUERY_KEY });
 			toast.success("Guruh muvaffaqiyatli o'chirildi");
 		},
-		onError: (err, id, context) => {
+		onError: (err) => {
 			toast.error("Guruhni o'chirishda xatolik yuz berdi");
-			console.log(err.response?.data);
-			queryClient.setQueryData(GROUPS_QUERY_KEY, context.previousGroups);
-		},
-		onSettled: () => {
-			queryClient.invalidateQueries({ queryKey: GROUPS_QUERY_KEY });
+			console.error(err.response);
 		},
 	});
 
@@ -116,12 +72,12 @@ export const useGroups = () => {
 		error,
 		fetchAll,
 		fetchById,
-		createGroup: createGroupMutation.mutate,
-		updateGroup: (id, data) => updateGroupMutation.mutate({ id, data }),
-		deleteGroup: deleteGroupMutation.mutate,
+		createGroup: create.mutate,
+		updateGroup: update.mutate,
+		deleteGroup: deleteById.mutate,
 
-		isCreating: createGroupMutation.isPending,
-		isUpdating: updateGroupMutation.isPending,
-		isDeleting: deleteGroupMutation.isPending,
+		isCreating: create.isPending,
+		isUpdating: update.isPending,
+		isDeleting: deleteById.isPending,
 	};
 };

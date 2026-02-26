@@ -16,8 +16,8 @@ export const usePayments = () => {
 	const createPaymentMutation = useMutation({
 		mutationFn: (data) => paymentService.create(data),
 		onSuccess: () => {
-			toast.success("To'lov muvaffaqiyatli qo'shildi");
 			queryClient.invalidateQueries({ queryKey: PAYMENTS_KEY });
+			toast.success("To'lov muvaffaqiyatli qo'shildi");
 		},
 		onError: (error) => {
 			toast.error("To'lov qo'shishda xatolik yuz berdi");
@@ -28,8 +28,8 @@ export const usePayments = () => {
 	const updatePaymentMutation = useMutation({
 		mutationFn: ({ id, data }) => paymentService.update(id, data),
 		onSuccess: () => {
-			toast.success("To'lov muvaffaqiyatli yangilandi");
 			queryClient.invalidateQueries({ queryKey: PAYMENTS_KEY });
+			toast.success("To'lov muvaffaqiyatli yangilandi");
 		},
 		onError: (error) => {
 			toast.error("To'lov yangilashda xatolik yuz berdi");
@@ -40,8 +40,8 @@ export const usePayments = () => {
 	const deletePaymentMutation = useMutation({
 		mutationFn: (id) => paymentService.delete(id),
 		onSuccess: () => {
-			toast.success("To'lov muvaffaqiyatli o'chirildi");
 			queryClient.invalidateQueries({ queryKey: PAYMENTS_KEY });
+			toast.success("To'lov muvaffaqiyatli o'chirildi");
 		},
 		onError: (error) => {
 			toast.error("To'lovni o'chirishda xatolik yuz berdi");
@@ -53,9 +53,8 @@ export const usePayments = () => {
 		payments,
 		isLoading,
 		error,
-		createPayment: createPaymentMutation.mutateAsync,
-		updatePayment: (id, data) =>
-			updatePaymentMutation.mutateAsync({ id, data }),
-		deletePayment: deletePaymentMutation.mutateAsync,
+		createPayment: createPaymentMutation.mutate,
+		updatePayment: updatePaymentMutation.mutate,
+		deletePayment: deletePaymentMutation.mutate,
 	};
 };

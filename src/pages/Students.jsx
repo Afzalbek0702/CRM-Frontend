@@ -1,7 +1,7 @@
 import Loader from "../components/Loader.jsx";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useStudents } from "../services/student/useStudents.js";
+import { useStudent } from "../services/student/useStudent.js";
 import { useGroups } from "../services/group/useGroups.js";
 import { useTeachers } from "../services/teacher/useTeachers.js";
 import {
@@ -28,7 +28,7 @@ export default function Students() {
 		updateStudent,
 		deleteStudent,
 		addToGroup,
-	} = useStudents();
+	} = useStudent();
 	const { groups } = useGroups();
 	const { teachers } = useTeachers();
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -48,11 +48,6 @@ export default function Students() {
 	const handleRowClick = (studentId) => {
 		navigate(`/students/${studentId}`);
 	};
-	// console.log(students);
-	// console.log(groups);
-	// console.log(teachers);
-
-
 
 	if (loading) return <Loader />;
 	if (error) return <div>Error</div>;
@@ -69,7 +64,9 @@ export default function Students() {
 					>
 						<option value="">All Teachers</option>
 						{teachers.map((t) => (
-							<option key={t.id} value={t.id}>{t.full_name}</option>
+							<option key={t.id} value={t.id}>
+								{t.full_name}
+							</option>
 						))}
 					</select>
 
@@ -79,7 +76,9 @@ export default function Students() {
 					>
 						<option value="">All Groups</option>
 						{groups.map((g) => (
-							<option key={g.id} value={g.id}>{g.name}</option>
+							<option key={g.id} value={g.id}>
+								{g.name}
+							</option>
 						))}
 					</select>
 				</div>
@@ -134,117 +133,116 @@ export default function Students() {
 						</tr>
 					</thead>
 					<tbody>
-						{
-							(students || [])
-								.filter((s) =>
-									s.full_name.toLowerCase().includes(searchTerm.toLowerCase())
-								)
-								.filter((s) =>
+						{(students || [])
+							.filter((s) =>
+								s.full_name.toLowerCase().includes(searchTerm.toLowerCase()),
+							)
+							.filter(
+								(s) =>
 									!selectedTeacher ||
-									s.groups?.some(studentGroupName => {
-										const groupObj = groups.find(g => g.name === studentGroupName);
+									s.groups?.some((studentGroupName) => {
+										const groupObj = groups.find(
+											(g) => g.name === studentGroupName,
+										);
 										return groupObj?.teacher_id === selectedTeacher;
-									})
-								)
-								.filter((s) =>
-									!selectedGroup || s.groups?.includes(
-										groups.find(g => g.id === selectedGroup)?.name
-									)
-								)
-								.map((s) => {
-									const formatDate = (d) => {
-										if (!d) return "";
-										return String(d).split("T")[0];
-									};
+									}),
+							)
+							.filter(
+								(s) =>
+									!selectedGroup ||
+									s.groups?.includes(
+										groups.find((g) => g.id === selectedGroup)?.name,
+									),
+							)
+							.map((s) => {
+								const formatDate = (d) => {
+									if (!d) return "";
+									return String(d).split("T")[0];
+								};
 
-									return (
-										<tr
-											key={s.id}
-											onClick={() => handleRowClick(s.id)}
-											style={{ cursor: "pointer" }}
+								return (
+									<tr
+										key={s.id}
+										onClick={() => handleRowClick(s.id)}
+										style={{ cursor: "pointer" }}
+									>
+										<td>{s.full_name}</td>
+										<td>{s.groups?.length > 0 ? s.groups[0] : "No Group"}</td>
+										<td
+											onClick={(e) => {
+												e.stopPropagation();
+												navigator.clipboard.writeText(s.phone);
+
+												const el = e.currentTarget;
+												el.dataset.copied = "true";
+
+												setTimeout(() => {
+													el.dataset.copied = "false";
+												}, 2000);
+											}}
+											data-copied="false"
+											className="copy-phone"
 										>
-											<td>{s.full_name}</td>
-											<td>{s.groups?.length > 0 ? s.groups[0] : "No Group"}</td>
-											<td
+											{s.phone}
+										</td>
+
+										<td>{formatDate(s.birthday)}</td>
+										<td>{s.parents_name}</td>
+										<td>{s.parents_phone}</td>
+										<td>{s.monthly_paid?.toLocaleString() ?? 0} so&apos;m</td>
+										<td
+											style={{ width: "10px" }}
+											onClick={(e) => e.stopPropagation()}
+										>
+											<button
+												className="icon-button"
 												onClick={(e) => {
-													e.stopPropagation();
-													navigator.clipboard.writeText(s.phone);
+													const rect = e.currentTarget.getBoundingClientRect();
 
-													const el = e.currentTarget;
-													el.dataset.copied = "true";
+													const menuHeight = 100;
+													const menuWidth = 150;
 
-													setTimeout(() => {
-														el.dataset.copied = "false";
-													}, 2000);
+													const scrollY = window.scrollY;
+													const scrollX = window.scrollX;
+
+													const absoluteTop = rect.top + scrollY;
+													const absoluteBottom = rect.bottom + scrollY;
+
+													const viewportBottom = scrollY + window.innerHeight;
+													const viewportRight = scrollX + window.innerWidth;
+
+													const top =
+														absoluteBottom + menuHeight > viewportBottom
+															? absoluteTop - menuHeight - 8
+															: absoluteBottom + 8;
+
+													let left = rect.right + scrollX - menuWidth;
+													if (left + menuWidth > viewportRight) {
+														left = viewportRight - menuWidth - 10;
+													}
+													if (left < scrollX) {
+														left = scrollX + 10;
+													}
+
+													setActionMenu({
+														isOpen: true,
+														position: {
+															top: top + "px",
+															left: left + "px",
+														},
+														student: s,
+													});
 												}}
-												data-copied="false"
-												className="copy-phone"
 											>
-												{s.phone}
-											</td>
-
-											<td>{formatDate(s.birthday)}</td>
-											<td>{s.parents_name}</td>
-											<td>{s.parents_phone}</td>
-											<td>{s.monthly_paid?.toLocaleString() ?? 0} so&apos;m</td>
-											<td
-												style={{ width: "10px" }}
-												onClick={(e) => e.stopPropagation()}
-											>
-												<button
-													className="icon-button"
-													onClick={(e) => {
-														const rect = e.currentTarget.getBoundingClientRect();
-
-														const menuHeight = 100;
-														const menuWidth = 150;
-
-														const scrollY = window.scrollY;
-														const scrollX = window.scrollX;
-
-														const absoluteTop = rect.top + scrollY;
-														const absoluteBottom = rect.bottom + scrollY;
-
-														const viewportBottom = scrollY + window.innerHeight;
-														const viewportRight = scrollX + window.innerWidth;
-
-														const top =
-															absoluteBottom + menuHeight > viewportBottom
-																? absoluteTop - menuHeight - 8
-																: absoluteBottom + 8;
-
-														let left = rect.right + scrollX - menuWidth;
-														if (left + menuWidth > viewportRight) {
-															left = viewportRight - menuWidth - 10;
-														}
-														if (left < scrollX) {
-															left = scrollX + 10;
-														}
-
-														setActionMenu({
-															isOpen: true,
-															position: {
-																top: top + "px",
-																left: left + "px",
-															},
-															student: s,
-														});
-													}}
-												>
-													<FaEllipsisV />
-												</button>
-											</td>
-										</tr>
-									);
-								})}
+												<FaEllipsisV />
+											</button>
+										</td>
+									</tr>
+								);
+							})}
 					</tbody>
 				</table>
-			)
-
-			}
-
-
-
+			)}
 
 			<ActionMenu
 				isOpen={actionMenu.isOpen}

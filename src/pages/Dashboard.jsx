@@ -1,13 +1,12 @@
 import { useDashboard } from "../services/dashboard/useDashboard.js";
 import StatsCards from "../components/Statscards";
-import { useStudents } from "../services/student/useStudents.js";
+import { useStudent } from "../services/student/useStudent.js";
 import { useGroups } from "../services/group/useGroups.js";
 import { useNavigate, NavLink } from "react-router-dom";
 import { FaUsers, FaClock, FaBook, FaChalkboardTeacher, FaPhone, FaExclamationTriangle } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
 
 export default function Dashboard() {
-	
 	const navigate = useNavigate();
 	const {absentStudents,monthlyIncome,todayLessons,topDebtors,isLoading,error } = useDashboard();
 
@@ -15,8 +14,7 @@ export default function Dashboard() {
 		navigate(`/groups/${groupId}`);
 	};
 
-   
-	const { students } = useStudents();
+	const { students } = useStudent();
 	const { groups } = useGroups();
    if (!localStorage.getItem("token")) return navigate("/login");
 

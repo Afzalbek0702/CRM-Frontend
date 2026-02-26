@@ -16,11 +16,11 @@ export const useWorker = () => {
 	const create = useMutation({
 		mutationFn: (data) => workerService.create(data),
 		onSuccess: () => {
-			toast.success("");
 			queryClient.invalidateQueries({ queryKey: WORKER_KEY });
+			toast.success("Ishchi muvaffaqiyatli qo'shildi");
 		},
 		onError: (error) => {
-			toast.error("");
+			toast.error("Ishchi qo'shishda xatolik yuz berdi");
 			console.error(error.response);
 		},
 	});
@@ -28,22 +28,22 @@ export const useWorker = () => {
 	const update = useMutation({
 		mutationFn: ({ id, data }) => workerService.update(id, data),
 		onSuccess: () => {
-			toast.success("");
 			queryClient.invalidateQueries({ queryKey: WORKER_KEY });
+			toast.success("Ishchi muvaffaqiyatli yangilandi");
 		},
 		onError: (error) => {
-			toast.error("");
+			toast.error("Ishchi yangilashda xatolik yuz berdi");
 			console.error(error.response);
 		},
 	});
 	const deleteById = useMutation({
 		mutationFn: (id) => workerService.delete(id),
 		onSuccess: () => {
-			toast.success("");
 			queryClient.invalidateQueries({ queryKey: WORKER_KEY });
+			toast.success("Ishchi muvaffaqiyatli o'chirildi");
 		},
 		onError: (error) => {
-			toast.error("");
+			toast.error("Ishchi o'chirishda xatolik yuz berdi");
 			console.error(error.response);
 		},
 	});
@@ -52,9 +52,8 @@ export const useWorker = () => {
 		workerData,
 		isLoading,
 		error,
-
-		create: create.mutate,
-		update: update.mutate,
-		delete: deleteById.mutate,
+		createWorker: create.mutate,
+		updateWorker: update.mutate,
+		removeWorker: deleteById.mutate,
 	};
 };

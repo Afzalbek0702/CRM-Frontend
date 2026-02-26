@@ -16,11 +16,11 @@ export const useRoom = () => {
 	const create = useMutation({
 		mutationFn: (data) => roomService.create(data),
 		onSuccess: () => {
-			toast.success("");
 			queryClient.invalidateQueries({ queryKey: ROOM_KEY });
+			toast.success("Xona muvaffaqiyatli qo'shildi");
 		},
 		onError: (error) => {
-			toast.error("");
+			toast.error("Xona qo'shishda xatolik yuz berdi");
 			console.error(error.response);
 		},
 	});
@@ -28,23 +28,23 @@ export const useRoom = () => {
 	const update = useMutation({
 		mutationFn: ({ id, data }) => roomService.update(id, data),
 		onSuccess: () => {
-			toast.success("");
 			queryClient.invalidateQueries({ queryKey: ROOM_KEY });
+			toast.success("Xona muvaffaqiyatli yangilandi");
 		},
 		onError: (error) => {
-			toast.error("");
+			toast.error("Xona yangilashda xatolik yuz berdi");
 			console.error(error.response);
 		},
 	});
 	const deleteById = useMutation({
 		mutationFn: (id) => roomService.delete(id),
 		onSuccess: () => {
-			toast.success("");
 			queryClient.invalidateQueries({ queryKey: ROOM_KEY });
+			toast.success("Xona muvaffaqiyatli o'chirildi");
 		},
 		onError: (error) => {
-			toast.error("");
 			console.error(error.response);
+			toast.error("Xona o'chirishda xatolik yuz berdi");
 		},
 	});
 
@@ -53,8 +53,8 @@ export const useRoom = () => {
 		isLoading,
 		error,
 
-		create: create.mutate,
-		update: update.mutate,
-		deleteById: deleteById.mutate,
+		createRoom: create.mutate,
+		updateRoom: update.mutate,
+		removeRoom: deleteById.mutate,
 	};
 };

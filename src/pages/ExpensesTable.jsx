@@ -31,8 +31,6 @@ export default function ExpensesTable() {
 
     if (isLoading) return <Loader />;
 
-    console.log(expenses);
-    
 
     const formatDate = (d) =>
         d ? new Date(d).toLocaleDateString() : "";
@@ -155,7 +153,6 @@ export default function ExpensesTable() {
                 }}
                 initialData={editingExpense}
                 onSubmit={async (formData) => {
-                    console.log("Submitting:", formData);
                     if (editingExpense) {
                         await updateExpense(
                             editingExpense.id,

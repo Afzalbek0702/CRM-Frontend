@@ -16,11 +16,11 @@ export const useExpenses = () => {
 	const createExpense = useMutation({
 		mutationFn: (data) => expenseService.create(data),
 		onSuccess: () => {
-			toast.success("");
 			queryClient.invalidateQueries({ queryKey: EXPENSE_KEY });
+			toast.success("Xarajat muvaffaqiyatli qo'shildi");
 		},
 		onError: (error) => {
-			toast.error("");
+			toast.error("Xarajat qo'shishda xatolik yuz berdi");
 			console.error(error.response);
 		},
 	});
@@ -28,22 +28,22 @@ export const useExpenses = () => {
 	const updateExpense = useMutation({
 		mutationFn: ({ id, data }) => expenseService.update(id, data),
 		onSuccess: () => {
-			toast.success("");
 			queryClient.invalidateQueries({ queryKey: EXPENSE_KEY });
+			toast.success("Xarajat muvaffaqiyatli yangilandi");
 		},
 		onError: (error) => {
-			toast.error("");
 			console.error(error.response);
+			toast.error("Xarajat yangilashda xatolik yuz berdi");
 		},
 	});
 	const deleteById = useMutation({
 		mutationFn: (id) => expenseService.delete(id),
 		onSuccess: () => {
-			toast.success("");
 			queryClient.invalidateQueries({ queryKey: EXPENSE_KEY });
+			toast.success("Xarajat muvaffaqiyatli o'chirildi");
 		},
 		onError: (error) => {
-			toast.error("");
+			toast.error("Xarajat o'chirishda xatolik yuz berdi");
 			console.error(error.response);
 		},
 	});
@@ -53,8 +53,8 @@ export const useExpenses = () => {
     isLoading,
     error,
 
-    createExpense: createExpense.mutateAsync,
-    updateExpense: (id, data) => updateExpense.mutateAsync({ id, data }),
-    deleteExpense: deleteById.mutateAsync,
+    createExpense: createExpense.mutate,
+    updateExpense: updateExpense.mutate,
+    deleteExpense: deleteById.mutate,
 };
 };
