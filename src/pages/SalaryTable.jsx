@@ -2,13 +2,15 @@ import { useState } from "react";
 import Loader from "../components/Loader";
 import ActionMenu from "../components/ActionMenu";
 import { useSalary } from "../services/salary/useSalary";
+import SalaryModal from "../components/SalaryModal";
 
 import {
   FaEllipsisV,
   FaUserTie,
   FaMoneyBillWave,
+  FaPlus
 } from "react-icons/fa";
-import { BsCalendar2DateFill, BsCreditCard2BackFill } from "react-icons/bs";
+import { BsCalendar2DateFill, BsCreditCard2BackFill, } from "react-icons/bs";
 
 export default function SalaryTable() {
   const {
@@ -41,7 +43,20 @@ export default function SalaryTable() {
   return (
     <div className="table-container">
 
-      {/* Summary */}
+      <div className="table-actions">
+        <div style={{ marginBottom: "16px" }}>
+          <button
+            className="btn1"
+            onClick={() => {
+              setEditingSalary(null);
+              setIsModalOpen(true);
+            }}
+          >
+            <FaPlus /> New Salary
+          </button>
+        </div>
+      </div>
+
       <div className="salary-summary">
         <strong>Total Salary Paid:</strong>{" "}
         {totalSalaryPaid.toLocaleString()} so'm
@@ -136,6 +151,25 @@ export default function SalaryTable() {
             ...m,
             isOpen: false,
           }));
+        }}
+      />
+
+      <SalaryModal
+        isOpen={isModalOpen}
+        initialData={editingSalary}
+        onClose={() => {
+          setIsModalOpen(false);
+          setEditingSalary(null);
+        }}
+        onSubmit={async (data) => {
+          if (editingSalary) {
+            await updateSalary(editingSalary.id, data);
+          } else {
+            await createSalary(data);
+          }
+
+          setIsModalOpen(false);
+          setEditingSalary(null);
         }}
       />
     </div>

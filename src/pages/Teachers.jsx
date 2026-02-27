@@ -1,7 +1,8 @@
 import Loader from "../components/Loader";
 import { useTeachers } from "../services/teacher/useTeachers";
 import { useNavigate } from "react-router-dom";
-
+import { useConfirm } from "../components/ConfirmProvider";
+import { withConfirm } from "../helpers/withConfirm";
 import { FaEllipsisV, FaChalkboardTeacher, FaPhone, FaPlus } from "react-icons/fa";
 
 import { FaSearch } from "react-icons/fa";
@@ -10,6 +11,7 @@ import TeacherModal from "../components/TeacherModal";
 import ActionMenu from "../components/ActionMenu";
 
 export default function Teachers() {
+	const confirm = useConfirm();
 	const navigate = useNavigate();
 	const { teachers, isLoading, createTeacher, updateTeacher, deleteTeacher } =
 		useTeachers();
@@ -25,6 +27,14 @@ export default function Teachers() {
 	const handleRowClick = (teacherId) => {
 		navigate(`/teachers/${teacherId}`);
 	};
+	const handleDeleteTeacher = withConfirm(
+		confirm,
+		"Are you sure you want to delete this teacher?",
+		async (teacher) => {
+            await deleteTeacher(teacher.id);
+            setActionMenu((m) => ({ ...m, isOpen: false }));
+        }
+	)
 
 	if (isLoading) return <Loader />;
 	console.log(teachers);
@@ -140,12 +150,7 @@ export default function Teachers() {
 					setIsModalOpen(true);
 					setActionMenu((m) => ({ ...m, isOpen: false }));
 				}}
-				onDelete={async () => {
-					const t = actionMenu.teacher;
-					if (!t) return;
-					await deleteTeacher(t.id);
-					setActionMenu((m) => ({ ...m, isOpen: false }));
-				}}
+				onDelete={() => handleDeleteTeacher(actionMenu.teacher)}
 			/>
 
 			<TeacherModal

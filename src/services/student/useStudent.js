@@ -125,17 +125,17 @@ export const useStudent = () => {
 		error,
 		fetchAll,
 		fetchById,
-		createStudent: createStudentMutation.mutate,
+		createStudent: createStudentMutation.mutateAsync,
 		updateStudent: (id, data) =>
-			updateStudentMutation.mutate({ id, data }),
+			updateStudentMutation.mutateAsync({ id, data }),
 		updateStatus: (id, status) =>
 			updateStatusMutation.mutate({ id, status }),
-		deleteStudent: deleteStudentMutation.mutate,
+		deleteStudent: deleteStudentMutation.mutateAsync,
 		addToGroup: (studentId, groupId) =>
-			addToGroupMutation.mutate({ studentId, groupId }),
+			addToGroupMutation.mutateAsync({ studentId, groupId }),
 		removeFromGroup: (studentId, groupId) =>
-			removeFromGroupMutation.mutate({ studentId, groupId }),
+			removeFromGroupMutation.mutateAsync({ studentId, groupId }),
 		transferToGroup: (studentId, toGroupId) =>
-			transferToGroupMutation.mutate({ studentId, toGroupId }),
+			transferToGroupMutation.mutateAsync({ studentId, toGroupId }),
 	};
 };

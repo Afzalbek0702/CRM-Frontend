@@ -5,6 +5,8 @@ import Modal from "../components/Modal";
 import ActionMenu from "../components/ActionMenu";
 import { useGroups } from "../services/group/useGroups.js";
 import { useStudent } from "../services/student/useStudent.js";
+import { useConfirm } from "../components/ConfirmProvider.jsx";
+import { withConfirm } from "../helpers/withConfirm.js";
 import {
 	FaEllipsisV,
 	FaPlus,
@@ -20,6 +22,7 @@ import { HiOutlinePencilAlt } from "react-icons/hi";
 import { useCourse } from "../services/course/useCourse.js";
 
 export default function Groups() {
+	const confirm = useConfirm();
 	const navigate = useNavigate();
 	const { groups, loading, createGroup, deleteGroup, updateGroup } =
 		useGroups();
@@ -69,24 +72,49 @@ export default function Groups() {
 		setIsModalOpen(true);
 	};
 
-	const handleDelete = () => {
-		if (
-			selectedGroup &&
-			window.confirm(`Are you sure you want to delete ${selectedGroup.name}?`)
-		) {
-			deleteGroup(selectedGroup.id);
-			setIsActionMenuOpen(false);
-		}
+	const handleDeleteGroup = (group) => {
+		if (!group) return;
+		withConfirm(
+			confirm,
+			`Are you sure you want to delete ${group.name}?`,
+			async () => {
+				await deleteGroup(group.id);
+				setIsActionMenuOpen(false);
+			}
+		)();
 	};
 
 	const handleActionMenu = (e, group) => {
 		e.stopPropagation();
 		setSelectedGroup(group);
+
 		const rect = e.currentTarget.getBoundingClientRect();
-		setActionMenuPosition({
-			top: rect.bottom + 5,
-			left: rect.left - 100,
-		});
+		const menuHeight = 80;
+		const menuWidth = 150;
+
+		const scrollY = window.scrollY;
+		const scrollX = window.scrollX;
+
+		const absoluteTop = rect.top + scrollY;
+		const absoluteBottom = rect.bottom + scrollY;
+
+		const viewportBottom = scrollY + window.innerHeight;
+		const viewportRight = scrollX + window.innerWidth;
+
+		let top =
+			absoluteBottom + menuHeight > viewportBottom
+				? absoluteTop - menuHeight - 8
+				: absoluteBottom + 8;
+
+		let left = rect.right + scrollX - menuWidth;
+		if (left + menuWidth > viewportRight) {
+			left = viewportRight - menuWidth - 10;
+		}
+		if (left < scrollX) {
+			left = scrollX + 10;
+		}
+
+		setActionMenuPosition({ top: top + "px", left: left + "px" });
 		setIsActionMenuOpen(true);
 	};
 
@@ -149,7 +177,7 @@ export default function Groups() {
 				isOpen={isActionMenuOpen}
 				position={actionMenuPosition}
 				onEdit={handleEdit}
-				onDelete={handleDelete}
+				onDelete={() => handleDeleteGroup(selectedGroup)}
 				onClose={() => setIsActionMenuOpen(false)}
 			/>
 
@@ -194,9 +222,9 @@ export default function Groups() {
 								// console.log("Group:", g.name);
 								// console.log("course_type:", g.course_type);
 								// console.log("courseData:", courseData);
-								console.log('g.course_type', g.course_type, typeof g.course_type);
-								console.log('courseMap keys', Object.keys(courseMap));
-								console.log(g.studentCount);
+								// console.log('g.course_type', g.course_type, typeof g.course_type);
+								// console.log('courseMap keys', Object.keys(courseMap));
+								// console.log(g.studentCount);
 
 
 								return (

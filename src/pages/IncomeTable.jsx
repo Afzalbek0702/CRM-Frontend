@@ -3,7 +3,8 @@ import { usePayments } from "../services/payment/usePayments";
 import Loader from "../components/Loader";
 import PaymentModal from "../components/PaymentModal";
 import ActionMenu from "../components/ActionMenu";
-
+import { useConfirm } from "../components/ConfirmProvider";
+import { withConfirm } from "../helpers/withConfirm";
 import {
   FaEllipsisV,
   FaUserGraduate,
@@ -13,6 +14,7 @@ import {
 import { BsCalendar2DateFill, BsCreditCard2BackFill } from "react-icons/bs";
 
 export default function IncomeTable() {
+  const confirm = useConfirm();
   const {
     payments,
     isLoading,
@@ -40,6 +42,16 @@ export default function IncomeTable() {
 
   const formatDate = (d) =>
     d ? new Date(d).toLocaleDateString() : "";
+
+  const handleDeletePayment = withConfirm(
+    confirm,
+    "Are you sure you want to delete this payment?",
+    async (teacher) => {
+      await deletePayment(teacher.id);
+      setActionMenu((m) => ({ ...m, isOpen: false }));
+    }
+
+  )
 
   return (
     <div className="table-container">
@@ -125,12 +137,7 @@ export default function IncomeTable() {
           setIsModalOpen(true);
           setActionMenu((m) => ({ ...m, isOpen: false }));
         }}
-        onDelete={async () => {
-          const p = actionMenu.payment;
-          if (!p) return;
-          await deletePayment(p.id);
-          setActionMenu((m) => ({ ...m, isOpen: false }));
-        }}
+        onDelete={() => handleDeletePayment(actionMenu.payment)}
       />
 
       <PaymentModal
