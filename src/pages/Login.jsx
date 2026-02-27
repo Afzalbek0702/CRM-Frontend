@@ -1,41 +1,25 @@
 import { useState } from "react";
-import { authService } from "../services/auth/authService";
-import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import phoneFormat from "../utils/phoneFormat";
+import { useAuth } from "../services/auth/useAuth";
 
 const Login = () => {
 	const [formData, setFormData] = useState({ password: "", phone: "+(998)" });
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState("");
-	const navigate = useNavigate();
-
-	const handleSubmit = async (e) => {
+	const { login, isLoading } = useAuth();
+	const handleSubmit = (e) => {
 		e.preventDefault();
-		setLoading(true);
-		setError("");
-		try {
-			const data = await authService.login({
-				...formData,
-				phone: formData.phone.replace(/\D/g, ""),
-         });
-         
-			localStorage.setItem("token", data.token);
-			navigate("/dashboard");
-      } catch (err) {
-         console.log(err);
-			setError("Login failed: " + (err.response?.data?.message || err.message));
-		} finally {
-			setLoading(false);
-		}
+		login({
+			phone: phoneFormat.cleanUzPhone(formData.phone),
+			password: formData.password,
+		});
 	};
 	const handleChange = (e) => {
 		setFormData({
 			...formData,
 			phone: phoneFormat.formatPhone(e.target.value),
 		});
-   };
-   
+	};
+
 	return (
 		<div className="login-container">
 			<div className="login-card">
@@ -44,9 +28,6 @@ const Login = () => {
 					<img className="logo-img" src="/logo.jpg" alt="" /> Data Space
 				</h2>
 				<p className="login-subtitle">Please login to your account</p>
-
-				{error && <div className="error-message">{error}</div>}
-
 				<form onSubmit={handleSubmit} className="login-form">
 					<div className="form-group">
 						<label htmlFor="phone" className="form-label">
@@ -79,8 +60,8 @@ const Login = () => {
 						/>
 					</div>
 
-					<button type="submit" disabled={loading} className="login-button">
-						{loading ? "Logging in..." : "Login"}
+					<button type="submit" disabled={isLoading} className="login-button">
+						{isLoading ? "Logging in..." : "Login"}
 					</button>
 				</form>
 			</div>

@@ -7,11 +7,14 @@ export default function ExpenseModal({
   onSubmit,
   initialData = null,
 }) {
+   const user = JSON.parse(localStorage.getItem("user"));
+   console.log(user);
+   
   const [form, setForm] = useState({
     description: "",
     amount: "",
     method: "cash",
-    created_by: "",
+    created_by: '',
   });
 
   useEffect(() => {
@@ -20,7 +23,7 @@ export default function ExpenseModal({
         description: initialData.description || "",
         amount: initialData.amount || "",
         method: initialData.method || "cash",
-        created_by: initialData.created_by || "",
+        created_by: user.id,
       });
     } else {
       resetForm();
@@ -44,14 +47,15 @@ export default function ExpenseModal({
     }));
   }
 
-  async function handleSubmit(e) {
+   function handleSubmit(e) {
     e.preventDefault();
 
     if (!form.description || !form.amount) return;
 
-    await onSubmit({
+    onSubmit({
       ...form,
-      amount: Number(form.amount),
+       amount: Number(form.amount),
+      created_by: user.id,
     });
 
     resetForm();

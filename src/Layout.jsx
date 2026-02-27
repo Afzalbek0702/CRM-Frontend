@@ -1,9 +1,4 @@
-import {
-	Routes,
-	Route,
-	Navigate,
-	useLocation,
-} from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
@@ -23,7 +18,6 @@ import Settings from "./pages/Settings";
 
 export default function Layout() {
 	const location = useLocation();
-	const token = localStorage.getItem("token");
 	const hideSidebar = location.pathname === "/login";
 	const [sidebarExpanded, setSidebarExpanded] = useState(true);
 	const [mobileOpen, setMobileOpen] = useState(false);
@@ -33,7 +27,7 @@ export default function Layout() {
 			<div className="app-layout">
 				{!hideSidebar && (
 					<>
-						<Header 
+						<Header
 							isExpanded={sidebarExpanded}
 							mobileOpen={mobileOpen}
 							onToggle={() => {
@@ -65,16 +59,7 @@ export default function Layout() {
 				>
 					<Routes>
 						<Route path="/login" element={<Login />} />
-						<Route
-							path="/"
-							element={
-								token ? (
-									<Navigate to="/dashboard" />
-								) : (
-									<Navigate to={"/login"}></Navigate>
-								)
-							}
-						/>
+						<Route path="/" element={<Navigate to="/dashboard" />} />
 						<Route path="/dashboard" element={<Dashboard />} />
 						<Route path="/leads" element={<Leads />} />
 						<Route path="/archive/:category" element={<Archive />} />
@@ -84,7 +69,7 @@ export default function Layout() {
 						<Route path="/students/:id" element={<StudentDetail />} />
 						<Route path="/teachers" element={<Teachers />} />
 						<Route path="/teachers/:id" element={<TeacherDetail />} />
-						<Route path="/settings" element={<Settings/>}></Route>
+						<Route path="/settings" element={<Settings />}></Route>
 
 						{/* o'zgartirvormelar yoki ochirvormelar!! */}
 						<Route path="/payments" element={<Payments />} />

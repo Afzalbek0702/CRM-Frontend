@@ -152,14 +152,14 @@ export default function ExpensesTable() {
                     setEditingExpense(null);
                 }}
                 initialData={editingExpense}
-                onSubmit={async (formData) => {
+                onSubmit={ (formData) => {
                     if (editingExpense) {
-                        await updateExpense(
+                         updateExpense(
                             editingExpense.id,
                             formData
                         );
                     } else {
-                        await createExpense(formData);
+                         createExpense(formData);
                     }
 
                     setIsModalOpen(false);

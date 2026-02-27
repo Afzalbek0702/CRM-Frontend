@@ -6,20 +6,20 @@ import { useCourse } from "../services/course/useCourse.js";
 import { useNavigate, NavLink } from "react-router-dom";
 import { FaUsers, FaClock, FaBook, FaChalkboardTeacher, FaPhone, FaExclamationTriangle } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
-
 export default function Dashboard() {
 	const navigate = useNavigate();
 	const {absentStudents,monthlyIncome,todayLessons,topDebtors,isLoading,error } = useDashboard();
 	const { courseData } = useCourse();
-	const courseMap = Object.fromEntries(courseData.map(c => [c.id, c.name]));
-
+	const courseMap = Object.fromEntries(courseData?.map(c => [c.id, c.name]));
+   const user =JSON.parse( localStorage.getItem("user") )
+   console.log(user);
+   
 	const handleRowClick = (groupId) => {
 		navigate(`/groups/${groupId}`);
 	};
 
 	const { students } = useStudent();
 	const { fetchById, groups } = useGroups();
-   if (!localStorage.getItem("token")) return navigate("/login");
 
 	return (
 		<>
@@ -27,12 +27,12 @@ export default function Dashboard() {
 				<h1>
 					<MdDashboard style={{ marginTop: "0px" }} /> Dashboard
 				</h1>
-				<p>Xush kelibsiz {"Admin"}</p>
+				<p>Xush kelibsiz {user?.role.toUpperCase()}</p>
 			</div>
 			<div className="dashboard-cards">
 				<NavLink to="/payments">
 					<StatsCards
-						data={monthlyIncome ? monthlyIncome.total_income : ""}
+						data={monthlyIncome ? monthlyIncome[0]?.total_income : ""}
 						type={"Oylik Tushum"}
 					/>
 				</NavLink>
