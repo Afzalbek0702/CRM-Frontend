@@ -72,9 +72,9 @@ export const useGroups = () => {
 		error,
 		fetchAll,
 		fetchById,
-		createGroup: create.mutate,
-		updateGroup: update.mutate,
-		deleteGroup: deleteById.mutate,
+		createGroup: create.mutateAsync,
+		updateGroup: update.mutateAsync,
+		deleteGroup: deleteById.mutateAsync,
 
 		isCreating: create.isPending,
 		isUpdating: update.isPending,

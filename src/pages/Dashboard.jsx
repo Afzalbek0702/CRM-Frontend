@@ -9,7 +9,7 @@ import { MdDashboard } from "react-icons/md";
 
 export default function Dashboard() {
 	const navigate = useNavigate();
-	const {absentStudents,monthlyIncome,todayLessons,topDebtors,isLoading,error } = useDashboard();
+	const { absentStudents, monthlyIncome, todayLessons, topDebtors, isLoading, error } = useDashboard();
 	const { courseData } = useCourse();
 	const courseMap = Object.fromEntries(courseData.map(c => [c.id, c.name]));
 
@@ -19,7 +19,8 @@ export default function Dashboard() {
 
 	const { students } = useStudent();
 	const { fetchById, groups } = useGroups();
-   if (!localStorage.getItem("token")) return navigate("/login");
+	if (!localStorage.getItem("token")) return navigate("/login");
+	console.log(absentStudents);
 
 	return (
 		<>
@@ -97,7 +98,7 @@ export default function Dashboard() {
 											onClick={() => handleRowClick(student.group_id)}
 											style={{ cursor: "pointer" }}
 										>
-											<td>{student.student_name}</td>
+											<td>{student.full_name}</td>
 											<td>{student.group_name}</td>
 											<td
 												onClick={(e) => {
@@ -136,41 +137,41 @@ export default function Dashboard() {
 						) : groups && groups.length < 1 ? (
 							<p>Guruhlar yo'q</p>
 						) :
-						
-						(
-							<table style={{ maxWidth: "600px" }}>
-								<thead>
-									<tr>
-										<th>
-											<FaUsers /> Guruh Nomi
-										</th>
-										<th>
-											<FaBook /> Kurs
-										</th>
-										<th>
-											<FaChalkboardTeacher /> O'qituvchi
-										</th>
-										<th>
-											<FaClock /> Dars Vaqti
-										</th>
-									</tr>
-								</thead>
-								<tbody>
-									{todayLessons?.map((lesson) => (
-										<tr
-											key={lesson.id}
-											onClick={() => handleRowClick(lesson.id)}
-											style={{ cursor: "pointer" }}
-										>
-											<td>{lesson.group_name}</td>
-											<td>{courseMap[lesson.course_type] ?? "Noma'lum"}</td>
-											<td>{lesson.teacher_name}</td>
-											<td>{lesson.lesson_time}</td>
+
+							(
+								<table style={{ maxWidth: "600px" }}>
+									<thead>
+										<tr>
+											<th>
+												<FaUsers /> Guruh Nomi
+											</th>
+											<th>
+												<FaBook /> Kurs
+											</th>
+											<th>
+												<FaChalkboardTeacher /> O'qituvchi
+											</th>
+											<th>
+												<FaClock /> Dars Vaqti
+											</th>
 										</tr>
-									))}
-								</tbody>
-							</table>
-						)}
+									</thead>
+									<tbody>
+										{todayLessons?.map((lesson) => (
+											<tr
+												key={lesson.id}
+												onClick={() => handleRowClick(lesson.id)}
+												style={{ cursor: "pointer" }}
+											>
+												<td>{lesson.group_name}</td>
+												<td>{courseMap[lesson.course_type] ?? "Noma'lum"}</td>
+												<td>{lesson.teacher_name}</td>
+												<td>{lesson.lesson_time}</td>
+											</tr>
+										))}
+									</tbody>
+								</table>
+							)}
 					</div>
 				</div>
 			</div>

@@ -3,7 +3,8 @@ import Loader from "../components/Loader";
 import ActionMenu from "../components/ActionMenu";
 import ExpenseModal from "../components/ExpenseModal";
 import { useExpenses } from "../services/expense/useExpense";
-
+import { useConfirm } from "../components/ConfirmProvider";
+import { withConfirm } from "../helpers/withConfirm";
 import {
     FaEllipsisV,
     FaMoneyBillWave,
@@ -11,7 +12,9 @@ import {
 } from "react-icons/fa";
 import { BsCalendar2DateFill, BsCreditCard2BackFill } from "react-icons/bs";
 
+
 export default function ExpensesTable() {
+    const confirm = useConfirm();
     const {
         expenses,
         isLoading,
@@ -28,6 +31,14 @@ export default function ExpensesTable() {
         position: { top: 0, left: 0 },
         expense: null,
     });
+    const handleDeleteExpense = withConfirm(
+        confirm,
+        "Are you sure you want to delete this expense?",
+        async (expense) => {
+            await deleteExpense(expense.id);
+            setActionMenu((m) => ({ ...m, isOpen: false }));
+        }
+    );
 
     if (isLoading) return <Loader />;
 
@@ -49,9 +60,11 @@ export default function ExpensesTable() {
                 {totalExpenses.toLocaleString()} so'm
             </div>
 
-            <button onClick={() => setIsModalOpen(true)}>
-                Add Expense
-            </button>
+            <div className="table-actions">
+                <button className="btn1" onClick={() => setIsModalOpen(true)}>
+                    Add Expense
+                </button>
+            </div>
 
             <table>
                 <thead>
@@ -134,15 +147,7 @@ export default function ExpensesTable() {
                         isOpen: false,
                     }));
                 }}
-                onDelete={async () => {
-                    const e = actionMenu.expense;
-                    if (!e) return;
-                    await deleteExpense(e.id);
-                    setActionMenu((m) => ({
-                        ...m,
-                        isOpen: false,
-                    }));
-                }}
+                onDelete={() => handleDeleteExpense(actionMenu.expense)}
             />
 
             <ExpenseModal

@@ -53,8 +53,8 @@ export const useSalary = () => {
 		isLoading,
 		error,
 
-		createSalary: create.mutate,
-		updateSalary: update.mutate,
-		removeSalary: deleteById.mutate,
+		createSalary: create.mutateAsync,
+		updateSalary: update.mutateAsync,
+		removeSalary: deleteById.mutateAsync,
 	};
 };

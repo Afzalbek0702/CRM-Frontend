@@ -60,8 +60,8 @@ export const useTeachers = () => {
 		error,
 		fetchAll,
 		fetchById,
-		createTeacher: createTeacherMutation.mutate,
-		updateTeacher: updateTeacherMutation.mutate,
-		deleteTeacher: deleteTeacherMutation.mutate,
+		createTeacher: createTeacherMutation.mutateAsync,
+		updateTeacher: updateTeacherMutation.mutateAsync,
+		deleteTeacher: deleteTeacherMutation.mutateAsync,
 	};
 };

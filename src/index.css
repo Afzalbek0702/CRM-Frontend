@@ -663,12 +663,11 @@ body {
 .table-container {
     width: 100%;
     height: auto;
-    /* height: calc(100vh - 80px); */
     background-color: var(--background-color);
     font-family: var(--font-family);
     color: white;
     overflow-x: auto;
-    overflow-y: auto;
+    overflow-y: hidden;
 }
 
 .table-container h2 {
@@ -694,6 +693,10 @@ body {
     border-radius: 8px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     overflow: visible;
+    overflow: auto;
+}
+table::-webkit-scrollbar {
+    display: none;
 }
 
 .table-container th {
@@ -932,8 +935,7 @@ body {
     align-items: center;
     padding: 10px;
     gap: 4px;
-    z-index: 99999;
-
+    z-index: 1000;
 }
 
 .btn1:hover {
@@ -1799,7 +1801,6 @@ body {
     scrollbar-width: thin;
 }
 
-/* Webkit scrollbar for Chrome, Safari, Edge */
 .side-panel::-webkit-scrollbar {
     width: 8px;
 }
@@ -3954,15 +3955,12 @@ option:hover {
 
 /* Table Row Fade In Animation */
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+tr {
+  animation: fadeIn 0.25s ease forwards;
 }
 .table-container tbody tr {
     animation: fadeIn 0.4s ease forwards;
@@ -4231,4 +4229,84 @@ input[type=number] {
 .copy-phone:hover{
     color: var(--primary-color);
     text-decoration: underline;
+}
+
+.confirm-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--background-color, #000);
+  color: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+  width: 360px;
+  max-width: 90%;
+  z-index: 1001;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  animation: fadeInScale 0.2s ease forwards;
+  font-family: "JetBrains Mono", monospace;
+}
+
+.confirm-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.confirm-icon {
+  font-size: 1.5rem;
+  color: var(--primary-color, orange);
+  margin-right: 0.75rem;
+}
+
+.confirm-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.confirm-message {
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+
+.confirm-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.confirm-buttons button {
+  padding: 0.5rem 1rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: background 0.2s, color 0.2s;
+}
+.btn-cancel {
+  background-color: transparent;
+  color: #fff;
+  border: 1px solid #fff;
+}
+
+.btn-cancel:hover {
+  background-color: #fff;
+  color: var(--background-color, #000);
+}
+
+.btn-danger {
+  background-color: var(--primary-color, orange);
+  color: #000;
+}
+
+.btn-danger:hover {
+  background-color: #ffb347; /* lighter orange on hover */
 }

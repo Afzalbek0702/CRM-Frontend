@@ -53,8 +53,8 @@ export const usePayments = () => {
 		payments,
 		isLoading,
 		error,
-		createPayment: createPaymentMutation.mutate,
-		updatePayment: updatePaymentMutation.mutate,
-		deletePayment: deletePaymentMutation.mutate,
+		createPayment: createPaymentMutation.mutateAsync,
+		updatePayment: updatePaymentMutation.mutateAsync,
+		deletePayment: deletePaymentMutation.mutateAsync
 	};
 };

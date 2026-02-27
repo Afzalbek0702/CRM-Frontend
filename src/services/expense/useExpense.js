@@ -53,8 +53,8 @@ export const useExpenses = () => {
     isLoading,
     error,
 
-    createExpense: createExpense.mutate,
-    updateExpense: updateExpense.mutate,
-    deleteExpense: deleteById.mutate,
+    createExpense: createExpense.mutateAsync,
+    updateExpense: updateExpense.mutateAsync,
+    deleteExpense: deleteById.mutateAsync,
 };
 };

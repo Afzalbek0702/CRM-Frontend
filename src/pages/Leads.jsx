@@ -6,8 +6,10 @@ import { FaEllipsisV, FaThList, FaPlus, FaSearch, FaPhone } from "react-icons/fa
 import { useState } from "react";
 import ActionMenu from "../components/ActionMenu";
 import LeadModal from "../components/LeadModal";
-
+import { useConfirm } from "../components/ConfirmProvider";
+import { withConfirm } from "../helpers/withConfirm";
 export default function Leads() {
+	const confirm = useConfirm();
 	const navigate = useNavigate();
 	const { leads, isLoading, createLead, updateLead, deleteLead, convertLeadToGroup } = useLeads();
 	const [searchTerm, setSearchTerm] = useState("");
@@ -67,6 +69,15 @@ export default function Leads() {
 
 	if (isLoading) return <Loader />;
 
+	const handleDeleteLead = withConfirm(
+		confirm,
+		"Are you sure you want to delete this lead?",
+		async (lead) => {
+			await deleteLead(lead.id);
+			setActionMenu((m) => ({ ...m, isOpen: false }));
+		}
+
+	)
 
 	return (
 		<div className="table-container">
@@ -166,12 +177,7 @@ export default function Leads() {
 					setIsModalOpen(true);
 					setActionMenu((m) => ({ ...m, isOpen: false }));
 				}}
-				onDelete={async () => {
-					const l = actionMenu.lead;
-					if (!l) return;
-					await deleteLead(l.id);
-					setActionMenu((m) => ({ ...m, isOpen: false }));
-				}}
+				onDelete={() => handleDeleteLead(actionMenu.lead)}
 			/>
 
 			<LeadModal

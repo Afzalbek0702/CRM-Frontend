@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useStudent } from "../services/student/useStudent.js";
 import { useGroups } from "../services/group/useGroups.js";
 import { useTeachers } from "../services/teacher/useTeachers.js";
+import { useConfirm } from "../components/ConfirmProvider.jsx";
+import { withConfirm } from "../helpers/withConfirm.js";
 import {
 	FaEllipsisV,
 	FaUserGraduate,
@@ -33,7 +35,7 @@ export default function Students() {
 	const { teachers } = useTeachers();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [editingStudent, setEditingStudent] = useState(null);
-
+	const confirm = useConfirm();
 	const [searchTerm, setSearchTerm] = useState("");
 	const [selectedTeacher, setSelectedTeacher] = useState("");
 	const [selectedGroup, setSelectedGroup] = useState("");
@@ -48,11 +50,17 @@ export default function Students() {
 	const handleRowClick = (studentId) => {
 		navigate(`/students/${studentId}`);
 	};
+	const handleDeleteStudent = withConfirm(
+		confirm,
+		"Are you sure you want to delete with student?",
+		async (student) => {
+            await deleteStudent(student.id);
+            setActionMenu((m) => ({ ...m, isOpen: false }));
+        }
+	)
 
 	if (loading) return <Loader />;
 	if (error) return <div>Error</div>;
-
-	// console.log();
 
 	return (
 		<div className="table-container">
@@ -277,12 +285,7 @@ export default function Students() {
 					setIsModalOpen(true);
 					setActionMenu((m) => ({ ...m, isOpen: false }));
 				}}
-				onDelete={async () => {
-					const s = actionMenu.student;
-					if (!s) return;
-					await deleteStudent(s.id);
-					setActionMenu((m) => ({ ...m, isOpen: false }));
-				}}
+				onDelete={() => handleDeleteStudent(actionMenu.student)}
 				onAddToGroup={() => {
 					const s = actionMenu.student;
 					if (!s) return;
@@ -298,6 +301,7 @@ export default function Students() {
 				initialData={editingStudent}
 				onSubmit={async (formData) => {
 					if (editingStudent) {
+						console.log("Updating student:", editingStudent?.id, formData);
 						await updateStudent(editingStudent.id, formData);
 					} else {
 						await createStudent(formData);
