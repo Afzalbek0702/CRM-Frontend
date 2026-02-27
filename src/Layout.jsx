@@ -1,4 +1,10 @@
-import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import {
+	Routes,
+	Route,
+	Navigate,
+	useLocation,
+	useNavigate,
+} from "react-router-dom";
 import { useState } from "react";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
@@ -15,12 +21,18 @@ import Login from "./pages/Login";
 import Leads from "./pages/Leads";
 import Archive from "./pages/Archive";
 import Settings from "./pages/Settings";
-
+import { setNavigate } from "./utils/navigate";
+import { useEffect } from "react";
 export default function Layout() {
 	const location = useLocation();
 	const hideSidebar = location.pathname === "/login";
 	const [sidebarExpanded, setSidebarExpanded] = useState(true);
 	const [mobileOpen, setMobileOpen] = useState(false);
+	const navigate = useNavigate();
+	useEffect(() => {
+		// Navigatsiya funksiyasini global o'zgaruvchiga saqlash
+		setNavigate(navigate);
+	}, [navigate]);
 
 	return (
 		<>

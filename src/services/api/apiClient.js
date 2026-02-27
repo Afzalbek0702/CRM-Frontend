@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import { navigateTo } from "../../utils/navigate";
 const api = axios.create({
 	baseURL: "https://api-crm-data-space.vercel.app",
 	timeout: 7000,
@@ -16,8 +16,11 @@ const api = axios.create({
 api.interceptors.response.use(
 	(res) => res,
 	(err) => {
-		if (err.response?.status === 401) {
-			window.location.href = "/login";
+		console.log("api", err);
+
+		if (err.response?.status || err.response === 401) {
+			// window.location.href = "/login";
+			navigateTo("/login");
 		}
 		return Promise.reject(err);
 	},
