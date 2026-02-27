@@ -19,9 +19,12 @@ api.interceptors.response.use(
 		console.log("api", err);
 
 		if (err.response?.status || err.response === 401) {
-			// window.location.href = "/login";
-			navigateTo("/login");
-		}
+			window.location.href = "/login";
+			// navigateTo("/login");
+      }
+      // if (window.location.pathname !== "/login") {
+		// 		navigateTo("/login");
+		// 	}
 		return Promise.reject(err);
 	},
 );
