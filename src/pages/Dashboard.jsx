@@ -20,8 +20,7 @@ export default function Dashboard() {
 
 	const { students } = useStudent();
 	const { fetchById, groups } = useGroups();
-
-	console.log(absentStudents);
+	
 
 
 	return (
@@ -34,10 +33,10 @@ export default function Dashboard() {
 					Xush kelibsiz
 					<span className="tooltip-wrapper">
 						<span className="text-special-part">
-							{user.full_name}
+							{user.role}
 						</span>
 						<span className="text-special-part-title">
-							{user.role}
+							user id : {user.id}
 						</span>
 					</span>
 				</p>
