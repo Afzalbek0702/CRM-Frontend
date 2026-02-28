@@ -1,20 +1,40 @@
 import { useState, useEffect } from "react";
-import { FaUser, FaPhone, FaSave, FaPlus, FaTimes } from "react-icons/fa";
+import { FaUser, FaPhone, FaSave, FaPlus, FaTimes, FaDollarSign, FaBriefcase, FaBirthdayCake, FaLock } from "react-icons/fa";
 
 export default function TeacherModal({ isOpen, onClose, onSubmit, initialData }) {
 	const [formData, setFormData] = useState({
 		full_name: "",
 		phone: "",
+		password: "",
+		birthday: "",
+		salary: "",
+		salary_type: "sum",
+		position: "O'qituvchi",
 	});
 
 	useEffect(() => {
 		if (initialData) {
+			const rawBirthday = initialData.birthday;
+			const birthday = rawBirthday ? String(rawBirthday).split("T")[0] : "";
 			setFormData({
 				full_name: initialData.full_name || "",
 				phone: initialData.phone || "",
+				password: "",
+				birthday,
+				salary: initialData.salary || "",
+				salary_type: initialData.salary_type || "sum",
+				position: initialData.position || "O'qituvchi",
 			});
 		} else {
-			setFormData({ full_name: "", phone: "" });
+			setFormData({
+				full_name: "",
+				phone: "",
+				password: "",
+				birthday: "",
+				salary: "",
+				salary_type: "sum",
+				position: "O'qituvchi",
+			});
 		}
 	}, [initialData, isOpen]);
 
@@ -27,8 +47,28 @@ export default function TeacherModal({ isOpen, onClose, onSubmit, initialData })
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		onSubmit(formData);
-		setFormData({ full_name: "", phone: "" });
+
+		const payload = {
+			...formData,
+			birthday: formData.birthday || null,
+			salary: Number(formData.salary || 0),
+		};
+
+		if (initialData && !formData.password) {
+			delete payload.password;
+		}
+
+		onSubmit(payload);
+
+		setFormData({
+			full_name: "",
+			phone: "",
+			password: "",
+			birthday: "",
+			salary: "",
+			salary_type: "sum",
+			position: "O'qituvchi",
+		});
 	};
 
 	const stop = (e) => e.stopPropagation();
@@ -39,31 +79,138 @@ export default function TeacherModal({ isOpen, onClose, onSubmit, initialData })
 			<div className="side-panel" onClick={stop}>
 				<div className="panel-header">
 					<div className="panel-title-section">
-						<div className="panel-icon">{initialData ? <FaSave /> : <FaPlus />}</div>
+						<div className="panel-icon">
+							{initialData ? <FaSave /> : <FaPlus />}
+						</div>
 						<div>
 							<h2>{initialData ? "Edit Teacher" : "New Teacher"}</h2>
-							<p className="panel-subtitle">{initialData ? "Update teacher details" : "Add a new teacher"}</p>
+							<p className="panel-subtitle">
+								{initialData ? "Update teacher details" : "Add a new teacher"}
+							</p>
 						</div>
 					</div>
-					<button className="close-button" onClick={onClose}><FaTimes /></button>
+					<button className="close-button" onClick={onClose}>
+						<FaTimes />
+					</button>
 				</div>
 
 				<form onSubmit={handleSubmit} className="modal-form">
 					<div className="form-grid">
+
 						<div className="form-group full-width">
-							<label className="form-label"><FaUser className="field-icon" /> Full name</label>
-							<input name="full_name" className="form-input" required value={formData.full_name} onChange={handleChange} />
+							<label className="form-label">
+								<FaUser className="field-icon" /> Full name
+							</label>
+							<input
+								name="full_name"
+								className="form-input"
+								required
+								value={formData.full_name}
+								onChange={handleChange}
+							/>
+						</div>
+
+						<div className="form-group">
+							<label className="form-label">
+								<FaPhone className="field-icon" /> Phone
+							</label>
+							<input
+								name="phone"
+								className="form-input"
+								required
+								value={formData.phone}
+								onChange={handleChange}
+							/>
+						</div>
+
+						<div className="form-group">
+							<label className="form-label">
+								<FaBirthdayCake className="field-icon" /> Birthday
+							</label>
+							<input
+								name="birthday"
+								type="date"
+								className="form-input"
+								value={formData.birthday}
+								onChange={handleChange}
+							/>
 						</div>
 
 						<div className="form-group full-width">
-							<label className="form-label"><FaPhone className="field-icon" /> Phone</label>
-							<input name="phone" className="form-input" required value={formData.phone} onChange={handleChange} />
+							<label className="form-label">
+								<FaLock className="field-icon" /> Password
+							</label>
+							<input
+								name="password"
+								type="password"
+								className="form-input"
+								required={!initialData} // required only on create
+								value={formData.password}
+								onChange={handleChange}
+							/>
 						</div>
+
+						<div className="form-group">
+							<label className="form-label">
+								<FaDollarSign className="field-icon" /> Salary
+							</label>
+							<input
+								name="salary"
+								type="number"
+								className="form-input"
+								value={formData.salary}
+								onChange={handleChange}
+							/>
+						</div>
+
+						<div className="form-group">
+							<label className="form-label">
+								<FaDollarSign className="field-icon" /> Salary Type
+							</label>
+							<select
+								name="salary_type"
+								className="form-input"
+								value={formData.salary_type}
+								onChange={handleChange}
+							>
+								<option value="sum">So'm</option>
+								<option value="percent">Foiz</option>
+							</select>
+						</div>
+
+						<div className="form-group full-width">
+							<label className="form-label">
+								<FaBriefcase className="field-icon" /> Position
+							</label>
+							<select
+								name="position"
+								className="form-input"
+								value={formData.position}
+								onChange={handleChange}
+							>
+								<option value="O'qituvchi">O'qituvchi</option>
+								<option value="Support">Support</option>
+								<option value="Manager">Manager</option>
+							</select>
+						</div>
+
 					</div>
 
 					<div className="panel-buttons">
-						<button type="button" className="btn-cancel" onClick={onClose}><FaTimes /> Cancel</button>
-						<button type="submit" className="btn-submit">{initialData ? <><FaSave /> Save</> : <><FaPlus /> Create</>}</button>
+						<button type="button" className="btn-cancel" onClick={onClose}>
+							<FaTimes /> Cancel
+						</button>
+						<button type="submit" className="btn-submit">
+							{initialData ? (
+								<>
+									<FaSave /> Save
+								</>
+							) : (
+								<>
+									<FaPlus /> Create
+								</>
+							)}
+						</button>
 					</div>
 				</form>
 			</div>

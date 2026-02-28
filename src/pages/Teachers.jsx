@@ -31,13 +31,12 @@ export default function Teachers() {
 		confirm,
 		"Are you sure you want to delete this teacher?",
 		async (teacher) => {
-            await deleteTeacher(teacher.id);
-            setActionMenu((m) => ({ ...m, isOpen: false }));
-        }
+			await deleteTeacher(teacher.id);
+			setActionMenu((m) => ({ ...m, isOpen: false }));
+		}
 	)
 
 	if (isLoading) return <Loader />;
-	console.log(teachers);
 
 
 	return (

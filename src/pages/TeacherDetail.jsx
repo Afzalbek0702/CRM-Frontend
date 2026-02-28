@@ -7,18 +7,33 @@ import { FaArrowLeft, FaUsers } from "react-icons/fa";
 export default function TeacherDetail() {
 	const { id } = useParams();
 	const navigate = useNavigate();
-	const { fetchById,error,isLoading } = useTeachers();
+	const { fetchById } = useTeachers();
 	const [teacher, setTeacher] = useState(null);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(null);
+	console.log("Route id:", id);
 	useEffect(() => {
-		const loadTeacher = async () => {
-				const data = await fetchById(id);
-				setTeacher(data);
-		};
-		loadTeacher();
-	}, []);
+		if (!id) return;
 
-	if (isLoading) return <Loader />;
-	if (error) return <p>Error: {error}</p>;
+		const loadTeacher = async () => {
+			try {
+				setLoading(true);
+				const data = await fetchById(id);
+				console.log("Fetched teacher:", data);
+				setTeacher(data);
+			} catch (err) {
+				console.error(err);
+				setError("Failed to load teacher");
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		loadTeacher();
+	}, [id]);
+
+	if (loading) return <Loader />;
+	if (error) return <p>{error}</p>;
 	if (!teacher) return <p>Teacher not found</p>;
 
 	return (
@@ -30,7 +45,9 @@ export default function TeacherDetail() {
 			<h2>{teacher.full_name}</h2>
 
 			<div style={{ marginBottom: "30px", background: "var(--background-color-secondary)", padding: "20px", borderRadius: "8px" }}>
+				<p><strong>Pozitsiya:</strong> {teacher.position}</p>
 				<p><strong>Phone:</strong> {teacher.phone}</p>
+				<p><strong>Salary:</strong> {teacher.salary} {teacher.salary_type}</p>
 			</div>
 
 			<h3><FaUsers /> Groups Teaching</h3>

@@ -16,10 +16,10 @@ export default function PaymentModal({
 	onClose,
 	onSubmit,
 	initialData,
+	student
 }) {
+	
 	const [formData, setFormData] = useState({
-		student_id: "",
-		group_id: "",
 		amount: "",
 		method: "Cash",
 		paid_at: "",
@@ -31,8 +31,6 @@ export default function PaymentModal({
 				? String(initialData.paid_at).split("T")[0]
 				: "";
 			setFormData({
-				student_id: initialData.student_id || "",
-				group_id: initialData.group_id || "",
 				amount: initialData.amount || "",
 				method: initialData.method || "Cash",
 				paid_at: paidDate,
@@ -40,8 +38,6 @@ export default function PaymentModal({
 		} else {
 			const today = new Date().toISOString().split("T")[0];
 			setFormData({
-				student_id: "",
-				group_id: "",
 				amount: "",
 				method: "Cash",
 				paid_at: today,
@@ -64,12 +60,11 @@ export default function PaymentModal({
 		}
 		const payload = {
 			...formData,
-			amount: formData.amount === "" ? 0 : Number(formData.amount),
+			amount: Number(formData.amount),
+			student_id: student?.id,
 		};
 		onSubmit(payload);
 		setFormData({
-			student_id: "",
-			group_id: "",
 			amount: "",
 			method: "Cash",
 			paid_at: new Date().toISOString().split("T")[0],
@@ -84,51 +79,19 @@ export default function PaymentModal({
 			<div className="side-panel" onClick={stop}>
 				<div className="panel-header">
 					<div className="panel-title-section">
-						<div className="panel-icon">
-							{initialData ? <FaSave /> : <FaPlus />}
-						</div>
+						<div className="panel-icon">{initialData ? <FaSave /> : <FaPlus />}</div>
 						<div>
 							<h2>{initialData ? "Edit Payment" : "New Payment"}</h2>
 							<p className="panel-subtitle">
-								{initialData
-									? "Update payment details"
-									: "Record a new payment"}
+								{initialData ? "Update payment details" : "Record a new payment"}
 							</p>
 						</div>
 					</div>
-					<button className="close-button" onClick={onClose}>
-						<FaTimes />
-					</button>
+					<button className="close-button" onClick={onClose}><FaTimes /></button>
 				</div>
 
 				<form onSubmit={handleSubmit} className="modal-form">
 					<div className="form-grid">
-						<div className="form-group">
-							<label className="form-label">
-								<FaUser className="field-icon" /> Student ID
-							</label>
-							<input
-								name="student_id"
-								className="form-input"
-								required
-								value={formData.student_id}
-								onChange={handleChange}
-							/>
-						</div>
-
-						<div className="form-group">
-							<label className="form-label">
-								<FaUsers className="field-icon" /> Group ID
-							</label>
-							<input
-								name="group_id"
-								className="form-input"
-								required
-								value={formData.group_id}
-								onChange={handleChange}
-							/>
-						</div>
-
 						<div className="form-group">
 							<label className="form-label">
 								<FaDollarSign className="field-icon" /> Amount
@@ -177,15 +140,7 @@ export default function PaymentModal({
 							<FaTimes /> Cancel
 						</button>
 						<button type="submit" className="btn-submit">
-							{initialData ? (
-								<>
-									<FaSave /> Save
-								</>
-							) : (
-								<>
-									<FaPlus /> Create
-								</>
-							)}
+							{initialData ? <><FaSave /> Save</> : <><FaPlus /> Create</>}
 						</button>
 					</div>
 				</form>

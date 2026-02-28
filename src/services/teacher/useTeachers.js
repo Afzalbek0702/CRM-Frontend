@@ -17,7 +17,7 @@ export const useTeachers = () => {
 
 	const fetchById = async (id) => {
 		const response = await teacherService.getById(id);
-		return response.data;
+		return response;
 	};
 
 	const createTeacherMutation = useMutation({

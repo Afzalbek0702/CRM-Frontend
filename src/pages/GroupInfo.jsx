@@ -573,6 +573,7 @@ export default function GuruhlarInfo() {
 					paid_at: new Date().toISOString().split("T")[0],
 				}}
 				onSubmit={handlePaymentSubmit}
+				student={selectedStudentForPayment}
 			/>
 
 			{/* Click outside to close action menu */}
