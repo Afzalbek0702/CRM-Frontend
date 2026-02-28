@@ -14,7 +14,7 @@ import { BsCalendar2DateFill, BsCreditCard2BackFill, } from "react-icons/bs";
 
 export default function SalaryTable() {
   const {
-    salaries,
+    salary,
     isLoading,
     createSalary,
     updateSalary,
@@ -35,7 +35,7 @@ export default function SalaryTable() {
   const formatDate = (d) =>
     d ? new Date(d).toLocaleDateString() : "";
 
-  const totalSalaryPaid = (salaries || []).reduce(
+  const totalSalaryPaid = (salary || []).reduce(
     (sum, s) => sum + (s.amount || 0),
     0
   );
@@ -75,15 +75,15 @@ export default function SalaryTable() {
         </thead>
 
         <tbody>
-          {(salaries || []).length === 0 ? (
+          {(salary || []).length === 0 ? (
             <tr>
               <td colSpan="6">No salary records found.</td>
             </tr>
           ) : (
-            (salaries || []).map((s) => (
+            (salary || []).map((s) => (
               <tr key={s.id}>
                 <td>{formatDate(s.created_at)}</td>
-                <td>{s.full_name}</td>
+                <td>{s.worker.full_name}</td>
                 <td>
                   {s.amount?.toLocaleString() ?? 0} so'm
                 </td>

@@ -6,7 +6,7 @@ import { FaPlus, FaTrash, FaEdit, FaEllipsisV, FaTimes } from "react-icons/fa";
 import ActionMenu from "../components/ActionMenu";
 
 export default function Settings() {
-    const { courseData, isLoading, create, update, deleteById } = useCourse();
+    const { courseData, isLoading, createCourse, updateCourse, removeCourse } = useCourse();
     const [modalOpen, setModalOpen] = useState(false);
     const [editingCourse, setEditingCourse] = useState(null);
     const [formData, setFormData] = useState({ name: "", price: "", lesson_count: "" });
@@ -74,19 +74,16 @@ export default function Settings() {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit =  (e) => {
         e.preventDefault();
-        try {
             if (editingCourse) {
-                await update({ id: editingCourse.id, data: formData });
+                 updateCourse({ id: editingCourse.id, data: formData });
             } else {
-                await create(formData);
+                 createCourse(formData);
             }
             setModalOpen(false);
-        } catch (err) {
-            console.error(err);
-        }
-    };
+        } 
+    
 
     if (isLoading) return <Loader />;
     console.log(roomData);
@@ -457,7 +454,7 @@ export default function Settings() {
                     if (!actionMenu.course) return;
                     if (actionMenu.course?.lesson_count !== undefined) {
                         if (window.confirm(`Delete ${actionMenu.course.name}?`)) {
-                            deleteById(actionMenu.course.id);
+                            removeCourse(actionMenu.course.id);
                         }
                     } else {
                         if (window.confirm(`Delete ${actionMenu.course.name}?`)) {

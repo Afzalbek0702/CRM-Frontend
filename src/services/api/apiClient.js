@@ -2,6 +2,7 @@ import axios from "axios";
 import { navigateTo } from "../../utils/navigate";
 const api = axios.create({
 	baseURL: "https://api-crm-data-space.vercel.app",
+	// baseURL: "http://localhost:7000",
 	timeout: 7000,
 	withCredentials: true,
 	headers: {
@@ -9,22 +10,13 @@ const api = axios.create({
 	},
 });
 
-// api.interceptors.request.use((config) => {
-// 	return config;
-// });
-
 api.interceptors.response.use(
 	(res) => res,
 	(err) => {
-		console.log("api", err);
-
-		if (err.response?.status || err.response === 401) {
-			window.location.href = "/login";
-			// navigateTo("/login");
-      }
-      // if (window.location.pathname !== "/login") {
-		// 		navigateTo("/login");
-		// 	}
+		if (err.status === 401) {
+         // window.location.href = "/login";
+         navigateTo("/login");
+		}
 		return Promise.reject(err);
 	},
 );

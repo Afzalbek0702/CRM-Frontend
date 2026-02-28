@@ -30,7 +30,6 @@ export default function Layout() {
 	const [mobileOpen, setMobileOpen] = useState(false);
 	const navigate = useNavigate();
 	useEffect(() => {
-		// Navigatsiya funksiyasini global o'zgaruvchiga saqlash
 		setNavigate(navigate);
 	}, [navigate]);
 
