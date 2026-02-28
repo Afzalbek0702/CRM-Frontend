@@ -394,6 +394,10 @@ body {
     transition: all 0.3s ease;
 }
 
+.dashboard-header div {
+    position: relative;
+}
+
 /* Sidebar ochiq bo'lganda header marginlari 0 */
 .content.sidebar-open .dashboard-header,
 .content.sidebar-open .students-header,
@@ -401,7 +405,7 @@ body {
 .content.sidebar-open .payments-header,
 .content.sidebar-open .groups-header,
 .content.sidebar-open .leads-header,
-.content.sidebar-open .archive-header{
+.content.sidebar-open .archive-header {
     margin-left: 0 !important;
     transition: all 0.3s ease;
 }
@@ -695,6 +699,7 @@ body {
     overflow: visible;
     overflow: auto;
 }
+
 table::-webkit-scrollbar {
     display: none;
 }
@@ -957,6 +962,7 @@ table::-webkit-scrollbar {
     margin-bottom: 30px;
     background-color: white;
 }
+
 .btn2 {
     background: none;
     border: none;
@@ -1215,7 +1221,8 @@ table::-webkit-scrollbar {
 .sidebar.mobile-open {
     top: 70px;
     height: calc(100vh - 70px);
-    z-index: 1045; /* below hamburger (1050) but above content */
+    z-index: 1045;
+    /* below hamburger (1050) but above content */
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
 }
 
@@ -1317,7 +1324,7 @@ table::-webkit-scrollbar {
     display: flex;
     flex-direction: column;
     gap: 0;
-    padding:  0;
+    padding: 0;
     flex: 1;
     overflow-y: auto;
     scrollbar-width: thin;
@@ -1327,7 +1334,7 @@ table::-webkit-scrollbar {
 
 .sidebar-nav::-webkit-scrollbar {
     display: none;
-        width: 6px;
+    width: 6px;
 }
 
 .sidebar-nav::-webkit-scrollbar-track {
@@ -1470,6 +1477,7 @@ table::-webkit-scrollbar {
     left: 0;
     top: 0;
 }
+
 .sidebar.collapsed .sidebar-submenu.collapsed-hover-submenu {
     position: absolute;
     left: calc(100% + 8px);
@@ -1490,6 +1498,7 @@ table::-webkit-scrollbar {
     height: 100%;
     overflow-y: auto;
 }
+
 .sidebar.expanded .sidebar-submenu.collapsed-hover-submenu {
     display: none !important;
 }
@@ -1499,6 +1508,7 @@ table::-webkit-scrollbar {
         opacity: 0;
         transform: translateX(-12px);
     }
+
     to {
         opacity: 1;
         transform: translateX(0);
@@ -1555,6 +1565,7 @@ table::-webkit-scrollbar {
         transform: translateY(-10px);
         max-height: 0;
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -3603,39 +3614,39 @@ option:hover {
 
 @media (min-width: 1024px) and (max-width: 1440px) {
 
-  /* Scrollni oldini olamiz */
-  body {
-    overflow-x: hidden;
-  }
+    /* Scrollni oldini olamiz */
+    body {
+        overflow-x: hidden;
+    }
 
-  .dashboard-cards {
-    display: grid;
-    grid-template-columns: repeat(4, 0.9fr); 
-    /* 1fr emas — 0.9fr qildik, kichrayadi */
+    .dashboard-cards {
+        display: grid;
+        grid-template-columns: repeat(4, 0.9fr);
+        /* 1fr emas — 0.9fr qildik, kichrayadi */
 
-    justify-content: center; 
-    gap: 24px;
-    width: 100%;
-    box-sizing: border-box;
-  }
+        justify-content: center;
+        gap: 24px;
+        width: 100%;
+        box-sizing: border-box;
+    }
 
-  .dashboard-cards a {  
-    display: block;
-    min-width: 0;
-  }
+    .dashboard-cards a {
+        display: block;
+        min-width: 0;
+    }
 
-  .dashboard-content-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 28px;
-    width: 100%;
-    box-sizing: border-box;
-  }
+    .dashboard-content-wrapper {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+        width: 100%;
+        box-sizing: border-box;
+    }
 
-  .dashboard-cards * {
-  box-sizing: border-box;
-  max-width: 100%;
-}
+    .dashboard-cards * {
+        box-sizing: border-box;
+        max-width: 100%;
+    }
 
 
 }
@@ -3744,7 +3755,7 @@ option:hover {
         font-size: 13px;
     }
 
-    
+
 
 }
 
@@ -3955,13 +3966,19 @@ option:hover {
 
 /* Table Row Fade In Animation */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 tr {
-  animation: fadeIn 0.25s ease forwards;
+    animation: fadeIn 0.25s ease forwards;
 }
+
 .table-container tbody tr {
     animation: fadeIn 0.4s ease forwards;
 }
@@ -4117,9 +4134,9 @@ tr {
         overflow-x: hidden !important;
     }
 
-    
 
-    
+
+
 
     .sidebar-backdrop {
         display: block !important;
@@ -4160,7 +4177,9 @@ tr {
         padding: 20px !important;
         min-height: 120px !important;
     }
-.collapsed-hover-submenu
+
+    .collapsed-hover-submenu
+
     /* Tables and search */
     .table-container {
         overflow-x: auto !important;
@@ -4204,15 +4223,15 @@ tr {
     /* Keep sidebar full height on landscape small screens */
     .sidebar {
         top: 30px;
-        height: calc(100vh - 30px) ;
-        max-height: none ;
+        height: calc(100vh - 30px);
+        max-height: none;
         transition: width 0.3s ease, transform 0.3s ease;
     }
 
 
 }
 
-.upperCaseHeader{
+.upperCaseHeader {
     text-transform: capitalize;
 }
 
@@ -4226,87 +4245,126 @@ input[type=number] {
     -moz-appearance: textfield;
     appearance: none;
 }
-.copy-phone:hover{
+
+.copy-phone:hover {
     color: var(--primary-color);
     text-decoration: underline;
 }
 
 .confirm-modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: var(--background-color, #000);
-  color: #fff;
-  border-radius: 0.5rem;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
-  width: 360px;
-  max-width: 90%;
-  z-index: 1001;
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  animation: fadeInScale 0.2s ease forwards;
-  font-family: "JetBrains Mono", monospace;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--background-color, #000);
+    color: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+    width: 360px;
+    max-width: 90%;
+    z-index: 1001;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    animation: fadeInScale 0.2s ease forwards;
+    font-family: "JetBrains Mono", monospace;
 }
 
 .confirm-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
 }
 
 .confirm-icon {
-  font-size: 1.5rem;
-  color: var(--primary-color, orange);
-  margin-right: 0.75rem;
+    font-size: 1.5rem;
+    color: var(--primary-color, orange);
+    margin-right: 0.75rem;
 }
 
 .confirm-header h3 {
-  margin: 0;
-  font-size: 1.2rem;
-  font-weight: 600;
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
 }
 
 .confirm-message {
-  font-size: 0.95rem;
-  margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
 }
 
 .confirm-buttons {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
 }
 
 .confirm-buttons button {
-  padding: 0.5rem 1rem;
-  font-family: inherit;
-  font-size: 0.95rem;
-  border-radius: 0.25rem;
-  cursor: pointer;
-  border: none;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  transition: background 0.2s, color 0.2s;
+    padding: 0.5rem 1rem;
+    font-family: inherit;
+    font-size: 0.95rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    transition: all 0.2s, color 0.2s;
 }
+
 .btn-cancel {
-  background-color: transparent;
-  color: #fff;
-  border: 1px solid #fff;
+    background-color: transparent;
+    color: #fff;
+    border: 1px solid #fff;
 }
 
 .btn-cancel:hover {
-  background-color: #fff;
-  color: var(--background-color, #000);
+    background-color: #fff;
+    color: var(--background-color, #000);
 }
 
 .btn-danger {
-  background-color: var(--primary-color, orange);
-  color: #000;
+    background-color: var(--primary-color);
+    color: #000;
 }
 
 .btn-danger:hover {
-  background-color: #ffb347; /* lighter orange on hover */
+    background-color: #ffb347;
+}
+
+.text-special-part {
+    color: var(--primary-color);
+    font-family: "JetBrains Mono", monospace;
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.tooltip-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-left: 1%;
+}
+
+.text-special-part-title {
+    position: absolute;
+    top: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+
+    opacity: 0;
+    background-color: var(--background-color);
+    color: var(--primary-color);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 14px;
+    white-space: nowrap;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    border: 1px solid var(--primary-color);
+    text-transform: uppercase;
+}
+
+.tooltip-wrapper:hover .text-special-part-title {
+    opacity: 1;
 }

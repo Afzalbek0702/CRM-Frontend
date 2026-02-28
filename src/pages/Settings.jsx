@@ -195,7 +195,7 @@ export default function Settings() {
                     </thead>
                     <tbody>
                         {roomData.map((room) => (
-                            <tr key={room.id}>
+                            <tr key={room.room_id}>
                                 <td>{room.room_name}</td>
                                 <td>{room.capacity}</td>
                                 <td style={{ width: "10px" }} onClick={(e) => e.stopPropagation()}>

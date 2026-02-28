@@ -11,15 +11,17 @@ export default function Dashboard() {
 	const { absentStudents, monthlyIncome, todayLessons, topDebtors, isLoading, error } = useDashboard();
 	const { courseData } = useCourse();
 	const courseMap = Object.fromEntries(courseData?.map(c => [c.id, c.name]));
-   const user =JSON.parse( localStorage.getItem("user") )
-   console.log(user);
-   
+	const user = JSON.parse(localStorage.getItem("user"))
+	console.log(user);
+
 	const handleRowClick = (groupId) => {
 		navigate(`/groups/${groupId}`);
 	};
 
 	const { students } = useStudent();
 	const { fetchById, groups } = useGroups();
+	
+
 
 	return (
 		<>
@@ -27,7 +29,17 @@ export default function Dashboard() {
 				<h1>
 					<MdDashboard style={{ marginTop: "0px" }} /> Dashboard
 				</h1>
-				<p>Xush kelibsiz {user?.role.toUpperCase()}</p>
+				<p>
+					Xush kelibsiz
+					<span className="tooltip-wrapper">
+						<span className="text-special-part">
+							{user.role}
+						</span>
+						<span className="text-special-part-title">
+							user id : {user.id}
+						</span>
+					</span>
+				</p>
 			</div>
 			<div className="dashboard-cards">
 				<NavLink to="/payments">
