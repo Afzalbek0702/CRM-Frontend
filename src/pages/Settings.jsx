@@ -13,9 +13,9 @@ export default function Settings() {
     const {
         roomData,
         isLoading: roomLoading,
-        create: createRoom,
-        update: updateRoom,
-        deleteById: deleteRoom
+        createRoom,
+        updateRoom,
+        removeRoom: deleteRoom
     } = useRoom();
     const [roomModalOpen, setRoomModalOpen] = useState(false);
     const [editingRoom, setEditingRoom] = useState(null);
