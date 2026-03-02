@@ -58,11 +58,11 @@ export default function DebtorsTable({ searchTerm = "" }) {
 			{/* Summary Section */}
 			<div className="debt-summary">
 				<div>
-					<strong>Total Outstanding Debt:</strong>{" "}
+					<strong>Jami qarz:</strong>{" "}
 					{totalOutstandingDebt.toLocaleString()} so'm
 				</div>
 				<div>
-					<strong>Number of Debtors:</strong> {numberOfDebtors}
+					<strong>Qarzdorlar soni:</strong> {numberOfDebtors}
 				</div>
 			</div>
 
@@ -82,7 +82,7 @@ export default function DebtorsTable({ searchTerm = "" }) {
 				<tbody>
 					{filtered.length === 0 ? (
 						<tr>
-							<td colSpan="6">No debtors found.</td>
+							<td colSpan="6">Qarzdorlar topilmadi.</td>
 						</tr>
 					) : (
 						filtered.map((d) => (

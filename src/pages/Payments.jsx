@@ -26,7 +26,7 @@ export default function Payments() {
 		}
 	}
 
-	const validCategories = [ "income", "salary", "debtors", "expenses"];
+	const validCategories = ["income", "salary", "debtors", "expenses"];
 	if (!validCategories.includes(category)) {
 		return <p>Invalid category</p>;
 	}
@@ -34,7 +34,10 @@ export default function Payments() {
 	return (
 		<div className="table-container">
 			<h2 className="upperCaseHeader">
-				{category}
+				{category === "income" ? "To'lovlar" :
+					category === "salary" ? "Ish haqlari" :
+						category === "expenses" ? "Harajatlar" :
+							category === "debtors" ? "Qarzdorlar" : ""}
 			</h2>
 
 			{category === "debtors" && (

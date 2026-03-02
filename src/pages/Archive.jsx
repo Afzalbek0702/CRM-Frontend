@@ -46,7 +46,14 @@ export default function Archive() {
 
   return (
     <div className="archive-container">
-      <h2>Archive - {category}</h2>
+      <h2>Arxiv -
+        <span>
+          {category === "students" ? "O'quvchilar" :
+            category === "teachers" ? "O'qituvchilar" :
+              category === "payments" ? "To'lovlar" :
+                category === "groups" ? "Guruhlar" :
+                  category === "leads" ? "Lidlar" : ""}</span>
+      </h2>
 
       {category === "students" && (
 

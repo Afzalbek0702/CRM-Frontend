@@ -52,13 +52,13 @@ export default function SalaryTable() {
               setIsModalOpen(true);
             }}
           >
-            <FaPlus /> New Salary
+            <FaPlus /> Yangi ish haqi
           </button>
         </div>
       </div>
 
       <div className="salary-summary">
-        <strong>Total Salary Paid:</strong>{" "}
+        <strong>Jami to'langan ish haqi:</strong>{" "}
         {totalSalaryPaid.toLocaleString()} so'm
       </div>
 
@@ -77,7 +77,7 @@ export default function SalaryTable() {
         <tbody>
           {(salary || []).length === 0 ? (
             <tr>
-              <td colSpan="6">No salary records found.</td>
+              <td colSpan="6">To'langan ish haqlari topilmadi.</td>
             </tr>
           ) : (
             (salary || []).map((s) => (

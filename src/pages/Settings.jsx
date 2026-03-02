@@ -91,13 +91,13 @@ export default function Settings() {
 
     return (
         <div className="table-container">
-            <h1>Admin Settings</h1>
+            <h1>Admin Sozlamalari</h1>
 
-            <h2>Courses</h2>
+            <h2>Kurslar</h2>
 
             <div style={{ marginBottom: "20px" }}>
                 <button className="btn1" onClick={openCreateModal}>
-                    <FaPlus /> Add Course
+                    <FaPlus /> Kurs qo'shish
                 </button>
             </div>
 
@@ -107,9 +107,9 @@ export default function Settings() {
                     <table className="table">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Price</th>
-                                <th>Lesson Count</th>
+                                <th>Nomi</th>
+                                <th>Narx</th>
+                                <th>Darslar soni</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -170,17 +170,17 @@ export default function Settings() {
 
                 </>
             ) : (
-                <p>No courses yet</p>
+                <p>Kurslar yo'q</p>
             )}
 
 
             <hr style={{ margin: "40px 0" }} />
 
-            <h2>Rooms</h2>
+            <h2>Xonalar</h2>
 
             <div style={{ marginBottom: "20px" }}>
                 <button className="btn1" onClick={openCreateRoom}>
-                    <FaPlus /> Add Room
+                    <FaPlus /> Xona qo'shish
                 </button>
             </div>
 
@@ -188,8 +188,8 @@ export default function Settings() {
                 <table className="table">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Capacity</th>
+                            <th>Nomi</th>
+                            <th>Hajmi</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -240,7 +240,7 @@ export default function Settings() {
                     </tbody>
                 </table>
             ) : (
-                <p>No rooms yet</p>
+                <p>Xona yo'q</p>
             )}
 
             {/* modal start */}
@@ -277,7 +277,7 @@ export default function Settings() {
                             <div className="form-grid">
                                 <div className="form-group full-width">
                                     <label className="form-label">
-                                        Name
+                                        Ism
                                     </label>
                                     <input
                                         type="text"
@@ -291,7 +291,7 @@ export default function Settings() {
 
                                 <div className="form-group">
                                     <label className="form-label">
-                                        Price
+                                        Narx
                                     </label>
                                     <input
                                         type="number"
@@ -305,7 +305,7 @@ export default function Settings() {
 
                                 <div className="form-group">
                                     <label className="form-label">
-                                        Lesson Count
+                                        Darslar soni
                                     </label>
                                     <input
                                         type="number"
@@ -324,17 +324,17 @@ export default function Settings() {
                                     className="btn-cancel"
                                     onClick={() => setModalOpen(false)}
                                 >
-                                    <FaTimes /> Cancel
+                                    <FaTimes /> Bekor qilish
                                 </button>
 
                                 <button type="submit" className="btn-submit">
                                     {editingCourse ? (
                                         <>
-                                            <FaEdit /> Update
+                                            <FaEdit /> Yangilar
                                         </>
                                     ) : (
                                         <>
-                                            <FaPlus /> Create
+                                            <FaPlus /> Yaratish
                                         </>
                                     )}
                                 </button>
@@ -362,8 +362,8 @@ export default function Settings() {
                                     <h2>{editingRoom ? "Edit Room" : "New Room"}</h2>
                                     <p className="panel-subtitle">
                                         {editingRoom
-                                            ? "Update room details"
-                                            : "Create a new room"}
+                                            ? "Xona infolarini yangilar"
+                                            : "Yangi xona yaratish"}
                                     </p>
                                 </div>
                             </div>
@@ -380,7 +380,7 @@ export default function Settings() {
                             <div className="form-grid">
                                 <div className="form-group full-width">
                                     <label className="form-label">
-                                        Name
+                                        Ism
                                     </label>
                                     <input
                                         type="text"
@@ -394,7 +394,7 @@ export default function Settings() {
 
                                 <div className="form-group">
                                     <label className="form-label">
-                                        Capacity
+                                        Hajm
                                     </label>
                                     <input
                                         type="number"
@@ -413,17 +413,17 @@ export default function Settings() {
                                     className="btn-cancel"
                                     onClick={() => setRoomModalOpen(false)}
                                 >
-                                    <FaTimes /> Cancel
+                                    <FaTimes /> Bekor qilish
                                 </button>
 
                                 <button type="submit" className="btn-submit">
                                     {editingRoom ? (
                                         <>
-                                            <FaEdit /> Update
+                                            <FaEdit /> Yangilash
                                         </>
                                     ) : (
                                         <>
-                                            <FaPlus /> Create
+                                            <FaPlus /> Yaratish
                                         </>
                                     )}
                                 </button>

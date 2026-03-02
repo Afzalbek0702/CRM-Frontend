@@ -56,13 +56,13 @@ export default function ExpensesTable() {
 
             {/* Summary */}
             <div className="expense-summary">
-                <strong>Total Expenses:</strong>{" "}
+                <strong>Jami harajatlar:</strong>{" "}
                 {totalExpenses.toLocaleString()} so'm
             </div>
 
             <div className="table-actions">
                 <button className="btn1" onClick={() => setIsModalOpen(true)}>
-                    Add Expense
+                    Xarajat qo'shish
                 </button>
             </div>
 
@@ -81,7 +81,7 @@ export default function ExpensesTable() {
                 <tbody>
                     {(expenses || []).length === 0 ? (
                         <tr>
-                            <td colSpan="6">No expenses found.</td>
+                            <td colSpan="6">Xarajatlar topilmadi.</td>
                         </tr>
                     ) : (
                         (expenses || []).map((e) => (
