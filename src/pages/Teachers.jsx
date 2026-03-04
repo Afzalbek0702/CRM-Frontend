@@ -23,9 +23,10 @@ export default function Teachers() {
 		position: { top: 0, left: 0 },
 		teacher: null,
 	});
+   const tenant = localStorage.getItem("tenant");
 
 	const handleRowClick = (teacherId) => {
-		navigate(`/teachers/${teacherId}`);
+		navigate(`/${tenant}/teachers/${teacherId}`);
 	};
 	const handleDeleteTeacher = withConfirm(
 		confirm,

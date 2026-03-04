@@ -46,9 +46,9 @@ export default function Students() {
 	});
 	const [addToGroupOpen, setAddToGroupOpen] = useState(false);
 	const [addToGroupStudent, setAddToGroupStudent] = useState(null);
-
+   const tenant = localStorage.getItem("tenant")
 	const handleRowClick = (studentId) => {
-		navigate(`/students/${studentId}`);
+		navigate(`/${tenant}/students/${studentId}`);
 	};
 	const handleDeleteStudent = withConfirm(
 		confirm,

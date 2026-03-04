@@ -1,0 +1,48 @@
+import { Navigate, Route, Routes } from "react-router-dom";
+import Layout from "./Layout";
+
+import Dashboard from "./pages/Dashboard";
+import Groups from "./pages/Groups";
+import GroupInfo from "./pages/GroupInfo";
+import Students from "./pages/Students";
+import StudentDetail from "./pages/StudentDetail";
+import Teachers from "./pages/Teachers";
+import TeacherDetail from "./pages/TeacherDetail";
+import Payments from "./pages/Payments";
+import Login from "./pages/Login";
+import Leads from "./pages/Leads";
+import Archive from "./pages/Archive";
+import Settings from "./pages/Settings";
+
+export default function App() {
+	const tenant = localStorage.getItem("tenant");
+	return (
+		<Routes>
+			<Route path="/login" element={<Login />} />
+			<Route
+				path="/"
+				element={
+					tenant ? (
+						<Navigate to={`/${tenant}/dashboard`} />
+					) : (
+						<Navigate to={"login"} />
+					)
+				}
+			/>
+			<Route path="/:tenant" element={<Layout />}>
+				<Route path="dashboard" element={<Dashboard />} />
+				<Route path="leads" element={<Leads />} />
+				<Route path="archive/:category" element={<Archive />} />
+				<Route path="groups" element={<Groups />} />
+				<Route path="groups/:id" element={<GroupInfo />} />
+				<Route path="students" element={<Students />} />
+				<Route path="students/:id" element={<StudentDetail />} />
+				<Route path="teachers" element={<Teachers />} />
+				<Route path="teachers/:id" element={<TeacherDetail />} />
+				<Route path="settings" element={<Settings />} />
+				<Route path="payments" element={<Payments />} />
+				<Route path="payments/:category" element={<Payments />} />
+			</Route>
+		</Routes>
+	);
+}

@@ -21,7 +21,7 @@ export default function Header({ isExpanded, onToggle, mobileOpen }) {
 	const { groups = [] } = useGroups();
 	const { teachers = [] } = useTeachers();
 	const { leads = [] } = useLeads();
-
+   const tenant = localStorage.getItem("tenant")
 	useEffect(() => {
 		const handleClickOutside = (event) => {
 			if (searchRef.current && !searchRef.current.contains(event.target)) {
@@ -70,16 +70,16 @@ export default function Header({ isExpanded, onToggle, mobileOpen }) {
 	const handleResultClick = (type, item) => {
 		switch (type) {
 			case "student":
-				navigate(`/students/${item.id}`);
+				navigate(`/${tenant}/students/${item.id}`);
 				break;
 			case "group":
-				navigate(`/groups/${item.id}`);
+				navigate(`/${tenant}/groups/${item.id}`);
 				break;
 			case "teacher":
-				navigate(`/teachers/${item.id}`);
+				navigate(`/${tenant}/teachers/${item.id}`);
 				break;
 			case "lead":
-				navigate(`/leads`);
+				navigate(`/${tenant}/leads`);
 				break;
 			default:
 				break;

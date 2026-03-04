@@ -1,7 +1,7 @@
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import AppLayout from "./Layout";
+import App from "./app";
 import "./index.css";
 import { Toaster } from "react-hot-toast";
 import { ConfirmProvider } from "./components/ConfirmProvider";
@@ -20,12 +20,12 @@ const queryClient = new QueryClient({
 	},
 });
 ReactDOM.createRoot(document.getElementById("root")).render(
-	<ConfirmProvider>
-		<BrowserRouter>
-			<QueryClientProvider client={queryClient}>
-				<AppLayout />
+	<QueryClientProvider client={queryClient}>
+		<ConfirmProvider>
+			<BrowserRouter>
+				<App />
 				<Toaster />
-			</QueryClientProvider>
-		</BrowserRouter>,
-	</ConfirmProvider>
+			</BrowserRouter>
+		</ConfirmProvider>
+	</QueryClientProvider>,
 );

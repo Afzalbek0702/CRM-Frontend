@@ -23,7 +23,8 @@ import { useCourse } from "../services/course/useCourse.js";
 
 export default function Groups() {
 	const confirm = useConfirm();
-	const navigate = useNavigate();
+   const navigate = useNavigate();
+   const tenant = localStorage.getItem("tenant")
 	const { groups, loading, createGroup, deleteGroup, updateGroup } =
 		useGroups();
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -119,7 +120,7 @@ export default function Groups() {
 	};
 
 	const handleRowClick = (groupId) => {
-		navigate(`/groups/${groupId}`);
+		navigate(`/${tenant}/groups/${groupId}`);
 	};
 
 	const handleSubmit = (formData) => {
@@ -133,7 +134,7 @@ export default function Groups() {
 		setIsEditMode(false);
 	};
 
-	if (loading || !courseData || courseData.length === 0) {
+	if (loading) {
 		return <Loader />;
 	}
 
@@ -219,14 +220,6 @@ export default function Groups() {
 
 							)
 							.map((g) => {
-								// console.log("Group:", g.name);
-								// console.log("course_type:", g.course_type);
-								// console.log("courseData:", courseData);
-								// console.log('g.course_type', g.course_type, typeof g.course_type);
-								// console.log('courseMap keys', Object.keys(courseMap));
-								// console.log(g.studentCount);
-
-
 								return (
 									<tr
 										key={g.id}

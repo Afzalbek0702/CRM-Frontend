@@ -11,9 +11,9 @@ export const useAuth = () => {
 		mutationFn: (credentials) => authService.login(credentials),
 
 		onSuccess: (data) => {
-			const { token, tenant, user } = data;
-
-			localStorage.setItem("token", token);
+			const { tenant, user } = data;
+         console.log("tenant",tenant);
+         
 			localStorage.setItem("tenant", tenant);
 			localStorage.setItem("user", JSON.stringify(user));
 

@@ -1,6 +1,6 @@
 export const endpoints = {
    LOGIN: "/auth/login",
-   REGISTER:"/auth/register",
+   REGISTER: "/auth/register",
 	ATTENDANCE: "/api/attendance",
 	STUDENTS: "/api/students",
 	GROUPS: "/api/groups",

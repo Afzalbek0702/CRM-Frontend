@@ -12,10 +12,9 @@ export default function Dashboard() {
 	const { courseData } = useCourse();
 	const courseMap = Object.fromEntries(courseData?.map(c => [c.id, c.name]));
 	const user = JSON.parse(localStorage.getItem("user"))
-	console.log(user);
-
+   const tenant = localStorage.getItem("tenant")
 	const handleRowClick = (groupId) => {
-		navigate(`/groups/${groupId}`);
+		navigate(`/${tenant}/groups/${groupId}`);
 	};
 
 	const { students } = useStudent();
