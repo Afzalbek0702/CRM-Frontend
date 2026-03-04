@@ -6,6 +6,7 @@ import {
 	useNavigate,
 } from "react-router-dom";
 import { useState } from "react";
+import RequireAuth from "./components/RequireAuth";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 
@@ -64,27 +65,26 @@ export default function Layout() {
 					</>
 				)}
 				<main
-					className={`content ${
-						sidebarExpanded ? "sidebar-expanded" : "sidebar-collapsed"
-					} ${location.pathname === "/login" ? "login-page" : ""}`}
+					className={`content ${sidebarExpanded ? "sidebar-expanded" : "sidebar-collapsed"
+						} ${location.pathname === "/login" ? "login-page" : ""}`}
 				>
 					<Routes>
 						<Route path="/login" element={<Login />} />
 						<Route path="/" element={<Navigate to="/dashboard" />} />
-						<Route path="/dashboard" element={<Dashboard />} />
-						<Route path="/leads" element={<Leads />} />
-						<Route path="/archive/:category" element={<Archive />} />
-						<Route path="/groups" element={<Groups />} />
-						<Route path="/groups/:id" element={<GroupInfo />} />
-						<Route path="/students" element={<Students />} />
-						<Route path="/students/:id" element={<StudentDetail />} />
-						<Route path="/teachers" element={<Teachers />} />
-						<Route path="/teachers/:id" element={<TeacherDetail />} />
-						<Route path="/settings" element={<Settings />}></Route>
+						<Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
+						<Route path="/leads" element={<RequireAuth><Leads /></RequireAuth>} />
+						<Route path="/archive/:category" element={<RequireAuth><Archive /></RequireAuth>} />
+						<Route path="/groups" element={<RequireAuth><Groups /></RequireAuth>} />
+						<Route path="/groups/:id" element={<RequireAuth><GroupInfo /></RequireAuth>} />
+						<Route path="/students" element={<RequireAuth><Students /></RequireAuth>} />
+						<Route path="/students/:id" element={<RequireAuth><StudentDetail /></RequireAuth>} />
+						<Route path="/teachers" element={<RequireAuth><Teachers /></RequireAuth>} />
+						<Route path="/teachers/:id" element={<RequireAuth><TeacherDetail /></RequireAuth>} />
+						<Route path="/settings" element={<RequireAuth><Settings /></RequireAuth>}></Route>
 
 						{/* o'zgartirvormelar yoki ochirvormelar!! */}
-						<Route path="/payments" element={<Payments />} />
-						<Route path="/payments/:category" element={<Payments />} />
+						<Route path="/payments" element={<RequireAuth><Payments /></RequireAuth>} />
+						<Route path="/payments/:category" element={<RequireAuth><Payments /></RequireAuth>} />
 						{/*  */}
 					</Routes>
 				</main>
