@@ -22,11 +22,12 @@ import Login from "./pages/Login";
 import Leads from "./pages/Leads";
 import Archive from "./pages/Archive";
 import Settings from "./pages/Settings";
+import TenantRedirect from "./components/TenantRedirect"
 import { setNavigate } from "./utils/navigate";
 import { useEffect } from "react";
 export default function Layout() {
 	const location = useLocation();
-	const hideSidebar = location.pathname === "/login";
+	const hideSidebar = location.pathname.includes("/login");
 	const [sidebarExpanded, setSidebarExpanded] = useState(true);
 	const [mobileOpen, setMobileOpen] = useState(false);
 	const navigate = useNavigate();
@@ -70,21 +71,21 @@ export default function Layout() {
 				>
 					<Routes>
 						<Route path="/login" element={<Login />} />
-						<Route path="/" element={<Navigate to="/dashboard" />} />
-						<Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
-						<Route path="/leads" element={<RequireAuth><Leads /></RequireAuth>} />
-						<Route path="/archive/:category" element={<RequireAuth><Archive /></RequireAuth>} />
-						<Route path="/groups" element={<RequireAuth><Groups /></RequireAuth>} />
-						<Route path="/groups/:id" element={<RequireAuth><GroupInfo /></RequireAuth>} />
-						<Route path="/students" element={<RequireAuth><Students /></RequireAuth>} />
-						<Route path="/students/:id" element={<RequireAuth><StudentDetail /></RequireAuth>} />
-						<Route path="/teachers" element={<RequireAuth><Teachers /></RequireAuth>} />
-						<Route path="/teachers/:id" element={<RequireAuth><TeacherDetail /></RequireAuth>} />
-						<Route path="/settings" element={<RequireAuth><Settings /></RequireAuth>}></Route>
+						<Route path="/" element={ <TenantRedirect/> } />
+						<Route path=":tenant/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
+						<Route path=":tenant/leads" element={<RequireAuth><Leads /></RequireAuth>} />
+						<Route path=":tenant/archive/:category" element={<RequireAuth><Archive /></RequireAuth>} />
+						<Route path=":tenant/groups" element={<RequireAuth><Groups /></RequireAuth>} />
+						<Route path=":tenant/groups/:id" element={<RequireAuth><GroupInfo /></RequireAuth>} />
+						<Route path=":tenant/students" element={<RequireAuth><Students /></RequireAuth>} />
+						<Route path=":tenant/students/:id" element={<RequireAuth><StudentDetail /></RequireAuth>} />
+						<Route path=":tenant/teachers" element={<RequireAuth><Teachers /></RequireAuth>} />
+						<Route path=":tenant/teachers/:id" element={<RequireAuth><TeacherDetail /></RequireAuth>} />
+						<Route path=":tenant/settings" element={<RequireAuth><Settings /></RequireAuth>}></Route>
 
 						{/* o'zgartirvormelar yoki ochirvormelar!! */}
-						<Route path="/payments" element={<RequireAuth><Payments /></RequireAuth>} />
-						<Route path="/payments/:category" element={<RequireAuth><Payments /></RequireAuth>} />
+						<Route path=":tenant/payments" element={<RequireAuth><Payments /></RequireAuth>} />
+						<Route path=":tenant/payments/:category" element={<RequireAuth><Payments /></RequireAuth>} />
 						{/*  */}
 					</Routes>
 				</main>

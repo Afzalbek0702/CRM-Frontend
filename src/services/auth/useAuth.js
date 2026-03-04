@@ -10,10 +10,16 @@ export const useAuth = () => {
 	const mutation = useMutation({
 		mutationFn: (credentials) => authService.login(credentials),
 
-      onSuccess: (data) => {
-         localStorage.setItem("user", JSON.stringify(data));
-			queryClient.setQueryData(["user"], data);
-			navigate("/dashboard");
+		onSuccess: (data) => {
+			const { token, tenant, user } = data;
+
+			localStorage.setItem("token", token);
+			localStorage.setItem("tenant", tenant);
+			localStorage.setItem("user", JSON.stringify(user));
+
+			queryClient.setQueryData(["user"], user);
+
+			navigate(`/${tenant}/dashboard`);
 		},
 
 		onError: (error) => {
@@ -21,11 +27,11 @@ export const useAuth = () => {
 			toast.error("Telefon raqam yoki parol noto'g'ri!");
 		},
 	});
-   
-   return {
+
+	return {
 		login: mutation.mutate,
 		isLoading: mutation.isLoading,
 		isError: mutation.isError,
 		error: mutation.error,
-	}; 
+	};
 };
