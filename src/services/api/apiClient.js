@@ -13,7 +13,7 @@ const api = axios.create({
 api.interceptors.request.use((config) => {
   const tenant = window.location.pathname.split("/")[1];
 
-  if (tenant && tenant !== '/login') {
+  if (tenant && tenant !== 'login') {
     config.url = `/${tenant}${config.url}`;
   }
 
