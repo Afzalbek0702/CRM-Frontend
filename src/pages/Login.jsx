@@ -27,7 +27,7 @@ const Login = () => {
 					{" "}
 					<img className="logo-img" src="/logo.jpg" alt="" /> Data Space
 				</h2>
-				<p className="login-subtitle">Please login to your account</p>
+				<p className="login-subtitle">Iltimos xisobingizga kiring.</p>
 				<form onSubmit={handleSubmit} className="login-form">
 					<div className="form-group">
 						<label htmlFor="phone" className="form-label">

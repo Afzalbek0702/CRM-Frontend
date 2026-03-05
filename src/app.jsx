@@ -10,6 +10,7 @@ import Teachers from "./pages/Teachers";
 import TeacherDetail from "./pages/TeacherDetail";
 import Payments from "./pages/Payments";
 import Login from "./pages/Login";
+import Superadmin from "./pages/Superadmin";
 import Leads from "./pages/Leads";
 import Archive from "./pages/Archive";
 import Settings from "./pages/Settings";
@@ -19,6 +20,7 @@ export default function App() {
 	return (
 		<Routes>
 			<Route path="/login" element={<Login />} />
+			<Route path="/superadmin" element={<Superadmin />} />
 			<Route
 				path="/"
 				element={
