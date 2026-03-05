@@ -12,12 +12,12 @@ export const useAuth = () => {
 
 		onSuccess: (data) => {
 			const { tenant, user } = data;
-         console.log("tenant",tenant);
-         
-			localStorage.setItem("tenant", tenant);
-			localStorage.setItem("user", JSON.stringify(user));
+			console.log("tenant : ", tenant);
+			console.log("user role: ", user.role);
 
-			queryClient.setQueryData(["user"], user);
+			queryClient.setQueryData(["auth"], { user, tenant });
+			console.log("CACHE AFTER LOGIN:", queryClient.getQueryData(["auth"]));
+			
 
 			navigate(`/${tenant}/dashboard`);
 		},

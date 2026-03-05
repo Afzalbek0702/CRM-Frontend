@@ -55,74 +55,78 @@ export default function IncomeTable() {
 
   return (
     <div className="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th><BsCalendar2DateFill /> Sana</th>
-            <th><FaUserGraduate /> O'quvchi</th>
-            <th><FaUsers /> Guruh</th>
-            <th><FaMoneyBillWave /> Miqdor</th>
-            <th><BsCreditCard2BackFill /> Tur</th>
-            <th></th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {(payments || []).map((p) => (
-            <tr key={p.id}>
-              <td>{formatDate(p.paid_at)}</td>
-              <td>{p.student_name}</td>
-              <td>{p.group_name}</td>
-              <td>{p.amount?.toLocaleString() ?? 0} so'm</td>
-              <td>{p.method}</td>
-              <td style={{ width: "10px" }}>
-                <button
-                  className="icon-button"
-                  onClick={(e) => {
-                    const rect = e.currentTarget.getBoundingClientRect();
-
-                    const menuHeight = 100;
-                    const menuWidth = 150;
-
-                    const scrollY = window.scrollY;
-                    const scrollX = window.scrollX;
-
-                    const absoluteTop = rect.top + scrollY;
-                    const absoluteBottom = rect.bottom + scrollY;
-
-                    const viewportBottom = scrollY + window.innerHeight;
-                    const viewportRight = scrollX + window.innerWidth;
-
-                    const top =
-                      absoluteBottom + menuHeight > viewportBottom
-                        ? absoluteTop - menuHeight - 8
-                        : absoluteBottom + 8;
-
-                    let left = rect.right + scrollX - menuWidth;
-                    if (left + menuWidth > viewportRight) {
-                      left = viewportRight - menuWidth - 10;
-                    }
-                    if (left < scrollX) {
-                      left = scrollX + 10;
-                    }
-
-                    setActionMenu({
-                      isOpen: true,
-                      position: {
-                        top: top + "px",
-                        left: left + "px",
-                      },
-                      payment: p
-                    });
-                  }}
-                >
-                  <FaEllipsisV />
-                </button>
-              </td>
+      {payments && payments.length < 1 ? (
+        <p>To'lovlar yo'q</p>
+      ) : (
+        <table>
+          <thead>
+            <tr>
+              <th><BsCalendar2DateFill /> Sana</th>
+              <th><FaUserGraduate /> O'quvchi</th>
+              <th><FaUsers /> Guruh</th>
+              <th><FaMoneyBillWave /> Miqdor</th>
+              <th><BsCreditCard2BackFill /> Tur</th>
+              <th></th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+
+          <tbody>
+            {(payments || []).map((p) => (
+              <tr key={p.id}>
+                <td>{formatDate(p.paid_at)}</td>
+                <td>{p.student_name}</td>
+                <td>{p.group_name}</td>
+                <td>{p.amount?.toLocaleString() ?? 0} so'm</td>
+                <td>{p.method}</td>
+                <td style={{ width: "10px" }}>
+                  <button
+                    className="icon-button"
+                    onClick={(e) => {
+                      const rect = e.currentTarget.getBoundingClientRect();
+
+                      const menuHeight = 100;
+                      const menuWidth = 150;
+
+                      const scrollY = window.scrollY;
+                      const scrollX = window.scrollX;
+
+                      const absoluteTop = rect.top + scrollY;
+                      const absoluteBottom = rect.bottom + scrollY;
+
+                      const viewportBottom = scrollY + window.innerHeight;
+                      const viewportRight = scrollX + window.innerWidth;
+
+                      const top =
+                        absoluteBottom + menuHeight > viewportBottom
+                          ? absoluteTop - menuHeight - 8
+                          : absoluteBottom + 8;
+
+                      let left = rect.right + scrollX - menuWidth;
+                      if (left + menuWidth > viewportRight) {
+                        left = viewportRight - menuWidth - 10;
+                      }
+                      if (left < scrollX) {
+                        left = scrollX + 10;
+                      }
+
+                      setActionMenu({
+                        isOpen: true,
+                        position: {
+                          top: top + "px",
+                          left: left + "px",
+                        },
+                        payment: p
+                      });
+                    }}
+                  >
+                    <FaEllipsisV />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
 
       <ActionMenu
         isOpen={actionMenu.isOpen}

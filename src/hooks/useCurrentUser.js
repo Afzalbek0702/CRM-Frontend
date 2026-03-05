@@ -1,12 +1,17 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useCurrentUser = () => {
-  return useQuery({
-    queryKey: ["user"],
-    queryFn: () => {
-      const user = localStorage.getItem("user");
-      return user ? JSON.parse(user) : null;
-    },
+  const queryClient = useQueryClient();
+
+  const { data } = useQuery({
+    queryKey: ["auth"],
+    queryFn: () => queryClient.getQueryData(["auth"]) ?? null,
+    initialData: () => queryClient.getQueryData(["auth"]) ?? null,
     staleTime: Infinity,
   });
+
+  return {
+    user: data?.user ?? null,
+    tenant: data?.tenant ?? null,
+  };
 };

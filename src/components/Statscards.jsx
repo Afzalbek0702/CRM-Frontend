@@ -8,7 +8,7 @@ export default function StatsCards({ data, type }) {
 
 	return (
 			<div className="card">
-				<h2>Jami {type}</h2>
+				<h2>{type === "Dars sifati" ? "Dars sifati" : `Jami ${type}`}</h2>
 				<p>{type === "Oylik Tushum" ? count.toLocaleString() : count}</p>
 			</div>
 	);

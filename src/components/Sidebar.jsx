@@ -1,4 +1,5 @@
 ﻿import { NavLink, useLocation, useParams } from "react-router-dom";
+import { useCurrentUser } from "../hooks/useCurrentUser";
 import {
 	FaTachometerAlt,
 	FaUsers,
@@ -19,6 +20,9 @@ export default function Sidebar({ isExpanded = true, onToggle = () => { }, mobil
 	const [paymentsOpen, setPaymentsOpen] = useState(false);
 	const [hoveredMenu, setHoveredMenu] = useState(null);
 	const hoverTimeoutRef = useRef(null);
+	const { user } = useCurrentUser();
+	// console.log(user);
+
 
 	useEffect(() => {
 		if (location.pathname.startsWith("/archive")) {
@@ -46,18 +50,20 @@ export default function Sidebar({ isExpanded = true, onToggle = () => { }, mobil
 			setHoveredMenu(null);
 		}, 100);
 	};
-   const {tenant} = useParams()
+	const { tenant } = useParams()
 	return (
 		<aside className={`sidebar ${isExpanded ? "expanded" : "collapsed"} ${mobileOpen ? 'mobile-open open' : ''}`}>
 			<nav className="sidebar-nav">
-            <NavLink to={`/${tenant}/dashboard`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
+				<NavLink to={`/${tenant}/dashboard`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
 					<FaTachometerAlt className="sidebar-icon" />
 					{isExpanded && <span>Asosiy panel</span>}
 				</NavLink>
-				<NavLink to={`/${tenant}/leads`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
-					<FaThList className="sidebar-icon" />
-					{isExpanded && <span>Lidlar</span>}
-				</NavLink>
+				{user?.role === "CEO" &&
+					<NavLink to={`/${tenant}/leads`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
+						<FaThList className="sidebar-icon" />
+						{isExpanded && <span>Lidlar</span>}
+					</NavLink>
+				}
 				<NavLink to={`/${tenant}/groups`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
 					<FaUsers className="sidebar-icon" />
 					{isExpanded && <span>Guruhlar</span>}
@@ -66,11 +72,14 @@ export default function Sidebar({ isExpanded = true, onToggle = () => { }, mobil
 					<FaUserGraduate className="sidebar-icon" />
 					{isExpanded && <span>O'quvchilar</span>}
 				</NavLink>
+				{user?.role === "CEO" && 
 				<NavLink to={`/${tenant}/teachers`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
 					<FaChalkboardTeacher className="sidebar-icon" />
 					{isExpanded && <span>O'qituvchilar</span>}
 				</NavLink>
+				}
 
+				{user?.role === "CEO" && 
 				<div
 					className="sidebar-parent"
 					onMouseEnter={() => !isExpanded && handleMouseEnter('payments')}
@@ -112,7 +121,9 @@ export default function Sidebar({ isExpanded = true, onToggle = () => { }, mobil
 						</div>
 					)}
 				</div>
+				}
 
+				{user?.role === "CEO" && 
 				<div
 					className="sidebar-parent"
 					onMouseEnter={() => !isExpanded && handleMouseEnter('archive')}
@@ -157,11 +168,14 @@ export default function Sidebar({ isExpanded = true, onToggle = () => { }, mobil
 						</div>
 					)}
 				</div>
+				}
 
+				{user?.role === "CEO" && 
 				<NavLink to={`/${tenant}/settings`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
 					<FaCog className="sidebar-icon" />
 					{isExpanded && <span>Sozlamalar</span>}
 				</NavLink>
+				}
 			</nav>
 		</aside>
 	);
