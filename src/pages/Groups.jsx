@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Loader from "../components/Loader";
 import Modal from "../components/Modal";
 import ActionMenu from "../components/ActionMenu";
@@ -20,12 +20,11 @@ import {
 } from "react-icons/fa";
 import { HiOutlinePencilAlt } from "react-icons/hi";
 import { useCourse } from "../services/course/useCourse.js";
-import { useCurrentUser } from "../hooks/useCurrentUser.js";
 
 export default function Groups() {
 	const confirm = useConfirm();
    const navigate = useNavigate();
-   const { tenant } = useCurrentUser();
+   const { tenant } = useParams();
    const { groups, loading, createGroup, deleteGroup, updateGroup } =
 		useGroups();
 	const [isModalOpen, setIsModalOpen] = useState(false);

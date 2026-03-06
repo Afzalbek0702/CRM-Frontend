@@ -1,8 +1,7 @@
-import { Navigate } from "react-router-dom";
-import { useCurrentUser } from "../hooks/useCurrentUser";
+import { Navigate, useParams } from "react-router-dom";
 
 export default function TenantRedirect() {
-   const { tenant } = useCurrentUser();
+   const { tenant } = useParams();
 
   if (!tenant) {
      return <Navigate to={`/${tenant}/logi`} />;

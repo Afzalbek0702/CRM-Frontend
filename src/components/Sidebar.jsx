@@ -1,5 +1,4 @@
 ﻿import { NavLink, useLocation, useParams } from "react-router-dom";
-import { useCurrentUser } from "../hooks/useCurrentUser";
 import {
 	FaTachometerAlt,
 	FaUsers,
@@ -13,6 +12,7 @@ import {
 	FaCog
 } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
+import { useAuth } from "../context/authContext";
 
 export default function Sidebar({ isExpanded = true, onToggle = () => { }, mobileOpen = false, onClose = () => { } }) {
 	const location = useLocation();
@@ -20,8 +20,7 @@ export default function Sidebar({ isExpanded = true, onToggle = () => { }, mobil
 	const [paymentsOpen, setPaymentsOpen] = useState(false);
 	const [hoveredMenu, setHoveredMenu] = useState(null);
 	const hoverTimeoutRef = useRef(null);
-	const { user } = useCurrentUser();
-	// console.log(user);
+	const { user } = useAuth();
 
 
 	useEffect(() => {

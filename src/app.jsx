@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useParams } from "react-router-dom";
 import Layout from "./Layout";
 
 import Dashboard from "./pages/Dashboard";
@@ -14,10 +14,9 @@ import Superadmin from "./pages/Superadmin";
 import Leads from "./pages/Leads";
 import Archive from "./pages/Archive";
 import Settings from "./pages/Settings";
-import { useCurrentUser } from "./hooks/useCurrentUser";
 
 export default function App() {
-   const { tenant } = useCurrentUser();
+   const { tenant } = useParams();
 	return (
 		<Routes>
 			<Route path="/login" element={<Login />} />

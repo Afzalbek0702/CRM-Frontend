@@ -1,6 +1,6 @@
 import Loader from "../components/Loader";
 import { useTeachers } from "../services/teacher/useTeachers";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useConfirm } from "../components/ConfirmProvider";
 import { withConfirm } from "../helpers/withConfirm";
 import { FaEllipsisV, FaChalkboardTeacher, FaPhone, FaPlus } from "react-icons/fa";
@@ -9,7 +9,6 @@ import { FaSearch } from "react-icons/fa";
 import { useState } from "react";
 import TeacherModal from "../components/TeacherModal";
 import ActionMenu from "../components/ActionMenu";
-import { useCurrentUser } from "../hooks/useCurrentUser";
 
 export default function Teachers() {
 	const confirm = useConfirm();
@@ -24,7 +23,7 @@ export default function Teachers() {
 		position: { top: 0, left: 0 },
 		teacher: null,
 	});
-   const { tenant } = useCurrentUser();
+   const { tenant } = useParams();
 
 	const handleRowClick = (teacherId) => {
 		navigate(`/${tenant}/teachers/${teacherId}`);

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { FaPlus, FaTimes, FaMoneyBillWave } from "react-icons/fa";
+import { useAuth } from "../context/authContext";
 
 export default function ExpenseModal({
   isOpen,
@@ -7,8 +8,7 @@ export default function ExpenseModal({
   onSubmit,
   initialData = null,
 }) {
-   const user = JSON.parse(localStorage.getItem("user"));
-   console.log(user);
+	const { user } = useAuth();
    
   const [form, setForm] = useState({
     description: "",

@@ -1,18 +1,23 @@
 import { useState } from "react";
+import {useNavigate} from 'react-router-dom'
 import "./Login.css";
 import phoneFormat from "../utils/phoneFormat";
-import { useAuth } from "../services/auth/useAuth";
+import { useAuth } from "../context/authContext";
 
 const Login = () => {
 	const [formData, setFormData] = useState({ password: "", phone: "+(998)" });
-	const { login, isLoading } = useAuth();
-	const handleSubmit = (e) => {
+	const { login, loading } = useAuth();
+   const navigate = useNavigate()
+
+	const handleSubmit =async (e) => {
 		e.preventDefault();
-		login({
+		const data = await login({
 			phone: phoneFormat.cleanUzPhone(formData.phone),
 			password: formData.password,
-		});
-	};
+      });
+      navigate(`/${data.tenant}/dashboard`)
+   };
+   
 	const handleChange = (e) => {
 		setFormData({
 			...formData,
@@ -60,8 +65,8 @@ const Login = () => {
 						/>
 					</div>
 
-					<button type="submit" disabled={isLoading} className="login-button">
-						{isLoading ? "Logging in..." : "Login"}
+					<button type="submit" disabled={loading} className="login-button">
+						{loading ? "Logging in..." : "Login"}
 					</button>
 				</form>
 			</div>

@@ -1,6 +1,6 @@
 import Loader from "../components/Loader.jsx";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useStudent } from "../services/student/useStudent.js";
 import { useGroups } from "../services/group/useGroups.js";
 import { useTeachers } from "../services/teacher/useTeachers.js";
@@ -19,7 +19,6 @@ import { FaSearch } from "react-icons/fa";
 import StudentModal from "../components/StudentModal.jsx";
 import ActionMenu from "../components/ActionMenu.jsx";
 import AddToGroupModal from "../components/AddToGroupModal.jsx";
-import { useCurrentUser } from "../hooks/useCurrentUser.js";
 
 export default function Students() {
 	const navigate = useNavigate();
@@ -47,7 +46,7 @@ export default function Students() {
 	});
 	const [addToGroupOpen, setAddToGroupOpen] = useState(false);
 	const [addToGroupStudent, setAddToGroupStudent] = useState(null);
-   const { tenant } = useCurrentUser();
+   const { tenant } = useParams();
 	const handleRowClick = (studentId) => {
 		navigate(`/${tenant}/students/${studentId}`);
 	};

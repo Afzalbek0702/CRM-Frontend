@@ -1,11 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { FaSearch, FaTimes, FaChevronLeft } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useStudent } from "../services/student/useStudent";
 import { useGroups } from "../services/group/useGroups";
 import { useTeachers } from "../services/teacher/useTeachers";
 import { useLeads } from "../services/lead/useLeads";
-import { useCurrentUser } from "../hooks/useCurrentUser";
 
 export default function Header({ isExpanded, onToggle, mobileOpen }) {
 	const [searchTerm, setSearchTerm] = useState("");
@@ -22,7 +21,7 @@ export default function Header({ isExpanded, onToggle, mobileOpen }) {
 	const { groups = [] } = useGroups();
 	const { teachers = [] } = useTeachers();
 	const { leads = [] } = useLeads();
-	const { tenant } = useCurrentUser();
+	const { tenant } = useParams()
 	useEffect(() => {
 		const handleClickOutside = (event) => {
 			if (searchRef.current && !searchRef.current.contains(event.target)) {

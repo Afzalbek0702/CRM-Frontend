@@ -3,10 +3,10 @@ import StatsCards from "../components/Statscards";
 import { useStudent } from "../services/student/useStudent.js";
 import { useGroups } from "../services/group/useGroups.js";
 import { useCourse } from "../services/course/useCourse.js";
-import { useNavigate, NavLink } from "react-router-dom";
+import { useNavigate, NavLink, useParams } from "react-router-dom";
 import { FaUsers, FaClock, FaBook, FaChalkboardTeacher, FaPhone, FaExclamationTriangle } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
-import { useCurrentUser } from "../hooks/useCurrentUser.js";
+import { useAuth } from "../context/authContext";
 export default function Dashboard() {
 	const navigate = useNavigate();
 	const { absentStudents, monthlyIncome, todayLessons, topDebtors, isLoading, error } = useDashboard();
@@ -15,10 +15,10 @@ export default function Dashboard() {
 	const handleRowClick = (groupId) => {
 		navigate(`/${tenant}/groups/${groupId}`);
 	};
-	const { user, tenant } = useCurrentUser();
+   const { user } = useAuth();
+   const { tenant} = useParams()
 	const { students } = useStudent();
-	const { fetchById, groups } = useGroups();
-	console.log("AUTH STATE:", user, tenant);
+	const { groups } = useGroups();
 
 
 	return (
