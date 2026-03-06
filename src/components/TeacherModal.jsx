@@ -8,7 +8,7 @@ export default function TeacherModal({ isOpen, onClose, onSubmit, initialData })
 		password: "",
 		birthday: "",
 		salary: "",
-		salary_type: "sum",
+		salary_type: "SUM",
 		position: "O'qituvchi",
 	});
 
@@ -22,7 +22,7 @@ export default function TeacherModal({ isOpen, onClose, onSubmit, initialData })
 				password: "",
 				birthday,
 				salary: initialData.salary || "",
-				salary_type: initialData.salary_type || "sum",
+				salary_type: initialData.salary_type || "SUM",
 				position: initialData.position || "O'qituvchi",
 			});
 		} else {
@@ -99,7 +99,7 @@ export default function TeacherModal({ isOpen, onClose, onSubmit, initialData })
 
 						<div className="form-group full-width">
 							<label className="form-label">
-								<FaUser className="field-icon" /> Full name
+								<FaUser className="field-icon" /> Ism familiya
 							</label>
 							<input
 								name="full_name"
@@ -112,7 +112,7 @@ export default function TeacherModal({ isOpen, onClose, onSubmit, initialData })
 
 						<div className="form-group">
 							<label className="form-label">
-								<FaPhone className="field-icon" /> Phone
+								<FaPhone className="field-icon" /> Telefon raqam
 							</label>
 							<input
 								name="phone"
@@ -125,7 +125,7 @@ export default function TeacherModal({ isOpen, onClose, onSubmit, initialData })
 
 						<div className="form-group">
 							<label className="form-label">
-								<FaBirthdayCake className="field-icon" /> Birthday
+								<FaBirthdayCake className="field-icon" /> Tug'ilgan kuni
 							</label>
 							<input
 								name="birthday"
@@ -138,7 +138,7 @@ export default function TeacherModal({ isOpen, onClose, onSubmit, initialData })
 
 						<div className="form-group full-width">
 							<label className="form-label">
-								<FaLock className="field-icon" /> Password
+								<FaLock className="field-icon" /> Parol
 							</label>
 							<input
 								name="password"
@@ -152,7 +152,7 @@ export default function TeacherModal({ isOpen, onClose, onSubmit, initialData })
 
 						<div className="form-group">
 							<label className="form-label">
-								<FaDollarSign className="field-icon" /> Salary
+								<FaDollarSign className="field-icon" /> Oylik maosh
 							</label>
 							<input
 								name="salary"
@@ -165,7 +165,7 @@ export default function TeacherModal({ isOpen, onClose, onSubmit, initialData })
 
 						<div className="form-group">
 							<label className="form-label">
-								<FaDollarSign className="field-icon" /> Salary Type
+								<FaDollarSign className="field-icon" /> Maosh turi
 							</label>
 							<select
 								name="salary_type"
@@ -178,7 +178,7 @@ export default function TeacherModal({ isOpen, onClose, onSubmit, initialData })
 							</select>
 						</div>
 
-						<div className="form-group full-width">
+						{/* <div className="form-group full-width">
 							<label className="form-label">
 								<FaBriefcase className="field-icon" /> Position
 							</label>
@@ -192,22 +192,22 @@ export default function TeacherModal({ isOpen, onClose, onSubmit, initialData })
 								<option value="Support">Support</option>
 								<option value="Manager">Manager</option>
 							</select>
-						</div>
+						</div> */}
 
 					</div>
 
 					<div className="panel-buttons">
 						<button type="button" className="btn-cancel" onClick={onClose}>
-							<FaTimes /> Cancel
+							<FaTimes /> Bekor qilish
 						</button>
 						<button type="submit" className="btn-submit">
 							{initialData ? (
 								<>
-									<FaSave /> Save
+									<FaSave /> Saqlash
 								</>
 							) : (
 								<>
-									<FaPlus /> Create
+									<FaPlus /> Yaratish
 								</>
 							)}
 						</button>

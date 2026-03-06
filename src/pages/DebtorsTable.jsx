@@ -70,12 +70,12 @@ export default function DebtorsTable({ searchTerm = "" }) {
 			<table>
 				<thead>
 					<tr>
-						<th>Student</th>
-						<th>Group</th>
-						<th>Course Price</th>
-						<th>Paid</th>
-						<th>Remaining</th>
-						<th>Last Payment</th>
+						<th>O'quvchi</th>
+						<th>Guruh</th>
+						<th>Kurs narxi</th>
+						<th>To'langan</th>
+						<th>Qolgan</th>
+						<th>Oxirgi to'lov</th>
 					</tr>
 				</thead>
 

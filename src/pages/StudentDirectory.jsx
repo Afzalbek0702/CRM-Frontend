@@ -5,7 +5,7 @@ export default function StudentDirectory() {
     <section className="student-directory">
       {/* Header */}
       <div className="student-directory__header">
-        <h2>Student Directory</h2>
+        <h2>Yalabalar katalogi</h2>
 
         <div className="student-directory__actions">
           <div className="search-box">
@@ -23,7 +23,7 @@ export default function StudentDirectory() {
 
           <button className="btn btn-primary">
             <FaDownload />
-            <span>Export Data</span>
+            <span>Yuklab olish</span>
           </button>
         </div>
       </div>
@@ -33,10 +33,10 @@ export default function StudentDirectory() {
         <table>
           <thead>
             <tr>
-              <th>Student ID</th>
-              <th>Name</th>
-              <th>Status</th>
-              <th>Attendance</th>
+              <th>O'quvchi ID raqami</th>
+              <th>Ismi</th>
+              <th>Holati</th>
+              <th>Davomat</th>
             </tr>
           </thead>
 

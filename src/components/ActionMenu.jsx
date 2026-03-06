@@ -39,7 +39,7 @@ export default function ActionMenu({ isOpen, position, onEdit, onDelete, onAddTo
 			</button>
 			{onAddToGroup && (
 				<button className="action-item" onClick={onAddToGroup}>
-					Add to Group
+					Guruhga qo'shish
 				</button>
 			)}
 		</div>

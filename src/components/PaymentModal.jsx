@@ -94,7 +94,7 @@ export default function PaymentModal({
 					<div className="form-grid">
 						<div className="form-group">
 							<label className="form-label">
-								<FaDollarSign className="field-icon" /> Amount
+								<FaDollarSign className="field-icon" /> Miqdor
 							</label>
 							<input
 								name="amount"
@@ -108,7 +108,7 @@ export default function PaymentModal({
 
 						<div className="form-group">
 							<label className="form-label">
-								<FaCreditCard className="field-icon" /> Method
+								<FaCreditCard className="field-icon" /> Turi
 							</label>
 							<select
 								name="method"
@@ -116,14 +116,14 @@ export default function PaymentModal({
 								value={formData.method}
 								onChange={handleChange}
 							>
-								<option value="Cash">Cash</option>
-								<option value="Card">Card</option>
-								<option value="Transfer">Transfer</option>
+								<option value="CASH">Naqd pul</option>
+								<option value="CARD">Carta</option>
+								<option value="TRANSFER">Xisob raqam</option>
 							</select>
 						</div>
 
 						<div className="form-group full-width">
-							<label className="form-label">Payment For Month</label>
+							<label className="form-label">Oy uchun to'lov</label>
 							<input
 								name="paid_at"
 								type="month"
@@ -137,10 +137,10 @@ export default function PaymentModal({
 
 					<div className="panel-buttons">
 						<button type="button" className="btn-cancel" onClick={onClose}>
-							<FaTimes /> Cancel
+							<FaTimes /> Bekor qilish
 						</button>
 						<button type="submit" className="btn-submit">
-							{initialData ? <><FaSave /> Save</> : <><FaPlus /> Create</>}
+							{initialData ? <><FaSave /> Saqlash</> : <><FaPlus /> Yaratish</>}
 						</button>
 					</div>
 				</form>

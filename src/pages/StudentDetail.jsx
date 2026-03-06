@@ -63,13 +63,13 @@ export default function StudentDetail() {
 				}}
 			>
 				<p>
-					<strong>Phone:</strong> {student.phone}
+					<strong>Telefon raqam:</strong> {student.phone}
 				</p>
 				<p>
-					<strong>Birthday:</strong> {formatDate(student.birthday)}
+					<strong>Tug'ilgan kun:</strong> {formatDate(student.birthday)}
 				</p>
 				<p>
-					<strong>Parents:</strong> {student.parents_name}
+					<strong>Ota-ona ismi:</strong> {student.parents_name}
 				</p>
 				<p>
 					<strong>Balance:</strong> {student.balance?.toLocaleString() ?? 0}{" "}
@@ -78,16 +78,16 @@ export default function StudentDetail() {
 			</div>
 
 			<h3>
-				<FaUsers /> Groups
+				<FaUsers /> Guruh
 			</h3>
 			{fullGroups && fullGroups.length > 0 ? (
 				<table>
 					<thead>
 						<tr>
-							<th>Group Name</th>
-							<th>Course Type</th>
-							<th>Price</th>
-							<th>Lesson Time</th>
+							<th>Guruh nomi</th>
+							<th>Kurs turi</th>
+							<th>Narxi</th>
+							<th>Dars vaqti</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -102,7 +102,7 @@ export default function StudentDetail() {
 					</tbody>
 				</table>
 			) : (
-				<p>No groups yet</p>
+				<p></p>
 			)}
 		</div>
 	);

@@ -80,7 +80,7 @@ export default function LeadModal({ isOpen, onClose, onSubmit, initialData }) {
                     <div className="form-grid">
                         <div className="form-group full-width">
                             <label className="form-label">
-                                <FaUser className="field-icon" /> Full Name
+                                <FaUser className="field-icon" /> Ism familiya
                             </label>
                             <input
                                 name="full_name"
@@ -93,7 +93,7 @@ export default function LeadModal({ isOpen, onClose, onSubmit, initialData }) {
 
                         <div className="form-group">
                             <label className="form-label">
-                                <FaPhone className="field-icon" /> Phone
+                                <FaPhone className="field-icon" /> Telefon raqam
                             </label>
                             <input
                                 name="phone"
@@ -104,7 +104,7 @@ export default function LeadModal({ isOpen, onClose, onSubmit, initialData }) {
                         </div>
 
                         <div className="form-group">
-                            <label className="form-label">Source</label>
+                            <label className="form-label">Manba</label>
                             <input
                                 name="source"
                                 className="form-input"
@@ -114,7 +114,7 @@ export default function LeadModal({ isOpen, onClose, onSubmit, initialData }) {
                         </div>
 
                         <div className="form-group">
-                            <label className="form-label">Interested Course</label>
+                            <label className="form-label">Qiziqgan kursi</label>
                             <select
                                 name="interested_course"
                                 value={formData.interested_course}
@@ -122,7 +122,7 @@ export default function LeadModal({ isOpen, onClose, onSubmit, initialData }) {
                                 className="form-input"
                                 required
                             >
-                                <option value="">Interested Course</option>
+                                <option value="">Qiziqgan kursi</option>
                                 {courseData.map((course) => (
                                     <option key={course.id} value={String(course.name)}>
                                         {course.name}
@@ -133,7 +133,7 @@ export default function LeadModal({ isOpen, onClose, onSubmit, initialData }) {
 
                         <div className="form-group full-width">
                             <label className="form-label">
-                                <FaComment className="field-icon" /> Comment
+                                <FaComment className="field-icon" /> Izoh
                             </label>
                             <textarea
                                 name="comment"
@@ -146,16 +146,16 @@ export default function LeadModal({ isOpen, onClose, onSubmit, initialData }) {
 
                     <div className="panel-buttons">
                         <button type="button" className="btn-cancel" onClick={onClose}>
-                            <FaTimes /> Cancel
+                            <FaTimes /> Bekor qilish
                         </button>
                         <button type="submit" className="btn-submit">
                             {initialData ? (
                                 <>
-                                    <FaSave /> Save
+                                    <FaSave /> Saqlash
                                 </>
                             ) : (
                                 <>
-                                    <FaPlus /> Create
+                                    <FaPlus /> Yaratish
                                 </>
                             )}
                         </button>

@@ -65,7 +65,7 @@ export default function Archive() {
               value={selectedTeacher}
               onChange={(e) => setSelectedTeacher(Number(e.target.value) || "")}
             >
-              <option value="">All Teachers</option>
+              <option value="">Hamma O'qtuvchilar</option>
               {teachers.map((t) => (
                 <option key={t.id} value={t.id}>{t.full_name}</option>
               ))}
@@ -75,7 +75,7 @@ export default function Archive() {
               value={selectedGroup}
               onChange={(e) => setSelectedGroup(Number(e.target.value) || "")}
             >
-              <option value="">All Groups</option>
+              <option value="">Hamma Guruhlar</option>
               {archivedGroups.map((g) => (
                 <option key={g.id} value={g.id}>{g.name}</option>
               ))}
@@ -107,12 +107,12 @@ export default function Archive() {
           <table>
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Group</th>
-                <th>Phone</th>
-                <th>Birthday</th>
-                <th>Parent</th>
-                <th>Parent Phone</th>
+                <th>Ism</th>
+                <th>Guruh</th>
+                <th>Telefon raqam</th>
+                <th>Tug'ilgan kun</th>
+                <th>Ota-ona ismi</th>
+                <th>Ota-ona raqami</th>
                 <th>Balance</th>
               </tr>
             </thead>
@@ -153,9 +153,9 @@ export default function Archive() {
           <table>
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Phone</th>
-                <th>Source</th>
+                <th>Ism</th>
+                <th>Telefon raqam</th>
+                <th>Manba</th>
               </tr>
             </thead>
             <tbody>
@@ -172,9 +172,9 @@ export default function Archive() {
           <table>
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Phone</th>
-                <th>Source</th>
+                <th>Isn</th>
+                <th>Telefon raqam</th>
+                <th>Manba</th>
               </tr>
             </thead>
             <tbody>
@@ -193,9 +193,9 @@ export default function Archive() {
           <table>
             <thead>
               <tr>
-                <th>Student</th>
-                <th>Amount</th>
-                <th>Date</th>
+                <th>O'quvchi</th>
+                <th>Miqdor</th>
+                <th>Sana</th>
               </tr>
             </thead>
             <tbody>

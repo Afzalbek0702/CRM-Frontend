@@ -46,19 +46,19 @@ export default function TeacherDetail() {
 
 			<div style={{ marginBottom: "30px", background: "var(--background-color-secondary)", padding: "20px", borderRadius: "8px" }}>
 				<p><strong>Pozitsiya:</strong> {teacher.position}</p>
-				<p><strong>Phone:</strong> {teacher.phone}</p>
-				<p><strong>Salary:</strong> {teacher.salary} {teacher.salary_type}</p>
+				<p><strong>Telefon raqami:</strong> {teacher.phone}</p>
+				<p><strong>Oyli maoshi:</strong> {teacher.salary} {teacher.salary_type}</p>
 			</div>
 
-			<h3><FaUsers /> Groups Teaching</h3>
+			<h3><FaUsers /> Guruhlari</h3>
 			{teacher.groups && teacher.groups.length > 0 ? (
 				<table>
 					<thead>
 						<tr>
-							<th>Group Name</th>
-							<th>Course Type</th>
-							<th>Price</th>
-							<th>Lesson Time</th>
+							<th>Nomi</th>
+							<th>Kurs turi</th>
+							<th>Narx</th>
+							<th>Dars vaqti</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -73,7 +73,7 @@ export default function TeacherDetail() {
 					</tbody>
 				</table>
 			) : (
-				<p>No groups yet</p>
+				<p>Guruh yo'q</p>
 			)}
 		</div>
 	);

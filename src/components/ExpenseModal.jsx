@@ -92,7 +92,7 @@ export default function ExpenseModal({
           <div className="form-grid">
             <div className="form-group full-width">
               <label className="form-label">
-                <FaMoneyBillWave className="field-icon" /> Description
+                <FaMoneyBillWave className="field-icon" /> Tavsif
               </label>
               <input
                 type="text"
@@ -106,7 +106,7 @@ export default function ExpenseModal({
 
             <div className="form-group">
               <label className="form-label">
-                Amount
+                Miqdor
               </label>
               <input
                 type="number"
@@ -120,7 +120,7 @@ export default function ExpenseModal({
 
             <div className="form-group">
               <label className="form-label">
-                Method
+                Turi
               </label>
               <select
                 name="method"
@@ -128,9 +128,9 @@ export default function ExpenseModal({
                 value={form.method}
                 onChange={handleChange}
               >
-                <option value="cash">Cash</option>
-                <option value="card">Card</option>
-                <option value="transfer">Transfer</option>
+                <option value="CASH">Naqd pul</option>
+                <option value="CARD">Carta</option>
+                <option value="TRANSFER">Xisob raqam</option>
               </select>
             </div>
           </div>
@@ -141,17 +141,17 @@ export default function ExpenseModal({
               className="btn-cancel"
               onClick={onClose}
             >
-              <FaTimes /> Cancel
+              <FaTimes /> Bekor qilish
             </button>
 
             <button type="submit" className="btn-submit">
               {initialData ? (
                 <>
-                  <FaEdit /> Update
+                  <FaEdit /> Saqlash
                 </>
               ) : (
                 <>
-                  <FaPlus /> Create
+                  <FaPlus /> Yaratish
                 </>
               )}
             </button>

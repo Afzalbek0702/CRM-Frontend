@@ -88,7 +88,7 @@ export default function SalaryModal({
           <div className="form-grid">
             <div className="form-group full-width">
               <label className="form-label">
-                <FaMoneyBillWave className="field-icon" /> Full Name
+                <FaMoneyBillWave className="field-icon" /> Ism familiya
               </label>
               <input
                 type="text"
@@ -102,7 +102,7 @@ export default function SalaryModal({
 
             <div className="form-group">
               <label className="form-label">
-                Amount
+                Miqdor
               </label>
               <input
                 type="number"
@@ -116,7 +116,7 @@ export default function SalaryModal({
 
             <div className="form-group">
               <label className="form-label">
-                Method
+                Turi
               </label>
               <select
                 name="method"
@@ -124,15 +124,15 @@ export default function SalaryModal({
                 value={form.method}
                 onChange={handleChange}
               >
-                <option value="cash">Cash</option>
-                <option value="card">Card</option>
-                <option value="transfer">Transfer</option>
+                <option value="CASH">Naqd pul</option>
+                <option value="CARD">Carta</option>
+                <option value="TRANSFER">Xisob raqam</option>
               </select>
             </div>
 
             <div className="form-group full-width">
               <label className="form-label">
-                Description
+                Tavsif
               </label>
               <input
                 type="text"
@@ -150,17 +150,17 @@ export default function SalaryModal({
               className="btn-cancel"
               onClick={onClose}
             >
-              <FaTimes /> Cancel
+              <FaTimes /> Bekor qilish
             </button>
 
             <button type="submit" className="btn-submit">
               {initialData ? (
                 <>
-                  <FaEdit /> Update
+                  <FaEdit /> Saqlash
                 </>
               ) : (
                 <>
-                  <FaPlus /> Create
+                  <FaPlus /> Yaratish
                 </>
               )}
             </button>

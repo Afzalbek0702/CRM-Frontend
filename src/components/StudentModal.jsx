@@ -100,7 +100,7 @@ export default function StudentModal({
 					<div className="form-grid">
 						<div className="form-group full-width">
 							<label className="form-label">
-								<FaUser className="field-icon" /> Full name
+								<FaUser className="field-icon" /> Ism familiya
 							</label>
 							<input
 								name="full_name"
@@ -113,7 +113,7 @@ export default function StudentModal({
 
 						<div className="form-group">
 							<label className="form-label">
-								<FaPhone className="field-icon" /> Phone
+								<FaPhone className="field-icon" /> Telefon raqam
 							</label>
 							<input
 								name="phone"
@@ -126,7 +126,7 @@ export default function StudentModal({
 
 						<div className="form-group">
 							<label className="form-label">
-								<FaBirthdayCake className="field-icon" /> Birthday
+								<FaBirthdayCake className="field-icon" /> Tug'ilgan kun
 							</label>
 							<input
 								name="birthday"
@@ -139,7 +139,7 @@ export default function StudentModal({
 
 						<div className="form-group full-width">
 							<label className="form-label">
-								<FaUsers className="field-icon" /> Parents
+								<FaUsers className="field-icon" /> Ota-ona ismi
 							</label>
 							<input
 								name="parents_name"
@@ -151,7 +151,7 @@ export default function StudentModal({
 
 						<div className="form-group full-width">
 							<label className="form-label">
-								<FaPhone className="field-icon" /> Parents Phone
+								<FaPhone className="field-icon" /> Ota-ona raqami
 							</label>
 							<input
 								name="parents_phone"
@@ -177,16 +177,16 @@ export default function StudentModal({
 
 					<div className="panel-buttons">
 						<button type="button" className="btn-cancel" onClick={onClose}>
-							<FaTimes /> Cancel
+							<FaTimes /> Bekor qilish
 						</button>
 						<button type="submit" className="btn-submit">
 							{initialData ? (
 								<>
-									<FaSave /> Save
+									<FaSave /> Saqlash
 								</>
 							) : (
 								<>
-									<FaPlus /> Create
+									<FaPlus /> Yaratish
 								</>
 							)}
 						</button>

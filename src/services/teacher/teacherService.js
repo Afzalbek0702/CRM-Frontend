@@ -10,7 +10,7 @@ export const teacherService = {
 			return r.data;
 		}),
 
-	create: (data) => api.post(endpoints.TEACHERS, data).then((r) => r.data),
+	create: (data) => api.post(endpoints.WORKER, data).then((r) => r.data),
 
 	update: (id, data) =>
 		api.put(`${endpoints.TEACHERS}/${id}`, data).then((r) => r.data),
