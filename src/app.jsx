@@ -14,9 +14,10 @@ import Superadmin from "./pages/Superadmin";
 import Leads from "./pages/Leads";
 import Archive from "./pages/Archive";
 import Settings from "./pages/Settings";
+import { useCurrentUser } from "./hooks/useCurrentUser";
 
 export default function App() {
-	const tenant = localStorage.getItem("tenant");
+   const { tenant } = useCurrentUser();
 	return (
 		<Routes>
 			<Route path="/login" element={<Login />} />

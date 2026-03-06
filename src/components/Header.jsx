@@ -5,6 +5,7 @@ import { useStudent } from "../services/student/useStudent";
 import { useGroups } from "../services/group/useGroups";
 import { useTeachers } from "../services/teacher/useTeachers";
 import { useLeads } from "../services/lead/useLeads";
+import { useCurrentUser } from "../hooks/useCurrentUser";
 
 export default function Header({ isExpanded, onToggle, mobileOpen }) {
 	const [searchTerm, setSearchTerm] = useState("");
@@ -21,7 +22,7 @@ export default function Header({ isExpanded, onToggle, mobileOpen }) {
 	const { groups = [] } = useGroups();
 	const { teachers = [] } = useTeachers();
 	const { leads = [] } = useLeads();
-   const tenant = localStorage.getItem("tenant")
+	const { tenant } = useCurrentUser();
 	useEffect(() => {
 		const handleClickOutside = (event) => {
 			if (searchRef.current && !searchRef.current.contains(event.target)) {
@@ -50,16 +51,16 @@ export default function Header({ isExpanded, onToggle, mobileOpen }) {
 
 		const results = {
 			students: (students || []).filter((s) =>
-				s.full_name?.toLowerCase().includes(lowerValue)
+				s.full_name?.toLowerCase().includes(lowerValue),
 			),
 			groups: (groups || []).filter((g) =>
-				g.name?.toLowerCase().includes(lowerValue)
+				g.name?.toLowerCase().includes(lowerValue),
 			),
 			teachers: (teachers || []).filter((t) =>
-				t.full_name?.toLowerCase().includes(lowerValue)
+				t.full_name?.toLowerCase().includes(lowerValue),
 			),
 			leads: (leads || []).filter((l) =>
-				l.full_name?.toLowerCase().includes(lowerValue)
+				l.full_name?.toLowerCase().includes(lowerValue),
 			),
 		};
 
@@ -96,7 +97,7 @@ export default function Header({ isExpanded, onToggle, mobileOpen }) {
 
 	const totalResults = Object.values(searchResults).reduce(
 		(sum, arr) => sum + arr.length,
-		0
+		0,
 	);
 
 	return (
@@ -110,7 +111,8 @@ export default function Header({ isExpanded, onToggle, mobileOpen }) {
 				>
 					<FaChevronLeft
 						style={{
-							transform: (isExpanded || mobileOpen) ? "rotate(0deg)" : "rotate(180deg)",
+							transform:
+								isExpanded || mobileOpen ? "rotate(0deg)" : "rotate(180deg)",
 							transition: "transform 0.28s ease",
 						}}
 					/>

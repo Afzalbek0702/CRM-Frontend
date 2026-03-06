@@ -9,6 +9,7 @@ import { FaSearch } from "react-icons/fa";
 import { useState } from "react";
 import TeacherModal from "../components/TeacherModal";
 import ActionMenu from "../components/ActionMenu";
+import { useCurrentUser } from "../hooks/useCurrentUser";
 
 export default function Teachers() {
 	const confirm = useConfirm();
@@ -23,7 +24,7 @@ export default function Teachers() {
 		position: { top: 0, left: 0 },
 		teacher: null,
 	});
-   const tenant = localStorage.getItem("tenant");
+   const { tenant } = useCurrentUser();
 
 	const handleRowClick = (teacherId) => {
 		navigate(`/${tenant}/teachers/${teacherId}`);

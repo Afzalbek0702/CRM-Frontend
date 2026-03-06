@@ -20,12 +20,13 @@ import {
 } from "react-icons/fa";
 import { HiOutlinePencilAlt } from "react-icons/hi";
 import { useCourse } from "../services/course/useCourse.js";
+import { useCurrentUser } from "../hooks/useCurrentUser.js";
 
 export default function Groups() {
 	const confirm = useConfirm();
    const navigate = useNavigate();
-   const tenant = localStorage.getItem("tenant")
-	const { groups, loading, createGroup, deleteGroup, updateGroup } =
+   const { tenant } = useCurrentUser();
+   const { groups, loading, createGroup, deleteGroup, updateGroup } =
 		useGroups();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isActionMenuOpen, setIsActionMenuOpen] = useState(false);

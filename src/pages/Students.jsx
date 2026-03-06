@@ -19,6 +19,7 @@ import { FaSearch } from "react-icons/fa";
 import StudentModal from "../components/StudentModal.jsx";
 import ActionMenu from "../components/ActionMenu.jsx";
 import AddToGroupModal from "../components/AddToGroupModal.jsx";
+import { useCurrentUser } from "../hooks/useCurrentUser.js";
 
 export default function Students() {
 	const navigate = useNavigate();
@@ -46,7 +47,7 @@ export default function Students() {
 	});
 	const [addToGroupOpen, setAddToGroupOpen] = useState(false);
 	const [addToGroupStudent, setAddToGroupStudent] = useState(null);
-   const tenant = localStorage.getItem("tenant")
+   const { tenant } = useCurrentUser();
 	const handleRowClick = (studentId) => {
 		navigate(`/${tenant}/students/${studentId}`);
 	};
