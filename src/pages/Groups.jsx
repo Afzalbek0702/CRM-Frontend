@@ -19,7 +19,6 @@ import {
 	FaSearch,
 } from "react-icons/fa";
 import { HiOutlinePencilAlt } from "react-icons/hi";
-import { useCourse } from "../services/course/useCourse.js";
 
 export default function Groups() {
 	const confirm = useConfirm();
@@ -33,7 +32,6 @@ export default function Groups() {
 		top: 0,
 		left: 0,
 	});
-	const { courseData } = useCourse();
 	const [selectedGroup, setSelectedGroup] = useState(null);
 	const [isEditMode, setIsEditMode] = useState(false);
 	const [searchTerm, setSearchTerm] = useState("");
@@ -58,6 +56,9 @@ export default function Groups() {
 		...group,
 		studentCount: studentCountMap[group.id] || 0,
 	}));
+
+	console.log(groupsWithCount);
+	
 
 
 
@@ -137,10 +138,7 @@ export default function Groups() {
 	if (loading) {
 		return <Loader />;
 	}
-
-	const courseMap = Object.fromEntries(
-		courseData.map(c => [Number(c.id), c.name])
-	);
+	
 
 	return (
 		<div className="table-container">
@@ -232,9 +230,9 @@ export default function Groups() {
 										<td>{g.price} ming so'm</td>
 										<td>{g.lesson_time}</td>
 										<td>
-											{courseMap[g.course_type] ?? "-"}
+											{g.course_type}
 										</td>
-										<td className="teacher">{g.teacher}</td>
+										<td className="teacher">{g.teachers.full_name}</td>
 										<td>
 											{Array.isArray(g.lesson_days) ? (
 												g.lesson_days.map((day) => (

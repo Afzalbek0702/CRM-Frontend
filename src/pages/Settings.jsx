@@ -86,6 +86,8 @@ export default function Settings() {
     
 
     if (isLoading) return <Loader />;
+    // console.log(courseData);
+    
     console.log(roomData);
 
 

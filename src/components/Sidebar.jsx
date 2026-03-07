@@ -77,6 +77,12 @@ export default function Sidebar({ isExpanded = true, onToggle = () => { }, mobil
 					{isExpanded && <span>O'qituvchilar</span>}
 				</NavLink>
 				}
+				{user?.role === "CEO" && 
+				<NavLink to={`/${tenant}/workers`} className={({ isActive }) => isActive ? 'active' : ''} onClick={() => { if (mobileOpen) onClose(); }}>
+					<FaUsers className="sidebar-icon" />
+					{isExpanded && <span>Ishchilar</span>}
+				</NavLink>
+				}
 
 				{user?.role === "CEO" && 
 				<div

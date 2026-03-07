@@ -3,7 +3,7 @@ import { endpoints } from "../api/endpoints.js";
 
 export const workerService = {
 	get: () => api.get(endpoints.WORKER).then((r) => r.data),
-	create: (data) => api.post(endpoints.WORKER, data).then((r) => r.data),
+	create: (data) => api.post(endpoints.REGISTER, data).then((r) => r.data),
 	update: (id, data) =>
 		api.put(`${endpoints.WORKER}/${id}`, data).then((r) => r.data),
 	delete: (id) => api.delete(`${endpoints.WORKER}/${id}`).then((r) => r.data),

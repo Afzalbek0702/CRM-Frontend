@@ -25,7 +25,13 @@ export default function GuruhlarInfo() {
 		position: { top: 0, left: 0 },
 		student: null,
 	});
-	const { courseData } = useCourse();
+	const months = Array.from({ length: 12 }, (_, i) => {
+		const date = new Date(new Date().getFullYear(), i, 1);
+		return {
+			value: date.toISOString().slice(0, 7), // YYYY-MM
+			label: date.toLocaleString("uz-UZ", { month: "long", year: "numeric" }),
+		};
+	});
 	const [transferStudent, setTransferStudent] = useState(null);
 	const [showTransferModal, setShowTransferModal] = useState(false);
 	const [showPaymentModal, setShowPaymentModal] = useState(false);
@@ -36,8 +42,7 @@ export default function GuruhlarInfo() {
 		group_id: id,
 		month: month,
 	});
-	const courseMap = Object.fromEntries(courseData.map(c => [c.id, c.name]));
-   
+
 	useEffect(() => {
 		fetchById(id).then((data) => {
 			setGroup(data);
@@ -181,7 +186,7 @@ export default function GuruhlarInfo() {
 									Kurs turi
 								</p>
 								<p style={{ color: "white", fontWeight: "600" }}>
-									{courseMap[group.course_type] ?? "Noma'lum"}
+									{group.course_type}
 								</p>
 							</div>
 							<div>
@@ -375,11 +380,16 @@ export default function GuruhlarInfo() {
 						}}
 					>
 						<h3 style={{ color: "white", marginBottom: "15px" }}>Davomat</h3>
-						<input
-							type="month"
+						<select
 							value={month}
 							onChange={(e) => setMonth(e.target.value)}
-						/>
+						>
+							{months.map((m) => (
+								<option key={m.value} value={m.value}>
+									{m.label}
+								</option>
+							))}
+						</select>
 					</div>
 					{attendance.length === 0 ? (
 						<p style={{ color: "var(--text-secondary)" }}>

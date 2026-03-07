@@ -14,6 +14,7 @@ import Superadmin from "./pages/Superadmin";
 import Leads from "./pages/Leads";
 import Archive from "./pages/Archive";
 import Settings from "./pages/Settings";
+import Workers from "./pages/Workers";
 
 export default function App() {
    const { tenant } = useParams();
@@ -44,6 +45,7 @@ export default function App() {
 				<Route path="settings" element={<Settings />} />
 				<Route path="payments" element={<Payments />} />
 				<Route path="payments/:category" element={<Payments />} />
+				<Route path="workers" element={<Workers/>}/>
 			</Route>
 		</Routes>
 	);

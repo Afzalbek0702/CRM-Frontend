@@ -15,8 +15,8 @@ export default function Dashboard() {
 	const handleRowClick = (groupId) => {
 		navigate(`/${tenant}/groups/${groupId}`);
 	};
-   const { user } = useAuth();
-   const { tenant} = useParams()
+	const { user } = useAuth();
+	const { tenant } = useParams()
 	const { students } = useStudent();
 	const { groups } = useGroups();
 
