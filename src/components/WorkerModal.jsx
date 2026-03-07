@@ -20,7 +20,7 @@ export default function WorkerModal({ isOpen, onClose, onSubmit, initialData }) 
 		position: "",
 		role: "",
 		salary_type: "CASH",
-        img: null,
+		img: null,
 	});
 
 	useEffect(() => {
@@ -34,6 +34,7 @@ export default function WorkerModal({ isOpen, onClose, onSubmit, initialData }) 
 				position: initialData.position || "",
 				role: initialData.role || "",
 				salary_type: initialData.salary_type || "CASH",
+				img: null,
 			});
 		} else {
 			setFormData({
@@ -45,6 +46,7 @@ export default function WorkerModal({ isOpen, onClose, onSubmit, initialData }) 
 				position: "",
 				role: "",
 				salary_type: "CASH",
+				img: null,
 			});
 		}
 	}, [initialData, isOpen]);
@@ -67,6 +69,9 @@ export default function WorkerModal({ isOpen, onClose, onSubmit, initialData }) 
 			role: formData.role.toUpperCase(),
 			salary_type: formData.salary_type.toUpperCase(),
 		};
+
+		console.log(payload);
+		
 
 		await onSubmit(payload);
 	};

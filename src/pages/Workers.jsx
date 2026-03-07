@@ -18,7 +18,7 @@ export default function Workers() {
     const { workerData, isLoading, createWorker, updateWorker, removeWorker } =
         useWorker();
     console.log(user);
-    
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingWorker, setEditingWorker] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
