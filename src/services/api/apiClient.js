@@ -28,10 +28,15 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (res) => res,
   (err) => {
-    if (err.response?.status === 401) {
-      navigateTo("/login");
-    }
-    return Promise.reject(err);
+    const currentPath = window.location.pathname;
+
+		if (err.response?.status === 401) {
+			// Agar foydalanuvchi allaqachon login sahifasida bo'lsa, redirect qilmaymiz
+			if (currentPath !== "/login") {
+				navigateTo("/login");
+			}
+		}
+		return Promise.reject(err);
   }
 );
 
