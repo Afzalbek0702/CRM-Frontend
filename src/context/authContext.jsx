@@ -43,6 +43,19 @@ export function AuthProvider({ children }) {
 		}
 	};
 
+	const logout = async () => {
+		try {
+			await authService.logout();
+		} catch (error) {
+			console.error("Logout failed:", error);
+		}
+
+		setUser(null);
+		setTenant(null);
+
+		window.location.href = "/login";
+	};
+
 	return (
 		<AuthContext.Provider
 			value={{
@@ -50,6 +63,7 @@ export function AuthProvider({ children }) {
 				tenant,
 				setUser,
 				login,
+				logout,
 				loading,
 			}}
 		>

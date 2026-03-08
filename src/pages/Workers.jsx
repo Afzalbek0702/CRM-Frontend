@@ -7,7 +7,7 @@ import { withConfirm } from "../helpers/withConfirm";
 import { FaUsers, FaPhone, FaPlus, FaEllipsisV, FaSearch } from "react-icons/fa";
 import { useState } from "react";
 import { useAuth } from "../context/authContext";
-import WorkerModal from "../components/WorkerModal";
+import WorkerModal from "../components/workerModal";
 import ActionMenu from "../components/ActionMenu";
 
 export default function Workers() {

@@ -19,6 +19,10 @@ export default function Dashboard() {
 	const { tenant } = useParams()
 	const { students } = useStudent();
 	const { groups } = useGroups();
+	// console.log(user);
+	// console.log(tenant);
+	
+	
 
 
 	return (
@@ -31,7 +35,7 @@ export default function Dashboard() {
 					Xush kelibsiz
 					<span className="tooltip-wrapper">
 						<span className="text-special-part">
-							{user?.username}
+							<NavLink to={`/${tenant}/profile`}>{user?.username}</NavLink>
 						</span>
 						<span className="text-special-part-title">
 							{user?.role}

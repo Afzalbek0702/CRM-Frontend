@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import { FaSearch, FaTimes, FaChevronLeft } from "react-icons/fa";
-import { useNavigate, useParams } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { useStudent } from "../services/student/useStudent";
 import { useGroups } from "../services/group/useGroups";
 import { useTeachers } from "../services/teacher/useTeachers";
 import { useLeads } from "../services/lead/useLeads";
+import { useAuth } from "../context/authContext";
 
 export default function Header({ isExpanded, onToggle, mobileOpen }) {
 	const [searchTerm, setSearchTerm] = useState("");
@@ -14,6 +15,7 @@ export default function Header({ isExpanded, onToggle, mobileOpen }) {
 		teachers: [],
 		leads: [],
 	});
+	const { user } = useAuth();
 	const [isSearchOpen, setIsSearchOpen] = useState(false);
 	const searchRef = useRef(null);
 	const navigate = useNavigate();
@@ -122,106 +124,111 @@ export default function Header({ isExpanded, onToggle, mobileOpen }) {
 				</h5>
 			</div>
 
-			<div className="header-search" ref={searchRef}>
-				<div className="search-input-wrapper">
-					<FaSearch className="search-icon" />
-					<input
-						type="text"
-						placeholder="Qidirish..."
-						value={searchTerm}
-						onChange={(e) => handleSearch(e.target.value)}
-						className="search-input"
-					/>
-					{searchTerm && (
-						<button
-							className="search-clear"
-							onClick={() => {
-								setSearchTerm("");
-								setSearchResults({
-									students: [],
-									groups: [],
-									teachers: [],
-									leads: [],
-								});
-								setIsSearchOpen(false);
-							}}
-						>
-							<FaTimes />
-						</button>
-					)}
-				</div>
-
-				{isSearchOpen && totalResults > 0 && (
-					<div className="search-results">
-						{searchResults.students.length > 0 && (
-							<div className="search-results-group">
-								<div className="search-results-title">O'quvchilar</div>
-								{searchResults.students.map((student) => (
-									<button
-										key={`student-${student.id}`}
-										className="search-result-item"
-										onClick={() => handleResultClick("student", student)}
-									>
-										<span className="result-icon">👤</span>
-										<span>{student.full_name}</span>
-									</button>
-								))}
-							</div>
-						)}
-
-						{searchResults.groups.length > 0 && (
-							<div className="search-results-group">
-								<div className="search-results-title">Guruhlar</div>
-								{searchResults.groups.map((group) => (
-									<button
-										key={`group-${group.id}`}
-										className="search-result-item"
-										onClick={() => handleResultClick("group", group)}
-									>
-										<span className="result-icon">👥</span>
-										<span>{group.name}</span>
-									</button>
-								))}
-							</div>
-						)}
-
-						{searchResults.teachers.length > 0 && (
-							<div className="search-results-group">
-								<div className="search-results-title">O'qituvchilar</div>
-								{searchResults.teachers.map((teacher) => (
-									<button
-										key={`teacher-${teacher.id}`}
-										className="search-result-item"
-										onClick={() => handleResultClick("teacher", teacher)}
-									>
-										<span className="result-icon">🎓</span>
-										<span>{teacher.full_name}</span>
-									</button>
-								))}
-							</div>
-						)}
-
-						{searchResults.leads.length > 0 && (
-							<div className="search-results-group">
-								<div className="search-results-title">Lidlar</div>
-								{searchResults.leads.map((lead) => (
-									<button
-										key={`lead-${lead.id}`}
-										className="search-result-item"
-										onClick={() => handleResultClick("lead", lead)}
-									>
-										<span className="result-icon">📞</span>
-										<span>{lead.full_name}</span>
-									</button>
-								))}
-							</div>
+			{
+				user.role === "CEO" &&
+				<div className="header-search" ref={searchRef}>
+					<div className="search-input-wrapper">
+						<FaSearch className="search-icon" />
+						<input
+							type="text"
+							placeholder="Qidirish..."
+							value={searchTerm}
+							onChange={(e) => handleSearch(e.target.value)}
+							className="search-input"
+						/>
+						{searchTerm && (
+							<button
+								className="search-clear"
+								onClick={() => {
+									setSearchTerm("");
+									setSearchResults({
+										students: [],
+										groups: [],
+										teachers: [],
+										leads: [],
+									});
+									setIsSearchOpen(false);
+								}}
+							>
+								<FaTimes />
+							</button>
 						)}
 					</div>
-				)}
-			</div>
+
+					{isSearchOpen && totalResults > 0 && (
+						<div className="search-results">
+							{searchResults.students.length > 0 && (
+								<div className="search-results-group">
+									<div className="search-results-title">O'quvchilar</div>
+									{searchResults.students.map((student) => (
+										<button
+											key={`student-${student.id}`}
+											className="search-result-item"
+											onClick={() => handleResultClick("student", student)}
+										>
+											<span className="result-icon">👤</span>
+											<span>{student.full_name}</span>
+										</button>
+									))}
+								</div>
+							)}
+
+							{searchResults.groups.length > 0 && (
+								<div className="search-results-group">
+									<div className="search-results-title">Guruhlar</div>
+									{searchResults.groups.map((group) => (
+										<button
+											key={`group-${group.id}`}
+											className="search-result-item"
+											onClick={() => handleResultClick("group", group)}
+										>
+											<span className="result-icon">👥</span>
+											<span>{group.name}</span>
+										</button>
+									))}
+								</div>
+							)}
+
+							{searchResults.teachers.length > 0 && (
+								<div className="search-results-group">
+									<div className="search-results-title">O'qituvchilar</div>
+									{searchResults.teachers.map((teacher) => (
+										<button
+											key={`teacher-${teacher.id}`}
+											className="search-result-item"
+											onClick={() => handleResultClick("teacher", teacher)}
+										>
+											<span className="result-icon">🎓</span>
+											<span>{teacher.full_name}</span>
+										</button>
+									))}
+								</div>
+							)}
+
+							{searchResults.leads.length > 0 && (
+								<div className="search-results-group">
+									<div className="search-results-title">Lidlar</div>
+									{searchResults.leads.map((lead) => (
+										<button
+											key={`lead-${lead.id}`}
+											className="search-result-item"
+											onClick={() => handleResultClick("lead", lead)}
+										>
+											<span className="result-icon">📞</span>
+											<span>{lead.full_name}</span>
+										</button>
+									))}
+								</div>
+							)}
+						</div>
+					)}
+				</div>
+			}
 
 			<div className="header-right">
-				{/* Add user profile or other right-side elements here */}
+				<NavLink to={`/${tenant}/profile`}>
+					<img src="/logo.jpg" alt="Profile" width={30} height={30} />
+				</NavLink>
 			</div>
 		</header>
 	);
