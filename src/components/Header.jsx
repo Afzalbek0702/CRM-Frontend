@@ -125,7 +125,7 @@ export default function Header({ isExpanded, onToggle, mobileOpen }) {
 			</div>
 
 			{
-				user.role === "CEO" &&
+				user?.role === "CEO" &&
 				<div className="header-search" ref={searchRef}>
 					<div className="search-input-wrapper">
 						<FaSearch className="search-icon" />
