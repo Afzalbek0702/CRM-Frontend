@@ -1,16 +1,4 @@
 ﻿import { NavLink, useLocation, useParams } from "react-router-dom";
-import {
-	FaTachometerAlt,
-	FaUsers,
-	FaUserGraduate,
-	FaChalkboardTeacher,
-	FaMoneyBillWave,
-	FaThList,
-	FaArchive,
-	FaWallet,
-	FaChevronRight,
-	FaCog
-} from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/authContext";
 import { filterSidebarByRole } from "../helpers/filterSidebarByRole";

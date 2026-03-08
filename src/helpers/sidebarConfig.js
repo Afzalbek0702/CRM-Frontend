@@ -15,14 +15,14 @@ export const sidebarConfig = [
         label: "Asosiy panel",
         icon: FaTachometerAlt,
         path: "dashboard",
-        roles: ["CEO", "ADMIN", "MANAGER", "TEACHER"]
+        roles: ["CEO", "ADMIN", "MANAGER"]
     },
     {
         key: "leads",
         label: "Lidlar",
         icon: FaThList,
         path: "leads",
-        roles: ["CEO", "MANAGER"]
+        roles: ["CEO","ADMIN", "MANAGER"]
     },
     {
         key: "groups",
@@ -40,11 +40,10 @@ export const sidebarConfig = [
     },
     {
         key: "teachers",
-        label: "teachers",
         label: "O'qituvchilar",
         icon: FaChalkboardTeacher,
         path: "teachers",
-        roles: ["CEO", "MANAGER"]
+        roles: ["CEO","ADMIN", "MANAGER"]
     },
     {
         key: "workers",

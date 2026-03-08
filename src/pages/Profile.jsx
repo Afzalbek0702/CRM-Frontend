@@ -31,9 +31,9 @@ export default function Profile() {
                     <h3>Account Information</h3>
 
                     <div className="profile-grid">
-                        <ProfileField label="User ID" value={user.id} />
+                        {/* <ProfileField label="User ID" value={user.id} /> */}
                         <ProfileField label="Phone" value={user.phone} />
-                        <ProfileField label="Teacher ID" value={user.teacher_id || "None"} />
+                        {/* <ProfileField label="Teacher ID" value={user.teacher_id || "None"} /> */}
                         <ProfileField label="Role" value={user.role} />
                     </div>
                 </div>

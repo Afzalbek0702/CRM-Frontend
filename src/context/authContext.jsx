@@ -11,8 +11,8 @@ export function AuthProvider({ children }) {
 	const fetchUser = async () => {
 		if (window.location.pathname === "/login") return;
 
-		const hasToken = document.cookie.includes("token");
-		if (!hasToken) return;
+		// const hasToken = document.cookie.includes("token");
+		// if (!hasToken) return;
 
 		try {
 			const res = await authService.me();
@@ -46,14 +46,12 @@ export function AuthProvider({ children }) {
 	const logout = async () => {
 		try {
 			await authService.logout();
+			setUser(null);
+			setTenant(null);
+			window.location.href = "/login";
 		} catch (error) {
 			console.error("Logout failed:", error);
 		}
-
-		setUser(null);
-		setTenant(null);
-
-		window.location.href = "/login";
 	};
 
 	return (
