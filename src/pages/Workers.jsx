@@ -104,7 +104,7 @@ export default function Workers() {
                 </div> */}
 
                 <button
-                    className="btn1"
+                    className="btn1 text-nowrap"
                     onClick={() => {
                         setEditingWorker(null);
                         setIsModalOpen(true);

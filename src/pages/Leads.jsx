@@ -99,7 +99,7 @@ export default function Leads() {
 						onChange={(e) => setSearchTerm(e.target.value)}
 					/>
 				</div>
-				<button className="btn1" onClick={handleCreateLead}>
+				<button className="btn1 text-nowrap" onClick={handleCreateLead}>
 					<FaPlus /> Lid qo'shish
 				</button>
 			</div>

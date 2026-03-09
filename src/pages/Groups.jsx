@@ -160,7 +160,7 @@ export default function Groups() {
 						onChange={(e) => setSearchTerm(e.target.value)}
 					/>
 				</div>
-				<button className="btn1" onClick={handleCreate}>
+				<button className="btn1 text-nowrap" onClick={handleCreate}>
 					<FaPlus /> Guruh yaratish
 				</button>
 			</div>

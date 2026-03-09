@@ -46,7 +46,7 @@ export default function SalaryTable() {
       <div className="table-actions">
         <div style={{ marginBottom: "16px" }}>
           <button
-            className="btn1"
+            className="btn1 text-nowrap"
             onClick={() => {
               setEditingSalary(null);
               setIsModalOpen(true);

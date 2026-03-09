@@ -108,7 +108,7 @@ export default function Students() {
 					/>
 				</div>
 				<button
-					className="btn1"
+					className="btn1 text-nowrap"
 					onClick={() => {
 						setEditingStudent(null);
 						setIsModalOpen(true);

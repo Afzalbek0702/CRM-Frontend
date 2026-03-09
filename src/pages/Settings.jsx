@@ -103,7 +103,7 @@ export default function Settings() {
             <h2>Kurslar</h2>
 
             <div style={{ marginBottom: "20px" }}>
-                <button className="btn1" onClick={openCreateModal}>
+                <button className="btn1 text-nowrap" onClick={openCreateModal}>
                     <FaPlus /> Kurs qo'shish
                 </button>
             </div>
@@ -186,7 +186,7 @@ export default function Settings() {
             <h2>Xonalar</h2>
 
             <div style={{ marginBottom: "20px" }}>
-                <button className="btn1" onClick={openCreateRoom}>
+                <button className="btn1 text-nowrap" onClick={openCreateRoom}>
                     <FaPlus /> Xona qo'shish
                 </button>
             </div>

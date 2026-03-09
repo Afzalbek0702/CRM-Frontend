@@ -60,7 +60,7 @@ export default function Teachers() {
 					/>
 				</div>
 				<button
-					className="btn1"
+					className="btn1 text-nowrap"
 					onClick={() => {
 						setEditingTeacher(null);
 						setIsModalOpen(true);
