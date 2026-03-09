@@ -6,14 +6,9 @@ const AuthContext = createContext();
 export function AuthProvider({ children }) {
 	const [user, setUser] = useState(null);
 	const [tenant, setTenant] = useState(null);
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 
 	const fetchUser = async () => {
-		if (window.location.pathname === "/login") return;
-
-		// const hasToken = document.cookie.includes("token");
-		// if (!hasToken) return;
-
 		try {
 			const res = await authService.me();
 			setTenant(res.tenant);

@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import Loader from "../components/Loader";
 import { useTeachers } from "../services/teacher/useTeachers";
 import { FaArrowLeft, FaUsers } from "react-icons/fa";
+import { goBack } from "../utils/navigate.js";
+
 
 export default function TeacherDetail() {
 	const { id } = useParams();
@@ -38,8 +40,8 @@ export default function TeacherDetail() {
 
 	return (
 		<div className="table-container">
-			<button onClick={() => navigate(-1)} className="btn1" style={{ marginBottom: "20px" }}>
-				<FaArrowLeft /> Back
+			<button className="btn1" onClick={goBack}>
+				← Ortga
 			</button>
 
 			<h2>{teacher.full_name}</h2>

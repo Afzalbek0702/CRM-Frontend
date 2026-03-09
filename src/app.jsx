@@ -16,9 +16,10 @@ import Archive from "./pages/Archive";
 import Settings from "./pages/Settings";
 import Workers from "./pages/Workers";
 import Profile from "./pages/Profile";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 export default function App() {
-   const { tenant } = useParams();
+	const { tenant } = useParams();
 	return (
 		<Routes>
 			<Route path="/login" element={<Login />} />
@@ -33,7 +34,7 @@ export default function App() {
 					)
 				}
 			/>
-			<Route path="/:tenant" element={<Layout />}>
+			<Route path="/:tenant" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
 				<Route path="dashboard" element={<Dashboard />} />
 				<Route path="leads" element={<Leads />} />
 				<Route path="archive/:category" element={<Archive />} />
@@ -46,8 +47,8 @@ export default function App() {
 				<Route path="settings" element={<Settings />} />
 				<Route path="payments" element={<Payments />} />
 				<Route path="payments/:category" element={<Payments />} />
-				<Route path="workers" element={<Workers/>}/>
-				<Route path="profile" element={<Profile/>}/>
+				<Route path="workers" element={<Workers />} />
+				<Route path="profile" element={<Profile />} />
 			</Route>
 		</Routes>
 	);

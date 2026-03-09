@@ -8,6 +8,8 @@ import ActionMenu from "../components/ActionMenu";
 import LeadModal from "../components/LeadModal";
 import { useConfirm } from "../components/ConfirmProvider";
 import { withConfirm } from "../helpers/withConfirm";
+import { goBack } from "../utils/navigate.js";
+
 export default function Leads() {
 	const confirm = useConfirm();
 	const navigate = useNavigate();
@@ -81,6 +83,9 @@ export default function Leads() {
 
 	return (
 		<div className="table-container">
+			<button className="btn1" onClick={goBack}>
+				← Ortga
+			</button>
 			<h2>
 				<FaThList /> Lidlar
 			</h2>

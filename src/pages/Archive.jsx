@@ -3,10 +3,11 @@ import Loader from "../components/Loader.jsx";
 import { useArchive } from "../services/archive/useArchive.js";
 import { FaSearch } from "react-icons/fa";
 import { useState } from "react";
-
+import { goBack } from "../utils/navigate.js";
 import "./Archive.css";
 
 export default function Archive() {
+
   const { category } = useParams();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTeacher, setSelectedTeacher] = useState("");
@@ -19,6 +20,7 @@ export default function Archive() {
     useAllArchivedTeachers
 
   } = useArchive();
+  const { tenant } = useParams();
 
   const { data: students = [], isLoading: loadingStudents, error: errorStudents } = useAllArchivedStudents();
   const { data: leads = [], isLoading: loadingLeads, error: errorLeads } = useAllArchivedLeads();
@@ -46,6 +48,9 @@ export default function Archive() {
 
   return (
     <div className="archive-container">
+      <button className="btn1" onClick={goBack}>
+        ← Ortga
+      </button>
       <h2>Arxiv -
         <span>
           {category === "students" ? "O'quvchilar" :

@@ -3,6 +3,7 @@ import { useWorker } from "../services/worker/useWorker";
 import { useNavigate, useParams } from "react-router-dom";
 import { useConfirm } from "../components/ConfirmProvider";
 import { withConfirm } from "../helpers/withConfirm";
+import { goBack } from "../utils/navigate.js";
 
 import { FaUsers, FaPhone, FaPlus, FaEllipsisV, FaSearch } from "react-icons/fa";
 import { useState } from "react";
@@ -72,6 +73,9 @@ export default function Workers() {
 
     return (
         <div className="table-container">
+            <button className="btn1" onClick={goBack}>
+                ← Ortga
+            </button>
             <h2>
                 <FaUsers /> Xodimlar
             </h2>

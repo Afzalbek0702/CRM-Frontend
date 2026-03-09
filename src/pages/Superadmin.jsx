@@ -2,6 +2,8 @@ import { useState } from "react";
 import "./Login.css";
 import phoneFormat from "../utils/phoneFormat";
 import api from "../services/api/apiClient";
+import { goBack } from "../utils/navigate.js";
+
 
 function Superadmin() {
 	const [formData, setFormData] = useState({
@@ -29,6 +31,9 @@ function Superadmin() {
 
 	return (
 		<div className="login-container">
+			<button className="btn1" onClick={goBack}>
+				← Ortga
+			</button>
 			<div className="login-card">
 				<h2 className="login-title">
 					{" "}
@@ -127,8 +132,8 @@ function Superadmin() {
 							}
 							placeholder="alpha"
 							className="form-input"
-                     required
-                     style={{textTransform:"lowercase"}}
+							required
+							style={{ textTransform: "lowercase" }}
 						/>
 					</div>
 

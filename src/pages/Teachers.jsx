@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useConfirm } from "../components/ConfirmProvider";
 import { withConfirm } from "../helpers/withConfirm";
 import { FaEllipsisV, FaChalkboardTeacher, FaPhone, FaPlus } from "react-icons/fa";
+import { goBack } from "../utils/navigate.js";
 
 import { FaSearch } from "react-icons/fa";
 import { useState } from "react";
@@ -23,7 +24,7 @@ export default function Teachers() {
 		position: { top: 0, left: 0 },
 		teacher: null,
 	});
-   const { tenant } = useParams();
+	const { tenant } = useParams();
 
 	const handleRowClick = (teacherId) => {
 		navigate(`/${tenant}/teachers/${teacherId}`);
@@ -42,6 +43,9 @@ export default function Teachers() {
 
 	return (
 		<div className="table-container">
+			<button className="btn1" onClick={goBack}>
+				← Ortga
+			</button>
 			<h2>
 				<FaChalkboardTeacher /> O'qituvchilar
 			</h2>

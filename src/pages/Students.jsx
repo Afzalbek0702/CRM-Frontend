@@ -6,6 +6,8 @@ import { useGroups } from "../services/group/useGroups.js";
 import { useTeachers } from "../services/teacher/useTeachers.js";
 import { useConfirm } from "../components/ConfirmProvider.jsx";
 import { withConfirm } from "../helpers/withConfirm.js";
+import { goBack } from "../utils/navigate.js";
+
 import {
 	FaEllipsisV,
 	FaUserGraduate,
@@ -46,7 +48,7 @@ export default function Students() {
 	});
 	const [addToGroupOpen, setAddToGroupOpen] = useState(false);
 	const [addToGroupStudent, setAddToGroupStudent] = useState(null);
-   const { tenant } = useParams();
+	const { tenant } = useParams();
 	const handleRowClick = (studentId) => {
 		navigate(`/${tenant}/students/${studentId}`);
 	};
@@ -54,9 +56,9 @@ export default function Students() {
 		confirm,
 		"Are you sure you want to delete with student?",
 		async (student) => {
-            await deleteStudent(student.id);
-            setActionMenu((m) => ({ ...m, isOpen: false }));
-        }
+			await deleteStudent(student.id);
+			setActionMenu((m) => ({ ...m, isOpen: false }));
+		}
 	)
 
 	if (loading) return <Loader />;
@@ -64,6 +66,9 @@ export default function Students() {
 
 	return (
 		<div className="table-container">
+			<button className="btn1" onClick={goBack}>
+				← Ortga
+			</button>
 			<h2>
 				<FaUserGraduate /> O'quvchilar
 			</h2>

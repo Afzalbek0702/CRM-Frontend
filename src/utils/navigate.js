@@ -1,4 +1,3 @@
-// navigation.js
 let navigateFunction;
 
 export const setNavigate = (func) => {
@@ -9,7 +8,16 @@ export const navigateTo = (path) => {
 	if (navigateFunction) {
 		navigateFunction(path);
 	} else {
-		// Fallback: agar funksiya o'rnatilmagan bo'lsa, hard reload
 		window.location.href = path;
+	}
+};
+
+export const goBack = (tenant) => {
+	if (!navigateFunction) return;
+
+	if (window.history.length > 1) {
+		navigateFunction(-1);
+	} else {
+		navigateFunction(`/${tenant}/dashboard`);
 	}
 };

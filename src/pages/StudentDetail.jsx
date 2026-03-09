@@ -4,6 +4,8 @@ import Loader from "../components/Loader";
 import { useStudent } from "../services/student/useStudent";
 import { FaArrowLeft, FaUsers } from "react-icons/fa";
 import { useGroups } from "../services/group/useGroups";
+import { goBack } from "../utils/navigate.js";
+
 
 export default function StudentDetail() {
 	const { id } = useParams();
@@ -44,6 +46,9 @@ export default function StudentDetail() {
 
 	return (
 		<div className="table-container">
+			<button className="btn1" onClick={goBack}>
+				← Ortga
+			</button>
 			<button
 				onClick={() => navigate(-1)}
 				className="btn1"

@@ -6,12 +6,13 @@ import { useAttendance } from "../services/attendance/useAttendance";
 import { useStudent } from "../services/student/useStudent";
 import { usePayments } from "../services/payment/usePayments";
 import { useTeachers } from "../services/teacher/useTeachers";
-import { useCourse } from "../services/course/useCourse";
+import { goBack } from "../utils/navigate";
 import PaymentModal from "../components/PaymentModal";
 import { FaArrowLeft, FaEllipsisV, FaSearch } from "react-icons/fa";
 
+
 export default function GuruhlarInfo() {
-	const { id } = useParams();
+	const { id, tenant } = useParams();
 	const navigate = useNavigate();
 	const { loading, error, fetchById, groups } = useGroups();
 	const { transferToGroup, removeFromGroup } = useStudent();
@@ -138,12 +139,8 @@ export default function GuruhlarInfo() {
 				width: "100%",
 			}}
 		>
-			<button
-				onClick={() => navigate(-1)}
-				className="btn1"
-				style={{ marginBottom: "20px", cursor: "pointer" }}
-			>
-				<FaArrowLeft /> Back
+			<button className="btn1" onClick={goBack}>
+				← Ortga
 			</button>
 
 			<div style={{ display: "flex", gap: "30px", flex: 1, minHeight: 0 }}>

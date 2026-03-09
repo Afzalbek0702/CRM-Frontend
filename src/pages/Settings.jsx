@@ -4,6 +4,8 @@ import { useRoom } from "../services/room/useRoom";
 import Loader from "../components/Loader";
 import { FaPlus, FaTrash, FaEdit, FaEllipsisV, FaTimes } from "react-icons/fa";
 import ActionMenu from "../components/ActionMenu";
+import { goBack } from "../utils/navigate.js";
+
 
 export default function Settings() {
     const { courseData, isLoading, createCourse, updateCourse, removeCourse } = useCourse();
@@ -74,25 +76,28 @@ export default function Settings() {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit =  (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-            if (editingCourse) {
-                 updateCourse({ id: editingCourse.id, data: formData });
-            } else {
-                 createCourse(formData);
-            }
-            setModalOpen(false);
-        } 
-    
+        if (editingCourse) {
+            updateCourse({ id: editingCourse.id, data: formData });
+        } else {
+            createCourse(formData);
+        }
+        setModalOpen(false);
+    }
+
 
     if (isLoading) return <Loader />;
     // console.log(courseData);
-    
+
     console.log(roomData);
 
 
     return (
         <div className="table-container">
+            <button className="btn1" onClick={goBack}>
+                ← Ortga
+            </button>
             <h1>Admin Sozlamalari</h1>
 
             <h2>Kurslar</h2>

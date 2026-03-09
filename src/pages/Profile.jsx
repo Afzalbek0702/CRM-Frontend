@@ -1,17 +1,25 @@
 import { useAuth } from "../context/authContext";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { goBack } from "../utils/navigate.js";
+
 
 export default function Profile() {
     const { user, logout } = useAuth();
     const { tenant } = useParams();
+    const navigate = useNavigate();
     const [editing, setEditing] = useState(false);
+    const HandleClick = () => {
+        navigate(`/login`)
+    }
 
     if (!user) return <div className="profile-loading">Loading profile...</div>;
 
     return (
         <div className="profile-container">
-
+            <button className="btn1" onClick={goBack}>
+                ← Ortga
+            </button>
             <div className="profile-card">
 
                 <div className="profile-header">
@@ -59,7 +67,10 @@ export default function Profile() {
 
                 <div className="profile-section">
                     <h3>Logout</h3>
-                    <button className="edit-btn" onClick={logout}>
+                    <button className="edit-btn"
+                        onClick={HandleClick}
+                    // onClick={logout}
+                    >
                         Logout
 
                     </button>

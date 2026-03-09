@@ -7,6 +7,8 @@ import { useGroups } from "../services/group/useGroups.js";
 import { useStudent } from "../services/student/useStudent.js";
 import { useConfirm } from "../components/ConfirmProvider.jsx";
 import { withConfirm } from "../helpers/withConfirm.js";
+import { goBack } from "../utils/navigate.js";
+
 import {
 	FaEllipsisV,
 	FaPlus,
@@ -22,9 +24,9 @@ import { HiOutlinePencilAlt } from "react-icons/hi";
 
 export default function Groups() {
 	const confirm = useConfirm();
-   const navigate = useNavigate();
-   const { tenant } = useParams();
-   const { groups, loading, createGroup, deleteGroup, updateGroup } =
+	const navigate = useNavigate();
+	const { tenant } = useParams();
+	const { groups, loading, createGroup, deleteGroup, updateGroup } =
 		useGroups();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isActionMenuOpen, setIsActionMenuOpen] = useState(false);
@@ -58,7 +60,7 @@ export default function Groups() {
 	}));
 
 	console.log(groupsWithCount);
-	
+
 
 
 
@@ -138,10 +140,13 @@ export default function Groups() {
 	if (loading) {
 		return <Loader />;
 	}
-	
+
 
 	return (
 		<div className="table-container">
+			<button className="btn1" onClick={goBack}>
+				← Ortga
+			</button>
 			<h2>
 				<FaUsers /> Guruhlar
 			</h2>

@@ -5,6 +5,8 @@ import IncomeTable from "./IncomeTable";
 import SalaryTable from "./SalaryTable";
 import ExpensesTable from "./ExpensesTable";
 import DebtorsTable from "./DebtorsTable";
+import { goBack } from "../utils/navigate.js";
+
 export default function Payments() {
 	const { category: rawCategory } = useParams();
 	const category = rawCategory ?? "income";
@@ -33,6 +35,9 @@ export default function Payments() {
 
 	return (
 		<div className="table-container">
+			<button className="btn1" onClick={goBack}>
+				← Ortga
+			</button>
 			<h2 className="upperCaseHeader">
 				{category === "income" ? "To'lovlar" :
 					category === "salary" ? "Ish haqlari" :
@@ -46,7 +51,7 @@ export default function Payments() {
 						<FaSearch />
 						<input
 							type="text"
-							placeholder="Search by student name..."
+							placeholder="O'quvchilarni ismi bo'yicha qidirish..."
 							value={searchTerm}
 							onChange={(e) => setSearchTerm(e.target.value)}
 						/>

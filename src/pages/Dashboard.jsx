@@ -10,8 +10,6 @@ import { useAuth } from "../context/authContext";
 export default function Dashboard() {
 	const navigate = useNavigate();
 	const { absentStudents, monthlyIncome, todayLessons, topDebtors, isLoading, error } = useDashboard();
-	const { courseData } = useCourse();
-	const courseMap = Object.fromEntries(courseData?.map(c => [c.id, c.name]));
 	const handleRowClick = (groupId) => {
 		navigate(`/${tenant}/groups/${groupId}`);
 	};
@@ -219,7 +217,7 @@ export default function Dashboard() {
 													style={{ cursor: "pointer" }}
 												>
 													<td>{lesson.group_name}</td>
-													<td>{courseMap[lesson.course_type] ?? "Noma'lum"}</td>
+													<td>{lesson.course_type}</td>
 													<td>{lesson.teacher_name}</td>
 													<td>{lesson.lesson_time}</td>
 												</tr>
