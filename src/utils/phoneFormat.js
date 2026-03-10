@@ -1,29 +1,3 @@
-// const formatUzPhone = (input) => {
-// 	let numbers = input.replace(/\D/g, "");
-
-// 	if (!numbers.startsWith("998")) {
-// 		numbers = "998";
-// 	}
-
-// 	numbers = numbers.slice(0, 12);
-
-// 	let result = "+998 ";
-
-// 	if (numbers.length > 3) {
-// 		result += numbers.slice(3, 5);
-// 	}
-// 	if (numbers.length > 5) {
-// 		result += "-" + numbers.slice(5, 8);
-// 	}
-// 	if (numbers.length > 8) {
-// 		result += "-" + numbers.slice(8, 10);
-// 	}
-// 	if (numbers.length > 10) {
-// 		result += "-" + numbers.slice(10, 12);
-// 	}
-
-// 	return result;
-// };
 const cleanUzPhone = (formattedPhone) => {
 	return formattedPhone.replace(/\D/g, "");
 };

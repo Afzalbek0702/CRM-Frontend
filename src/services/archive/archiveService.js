@@ -1,5 +1,5 @@
-import api from "../api/apiClient.js";
-import { endpoints } from "../api/endpoints.js";
+import api from "@/services/api/apiClient.js";
+import { endpoints } from "@/services/api/endpoints.js";
 
 export const archiveService = {
   getArchivedGroups: () => api.get(`${endpoints.ARCHIVE}/groups`).then((r) => r.data),

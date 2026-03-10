@@ -1,5 +1,5 @@
 import axios from "axios";
-import { navigateTo } from "../../utils/navigate";
+import { navigateTo } from "@/utils/navigate";
 
 const api = axios.create({
   baseURL: "https://api-crm-data-space.vercel.app",
