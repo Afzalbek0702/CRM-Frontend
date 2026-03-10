@@ -38,10 +38,7 @@ export function ConfirmProvider({ children }) {
 
       {state.isOpen && (
         <>
-          <div
-            className="side-panel-backdrop"
-            onClick={handleClose}
-          ></div>
+
 
           <div className="confirm-modal">
             <div className="confirm-header">
@@ -61,6 +58,11 @@ export function ConfirmProvider({ children }) {
               </button>
             </div>
           </div>
+
+          {/* <div
+            className="side-panel-backdrop"
+            onClick={handleClose}
+          ></div> */}
         </>
       )}
     </ConfirmContext.Provider>

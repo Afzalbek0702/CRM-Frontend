@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";  
+@import "@fontsource-variable/geist";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -46,8 +46,9 @@
     --sidebar-border: oklch(0.922 0 0);
     --sidebar-ring: oklch(0.708 0 0);
 }
+
 @layer base {
-  :root {
+    :root {
         --background: oklch(1 0 0);
         --foreground: oklch(0.145 0 0);
         --card: oklch(1 0 0);
@@ -81,7 +82,8 @@
         --sidebar-border: oklch(0.922 0 0);
         --sidebar-ring: oklch(0.708 0 0);
     }
-  .dark {
+
+    .dark {
         --background: oklch(0.145 0 0);
         --foreground: oklch(0.985 0 0);
         --card: oklch(0.205 0 0);
@@ -114,17 +116,21 @@
         --sidebar-border: oklch(1 0 0 / 10%);
         --sidebar-ring: oklch(0.556 0 0);
     }
-  .theme {
+
+    .theme {
         --font-sans: 'Geist Variable', sans-serif;
     }
-  * {
-    @apply border-border outline-ring/50;
+
+    * {
+        @apply border-border outline-ring/50;
     }
-  body {
-    @apply bg-background text-foreground;
+
+    body {
+        @apply bg-background text-foreground;
     }
-  html {
-    @apply font-sans;
+
+    html {
+        @apply font-sans;
     }
 }
 
@@ -222,7 +228,6 @@ body {
     cursor: url("/cursor.png") 4 0, auto;
 }
 
-/* App Layout */
 .app-layout {
     display: flex;
     flex-direction: column;
@@ -230,7 +235,6 @@ body {
     position: relative;
 }
 
-/* App Header */
 .app-header {
     position: fixed;
     top: 0;
@@ -268,7 +272,6 @@ body {
     display: block;
 }
 
-/*STUDENTS SELECT */
 
 .filters {
     display: flex;
@@ -421,14 +424,12 @@ body {
     flex-shrink: 0;
 }
 
-/* Hamburger Button - REMOVED */
 .hamburger-button {
     display: none !important;
     visibility: hidden !important;
     pointer-events: none !important;
 }
 
-/* Header Toggle Button */
 .header-toggle-button {
     display: flex;
     align-items: center;
@@ -451,7 +452,6 @@ body {
     transform: translateY(-2px);
 }
 
-/* Sidebar Backdrop */
 .sidebar-backdrop {
     position: fixed;
     top: 70px;
@@ -544,8 +544,6 @@ body {
         margin-left: 80px;
     }
 
-    /* Ensure sidebar is visible and respects expanded/collapsed
-   between 641px and 768px (some earlier rules hid it in this range) */
     @media (min-width: 641px) and (max-width: 768px) {
         .sidebar {
             position: fixed;
@@ -566,7 +564,6 @@ body {
             width: 80px !important;
         }
 
-        /* hide mobile-only hamburger and backdrop in this desktop-ish range */
         .hamburger-button {
             display: none !important;
         }
@@ -575,7 +572,6 @@ body {
             display: none !important;
         }
 
-        /* content margins follow expanded/collapsed state */
         .content {
             margin-left: 280px;
         }
@@ -595,7 +591,6 @@ body {
     position: relative;
 }
 
-/* Sidebar ochiq bo'lganda header marginlari 0 */
 .content.sidebar-open .dashboard-header,
 .content.sidebar-open .students-header,
 .content.sidebar-open .teachers-header,
@@ -607,7 +602,6 @@ body {
     transition: all 0.3s ease;
 }
 
-/* Sidebar yopiq bo'lganda header marginlari 60px */
 .content.sidebar-closed .dashboard-header,
 .content.sidebar-closed .students-header,
 .content.sidebar-closed .teachers-header,
@@ -713,7 +707,6 @@ body {
     margin-bottom: 16px;
 }
 
-/* group-info link ichi css */
 .GROUP-INFO {
     width: 100%;
     max-width: 560px;
@@ -740,7 +733,6 @@ body {
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
 }
 
-/* Chap tomondagi sariq chiziq */
 .vertical-hr {
     position: absolute;
     top: 0px;
@@ -758,7 +750,6 @@ body {
             #F59E0B);
 }
 
-/* Textlar */
 .GROUP-INFO p {
     margin: 0;
     padding-bottom: 6px;
@@ -779,7 +770,6 @@ body {
     gap: 8px;
 }
 
-/* Label */
 .GROUP-INFO strong {
     font-weight: 600;
     color: #FCD34D;
@@ -910,7 +900,7 @@ table::-webkit-scrollbar {
 }
 
 .table-container tbody tr {
-    /* border-bottom: 1px solid #1f2937; */
+    border-bottom: 1px solid #1f2937;
     border-bottom: 1px solid #4e3d14;
     position: relative;
 }
@@ -964,7 +954,6 @@ table::-webkit-scrollbar {
     color: var(--primary-color);
 }
 
-/* Action Menu and Side Panel Styles*/
 
 .actions-cell {
     position: relative;
@@ -1092,7 +1081,6 @@ table::-webkit-scrollbar {
 
 }
 
-/* STUDENT-PAGE */
 .student-page h2 {
     display: flex;
     align-items: center;
@@ -1172,7 +1160,7 @@ table::-webkit-scrollbar {
     transform: none;
 }
 
-/* .student-table {
+.student-table {
     width: 100%;
     border: 1px solid var(--text-color);
     box-shadow: var(--box-shadow);
@@ -1182,7 +1170,7 @@ table::-webkit-scrollbar {
     padding-left: 10px;
     border: none;
     margin-bottom: 50px;
-} */
+}
 
 .davomat-and-date {
     margin-bottom: 20px;
@@ -1245,7 +1233,6 @@ table::-webkit-scrollbar {
     font-weight: 600;
 }
 
-/* Custom Checkbox Styles */
 .attendance-checkbox {
     appearance: none !important;
     -webkit-appearance: none !important;
@@ -1392,12 +1379,10 @@ table::-webkit-scrollbar {
     width: 80px;
 }
 
-/* Mobile open: offset the sidebar slightly below the hamburger so the X remains clickable */
 .sidebar.mobile-open {
     top: 70px;
     height: calc(100vh - 70px);
     z-index: 1045;
-    /* below hamburger (1050) but above content */
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
 }
 
@@ -1785,7 +1770,6 @@ table::-webkit-scrollbar {
     padding: 0 !important;
 }
 
-/* Remove all hamburger button styles */
 .hamburger-button {
     display: none !important;
 }
@@ -1904,7 +1888,6 @@ table::-webkit-scrollbar {
 
 }
 
-/* Enhanced Modal Styles */
 .hamburger-button {
     display: flex;
     position: fixed;
@@ -2194,7 +2177,6 @@ table::-webkit-scrollbar {
     padding-left: 45px;
 }
 
-/* Days Grid */
 .days-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
@@ -2265,7 +2247,6 @@ table::-webkit-scrollbar {
     font-weight: 600;
 }
 
-/* Enhanced Buttons */
 .panel-buttons {
     display: flex;
     gap: 16px;
@@ -2519,7 +2500,6 @@ table::-webkit-scrollbar {
     }
 }
 
-/* Dashboard cards responsive design */
 @media (max-width: 480px) {
     .sidebar {
         width: 100%;
@@ -2573,7 +2553,6 @@ table::-webkit-scrollbar {
     }
 }
 
-/* Extra small screens (425px and below) */
 @media (max-width: 426px) {
     .hamburger-button {
         top: 12px;
@@ -2643,36 +2622,30 @@ table::-webkit-scrollbar {
     }
 }
 
-/* GroupInfo page responsive design */
 @media (max-width: 768px) {
 
-    /* GroupInfo main container */
-    div[style*="display: flex"][style*="gap: 30px"] {
+    GroupInfo main container div[style*="display: flex"][style*="gap: 30px"] {
         flex-direction: column !important;
         gap: 20px !important;
     }
 
-    /* Left panel - Group Info and Students */
     div[style*="flex: 0 0 500px"] {
         flex: 1 1 100% !important;
         max-width: 100% !important;
         width: 100% !important;
     }
 
-    /* Right panel - Attendance */
     div[style*="flex: 1"][style*="overflowY: auto"]:not([style*="flex-direction"]) {
         flex: 1 1 100% !important;
         width: 100% !important;
     }
 
-    /* Group info grid */
-    div[style*="gridTemplateColumns: 1fr 1fr"] {
+    Group info grid div[style*="gridTemplateColumns: 1fr 1fr"] {
         grid-template-columns: 1fr !important;
         gap: 8px !important;
     }
 
-    /* Attendance table responsive */
-    .attendance-scroll {
+    Attendance table responsive .attendance-scroll {
         overflow-x: auto !important;
         max-width: 100% !important;
     }
@@ -2682,8 +2655,7 @@ table::-webkit-scrollbar {
         width: 100% !important;
     }
 
-    /* Students table */
-    table[style*="width: 100%"] {
+    Students table table[style*="width: 100%"] {
         font-size: 12px !important;
     }
 
@@ -2693,8 +2665,7 @@ table::-webkit-scrollbar {
     }
 }
 
-/* Table Actions and Search */
-.table-actions {
+Table Actions and Search .table-actions {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -2727,8 +2698,7 @@ table::-webkit-scrollbar {
     color: #999;
 }
 
-/* Compact search box for GroupInfo */
-.search-box-compact {
+Compact search box for GroupInfo .search-box-compact {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -2757,8 +2727,7 @@ table::-webkit-scrollbar {
     font-size: 12px;
 }
 
-/* Scrollbar styling */
-::-webkit-scrollbar {
+Scrollbar styling::-webkit-scrollbar {
     display: none;
 }
 
@@ -2766,8 +2735,7 @@ table::-webkit-scrollbar {
     background-color: transparent;
 }
 
-/* Firefox scrollbar */
-* {
+Firefox scrollbar * {
     scrollbar-color: var(--primary-color) var(--background-color);
     scrollbar-width: thin;
 }
@@ -2788,8 +2756,7 @@ table::-webkit-scrollbar {
     background-color: rgba(255, 208, 12, 0.1);
 }
 
-/* Select styling */
-.side-panel select {
+Select styling .side-panel select {
     width: 100%;
     padding: 16px 20px;
     border: 2px solid rgba(255, 255, 255, 0.1);
@@ -2814,7 +2781,6 @@ table::-webkit-scrollbar {
         0 8px 25px rgba(255, 208, 12, 0.15);
 }
 
-/* Page Transition Animations */
 .page-transition {
     opacity: 0;
     transform: translateX(100px);
@@ -2826,7 +2792,6 @@ table::-webkit-scrollbar {
     transform: translateX(0);
 }
 
-/* Slide in from left */
 .page-transition.slide-in-left {
     transform: translateX(-100px);
 }
@@ -2835,7 +2800,6 @@ table::-webkit-scrollbar {
     transform: translateX(0);
 }
 
-/* Slide in from right */
 .page-transition.slide-in-right {
     transform: translateX(100px);
 }
@@ -2844,7 +2808,6 @@ table::-webkit-scrollbar {
     transform: translateX(0);
 }
 
-/* Slide in from top */
 .page-transition.slide-in-top {
     transform: translateY(-100px);
 }
@@ -2853,7 +2816,6 @@ table::-webkit-scrollbar {
     transform: translateY(0);
 }
 
-/* Slide in from bottom */
 .page-transition.slide-in-bottom {
     transform: translateY(100px);
 }
@@ -2862,7 +2824,6 @@ table::-webkit-scrollbar {
     transform: translateY(0);
 }
 
-/* Fade in with scale */
 .page-transition.fade-in-scale {
     transform: scale(0.8);
     opacity: 0;
@@ -2873,7 +2834,6 @@ table::-webkit-scrollbar {
     opacity: 1;
 }
 
-/* Rotate in */
 .page-transition.rotate-in {
     transform: rotate(-10deg) scale(0.8);
     opacity: 0;
@@ -2967,7 +2927,6 @@ table::-webkit-scrollbar {
         max-height: calc(100vh - 80px);
     }
 
-    /* Hide scrollbar but keep functionality */
     .sidebar-nav::-webkit-scrollbar {
         width: 4px;
     }
@@ -2990,7 +2949,6 @@ table::-webkit-scrollbar {
         padding-top: 70px;
     }
 
-    /* Dashboard Cards */
     .dashboard-cards {
         flex-direction: column;
         gap: 12px;
@@ -3022,7 +2980,6 @@ table::-webkit-scrollbar {
         margin-bottom: 12px;
     }
 
-    /* Group Info */
     .GROUP-INFO {
         max-width: 100%;
         padding: 20px 20px 20px 0;
@@ -3039,7 +2996,6 @@ table::-webkit-scrollbar {
         width: 5px;
     }
 
-    /* Tables */
     .table-container {
         overflow-x: auto;
     }
@@ -3078,7 +3034,6 @@ table::-webkit-scrollbar {
         min-width: 120px;
     }
 
-    /* Buttons */
     .btn1 {
         width: 100%;
         height: 40px;
@@ -3092,7 +3047,6 @@ table::-webkit-scrollbar {
         margin-top: 10px;
     }
 
-    /* Student Page */
     .student-page {
         padding: 20px;
     }
@@ -3102,7 +3056,6 @@ table::-webkit-scrollbar {
         margin-bottom: 30px;
     }
 
-    /* Month Picker */
     .month-picker {
         padding: 12px;
     }
@@ -3113,7 +3066,6 @@ table::-webkit-scrollbar {
         min-width: 40px;
     }
 
-    /* Checkboxes */
     .attendance-checkbox {
         width: 25px !important;
         height: 25px !important;
@@ -3121,7 +3073,6 @@ table::-webkit-scrollbar {
         min-height: 25px;
     }
 
-    /* Search Box */
     .search-box {
         max-width: 100%;
         padding: 8px 12px;
@@ -3131,20 +3082,17 @@ table::-webkit-scrollbar {
         font-size: 13px;
     }
 
-    /* Table Actions */
     .table-actions {
         flex-direction: column;
         gap: 15px;
         align-items: stretch;
     }
 
-    /* Kelmaganlar Page */
     .kelmaganlar-page {
         flex-direction: column;
         gap: 20px;
     }
 
-    /* Side Panel (Modal) */
     .side-panel {
         width: 95vw;
         max-height: 95vh;
@@ -3245,7 +3193,6 @@ table::-webkit-scrollbar {
         padding: 12px;
     }
 
-    /* Dashboard */
     .dashboard-header h1 {
         font-size: 18px;
     }
@@ -3268,7 +3215,6 @@ table::-webkit-scrollbar {
         font-size: 24px;
     }
 
-    /* Group Info */
     .GROUP-INFO {
         padding: 16px 16px 16px 0;
     }
@@ -3279,7 +3225,6 @@ table::-webkit-scrollbar {
         padding-bottom: 4px;
     }
 
-    /* Tables */
     .table-container h2 {
         font-size: 16px;
     }
@@ -3310,8 +3255,7 @@ table::-webkit-scrollbar {
         min-width: 100px;
     }
 
-    /* Buttons */
-    .btn1 {
+    Buttons .btn1 {
         height: 35px;
         font-size: 13px;
     }
@@ -3321,7 +3265,6 @@ table::-webkit-scrollbar {
         font-size: 13px;
     }
 
-    /* Student Page */
     .student-page {
         padding: 16px;
     }
@@ -3331,7 +3274,6 @@ table::-webkit-scrollbar {
         margin-bottom: 20px;
     }
 
-    /* Month Picker */
     .month-picker {
         padding: 10px;
     }
@@ -3342,7 +3284,6 @@ table::-webkit-scrollbar {
         min-width: 35px;
     }
 
-    /* Checkboxes */
     .attendance-checkbox {
         width: 20px !important;
         height: 20px !important;
@@ -3350,7 +3291,6 @@ table::-webkit-scrollbar {
         min-height: 20px;
     }
 
-    /* Search Box */
     .search-box {
         padding: 6px 10px;
     }
@@ -3359,7 +3299,6 @@ table::-webkit-scrollbar {
         font-size: 12px;
     }
 
-    /* Side Panel */
     .side-panel {
         width: 98vw;
         margin: 5px;
@@ -3419,7 +3358,6 @@ table::-webkit-scrollbar {
         font-size: 13px;
     }
 
-    /* Day Pills */
     .day-pill {
         padding: 4px 8px;
         font-size: 10px;
@@ -3453,12 +3391,10 @@ table::-webkit-scrollbar {
         flex-shrink: 0;
     }
 
-    /* Content */
     .content {
         padding: 8px;
     }
 
-    /* Dashboard */
     .dashboard-header h1 {
         font-size: 16px;
     }
@@ -3481,7 +3417,6 @@ table::-webkit-scrollbar {
         font-size: 20px;
     }
 
-    /* Group Info */
     .GROUP-INFO {
         padding: 12px 12px 12px 0;
     }
@@ -3499,7 +3434,6 @@ table::-webkit-scrollbar {
         width: 4px;
     }
 
-    /* Tables */
     .table-container h2 {
         font-size: 14px;
     }
@@ -3530,7 +3464,6 @@ table::-webkit-scrollbar {
         min-width: 80px;
     }
 
-    /* Buttons */
     .btn1 {
         height: 30px;
         font-size: 12px;
@@ -3541,7 +3474,6 @@ table::-webkit-scrollbar {
         font-size: 12px;
     }
 
-    /* Student Page */
     .student-page {
         padding: 12px;
     }
@@ -3551,7 +3483,6 @@ table::-webkit-scrollbar {
         margin-bottom: 15px;
     }
 
-    /* Month Picker */
     .month-picker {
         padding: 8px;
     }
@@ -3562,7 +3493,6 @@ table::-webkit-scrollbar {
         min-width: 30px;
     }
 
-    /* Checkboxes */
     .attendance-checkbox {
         width: 18px !important;
         height: 18px !important;
@@ -3570,7 +3500,6 @@ table::-webkit-scrollbar {
         min-height: 18px;
     }
 
-    /* Search Box */
     .search-box {
         padding: 5px 8px;
     }
@@ -3579,7 +3508,6 @@ table::-webkit-scrollbar {
         font-size: 11px;
     }
 
-    /* Side Panel */
     .side-panel {
         width: 100vw;
         height: 100vh;
@@ -3768,7 +3696,6 @@ option:hover {
 
 @media (min-width: 1024px) and (max-width: 1440px) {
 
-    /* Scrollni oldini olamiz */
     body {
         overflow-x: hidden;
     }
@@ -3776,7 +3703,6 @@ option:hover {
     .dashboard-cards {
         display: grid;
         grid-template-columns: repeat(4, 0.9fr);
-        /* 1fr emas — 0.9fr qildik, kichrayadi */
 
         justify-content: center;
         gap: 24px;
@@ -3849,7 +3775,6 @@ option:hover {
         overflow: hidden;
         text-overflow: ellipsis;
         vertical-align: middle;
-        /* ustiga chiqmasin */
         line-height: 1.2;
     }
 
@@ -3858,7 +3783,6 @@ option:hover {
         font-size: 0.6rem;
     }
 
-    /* Ustunlarni muvozanatlash */
     th:nth-child(1),
     td:nth-child(1) {
         width: 16%;
@@ -3910,7 +3834,6 @@ option:hover {
 
 }
 
-/* Responsive Design for Tablets Portrait */
 @media (max-width: 768px) {
     .table-container {
         padding: 15px 10px;
@@ -3956,7 +3879,6 @@ option:hover {
     }
 }
 
-/* Responsive Design for Mobile Landscape */
 @media (max-width: 600px) {
     .table-container h2 {
         margin-left: 15px;
@@ -4001,7 +3923,6 @@ option:hover {
     }
 }
 
-/* Responsive Design for Mobile Portrait */
 @media (max-width: 480px) {
     .table-container {
         padding: 10px 5px;
@@ -4068,7 +3989,6 @@ option:hover {
     }
 }
 
-/* Responsive Design for Small Mobile */
 @media (max-width: 360px) {
     .table-container h2 {
         font-size: 14px;
@@ -4112,7 +4032,6 @@ option:hover {
     }
 }
 
-/* Table Row Fade In Animation */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -4218,7 +4137,6 @@ tr {
         height: 18px !important;
     }
 
-    /* Side panel/modal */
     .side-panel {
         width: 95vw !important;
         margin: 20px !important;
@@ -4247,7 +4165,6 @@ tr {
         gap: 12px !important;
     }
 
-    /* Hamburger (mobile) */
     .hamburger-button {
         display: flex !important;
         position: fixed !important;
@@ -4269,7 +4186,6 @@ tr {
         pointer-events: none !important;
     }
 
-    /* Sidebar: off-canvas by default on narrow screens but visible with .open/.mobile-open */
     .sidebar {
         top: 0 !important;
         left: 0 !important;
@@ -4293,7 +4209,6 @@ tr {
         z-index: 1025 !important;
     }
 
-    /* Content layout */
     .content {
         padding: 16px !important;
         padding-top: 70px !important;
@@ -4308,7 +4223,6 @@ tr {
         margin-left: 44px !important;
     }
 
-    /* Dashboard / cards adjustments */
     .dashboard-cards {
         flex-direction: column !important;
         gap: 12px !important;
@@ -4322,10 +4236,7 @@ tr {
         min-height: 120px !important;
     }
 
-    .collapsed-hover-submenu
-
-    /* Tables and search */
-    .table-container {
+    .collapsed-hover-submenu .table-container {
         overflow-x: auto !important;
         padding: 15px 10px !important;
     }
@@ -4351,7 +4262,6 @@ tr {
         padding: 10px 14px !important;
     }
 
-    /* Small-screen tweaks */
     .btn1 {
         width: 100% !important;
         height: 40px !important;
@@ -4364,7 +4274,6 @@ tr {
         margin-top: 10px !important;
     }
 
-    /* Keep sidebar full height on landscape small screens */
     .sidebar {
         top: 30px;
         height: calc(100vh - 30px);
@@ -4405,7 +4314,7 @@ input[type=number] {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
     width: 360px;
     max-width: 90%;
-    z-index: 1001;
+    z-index: 9999;
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
@@ -4517,7 +4426,6 @@ input[type=number] {
     opacity: 1;
 }
 
-/* profile uchun css */
 
 .profile-container {
     padding: 40px;
@@ -4606,4 +4514,3 @@ input[type=number] {
     font-size: 15px;
     font-weight: 500;
 }
-

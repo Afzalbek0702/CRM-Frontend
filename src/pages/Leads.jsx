@@ -9,6 +9,7 @@ import LeadModal from "../components/LeadModal";
 import { useConfirm } from "../components/ConfirmProvider";
 import { withConfirm } from "../helpers/withConfirm";
 import { goBack } from "../utils/navigate.js";
+import { Button } from "@/components/ui/button";
 
 export default function Leads() {
 	const confirm = useConfirm();
@@ -99,9 +100,10 @@ export default function Leads() {
 						onChange={(e) => setSearchTerm(e.target.value)}
 					/>
 				</div>
-				<button className="btn1 text-nowrap" onClick={handleCreateLead}>
+				
+				<Button onClick={handleCreateLead} className="cursor-pointer px-6 py-3 text-[12px] text-(--background-color) bg-(--primary-color) text-nowrap">
 					<FaPlus /> Lid qo'shish
-				</button>
+				</Button>
 			</div>
 
 			{leads && leads.length < 1 ? (
