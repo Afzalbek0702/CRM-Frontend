@@ -4,7 +4,7 @@ import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import { setNavigate } from "./utils/navigate";
 import { useNavigate } from "react-router-dom";
-
+import { Button} from '@/components/ui/Button'
 export default function Layout() {
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -44,7 +44,8 @@ export default function Layout() {
 				className={`content ${
 					sidebarExpanded ? "sidebar-expanded" : "sidebar-collapsed"
 				} ${hideSidebar ? "login-page" : ""}`}
-			>
+         >
+            <Button>Salom</Button>
 				<Outlet />
 			</main>
 		</div>
