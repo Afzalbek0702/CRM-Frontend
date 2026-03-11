@@ -15,7 +15,7 @@ export default function Layout() {
 	return (
 		<TooltipProvider>
 			<SidebarProvider>
-				<div className="flex min-h-screen w-full bg-background text-foreground`">
+				<div className="flex min-h-screen w-full bg-background text-foreground dark:bg-background dark:text-foreground">
 					<AppSidebar />
 					<SidebarInset className="flex flex-col p-6">
 						<Header />
