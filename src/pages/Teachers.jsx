@@ -43,13 +43,13 @@ export default function Teachers() {
 
 	return (
 		<div className="table-container">
-			<button className="btn1" onClick={goBack}>
+			<button className="btn btn-default" onClick={goBack}>
 				← Ortga
 			</button>
 			<h2>
 				<FaChalkboardTeacher /> O'qituvchilar
 			</h2>
-			<div className="table-actions">
+			<div className="table-actions mb-[30px]">
 				<div className="search-box">
 					<FaSearch />
 					<input
@@ -60,7 +60,7 @@ export default function Teachers() {
 					/>
 				</div>
 				<button
-					className="btn1 text-nowrap"
+					className="btn btn-default text-nowrap"
 					onClick={() => {
 						setEditingTeacher(null);
 						setIsModalOpen(true);

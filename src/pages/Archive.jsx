@@ -48,7 +48,7 @@ export default function Archive() {
 
   return (
     <div className="archive-container">
-      <button className="btn1" onClick={goBack}>
+      <button className="btn btn-default" onClick={goBack}>
         ← Ortga
       </button>
       <h2>Arxiv -

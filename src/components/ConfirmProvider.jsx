@@ -43,17 +43,17 @@ export function ConfirmProvider({ children }) {
           <div className="confirm-modal">
             <div className="confirm-header">
               <FaExclamationTriangle className="confirm-icon" />
-              <h3>{state.title}</h3>
+              <h3 className="confirm-title">{state.title}</h3>
             </div>
 
             <p className="confirm-message">{state.message}</p>
 
             <div className="confirm-buttons">
-              <button className="btn-cancel" onClick={handleClose}>
+              <button className="btn btn-cancel flex-1" onClick={handleClose}>
                 <FaTimes /> Cancel
               </button>
 
-              <button className="btn-danger" onClick={handleConfirm}>
+              <button className="btn btn-danger" onClick={handleConfirm}>
                 Confirm
               </button>
             </div>

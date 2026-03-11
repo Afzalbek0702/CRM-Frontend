@@ -84,13 +84,13 @@ export default function Leads() {
 
 	return (
 		<div className="table-container">
-			<button className="btn1" onClick={goBack}>
+			<button className="btn btn-default" onClick={goBack}>
 				← Ortga
 			</button>
 			<h2>
 				<FaThList /> Lidlar
 			</h2>
-			<div className="table-actions">
+			<div className="table-actions mb-[30px]">
 				<div className="search-box">
 					<FaSearch />
 					<input
@@ -101,11 +101,11 @@ export default function Leads() {
 					/>
 				</div>
 
-				<Button onClick={handleCreateLead}
-					className="cursor-pointer p-7 text-[12px] text-(--background-color) bg-(--primary-color) whitespace-nowrap"
+				<button onClick={handleCreateLead}
+					className="btn btn-default"
 				>
 					<FaPlus /> Lid qo'shish
-				</Button>
+				</button>
 			</div>
 
 			{leads && leads.length < 1 ? (

@@ -2254,25 +2254,16 @@ table::-webkit-scrollbar {
     padding-top: 24px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
-
+/* 
 .btn-cancel,
 .btn-submit {
     flex: 1;
-    padding: 16px 24px;
-    border-radius: 16px;
-    font-size: 15px;
-    font-weight: 600;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    position: relative;
-    overflow: hidden;
-}
-
+    
+} */
+/* 
 .btn-cancel {
     background: rgba(255, 255, 255, 0.05);
     color: var(--text-color);
@@ -2285,8 +2276,8 @@ table::-webkit-scrollbar {
     color: var(--primary-color);
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(255, 208, 12, 0.2);
-}
-
+} */
+/* 
 .btn-submit {
     background: linear-gradient(135deg, var(--primary-color) 0%, #ffcc00 100%);
     color: #000;
@@ -2303,7 +2294,7 @@ table::-webkit-scrollbar {
 .btn-cancel:active,
 .btn-submit:active {
     transform: translateY(0);
-}
+}  */
 
 @media (max-width: 768px) {
     .side-panel {
@@ -4302,7 +4293,7 @@ input[type=number] {
     color: var(--primary-color);
     text-decoration: underline;
 }
-
+/* 
 .confirm-modal {
     position: fixed;
     top: 50%;
@@ -4382,7 +4373,7 @@ input[type=number] {
 
 .btn-danger:hover {
     background-color: #ffb347;
-}
+} */
 
 .text-special-part {
     color: var(--primary-color);

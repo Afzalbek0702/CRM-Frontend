@@ -144,13 +144,13 @@ export default function Groups() {
 
 	return (
 		<div className="table-container">
-			<button className="btn1" onClick={goBack}>
+			<button className="btn btn-default" onClick={goBack}>
 				← Ortga
 			</button>
 			<h2>
 				<FaUsers /> Guruhlar
 			</h2>
-			<div className="table-actions">
+			<div className="table-actions mb-[30px]">
 				<div className="search-box">
 					<FaSearch />
 					<input
@@ -160,7 +160,7 @@ export default function Groups() {
 						onChange={(e) => setSearchTerm(e.target.value)}
 					/>
 				</div>
-				<button className="btn1 text-nowrap" onClick={handleCreate}>
+				<button className="btn btn-default text-nowrap" onClick={handleCreate}>
 					<FaPlus /> Guruh yaratish
 				</button>
 			</div>

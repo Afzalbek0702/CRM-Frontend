@@ -60,7 +60,7 @@ export default function ExpensesTable() {
                 {totalExpenses.toLocaleString()} so'm
             </div>
 
-            <div className="table-actions">
+            <div className="table-actions mb-[30px]">
                 <button className="btn1" onClick={() => setIsModalOpen(true)}>
                     Xarajat qo'shish
                 </button>
