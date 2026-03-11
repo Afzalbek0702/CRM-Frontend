@@ -1,51 +1,30 @@
 import { Outlet, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
-import Sidebar from "./components/Sidebar";
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import { AppSidebar } from "./components/Sidebar";
 import Header from "./components/Header";
-import { setNavigate } from "./utils/navigate";
-import { useNavigate } from "react-router-dom";
+import { TooltipProvider } from "@/components/ui/tooltip";
+
 export default function Layout() {
 	const location = useLocation();
-	const navigate = useNavigate();
-	const hideSidebar = location.pathname.endsWith("/login");
+	const isLoginPage = location.pathname.endsWith("/login");
 
-	const [sidebarExpanded, setSidebarExpanded] = useState(true);
-	const [mobileOpen, setMobileOpen] = useState(false);
-
-	useEffect(() => {
-		setNavigate(navigate);
-	}, [navigate,]);
+	if (isLoginPage) {
+		return <Outlet />;
+	}
 
 	return (
-		<div className="app-layout">
-			{!hideSidebar && (
-				<>
-					<Header
-						isExpanded={sidebarExpanded}
-						mobileOpen={mobileOpen}
-						onToggle={() => {
-							if (window.innerWidth < 640) {
-								setMobileOpen(!mobileOpen);
-							} else {
-								setSidebarExpanded(!sidebarExpanded);
-							}
-						}}
-					/>
-					<Sidebar
-						isExpanded={mobileOpen ? true : sidebarExpanded}
-						mobileOpen={mobileOpen}
-						onClose={() => setMobileOpen(false)}
-					/>
-				</>
-			)}
-
-			<main
-				className={`content ${
-					sidebarExpanded ? "sidebar-expanded" : "sidebar-collapsed"
-				} ${hideSidebar ? "login-page" : ""}`}
-         >
-				<Outlet />
-			</main>
-		</div>
+		<TooltipProvider>
+			<SidebarProvider>
+				<div className="flex min-h-screen w-full bg-background text-foreground`">
+					<AppSidebar />
+					<SidebarInset className="flex flex-col p-6">
+						<Header />
+						<div className="flex-1 overflow-x-hidden">
+							<Outlet />
+						</div>
+					</SidebarInset>
+				</div>
+			</SidebarProvider>
+		</TooltipProvider>
 	);
 }

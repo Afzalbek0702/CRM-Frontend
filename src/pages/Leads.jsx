@@ -101,7 +101,7 @@ export default function Leads() {
 					/>
 				</div>
 				
-				<Button onClick={handleCreateLead} className="cursor-pointer px-6 py-3 text-[12px] text-(--background-color) bg-(--primary-color) text-nowrap">
+				<Button onClick={handleCreateLead} className="cursor-pointer px-6 py-3 text-[12px] text-BgColor bg-primaryF text-nowrap">
 					<FaPlus /> Lid qo'shish
 				</Button>
 			</div>

@@ -1,122 +1,127 @@
 ﻿import { NavLink, useLocation, useParams } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
+import { ChevronDown, ChevronRight, LayoutDashboard } from "lucide-react";
 import { useAuth } from "../context/authContext";
 import { filterSidebarByRole } from "../helpers/filterSidebarByRole";
 import { sidebarConfig } from "../helpers/sidebarConfig";
 
-export default function Sidebar({ isExpanded = true, onToggle = () => { }, mobileOpen = false, onClose = () => { } }) {
-	const location = useLocation();
-	const [archiveOpen, setArchiveOpen] = useState(false);
-	const [paymentsOpen, setPaymentsOpen] = useState(false);
-	const [hoveredMenu, setHoveredMenu] = useState(null);
-	const [openMenus, setOpenMenus] = useState({
-		payments: false,
-		archive: false,
-	});
-	const hoverTimeoutRef = useRef(null);
+import {
+	Sidebar,
+	SidebarContent,
+	SidebarGroup,
+	SidebarGroupContent,
+	SidebarGroupLabel,
+	SidebarHeader,
+	SidebarMenu,
+	SidebarMenuButton,
+	SidebarMenuItem,
+	SidebarMenuSub,
+	SidebarMenuSubItem,
+	SidebarMenuSubButton,
+} from "@/components/ui/sidebar";
+import {
+	Collapsible,
+	CollapsibleContent,
+	CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+
+export function AppSidebar() {
 	const { user } = useAuth();
-
-
-	useEffect(() => {
-		if (location.pathname.startsWith("/archive")) {
-			setArchiveOpen(true);
-		}
-	}, [location.pathname]);
-
-	useEffect(() => {
-		return () => {
-			if (hoverTimeoutRef.current) {
-				clearTimeout(hoverTimeoutRef.current);
-			}
-		};
-	}, []);
-
-	const handleMouseEnter = (menuName) => {
-		if (hoverTimeoutRef.current) {
-			clearTimeout(hoverTimeoutRef.current);
-		}
-		setHoveredMenu(menuName);
-	};
-	
-	const toggleParent = (menuKey) => {
-		setOpenMenus((prev) => ({
-			...prev,
-			[menuKey]: !prev[menuKey],
-		}));
-	};
-
-	const handleMouseLeave = () => {
-		hoverTimeoutRef.current = setTimeout(() => {
-			setHoveredMenu(null);
-		}, 100);
-	};
-	const { tenant } = useParams()
+	const location = useLocation();
+	const { tenant } = useParams();
 	const filteredSidebar = filterSidebarByRole(sidebarConfig, user?.role);
+
 	return (
-		<aside className={`sidebar ${isExpanded ? "expanded" : "collapsed"} ${mobileOpen ? "mobile-open open" : ""}`}>
-			<nav className="sidebar-nav">
-				{filteredSidebar.map((item) => {
-					const Icon = item.icon;
-					if (!item.children) {
+		<Sidebar collapsible="icon">
+			<SidebarHeader className="h-16 flex items-center px-4 border-b">
+				<div className="flex items-center gap-2 font-bold">
+					<div className="bg-primary text-primary-foreground p-1 rounded">
+						<LayoutDashboard size={20} />
+					</div>
+					<span className="group-data-[collapsible=icon]:hidden text-xl">
+						CRM
+					</span>
+				</div>
+			</SidebarHeader>
 
-						return (
-							<NavLink
-								key={item.path}
-								to={`/${tenant}/${item.path}`}
-								className={({ isActive }) => (isActive ? "active" : "")}
-								onClick={() => { if (mobileOpen) onClose(); }}
-							>
-								<Icon className="sidebar-icon" />
-								{isExpanded && <span>{item.label}</span>}
-							</NavLink>
-						);
-					}
-
-					const isOpen = openMenus[item.label] || false;
-					const isHovered = hoveredMenu === item.label;
-
-					return (
-						<div
-							key={item.label}
-							className="sidebar-parent"
-							onMouseEnter={() => !isExpanded && handleMouseEnter(item.label)}
-							onMouseLeave={() => !isExpanded && handleMouseLeave()}
-						>
-							<button
-								className={`sidebar-link-parent ${isOpen ? "open" : ""}`}
-								onClick={() => {
-									if (isExpanded) toggleParent(item.label);
-									setHoveredMenu(null);
-								}}
-								title={isExpanded ? "" : item.label}
-							>
-								<Icon className="sidebar-icon" />
-								{isExpanded && (
-									<>
-										<span>{item.label}</span>
-										<span className={`arrow ${isOpen ? "open" : ""}`}>▾</span>
-									</>
-								)}
-							</button>
-
-							{((isExpanded && isOpen) || (!isExpanded && isHovered)) && (
-								<div className={`sidebar-submenu ${!isExpanded ? "collapsed-hover-submenu" : ""}`}>
-									{item.children.map((child) => (
-										<NavLink
-											key={child.path}
-											to={`/${tenant}/${child.path}`}
-											className={({ isActive }) => (isActive ? "active" : "")}
-											onClick={() => { if (mobileOpen) onClose(); }}
+			<SidebarContent>
+				<SidebarGroup>
+					<SidebarMenu>
+						{filteredSidebar.map((item) => {
+							const Icon = item.icon;
+							const fullPath = `/${tenant}/${item.path}`;
+							// Asosiy menyu active ekanligini tekshirish
+							const isActive = location.pathname === fullPath;
+							if (!item.children) {
+								return (
+									<SidebarMenuItem key={item.path}>
+										<SidebarMenuButton
+											asChild
+											tooltip={item.label}
+											isActive={isActive}
 										>
-											{child.label}
-										</NavLink>
-									))}
-								</div>
-							)}
-						</div>
-					);
-				})}
-			</nav>
-		</aside>
+											<NavLink
+												to={`/${tenant}/${item.path}`}
+												className={({ isActive }) =>
+													isActive
+														? "bg-primary/10 text-primary font-medium"
+														: ""
+												}
+											>
+												<Icon />
+												<span>{item.label}</span>
+											</NavLink>
+										</SidebarMenuButton>
+									</SidebarMenuItem>
+								);
+							}
+							const isChildActive = item.children.some(
+								(child) => location.pathname === `/${tenant}/${child.path}`,
+							);
+							return (
+								<Collapsible key={item.label} className="group/collapsible">
+									<SidebarMenuItem>
+										<CollapsibleTrigger asChild>
+											<SidebarMenuButton
+												tooltip={item.label}
+												isActive={isChildActive}
+											>
+												<Icon />
+												<span>{item.label}</span>
+												<ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
+											</SidebarMenuButton>
+										</CollapsibleTrigger>
+										<CollapsibleContent>
+											<SidebarMenuSub>
+												{item.children.map((child) => {
+													const childPath = `/${tenant}/${child.path}`;
+													const isSubActive = location.pathname === childPath;
+													return (
+														<SidebarMenuSubItem key={child.path}>
+															<SidebarMenuSubButton
+																asChild
+																isActive={isSubActive}
+															>
+																<NavLink
+																	to={`/${tenant}/${child.path}`}
+																	className={({ isActive }) =>
+																		isActive ? "text-primary font-bold" : ""
+																	}
+																>
+																	<span>{child.label}</span>
+																</NavLink>
+															</SidebarMenuSubButton>
+														</SidebarMenuSubItem>
+													);
+												})}
+											</SidebarMenuSub>
+										</CollapsibleContent>
+									</SidebarMenuItem>
+								</Collapsible>
+							);
+						})}
+					</SidebarMenu>
+				</SidebarGroup>
+			</SidebarContent>
+		</Sidebar>
 	);
 }

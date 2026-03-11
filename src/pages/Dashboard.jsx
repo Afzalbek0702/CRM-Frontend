@@ -4,45 +4,58 @@ import { useStudent } from "../services/student/useStudent.js";
 import { useGroups } from "../services/group/useGroups.js";
 import { useCourse } from "../services/course/useCourse.js";
 import { useNavigate, NavLink, useParams } from "react-router-dom";
-import { FaUsers, FaClock, FaBook, FaChalkboardTeacher, FaPhone, FaExclamationTriangle } from "react-icons/fa";
+import {
+	FaUsers,
+	FaClock,
+	FaBook,
+	FaChalkboardTeacher,
+	FaPhone,
+	FaExclamationTriangle,
+} from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
 import { useAuth } from "../context/authContext";
+import {
+	Table,
+	TableBody,
+	TableCaption,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table.jsx";
 export default function Dashboard() {
 	const navigate = useNavigate();
-	const { absentStudents, monthlyIncome, todayLessons, topDebtors, isLoading, error } = useDashboard();
+	const {
+		absentStudents,
+		monthlyIncome,
+		todayLessons,
+		topDebtors,
+		isLoading,
+		error,
+	} = useDashboard();
 	const handleRowClick = (groupId) => {
 		navigate(`/${tenant}/groups/${groupId}`);
 	};
 	const { user } = useAuth();
-	const { tenant } = useParams()
+	const { tenant } = useParams();
 	const { students } = useStudent();
 	const { groups } = useGroups();
-	// console.log(user);
-	// console.log(tenant);
-	
-	
-
 
 	return (
 		<>
 			<div className="dashboard-header">
-				<h1>
+				<h1 className="flex items-center text-2xl font-semibold">
 					<MdDashboard style={{ marginTop: "0px" }} /> Asosiy panel
 				</h1>
 				<p>
 					Xush kelibsiz
-					<span className="tooltip-wrapper">
-						<span className="text-special-part">
-							<NavLink to={`/${tenant}/profile`}>{user?.username}</NavLink>
-						</span>
-						<span className="text-special-part-title">
-							{user?.role}
-						</span>
+					<span className="text-(--primary-color) font-sans ml-0.5">
+						{user?.username}
 					</span>
 				</p>
 			</div>
-			{user?.role === "CEO" &&
-				<div className="dashboard-cards">
+			{user?.role === "CEO" && (
+				<div className="grid xl:grid-cols-4 items-center gap-6 md:grid-cols-2 mt-7.5">
 					<NavLink to={`/${tenant}/payments`}>
 						<StatsCards
 							data={monthlyIncome ? monthlyIncome[0]?.total_income : ""}
@@ -74,9 +87,9 @@ export default function Dashboard() {
 						/>
 					</NavLink>
 				</div>
-			}
-			{user?.role === "TEACHER" &&
-				<div className="dashboard-cards">
+			)}
+			{user?.role === "TEACHER" && (
+				<div className="grid xl:grid-cols-4 items-center gap-6 md:grid-cols-2 mt-7.5">
 					<NavLink to={`/${tenant}/groups`}>
 						<StatsCards
 							className="statcards"
@@ -108,52 +121,80 @@ export default function Dashboard() {
 							type={"Dars sifati"}
 						/>
 					</NavLink>
-
-
 				</div>
-
-
-			}
+			)}
 			{user?.role === "CEO" ? (
-				<div className="dashboard-content-wrapper">
-					<div className="dashboard-today-lesson absent-students">
+				<div className="flex gap-7.5">
+					<div className="max-w-150 w-full">
+						<h2>Bugungi darslar</h2>
+						<Table>
+							<TableCaption>Bugungi darslar</TableCaption>
+							<TableHeader className={"bg-(--primary-color)"}>
+								<TableRow>
+									<TableHead>
+										<FaUsers /> Guruh Nomi
+									</TableHead>
+									<TableHead>
+										<FaBook /> Kurs
+									</TableHead>
+									<TableHead>
+										<FaChalkboardTeacher /> O'qituvchi
+									</TableHead>
+									<TableHead>
+										<FaClock /> Dars Vaqti
+									</TableHead>
+								</TableRow>
+							</TableHeader>
+							<TableBody>
+								{todayLessons?.map((lesson) => (
+									<TableRow
+										key={lesson.id}
+										onClick={() => handleRowClick(lesson.id)}
+										style={{ cursor: "pointer" }}
+									>
+										<TableCell>{lesson.group_name}</TableCell>
+										<TableCell>{lesson.course_type}</TableCell>
+										<TableCell>{lesson.teacher_name}</TableCell>
+										<TableCell>{lesson.lesson_time}</TableCell>
+									</TableRow>
+								))}
+							</TableBody>
+						</Table>
+					</div>
+
+					<div className="dashboard-today-lesson absent-students flex-1">
 						<h2>
 							<FaExclamationTriangle /> Bugun kelmagan o'quvchilar
 						</h2>
 
-
 						<div className="table-container">
-							{isLoading ? (
-								<p>Yuklanmoqda...</p>
-							) : error ? (
-								<p>Xatolik yuz berdi</p>
-							) : students && students.length < 1 ? (
+							{students && students.length < 1 ? (
 								<p>Studentlar yo'q</p>
 							) : absentStudents && absentStudents.length > 0 ? (
-								<table>
-									<thead>
-										<tr>
-											<th>
+								<Table>
+									<TableHead>
+										<TableRow>
+											<TableHeader>
 												<FaUsers /> O'quvchi Nomi
-											</th>
-											<th>
+											</TableHeader>
+											<TableHeader>
 												<FaUsers /> Guruh
-											</th>
-											<th>
+											</TableHeader>
+											<TableHeader>
 												<FaPhone /> Telefon
-											</th>
-										</tr>
-									</thead>
-									<tbody>
+											</TableHeader>
+										</TableRow>
+									</TableHead>
+									<TableBody>
 										{absentStudents.map((student) => (
-											<tr
+											<TableRow
 												key={student.student_id}
 												onClick={() => handleRowClick(student.group_id)}
 												style={{ cursor: "pointer" }}
 											>
-												<td>{student.full_name}</td>
-												<td>{student.group_name}</td>
-												<td
+												<TableCell>{student.full_name}</TableCell>
+												<TableCell>{student.group_name}</TableCell>
+												<TableCell
 													onClick={(e) => {
 														e.stopPropagation();
 														navigator.clipboard.writeText(student.phone);
@@ -169,62 +210,14 @@ export default function Dashboard() {
 													className="copy-phone"
 												>
 													{student.phone}
-												</td>
-											</tr>
+												</TableCell>
+											</TableRow>
 										))}
-									</tbody>
-								</table>
+									</TableBody>
+								</Table>
 							) : (
 								<p>Bugun hamma o'quvchilar kelib qolipdi! 🎉</p>
 							)}
-						</div>
-					</div>
-
-					<div className="dashboard-today-lesson today-lessons">
-						<h2>Bugungi darslar</h2>
-						<div className="table-container">
-							{isLoading ? (
-								<p>Yuklanmoqda...</p>
-							) : error ? (
-								<p>Xatolik yuz berdi</p>
-							) : groups && groups.length < 1 ? (
-								<p>Guruhlar yo'q</p>
-							) :
-
-								(
-									<table style={{ maxWidth: "600px" }}>
-										<thead>
-											<tr>
-												<th>
-													<FaUsers /> Guruh Nomi
-												</th>
-												<th>
-													<FaBook /> Kurs
-												</th>
-												<th>
-													<FaChalkboardTeacher /> O'qituvchi
-												</th>
-												<th>
-													<FaClock /> Dars Vaqti
-												</th>
-											</tr>
-										</thead>
-										<tbody>
-											{todayLessons?.map((lesson) => (
-												<tr
-													key={lesson.id}
-													onClick={() => handleRowClick(lesson.id)}
-													style={{ cursor: "pointer" }}
-												>
-													<td>{lesson.group_name}</td>
-													<td>{lesson.course_type}</td>
-													<td>{lesson.teacher_name}</td>
-													<td>{lesson.lesson_time}</td>
-												</tr>
-											))}
-										</tbody>
-									</table>
-								)}
 						</div>
 					</div>
 				</div>
@@ -235,7 +228,6 @@ export default function Dashboard() {
 							<FaExclamationTriangle /> Bugun kelmagan o'quvchilaringiz
 						</h2>
 
-
 						<div className="table-container">
 							{isLoading ? (
 								<p>Yuklanmoqda...</p>
@@ -244,30 +236,30 @@ export default function Dashboard() {
 							) : students && students.length < 1 ? (
 								<p>Studentlar yo'q</p>
 							) : absentStudents && absentStudents.length > 0 ? (
-								<table>
-									<thead>
-										<tr>
-											<th>
+								<Table>
+									<TableHead>
+										<TableRow>
+											<TableHead>
 												<FaUsers /> O'quvchi Nomi
-											</th>
-											<th>
+											</TableHead>
+											<TableHead>
 												<FaUsers /> Guruh
-											</th>
-											<th>
+											</TableHead>
+											<TableHead>
 												<FaPhone /> Telefon
-											</th>
-										</tr>
-									</thead>
-									<tbody>
+											</TableHead>
+										</TableRow>
+									</TableHead>
+									<TableBody>
 										{absentStudents.map((student) => (
-											<tr
+											<TableRow
 												key={student.student_id}
 												onClick={() => handleRowClick(student.group_id)}
 												style={{ cursor: "pointer" }}
 											>
-												<td>{student.full_name}</td>
-												<td>{student.group_name}</td>
-												<td
+												<TableCell>{student.full_name}</TableCell>
+												<TableCell>{student.group_name}</TableCell>
+												<TableCell
 													onClick={(e) => {
 														e.stopPropagation();
 														navigator.clipboard.writeText(student.phone);
@@ -283,11 +275,11 @@ export default function Dashboard() {
 													className="copy-phone"
 												>
 													{student.phone}
-												</td>
-											</tr>
+												</TableCell>
+											</TableRow>
 										))}
-									</tbody>
-								</table>
+									</TableBody>
+								</Table>
 							) : (
 								<p>Bugun hamma o'quvchilaringiz kelib qolipdi! 🎉</p>
 							)}
@@ -303,42 +295,42 @@ export default function Dashboard() {
 								<p>Xatolik yuz berdi</p>
 							) : groups && groups.length < 1 ? (
 								<p>Guruhlar yo'q</p>
-							) :
-
-								(
-									<table style={{ maxWidth: "600px" }}>
-										<thead>
-											<tr>
-												<th>
-													<FaUsers /> Guruh Nomi
-												</th>
-												<th>
-													<FaBook /> Kurs
-												</th>
-												<th>
-													<FaChalkboardTeacher /> O'qituvchi
-												</th>
-												<th>
-													<FaClock /> Dars Vaqti
-												</th>
-											</tr>
-										</thead>
-										<tbody>
-											{todayLessons?.map((lesson) => (
-												<tr
-													key={lesson.id}
-													onClick={() => handleRowClick(lesson.id)}
-													style={{ cursor: "pointer" }}
-												>
-													<td>{lesson.group_name}</td>
-													<td>{courseMap[lesson.course_type] ?? "Noma'lum"}</td>
-													<td>{lesson.teacher_name}</td>
-													<td>{lesson.lesson_time}</td>
-												</tr>
-											))}
-										</tbody>
-									</table>
-								)}
+							) : (
+								<Table style={{ maxWidth: "600px" }}>
+									<TableHead>
+										<TableRow>
+											<TableHead>
+												<FaUsers /> Guruh Nomi
+											</TableHead>
+											<TableHead>
+												<FaBook /> Kurs
+											</TableHead>
+											<TableHead>
+												<FaChalkboardTeacher /> O'qituvchi
+											</TableHead>
+											<TableHead>
+												<FaClock /> Dars Vaqti
+											</TableHead>
+										</TableRow>
+									</TableHead>
+									<TableBody>
+										{todayLessons?.map((lesson) => (
+											<TableRow
+												key={lesson.id}
+												onClick={() => handleRowClick(lesson.id)}
+												style={{ cursor: "pointer" }}
+											>
+												<TableCell>{lesson.group_name}</TableCell>
+												<TableCell>
+													{courseMap[lesson.course_type] ?? "Noma'lum"}
+												</TableCell>
+												<TableCell>{lesson.teacher_name}</TableCell>
+												<TableCell>{lesson.lesson_time}</TableCell>
+											</TableRow>
+										))}
+									</TableBody>
+								</Table>
+							)}
 						</div>
 					</div>
 				</div>
