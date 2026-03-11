@@ -100,8 +100,10 @@ export default function Leads() {
 						onChange={(e) => setSearchTerm(e.target.value)}
 					/>
 				</div>
-				
-				<Button onClick={handleCreateLead} className="cursor-pointer px-6 py-3 text-[12px] text-(--background-color) bg-(--primary-color) text-nowrap">
+
+				<Button onClick={handleCreateLead}
+					className="cursor-pointer p-7 text-[12px] text-(--background-color) bg-(--primary-color) whitespace-nowrap"
+				>
 					<FaPlus /> Lid qo'shish
 				</Button>
 			</div>
