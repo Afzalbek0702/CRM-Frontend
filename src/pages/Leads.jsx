@@ -84,13 +84,13 @@ export default function Leads() {
 
 	return (
 		<div className="table-container">
-			<button className="btn1" onClick={goBack}>
+			<button className="btn btn-default" onClick={goBack}>
 				← Ortga
 			</button>
 			<h2>
 				<FaThList /> Lidlar
 			</h2>
-			<div className="table-actions">
+			<div className="table-actions mb-[30px]">
 				<div className="search-box">
 					<FaSearch />
 					<input
@@ -100,10 +100,12 @@ export default function Leads() {
 						onChange={(e) => setSearchTerm(e.target.value)}
 					/>
 				</div>
-				
-				<Button onClick={handleCreateLead} className="cursor-pointer px-6 py-3 text-[12px] text-BgColor bg-primaryF text-nowrap">
+
+				<button onClick={handleCreateLead}
+					className="btn btn-default"
+				>
 					<FaPlus /> Lid qo'shish
-				</Button>
+				</button>
 			</div>
 
 			{leads && leads.length < 1 ? (

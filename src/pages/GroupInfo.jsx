@@ -139,7 +139,7 @@ export default function GuruhlarInfo() {
 				width: "100%",
 			}}
 		>
-			<button className="btn1" onClick={goBack}>
+			<button className="btn btn-default" onClick={goBack}>
 				← Ortga
 			</button>
 

@@ -95,7 +95,7 @@ export default function Settings() {
 
     return (
         <div className="table-container">
-            <button className="btn1" onClick={goBack}>
+            <button className="btn btn-default" onClick={goBack}>
                 ← Ortga
             </button>
             <h1>Admin Sozlamalari</h1>
@@ -103,7 +103,7 @@ export default function Settings() {
             <h2>Kurslar</h2>
 
             <div style={{ marginBottom: "20px" }}>
-                <button className="btn1 text-nowrap" onClick={openCreateModal}>
+                <button className="btn btn-default text-nowrap" onClick={openCreateModal}>
                     <FaPlus /> Kurs qo'shish
                 </button>
             </div>
@@ -186,7 +186,7 @@ export default function Settings() {
             <h2>Xonalar</h2>
 
             <div style={{ marginBottom: "20px" }}>
-                <button className="btn1 text-nowrap" onClick={openCreateRoom}>
+                <button className="btn btn-default text-nowrap" onClick={openCreateRoom}>
                     <FaPlus /> Xona qo'shish
                 </button>
             </div>

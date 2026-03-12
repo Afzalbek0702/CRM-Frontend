@@ -66,13 +66,13 @@ export default function Students() {
 
 	return (
 		<div className="table-container">
-			<button className="btn1" onClick={goBack}>
+			<button className="btn btn-default" onClick={goBack}>
 				← Ortga
 			</button>
 			<h2>
 				<FaUserGraduate /> O'quvchilar
 			</h2>
-			<div className="table-actions">
+			<div className="table-actions mb-[30px]">
 				<div className="filters">
 					<select
 						value={selectedTeacher}
@@ -108,7 +108,7 @@ export default function Students() {
 					/>
 				</div>
 				<button
-					className="btn1 text-nowrap"
+					className="btn btn-default text-nowrap"
 					onClick={() => {
 						setEditingStudent(null);
 						setIsModalOpen(true);

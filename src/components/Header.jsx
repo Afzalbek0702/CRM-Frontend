@@ -105,29 +105,15 @@ export default function Header({ isExpanded, onToggle, mobileOpen }) {
 	);
 
 	return (
-		<header className="fixed top-0 left-0 z-50 flex h-17.5 w-full items-center justify-between bg-BgColor px-5">
-			{/* LEFT */}
+		<header className="bg-sidebar fixed top-0 left-0 z-50 flex h-17.5 w-full items-center justify-between px-5">
 			<div className="flex items-center gap-3">
-				{/* <Button
-					onClick={onToggle}
-					aria-label="Toggle sidebar"
-					title={isExpanded ? "Yopish" : "Ochish"}
-					className="flex h-9 w-9 items-center justify-center rounded-md"
-				>
-					<FaChevronLeft
-						className={`transition-transform duration-300 ${
-							isExpanded || mobileOpen ? "rotate-0" : "rotate-180"
-						}`}
-					/>
-				</Button> */}
-				<SidebarTrigger className="-ml-1" />
+				<SidebarTrigger className="-ml-3" />
 				<h5 className="flex items-center gap-2 font-semibold">
 					<img src="/logo.jpg" alt="Logo" width={21} height={21} />
 					Data space CRM
 				</h5>
 			</div>
 
-			{/* SEARCH */}
 			{user?.role === "CEO" && (
 				<div className="relative flex-1 max-w-125 w-full my-5" ref={searchRef}>
 					<div className="relative flex items-center gap-2.5 px-2 py-0.5 rounded-md border border-[#ffd00c33] bg-[#ffffff0d]">

@@ -35,7 +35,7 @@ export default function Payments() {
 
 	return (
 		<div className="table-container">
-			<button className="btn1" onClick={goBack}>
+			<button className="btn btn-default" onClick={goBack}>
 				← Ortga
 			</button>
 			<h2 className="upperCaseHeader">
@@ -46,7 +46,7 @@ export default function Payments() {
 			</h2>
 
 			{category === "debtors" && (
-				<div className="table-actions">
+				<div className="table-actions mb-[30px]">
 					<div className="search-box">
 						<FaSearch />
 						<input

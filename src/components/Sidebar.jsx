@@ -17,6 +17,7 @@ import {
 	SidebarMenuSub,
 	SidebarMenuSubItem,
 	SidebarMenuSubButton,
+   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import {
 	Collapsible,
@@ -32,7 +33,7 @@ export function AppSidebar() {
 
 	return (
 		<Sidebar collapsible="icon">
-			<SidebarHeader className="h-16 flex items-center px-4 border-b">
+			{/* <SidebarHeader className="h-16 mt-20 flex items-center px-4 border-b">
 				<div className="flex items-center gap-2 font-bold">
 					<div className="bg-primary text-primary-foreground p-1 rounded">
 						<LayoutDashboard size={20} />
@@ -41,9 +42,10 @@ export function AppSidebar() {
 						CRM
 					</span>
 				</div>
-			</SidebarHeader>
+			</SidebarHeader> */}
 
-			<SidebarContent>
+			<SidebarContent className={"mt-20"}>
+				{/* <SidebarTrigger className="ml-2" /> */}
 				<SidebarGroup>
 					<SidebarMenu>
 						{filteredSidebar.map((item) => {
@@ -63,7 +65,7 @@ export function AppSidebar() {
 												to={`/${tenant}/${item.path}`}
 												className={({ isActive }) =>
 													isActive
-														? "bg-primary/10 text-primary font-medium"
+														? "font-medium"
 														: ""
 												}
 											>
