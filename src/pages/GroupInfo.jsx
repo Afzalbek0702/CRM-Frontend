@@ -10,7 +10,6 @@ import { goBack } from "../utils/navigate";
 import PaymentModal from "../components/PaymentModal";
 import { FaArrowLeft, FaEllipsisV, FaSearch } from "react-icons/fa";
 
-
 export default function GuruhlarInfo() {
 	const { id, tenant } = useParams();
 	const navigate = useNavigate();
@@ -38,7 +37,7 @@ export default function GuruhlarInfo() {
 	const [showPaymentModal, setShowPaymentModal] = useState(false);
 	const [selectedStudentForPayment, setSelectedStudentForPayment] =
 		useState(null);
-	const [month, setMonth] = useState((new Date().toISOString().slice(0, 7)))
+	const [month, setMonth] = useState(new Date().toISOString().slice(0, 7));
 	const { attendance, setAttendance } = useAttendance({
 		group_id: id,
 		month: month,
@@ -298,7 +297,7 @@ export default function GuruhlarInfo() {
 									<thead>
 										<tr
 											style={{
-												backgroundColor: "var(--primary-color)",
+												backgroundColor: "var(--primary)",
 												position: "sticky",
 												top: 0,
 											}}
@@ -377,10 +376,7 @@ export default function GuruhlarInfo() {
 						}}
 					>
 						<h3 style={{ color: "white", marginBottom: "15px" }}>Davomat</h3>
-						<select
-							value={month}
-							onChange={(e) => setMonth(e.target.value)}
-						>
+						<select value={month} onChange={(e) => setMonth(e.target.value)}>
 							{months.map((m) => (
 								<option key={m.value} value={m.value}>
 									{m.label}

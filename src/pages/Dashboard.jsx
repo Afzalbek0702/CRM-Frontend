@@ -2,7 +2,6 @@ import { useDashboard } from "../services/dashboard/useDashboard.js";
 import StatsCards from "../components/Statscards";
 import { useStudent } from "../services/student/useStudent.js";
 import { useGroups } from "../services/group/useGroups.js";
-import { useCourse } from "../services/course/useCourse.js";
 import { useNavigate, NavLink, useParams } from "react-router-dom";
 import {
 	FaUsers,
@@ -23,6 +22,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table.jsx";
+import { BsFillPeopleFill } from "react-icons/bs";
 export default function Dashboard() {
 	const navigate = useNavigate();
 	const {
@@ -43,13 +43,13 @@ export default function Dashboard() {
 
 	return (
 		<>
-			<div className="dashboard-header">
+			<div>
 				<h1 className="flex items-center text-2xl font-semibold">
 					<MdDashboard style={{ marginTop: "0px" }} /> Asosiy panel
 				</h1>
 				<p>
-					Xush kelibsiz
-					<span className="text-(--primary-color) font-sans ml-0.5">
+					Xush kelibsiz{" "}
+					<span className="text-primary font-sans ml-0.5">
 						{user?.username}
 					</span>
 				</p>
@@ -64,27 +64,15 @@ export default function Dashboard() {
 					</NavLink>
 
 					<NavLink to={`/${tenant}/payments/debtors`}>
-						<StatsCards
-							className="statcards"
-							data={topDebtors?.length}
-							type={"Qarzdor"}
-						/>
+						<StatsCards data={topDebtors?.length} type={"Qarzdor"} />
 					</NavLink>
 
 					<NavLink to={`/${tenant}/students`}>
-						<StatsCards
-							className="statcards"
-							data={students?.length}
-							type={"O'quvchi"}
-						/>
+						<StatsCards data={students?.length} type={"O'quvchi"} />
 					</NavLink>
 
 					<NavLink to={`/${tenant}/groups`}>
-						<StatsCards
-							className="statcards"
-							data={groups?.length}
-							type={"Guruh"}
-						/>
+						<StatsCards data={groups?.length} type={"Guruh"} />
 					</NavLink>
 				</div>
 			)}
@@ -92,7 +80,6 @@ export default function Dashboard() {
 				<div className="grid xl:grid-cols-4 items-center gap-6 md:grid-cols-2 mt-7.5">
 					<NavLink to={`/${tenant}/groups`}>
 						<StatsCards
-							className="statcards"
 							// data={students?.length} bilmadim teacherni dashboardiga ham biror nimalar oylab topelik
 							type={"Davomat olinmagan darslar"}
 						/>
@@ -100,7 +87,6 @@ export default function Dashboard() {
 
 					<NavLink to={`/${tenant}/groups`}>
 						<StatsCards
-							className="statcards"
 							// data={students?.length}
 							type={"Kelmagan o'quvchilar"}
 						/>
@@ -108,7 +94,6 @@ export default function Dashboard() {
 
 					<NavLink to={`/${tenant}/groups`}>
 						<StatsCards
-							className="statcards"
 							// data={students?.length}
 							type={"Oylik tushum"}
 						/>
@@ -116,7 +101,6 @@ export default function Dashboard() {
 
 					<NavLink to={`/${tenant}/groups`}>
 						<StatsCards
-							className="statcards"
 							// data={students?.length}
 							type={"Dars sifati"}
 						/>
@@ -129,8 +113,8 @@ export default function Dashboard() {
 						<h2>Bugungi darslar</h2>
 						<Table>
 							<TableCaption>Bugungi darslar</TableCaption>
-							<TableHeader className={"bg-(--primary-color)"}>
-								<TableRow>
+							<TableHeader className={"bg-"}>
+								<TableRow className={"text-black"}>
 									<TableHead>
 										<FaUsers /> Guruh Nomi
 									</TableHead>
@@ -172,8 +156,8 @@ export default function Dashboard() {
 								<p>Studentlar yo'q</p>
 							) : absentStudents && absentStudents.length > 0 ? (
 								<Table>
-									<TableHead>
-										<TableRow>
+									<TableHead className={"bg-primary"}>
+										<TableRow className={"bg-primary"}>
 											<TableHeader>
 												<FaUsers /> O'quvchi Nomi
 											</TableHeader>

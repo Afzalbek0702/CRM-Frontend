@@ -9,6 +9,7 @@ import { useAuth } from "../context/authContext";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { SidebarTrigger } from "./ui/sidebar";
+import { ThemeToggle } from "./ThemeToggle";
 
 export default function Header({ isExpanded, onToggle, mobileOpen }) {
 	const [searchTerm, setSearchTerm] = useState("");
@@ -105,7 +106,7 @@ export default function Header({ isExpanded, onToggle, mobileOpen }) {
 	);
 
 	return (
-		<header className="bg-sidebar fixed top-0 left-0 z-50 flex h-17.5 w-full items-center justify-between px-5">
+		<header className="bg-secondary fixed top-0 left-0 z-50 flex h-17.5 w-full items-center justify-between px-5">
 			<div className="flex items-center gap-3">
 				<SidebarTrigger className="-ml-3" />
 				<h5 className="flex items-center gap-2 font-semibold">
@@ -149,7 +150,7 @@ export default function Header({ isExpanded, onToggle, mobileOpen }) {
 						<div className="absolute max-h-105 top-12 left-0 right-0 overflow-y-auto rounded-lg border border-[#2c230e] bg-BgColor">
 							{searchResults.students.length > 0 && (
 								<div className="py-2 w-full">
-									<div className="px-3 py-1 text-xs font-semibold text-(--primary-color)">
+									<div className="px-3 py-1 text-xs font-semibold text-primary">
 										O'quvchilar
 									</div>
 
@@ -168,7 +169,7 @@ export default function Header({ isExpanded, onToggle, mobileOpen }) {
 
 							{searchResults.groups.length > 0 && (
 								<div className="py-2 w-full">
-									<div className="px-3 py-1 text-xs font-semibold text-(--primary-color)">
+									<div className="px-3 py-1 text-xs font-semibold text-primary">
 										Guruhlar
 									</div>
 
@@ -176,7 +177,7 @@ export default function Header({ isExpanded, onToggle, mobileOpen }) {
 										<button
 											key={`group-${group.id}`}
 											onClick={() => handleResultClick("group", group)}
-											className="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-(--hover-color) hover:text-(--primary-color)"
+											className="flex w-full items-center gap-2 px-3 py-2 text-left hover:text-primary"
 										>
 											👥 {group.name}
 										</button>
@@ -190,6 +191,9 @@ export default function Header({ isExpanded, onToggle, mobileOpen }) {
 
 			{/* RIGHT */}
 			<div className="flex items-center">
+				<div className="flex items-center gap-3 mr-2">
+					<ThemeToggle />
+				</div>
 				<NavLink to={`/${tenant}/profile`}>
 					<img
 						src="/logo.jpg"

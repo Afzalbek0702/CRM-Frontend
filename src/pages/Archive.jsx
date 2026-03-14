@@ -111,7 +111,7 @@ export default function Archive() {
 							<SelectTrigger>
 								<SelectValue placeholder="Hamma O'qtuvchilar" />
 							</SelectTrigger>
-							<SelectContent>
+							<SelectContent position="popper">
 								<SelectGroup>
 									{teachers.map((t) => (
 										<SelectItem key={t.id} value={t.id}>
@@ -128,7 +128,7 @@ export default function Archive() {
 							<SelectTrigger>
 								<SelectValue placeholder="Hamma guruhlar" />
 							</SelectTrigger>
-							<SelectContent>
+							<SelectContent position="popper">
 								<SelectGroup>
 									{archivedGroups.map((g) => (
 										<SelectItem key={g.id} value={g.id}>
@@ -145,7 +145,7 @@ export default function Archive() {
 							<SelectTrigger>
 								<SelectValue placeholder="Hamma guruhlar" />
 							</SelectTrigger>
-							<SelectContent>
+							<SelectContent position="popper">
 								<SelectGroup>
 									{archivedGroups.map((g) => (
 										<SelectItem key={g.id} value={g.id}>

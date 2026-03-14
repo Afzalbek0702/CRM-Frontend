@@ -33,25 +33,14 @@ export function AppSidebar() {
 
 	return (
 		<Sidebar collapsible="icon">
-			{/* <SidebarHeader className="h-16 mt-20 flex items-center px-4 border-b">
-				<div className="flex items-center gap-2 font-bold">
-					<div className="bg-primary text-primary-foreground p-1 rounded">
-						<LayoutDashboard size={20} />
-					</div>
-					<span className="group-data-[collapsible=icon]:hidden text-xl">
-						CRM
-					</span>
-				</div>
-			</SidebarHeader> */}
+
 
 			<SidebarContent className={"mt-20"}>
-				{/* <SidebarTrigger className="ml-2" /> */}
 				<SidebarGroup>
 					<SidebarMenu>
 						{filteredSidebar.map((item) => {
 							const Icon = item.icon;
 							const fullPath = `/${tenant}/${item.path}`;
-							// Asosiy menyu active ekanligini tekshirish
 							const isActive = location.pathname === fullPath;
 							if (!item.children) {
 								return (
@@ -60,13 +49,12 @@ export function AppSidebar() {
 											asChild
 											tooltip={item.label}
 											isActive={isActive}
+											className={"rounded-none h-10 px-2.5 py-3 hover:bg-card"}
 										>
 											<NavLink
 												to={`/${tenant}/${item.path}`}
 												className={({ isActive }) =>
-													isActive
-														? "font-medium"
-														: ""
+													isActive ? "font-medium" : ""
 												}
 											>
 												<Icon />
@@ -86,10 +74,13 @@ export function AppSidebar() {
 											<SidebarMenuButton
 												tooltip={item.label}
 												isActive={isChildActive}
+												className={
+													"rounded-none h-10 px-2.5 py-3 hover:bg-card"
+												}
 											>
 												<Icon />
 												<span>{item.label}</span>
-												<ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
+												<ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90 hover:bg-card" />
 											</SidebarMenuButton>
 										</CollapsibleTrigger>
 										<CollapsibleContent>
@@ -102,6 +93,9 @@ export function AppSidebar() {
 															<SidebarMenuSubButton
 																asChild
 																isActive={isSubActive}
+																className={
+																	"rounded-none h-10 px-2.5 py-3 hover:bg-card"
+																}
 															>
 																<NavLink
 																	to={`/${tenant}/${child.path}`}
