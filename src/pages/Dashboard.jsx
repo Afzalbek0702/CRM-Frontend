@@ -48,7 +48,7 @@ export default function Dashboard() {
 					<MdDashboard style={{ marginTop: "0px" }} /> Asosiy panel
 				</h1>
 				<p>
-					Xush kelibsiz{" "}
+					Xush kelibsiz,{" "}
 					<span className="text-primary font-sans ml-0.5">
 						{user?.username}
 					</span>
@@ -56,22 +56,22 @@ export default function Dashboard() {
 			</div>
 			{user?.role === "CEO" && (
 				<div className="grid xl:grid-cols-4 items-center gap-6 md:grid-cols-2 mt-7.5">
-					<NavLink to={`/${tenant}/payments`}>
+					<NavLink to={`/${tenant}/payments`} className={"w-60"}>
 						<StatsCards
 							data={monthlyIncome ? monthlyIncome[0]?.total_income : ""}
 							type={"Oylik Tushum"}
 						/>
 					</NavLink>
 
-					<NavLink to={`/${tenant}/payments/debtors`}>
+					<NavLink to={`/${tenant}/payments/debtors`} className={"w-60"}>
 						<StatsCards data={topDebtors?.length} type={"Qarzdor"} />
 					</NavLink>
 
-					<NavLink to={`/${tenant}/students`}>
+					<NavLink to={`/${tenant}/students`} className={"w-60"}>
 						<StatsCards data={students?.length} type={"O'quvchi"} />
 					</NavLink>
 
-					<NavLink to={`/${tenant}/groups`}>
+					<NavLink to={`/${tenant}/groups`} className={"w-60"}>
 						<StatsCards data={groups?.length} type={"Guruh"} />
 					</NavLink>
 				</div>
@@ -108,47 +108,51 @@ export default function Dashboard() {
 				</div>
 			)}
 			{user?.role === "CEO" ? (
-				<div className="flex gap-7.5">
+				<div className="flex gap-7.5 mt-5">
 					<div className="max-w-150 w-full">
-						<h2>Bugungi darslar</h2>
-						<Table>
-							<TableCaption>Bugungi darslar</TableCaption>
-							<TableHeader className={"bg-"}>
-								<TableRow className={"text-black"}>
-									<TableHead>
-										<FaUsers /> Guruh Nomi
-									</TableHead>
-									<TableHead>
-										<FaBook /> Kurs
-									</TableHead>
-									<TableHead>
-										<FaChalkboardTeacher /> O'qituvchi
-									</TableHead>
-									<TableHead>
-										<FaClock /> Dars Vaqti
-									</TableHead>
-								</TableRow>
-							</TableHeader>
-							<TableBody>
-								{todayLessons?.map((lesson) => (
-									<TableRow
-										key={lesson.id}
-										onClick={() => handleRowClick(lesson.id)}
-										style={{ cursor: "pointer" }}
-									>
-										<TableCell>{lesson.group_name}</TableCell>
-										<TableCell>{lesson.course_type}</TableCell>
-										<TableCell>{lesson.teacher_name}</TableCell>
-										<TableCell>{lesson.lesson_time}</TableCell>
+						<h2 className="border-l-2 border-primary pl-2.5 mb-5">Bugungi darslar</h2>
+						{todayLessons && todayLessons.length < 1 ? (
+							<p>Darslar yo'q</p>
+						) : (
+							<Table>
+								<TableCaption>Bugungi darslar</TableCaption>
+								<TableHeader className={"bg-"}>
+									<TableRow className={"text-black"}>
+										<TableHead>
+											<FaUsers /> Guruh Nomi
+										</TableHead>
+										<TableHead>
+											<FaBook /> Kurs
+										</TableHead>
+										<TableHead>
+											<FaChalkboardTeacher /> O'qituvchi
+										</TableHead>
+										<TableHead>
+											<FaClock /> Dars Vaqti
+										</TableHead>
 									</TableRow>
-								))}
-							</TableBody>
-						</Table>
+								</TableHeader>
+								<TableBody>
+									{todayLessons?.map((lesson) => (
+										<TableRow
+											key={lesson.id}
+											onClick={() => handleRowClick(lesson.id)}
+											style={{ cursor: "pointer" }}
+										>
+											<TableCell>{lesson.group_name}</TableCell>
+											<TableCell>{lesson.course_type}</TableCell>
+											<TableCell>{lesson.teacher_name}</TableCell>
+											<TableCell>{lesson.lesson_time}</TableCell>
+										</TableRow>
+									))}
+								</TableBody>
+							</Table>
+						)}
 					</div>
 
 					<div className="dashboard-today-lesson absent-students flex-1">
-						<h2>
-							<FaExclamationTriangle /> Bugun kelmagan o'quvchilar
+						<h2 className="border-l-2 border-primary pl-2.5 mb-5">
+							Bugun kelmagan o'quvchilar
 						</h2>
 
 						<div className="table-container">

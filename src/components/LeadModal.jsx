@@ -145,10 +145,10 @@ export default function LeadModal({ isOpen, onClose, onSubmit, initialData }) {
                     </div>
 
                     <div className="panel-buttons">
-                        <button type="button" className="btn-cancel" onClick={onClose}>
+                        <button type="button" className="btn btn-cancel" onClick={onClose}>
                             <FaTimes /> Bekor qilish
                         </button>
-                        <button type="submit" className="btn-submit">
+                        <button type="submit" className="btn btn-default flex justify-center">
                             {initialData ? (
                                 <>
                                     <FaSave /> Saqlash

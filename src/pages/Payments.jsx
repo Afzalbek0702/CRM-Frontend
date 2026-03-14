@@ -35,7 +35,7 @@ export default function Payments() {
 
 	return (
 		<div className="table-container">
-			<button className="btn btn-default" onClick={goBack}>
+			<button className="btn btn-default bg-primary " onClick={goBack}>
 				← Ortga
 			</button>
 			<h2 className="upperCaseHeader">

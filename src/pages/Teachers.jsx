@@ -43,7 +43,7 @@ export default function Teachers() {
 
 	return (
 		<div className="table-container">
-			<button className="btn btn-default" onClick={goBack}>
+			<button className="btn btn-default bg-primary " onClick={goBack}>
 				← Ortga
 			</button>
 			<h2>
@@ -60,7 +60,7 @@ export default function Teachers() {
 					/>
 				</div>
 				<button
-					className="btn btn-default text-nowrap"
+					className="btn btn-default bg-primary  text-nowrap"
 					onClick={() => {
 						setEditingTeacher(null);
 						setIsModalOpen(true);

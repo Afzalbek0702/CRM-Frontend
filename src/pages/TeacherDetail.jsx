@@ -40,7 +40,7 @@ export default function TeacherDetail() {
 
 	return (
 		<div className="table-container">
-			<button className="btn btn-default" onClick={goBack}>
+			<button className="btn btn-default bg-primary " onClick={goBack}>
 				← Ortga
 			</button>
 

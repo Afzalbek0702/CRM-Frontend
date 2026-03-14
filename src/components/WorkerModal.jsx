@@ -215,11 +215,11 @@ export default function WorkerModal({ isOpen, onClose, onSubmit, initialData }) 
 					</div>
 
 					<div className="panel-buttons">
-						<button type="button" className="btn-cancel" onClick={onClose}>
+						<button type="button" className="btn btn-cancel" onClick={onClose}>
 							Bekor qilish
 						</button>
 
-						<button type="submit" className="btn-submit">
+						<button type="submit" className="btn btn-default flex justify-center">
 							<FaSave /> Saqlash
 						</button>
 					</div>

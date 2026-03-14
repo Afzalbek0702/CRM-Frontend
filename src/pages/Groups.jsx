@@ -144,8 +144,9 @@ export default function Groups() {
 
 	return (
 		<div className="table-container">
-			<button className="btn btn-default" onClick={goBack}>
+			<button className="btn btn-default bg-primary " onClick={goBack}>
 				← Ortga
+				{/* TEMPORARY_SOLUTIONS */}
 			</button>
 			<h2>
 				<FaUsers /> Guruhlar
@@ -160,7 +161,7 @@ export default function Groups() {
 						onChange={(e) => setSearchTerm(e.target.value)}
 					/>
 				</div>
-				<button className="btn btn-default text-nowrap" onClick={handleCreate}>
+				<button className="btn btn-default bg-primary  text-nowrap" onClick={handleCreate}>
 					<FaPlus /> Guruh yaratish
 				</button>
 			</div>

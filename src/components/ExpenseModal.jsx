@@ -138,13 +138,13 @@ export default function ExpenseModal({
           <div className="panel-buttons">
             <button
               type="button"
-              className="btn-cancel"
+              className="btn btn-cancel"
               onClick={onClose}
             >
               <FaTimes /> Bekor qilish
             </button>
 
-            <button type="submit" className="btn-submit">
+            <button type="submit" className="btn btn-default flex justify-center">
               {initialData ? (
                 <>
                   <FaEdit /> Saqlash

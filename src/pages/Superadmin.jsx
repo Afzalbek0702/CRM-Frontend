@@ -31,7 +31,7 @@ function Superadmin() {
 
 	return (
 		<div className="login-container">
-			<button className="btn btn-default" onClick={goBack}>
+			<button className="btn btn-default bg-primary " onClick={goBack}>
 				← Ortga
 			</button>
 			<div className="login-card">

@@ -62,12 +62,12 @@ export default function AddToGroupModal({ isOpen, onClose, onConfirm, initialGro
 					</div>
 
 					<div className="panel-buttons">
-						<button type="button" className="btn-cancel" onClick={onClose}>
+						<button type="button" className="btn btn-cancel" onClick={onClose}>
 							<FaTimes /> Bekor qilish
 						</button>
 						<button
 							type="button"
-							className="btn-submit"
+							className="btn btn-default flex justify-center"
 							onClick={handleConfirm}
 						>
 							<FaCheck /> Qo'shish

@@ -187,15 +187,14 @@ body {
 
 .filters select {
 	padding: 8px 12px;
-	border: 1px solid #ddd;
 	border-radius: 6px;
 	font-size: 14px;
-	background-color: white;
 	cursor: pointer;
 	font-family: var(--font-family);
 	background-color: var(--primary);
-	border: 1px solid var(--primary);
 	outline: none;
+	color: black; 
+	/* TEMPORARY_SOLUTIONS */
 }
 
 .filters select:hover {
@@ -602,16 +601,6 @@ body {
 	}
 }
 
-.dashboard-today-lesson {
-	margin-top: 50px;
-}
-
-.dashboard-today-lesson h2 {
-	font-size: 24px;
-	font-weight: 600;
-	color: white;
-	margin-bottom: 16px;
-}
 
 .GROUP-INFO {
 	width: 100%;

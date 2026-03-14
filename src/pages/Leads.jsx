@@ -84,7 +84,7 @@ export default function Leads() {
 
 	return (
 		<div className="table-container">
-			<button className="btn btn-default" onClick={goBack}>
+			<button className="btn btn-default bg-primary " onClick={goBack}>
 				← Ortga
 			</button>
 			<h2>
@@ -102,7 +102,7 @@ export default function Leads() {
 				</div>
 
 				<button onClick={handleCreateLead}
-					className="btn btn-default"
+					className="btn btn-default bg-primary "
 				>
 					<FaPlus /> Lid qo'shish
 				</button>

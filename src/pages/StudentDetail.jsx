@@ -46,12 +46,12 @@ export default function StudentDetail() {
 
 	return (
 		<div className="table-container">
-			<button className="btn btn-default" onClick={goBack}>
+			<button className="btn btn-default bg-primary " onClick={goBack}>
 				← Ortga
 			</button>
 			<button
 				onClick={() => navigate(-1)}
-				className="btn btn-default"
+				className="btn btn-default bg-primary "
 				style={{ marginBottom: "20px", cursor: "pointer" }}
 			>
 				<FaArrowLeft /> Back
