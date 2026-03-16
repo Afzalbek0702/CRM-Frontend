@@ -43,7 +43,8 @@ export const sidebarConfig = [
         label: "O'qituvchilar",
         icon: FaChalkboardTeacher,
         path: "teachers",
-        roles: ["CEO","ADMIN", "MANAGER"]
+        // roles: ["CEO","ADMIN", "MANAGER"]
+        roles : [""]
     },
     {
         key: "workers",

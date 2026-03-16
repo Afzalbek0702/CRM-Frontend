@@ -1,6 +1,23 @@
 import { useState, useEffect } from "react";
 import { FaUser, FaPhone, FaComment, FaSave, FaPlus, FaTimes } from "react-icons/fa";
 import { useCourse } from "../services/course/useCourse";
+import { Button } from "@/components/ui/button"
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"
+
+import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+} from "@/components/ui/command"
+
+import { Check, ChevronsUpDown } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 export default function LeadModal({ isOpen, onClose, onSubmit, initialData }) {
     const [formData, setFormData] = useState({

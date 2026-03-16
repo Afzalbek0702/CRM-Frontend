@@ -8,7 +8,23 @@ import { useStudent } from "../services/student/useStudent.js";
 import { useConfirm } from "../components/ConfirmProvider.jsx";
 import { withConfirm } from "../helpers/withConfirm.js";
 import { goBack } from "../utils/navigate.js";
-
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table"
+import {
+	InputGroup,
+	InputGroupAddon,
+	InputGroupButton,
+	InputGroupInput,
+	InputGroupText,
+	InputGroupTextarea,
+} from "@/components/ui/input-group"
+import { Button } from "@/components/ui/button";
 import {
 	FaEllipsisV,
 	FaPlus,
@@ -144,26 +160,23 @@ export default function Groups() {
 
 	return (
 		<div className="table-container">
-			<button className="btn btn-default bg-primary " onClick={goBack}>
+			<Button className="btn-default" onClick={goBack}>
 				← Ortga
-				{/* TEMPORARY_SOLUTIONS */}
-			</button>
+			</Button>
 			<h2>
 				<FaUsers /> Guruhlar
 			</h2>
-			<div className="table-actions mb-[30px]">
-				<div className="search-box">
-					<FaSearch />
-					<input
-						type="text"
-						placeholder="Guruhlarni nomi bo'yicha qidirsh ..."
-						value={searchTerm}
-						onChange={(e) => setSearchTerm(e.target.value)}
-					/>
-				</div>
-				<button className="btn btn-default bg-primary  text-nowrap" onClick={handleCreate}>
+			<div className="table-actions mb-7.5">
+				<InputGroup>
+					<InputGroupInput value={searchTerm}
+						onChange={(e) => setSearchTerm(e.target.value)} placeholder="Guruh nomi bo'yicha qidirish" className={"hover:bg-primary"}/>
+					<InputGroupAddon>
+						<FaSearch />
+					</InputGroupAddon>
+				</InputGroup>
+				<Button className={"btn-default"} onClick={handleCreate}>
 					<FaPlus /> Guruh yaratish
-				</button>
+				</Button>
 			</div>
 
 			<Modal
@@ -191,91 +204,118 @@ export default function Groups() {
 			{groupsWithCount && groupsWithCount.length < 1 ? (
 				<p>Guruhlar yo'q</p>
 			) : (
-				<table>
-					<thead>
-						<tr>
-							<th>
-								<HiOutlinePencilAlt /> Nomi
-							</th>
-							<th>
-								<FaDollarSign /> Narx
-							</th>
-							<th>
-								<FaClock /> Dars vaqti
-							</th>
-							<th>
-								<FaBook /> Kurs turi
-							</th>
-							<th>
-								<FaChalkboardTeacher /> O'qituvchi
-							</th>
-							<th>
-								<FaCalendarAlt /> Dars kunlari
-							</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
+
+				<Table>
+
+					<TableHeader>
+						<TableRow>
+							<TableHead>
+								<div className="flex items-center gap-1">
+									<HiOutlinePencilAlt /> Nomi
+								</div>
+							</TableHead>
+
+							<TableHead>
+								<div className="flex items-center gap-1">
+									<FaDollarSign /> Narx
+								</div>
+							</TableHead>
+
+							<TableHead>
+								<div className="flex items-center gap-1">
+									<FaClock /> Dars vaqti
+								</div>
+							</TableHead>
+
+							<TableHead>
+								<div className="flex items-center gap-1">
+									<FaBook /> Kurs turi
+								</div>
+							</TableHead>
+
+							<TableHead>
+								<div className="flex items-center gap-1">
+									<FaChalkboardTeacher /> O'qituvchi
+								</div>
+							</TableHead>
+
+							<TableHead>
+								<div className="flex items-center gap-1">
+									<FaCalendarAlt /> Dars kunlari
+								</div>
+							</TableHead >
+
+							<TableHead />
+						</TableRow>
+					</TableHeader>
+
+					<TableBody>
 						{groupsWithCount
 							.filter(
 								(g) =>
 									g.name &&
-									g.name.toLowerCase().includes(searchTerm.toLowerCase()),
-
+									g.name.toLowerCase().includes(searchTerm.toLowerCase())
 							)
-							.map((g) => {
-								return (
-									<tr
-										key={g.id}
-										onClick={() => handleRowClick(g.id)}
-										style={{ cursor: "pointer" }}
+							.map((g) => (
+								<TableRow
+									key={g.id}
+									onClick={() => handleRowClick(g.id)}
+									className="cursor-pointer"
+								>
+									<TableCell>
+										{g.name}{" "}
+										<span id="studentCounter">[{g.studentCount}]</span>
+									</TableCell>
+
+									<TableCell>
+										{g.price} ming so'm
+									</TableCell>
+
+									<TableCell>
+										{g.lesson_time}
+									</TableCell>
+
+									<TableCell>
+										{g.course_type}
+									</TableCell>
+
+									<TableCell className="teacher">
+										{g.teachers.full_name}
+									</TableCell>
+
+									<TableCell>
+										{Array.isArray(g.lesson_days) ? (
+											g.lesson_days.map((day) => (
+												<span
+													key={day}
+													className="day-pill px-[10px] py-[3px] rounded-[10px]"
+												>
+													{day}
+												</span>
+											))
+										) : (
+											<span className="day-pill">
+												{g.lesson_days}
+											</span>
+										)}
+									</TableCell>
+
+									<TableCell
+										className="w-[10px]"
+										onClick={(e) => e.stopPropagation()}
 									>
-										<td>
-											{g.name} <span id="studentCounter">[{g.studentCount}]</span>
-										</td>
-										<td>{g.price} ming so'm</td>
-										<td>{g.lesson_time}</td>
-										<td>
-											{g.course_type}
-										</td>
-										<td className="teacher">{g.teachers.full_name}</td>
-										<td>
-											{Array.isArray(g.lesson_days) ? (
-												g.lesson_days.map((day) => (
-													<span
-														key={day}
-														className="day-pill"
-														style={{ padding: "3px 10px", borderRadius: "10px" }}
-													>
-														{day}
-													</span>
-												))
-											) : (
-												<span className="day-pill">{g.lesson_days}</span>
-											)}
-										</td>
-										<td
-											style={{ width: "10px" }}
-											onClick={(e) => e.stopPropagation()}
+										<button
+											className="icon-button"
+											onClick={(e) => handleActionMenu(e, g)}
 										>
-											<button
-												className="icon-button"
-												onClick={(e) => handleActionMenu(e, g)}
-											>
-												<FaEllipsisV />
-											</button>
-										</td>
-									</tr>)
+											<FaEllipsisV />
+										</button>
+									</TableCell>
+								</TableRow>
+							))}
+					</TableBody>
 
-
-
-							}
-							)
-						}
-
-
-					</tbody>
-				</table>
+				</Table>
 			)}
 		</div>
 	);

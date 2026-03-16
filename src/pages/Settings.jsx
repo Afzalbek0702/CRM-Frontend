@@ -5,6 +5,23 @@ import Loader from "../components/Loader";
 import { FaPlus, FaTrash, FaEdit, FaEllipsisV, FaTimes } from "react-icons/fa";
 import ActionMenu from "../components/ActionMenu";
 import { goBack } from "../utils/navigate.js";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table"
+import {
+	InputGroup,
+	InputGroupAddon,
+	InputGroupButton,
+	InputGroupInput,
+	InputGroupText,
+	InputGroupTextarea,
+} from "@/components/ui/input-group"
+import { Button } from "@/components/ui/button";
 
 
 export default function Settings() {
@@ -95,385 +112,161 @@ export default function Settings() {
 
     return (
         <div className="table-container">
-            <button className="btn btn-default bg-primary " onClick={goBack}>
-                ← Ortga
-            </button>
+            <Button onClick={goBack}>← Ortga</Button>
             <h1>Admin Sozlamalari</h1>
 
+            {/* Courses Section */}
             <h2>Kurslar</h2>
-
-            <div style={{ marginBottom: "20px" }}>
-                <button className="btn btn-default bg-primary  text-nowrap" onClick={openCreateModal}>
+            <div className="mb-5">
+                <Button onClick={openCreateModal} variant="primary">
                     <FaPlus /> Kurs qo'shish
-                </button>
+                </Button>
             </div>
 
             {courseData.length > 0 ? (
-
-                <>
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                <th>Nomi</th>
-                                <th>Narx</th>
-                                <th>Darslar soni</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {courseData.map((course) => (
-                                <tr key={course.id}>
-                                    <td>{course.name}</td>
-                                    <td>{course.price}</td>
-                                    <td>{course.lesson_count}</td>
-                                    <td style={{ width: "10px" }} onClick={(e) => e.stopPropagation()}>
-                                        <button
-                                            className="icon-button"
-                                            onClick={(e) => {
-                                                const rect = e.currentTarget.getBoundingClientRect();
-
-                                                const menuHeight = 100;
-                                                const menuWidth = 150;
-
-                                                const scrollY = window.scrollY;
-                                                const scrollX = window.scrollX;
-
-                                                const absoluteTop = rect.top + scrollY;
-                                                const absoluteBottom = rect.bottom + scrollY;
-
-                                                const viewportBottom = scrollY + window.innerHeight;
-                                                const viewportRight = scrollX + window.innerWidth;
-
-                                                const top =
-                                                    absoluteBottom + menuHeight > viewportBottom
-                                                        ? absoluteTop - menuHeight - 8
-                                                        : absoluteBottom + 8;
-
-                                                let left = rect.right + scrollX - menuWidth;
-                                                if (left + menuWidth > viewportRight) {
-                                                    left = viewportRight - menuWidth - 10;
-                                                }
-                                                if (left < scrollX) {
-                                                    left = scrollX + 10;
-                                                }
-
-                                                setActionMenu({
-                                                    isOpen: true,
-                                                    position: {
-                                                        top: top + "px",
-                                                        left: left + "px",
-                                                    },
-                                                    course: course
-                                                });
-                                            }}
-                                        >
-                                            <FaEllipsisV />
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-
-                </>
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Nomi</TableHead>
+                            <TableHead>Narx</TableHead>
+                            <TableHead>Darslar soni</TableHead>
+                            <TableHead></TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {courseData.map((course) => (
+                            <TableRow key={course.id}>
+                                <TableCell>{course.name}</TableCell>
+                                <TableCell>{course.price}</TableCell>
+                                <TableCell>{course.lesson_count}</TableCell>
+                                <TableCell>
+                                    <Button
+                                        variant="icon"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            const rect = e.currentTarget.getBoundingClientRect();
+                                            const top = rect.bottom + window.scrollY + 8 + "px";
+                                            const left = rect.right + window.scrollX - 150 + "px";
+                                            setActionMenu({ isOpen: true, position: { top, left }, course });
+                                        }}
+                                    >
+                                        <FaEllipsisV />
+                                    </Button>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
             ) : (
                 <p>Kurslar yo'q</p>
             )}
 
+            <hr className="my-10" />
 
-            <hr style={{ margin: "40px 0" }} />
-
+            {/* Rooms Section */}
             <h2>Xonalar</h2>
-
-            <div style={{ marginBottom: "20px" }}>
-                <button className="btn btn-default bg-primary  text-nowrap" onClick={openCreateRoom}>
+            <div className="mb-5">
+                <Button onClick={openCreateRoom} variant="primary">
                     <FaPlus /> Xona qo'shish
-                </button>
+                </Button>
             </div>
 
             {roomData.length > 0 ? (
-                <table className="table">
-                    <thead>
-                        <tr>
-                            <th>Nomi</th>
-                            <th>Hajmi</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Nomi</TableHead>
+                            <TableHead>Hajmi</TableHead>
+                            <TableHead></TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
                         {roomData.map((room) => (
-                            <tr key={room.room_id}>
-                                <td>{room.room_name}</td>
-                                <td>{room.capacity}</td>
-                                <td style={{ width: "10px" }} onClick={(e) => e.stopPropagation()}>
-                                    <button
-                                        className="icon-button"
+                            <TableRow key={room.room_id}>
+                                <TableCell>{room.room_name}</TableCell>
+                                <TableCell>{room.capacity}</TableCell>
+                                <TableCell>
+                                    <Button
+                                        variant="icon"
                                         onClick={(e) => {
+                                            e.stopPropagation();
                                             const rect = e.currentTarget.getBoundingClientRect();
-
-                                            const menuHeight = 100;
-                                            const menuWidth = 150;
-
-                                            const scrollY = window.scrollY;
-                                            const scrollX = window.scrollX;
-
-                                            const absoluteTop = rect.top + scrollY;
-                                            const absoluteBottom = rect.bottom + scrollY;
-
-                                            const viewportBottom = scrollY + window.innerHeight;
-                                            const viewportRight = scrollX + window.innerWidth;
-
-                                            const top =
-                                                absoluteBottom + menuHeight > viewportBottom
-                                                    ? absoluteTop - menuHeight - 8
-                                                    : absoluteBottom + 8;
-
-                                            let left = rect.right + scrollX - menuWidth;
-                                            if (left + menuWidth > viewportRight) left = viewportRight - menuWidth - 10;
-                                            if (left < scrollX) left = scrollX + 10;
-
-                                            setActionMenu({
-                                                isOpen: true,
-                                                position: { top: top + "px", left: left + "px" },
-                                                course: room
-                                            });
+                                            const top = rect.bottom + window.scrollY + 8 + "px";
+                                            const left = rect.right + window.scrollX - 150 + "px";
+                                            setActionMenu({ isOpen: true, position: { top, left }, course: room });
                                         }}
                                     >
                                         <FaEllipsisV />
-                                    </button>
-                                </td>
-                            </tr>
+                                    </Button>
+                                </TableCell>
+                            </TableRow>
                         ))}
-                    </tbody>
-                </table>
+                    </TableBody>
+                </Table>
             ) : (
                 <p>Xona yo'q</p>
             )}
 
-            {/* modal start */}
-
+            {/* Modals */}
             {modalOpen && (
-                <>
-                    <div className="side-panel-backdrop" onClick={() => setModalOpen(false)}></div>
-
-                    <div className="side-panel" onClick={(e) => e.stopPropagation()}>
-                        <div className="panel-header">
-                            <div className="panel-title-section">
-                                <div className="panel-icon">
-                                    {editingCourse ? <FaEdit /> : <FaPlus />}
-                                </div>
-                                <div>
-                                    <h2>{editingCourse ? "Edit Course" : "New Course"}</h2>
-                                    <p className="panel-subtitle">
-                                        {editingCourse
-                                            ? "Update course details"
-                                            : "Create a new course"}
-                                    </p>
-                                </div>
-                            </div>
-
-                            <button
-                                className="close-button"
-                                onClick={() => setModalOpen(false)}
-                            >
-                                <FaTimes />
-                            </button>
+                <SidePanel onClose={() => setModalOpen(false)}>
+                    <h2>{editingCourse ? "Edit Course" : "New Course"}</h2>
+                    <p>{editingCourse ? "Update course details" : "Create a new course"}</p>
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-grid">
+                            <Input label="Ism" name="name" value={formData.name} onChange={handleChange} required />
+                            <Input label="Narx" type="number" name="price" value={formData.price} onChange={handleChange} required />
+                            <Input label="Darslar soni" type="number" name="lesson_count" value={formData.lesson_count} onChange={handleChange} required />
                         </div>
-
-                        <form onSubmit={handleSubmit} className="modal-form">
-                            <div className="form-grid">
-                                <div className="form-group full-width">
-                                    <label className="form-label">
-                                        Ism
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="name"
-                                        className="form-input"
-                                        value={formData.name}
-                                        onChange={handleChange}
-                                        required
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <label className="form-label">
-                                        Narx
-                                    </label>
-                                    <input
-                                        type="number"
-                                        name="price"
-                                        className="form-input"
-                                        value={formData.price}
-                                        onChange={handleChange}
-                                        required
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <label className="form-label">
-                                        Darslar soni
-                                    </label>
-                                    <input
-                                        type="number"
-                                        name="lesson_count"
-                                        className="form-input"
-                                        value={formData.lesson_count}
-                                        onChange={handleChange}
-                                        required
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="panel-buttons">
-                                <button
-                                    type="button"
-                                    className="btn-cancel"
-                                    onClick={() => setModalOpen(false)}
-                                >
-                                    <FaTimes /> Bekor qilish
-                                </button>
-
-                                <button type="submit" className="btn-submit">
-                                    {editingCourse ? (
-                                        <>
-                                            <FaEdit /> Yangilar
-                                        </>
-                                    ) : (
-                                        <>
-                                            <FaPlus /> Yaratish
-                                        </>
-                                    )}
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </>
+                        <div className="panel-buttons">
+                            <Button variant="secondary" onClick={() => setModalOpen(false)}><FaTimes /> Bekor qilish</Button>
+                            <Button type="submit" variant="primary">
+                                {editingCourse ? <><FaEdit /> Yangilar</> : <><FaPlus /> Yaratish</>}
+                            </Button>
+                        </div>
+                    </form>
+                </SidePanel>
             )}
-
 
             {roomModalOpen && (
-                <>
-                    <div
-                        className="side-panel-backdrop"
-                        onClick={() => setRoomModalOpen(false)}
-                    ></div>
-
-                    <div className="side-panel" onClick={(e) => e.stopPropagation()}>
-                        <div className="panel-header">
-                            <div className="panel-title-section">
-                                <div className="panel-icon">
-                                    {editingRoom ? <FaEdit /> : <FaPlus />}
-                                </div>
-                                <div>
-                                    <h2>{editingRoom ? "Edit Room" : "New Room"}</h2>
-                                    <p className="panel-subtitle">
-                                        {editingRoom
-                                            ? "Xona infolarini yangilar"
-                                            : "Yangi xona yaratish"}
-                                    </p>
-                                </div>
-                            </div>
-
-                            <button
-                                className="close-button"
-                                onClick={() => setRoomModalOpen(false)}
-                            >
-                                <FaTimes />
-                            </button>
+                <SidePanel onClose={() => setRoomModalOpen(false)}>
+                    <h2>{editingRoom ? "Edit Room" : "New Room"}</h2>
+                    <p>{editingRoom ? "Xona infolarini yangilar" : "Yangi xona yaratish"}</p>
+                    <form onSubmit={handleRoomSubmit}>
+                        <div className="form-grid">
+                            <Input label="Ism" name="name" value={roomForm.name} onChange={handleRoomChange} required />
+                            <Input label="Hajm" type="number" name="capacity" value={roomForm.capacity} onChange={handleRoomChange} required />
                         </div>
-
-                        <form onSubmit={handleRoomSubmit} className="modal-form">
-                            <div className="form-grid">
-                                <div className="form-group full-width">
-                                    <label className="form-label">
-                                        Ism
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="name"
-                                        className="form-input"
-                                        value={roomForm.name}
-                                        onChange={handleRoomChange}
-                                        required
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <label className="form-label">
-                                        Hajm
-                                    </label>
-                                    <input
-                                        type="number"
-                                        name="capacity"
-                                        className="form-input"
-                                        value={roomForm.capacity}
-                                        onChange={handleRoomChange}
-                                        required
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="panel-buttons">
-                                <button
-                                    type="button"
-                                    className="btn-cancel"
-                                    onClick={() => setRoomModalOpen(false)}
-                                >
-                                    <FaTimes /> Bekor qilish
-                                </button>
-
-                                <button type="submit" className="btn-submit">
-                                    {editingRoom ? (
-                                        <>
-                                            <FaEdit /> Yangilash
-                                        </>
-                                    ) : (
-                                        <>
-                                            <FaPlus /> Yaratish
-                                        </>
-                                    )}
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </>
+                        <div className="panel-buttons">
+                            <Button variant="secondary" onClick={() => setRoomModalOpen(false)}><FaTimes /> Bekor qilish</Button>
+                            <Button type="submit" variant="primary">
+                                {editingRoom ? <><FaEdit /> Yangilash</> : <><FaPlus /> Yaratish</>}
+                            </Button>
+                        </div>
+                    </form>
+                </SidePanel>
             )}
 
-            {/* modal end */}
-
-
-
-
-
+            {/* Action Menu */}
             <ActionMenu
                 isOpen={actionMenu.isOpen}
                 position={actionMenu.position}
                 onEdit={() => {
-                    if (actionMenu.course?.lesson_count !== undefined) {
-                        openEditModal(actionMenu.course);
-                    } else {
-                        openEditRoom(actionMenu.course);
-                    }
+                    if (actionMenu.course?.lesson_count !== undefined) openEditModal(actionMenu.course);
+                    else openEditRoom(actionMenu.course);
                     setActionMenu(prev => ({ ...prev, isOpen: false }));
                 }}
                 onDelete={() => {
                     if (!actionMenu.course) return;
                     if (actionMenu.course?.lesson_count !== undefined) {
-                        if (window.confirm(`Delete ${actionMenu.course.name}?`)) {
-                            removeCourse(actionMenu.course.id);
-                        }
+                        if (window.confirm(`Delete ${actionMenu.course.name}?`)) removeCourse(actionMenu.course.id);
                     } else {
-                        if (window.confirm(`Delete ${actionMenu.course.name}?`)) {
-                            deleteRoom(actionMenu.course.id);
-                        }
+                        if (window.confirm(`Delete ${actionMenu.course.room_name}?`)) deleteRoom(actionMenu.course.room_id);
                     }
                     setActionMenu(prev => ({ ...prev, isOpen: false }));
                 }}
                 onClose={() => setActionMenu(prev => ({ ...prev, isOpen: false }))}
-                entityLabel={
-                    actionMenu.course?.lesson_count !== undefined ? "Course" : "Room"
-                }
+                entityLabel={actionMenu.course?.lesson_count !== undefined ? "Course" : "Room"}
             />
         </div>
     );

@@ -736,7 +736,10 @@ body {
 	padding: 0 20px;
 	font-size: 14px;
 }
-
+table::-webkit-scrollbar {
+	display: none;
+}
+/* 
 .table-container {
 	width: 100%;
 	height: auto;
@@ -774,8 +777,8 @@ body {
 
 table::-webkit-scrollbar {
 	display: none;
-}
-
+} */
+/* 
 .table-container th {
 	padding: 15px;
 	text-align: left;
@@ -807,7 +810,7 @@ table::-webkit-scrollbar {
 
 .table-container tbody tr:last-child {
 	border-bottom: none;
-}
+} */
 
 .day-pill {
 	display: inline-block;
@@ -819,7 +822,7 @@ table::-webkit-scrollbar {
 	font-weight: 500;
 	color: black;
 	background-color: var(--primary);
-}
+} 
 
 .group-link {
 	color: var(--primary);
@@ -4403,3 +4406,143 @@ input[type="number"] {
 	font-size: 15px;
 	font-weight: 500;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* NEW UTILITY CSS!!! O'CHIRVORMELARRRR ENG KEREKLI CSS LARNI SHOTGA YOZIB QOYYABMAN */
+
+.table-container {
+	width: 100%;
+	height: auto;
+	background-color: var(--background-color);
+	font-family: var(--font-family);
+	color: white;
+	overflow-x: auto;
+	overflow-y: hidden;
+}
+.table-container table {
+	/* color: black; */
+}
+.table-container thead {
+	background-color: var(--primary);
+	/* border-bottom: 1px solid var(--color-primary); */
+	border-radius: 4px;
+
+}
+.table-container thead:first-child{
+	border-top-left-radius: 4px;
+}
+.table-container thead:last-child {
+	border-top-right-radius: 4px;
+}
+.table-container tbody tr {
+	background-color: #1F1F1F;
+}
+.table-container tbody tr:hover {
+	background-color: #2a2821;
+	transition: background-color 0.5s;
+}
+
+.btn-default {
+    background-color: var(--primary);
+    color: black;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.btn-cancel {
+    background-color: white;
+    color: black;
+    border: 1px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-danger {
+    background-color: var(--color-destructive);
+    border: 1px solid var(--color-destructive);
+    color: var(--color-destructive);
+    cursor: pointer;
+}
+
+.table-container h2 {
+    margin-top: 10px;
+    margin-bottom: 30px;
+    font-size: 24px;
+    font-weight: 600;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.table-actions div {
+	border-radius: 4px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* UTILITY CSS TUGADI! */

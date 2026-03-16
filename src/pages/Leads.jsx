@@ -10,6 +10,22 @@ import { useConfirm } from "../components/ConfirmProvider";
 import { withConfirm } from "../helpers/withConfirm";
 import { goBack } from "../utils/navigate.js";
 import { Button } from "@/components/ui/button";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table"
+import {
+	InputGroup,
+	InputGroupAddon,
+	InputGroupButton,
+	InputGroupInput,
+	InputGroupText,
+	InputGroupTextarea,
+} from "@/components/ui/input-group"
 
 export default function Leads() {
 	const confirm = useConfirm();
@@ -83,60 +99,75 @@ export default function Leads() {
 	)
 
 	return (
-		<div className="table-container">
-			<button className="btn btn-default bg-primary " onClick={goBack}>
-				← Ortga
-			</button>
-			<h2>
-				<FaThList /> Lidlar
-			</h2>
-			<div className="table-actions mb-[30px]">
-				<div className="search-box">
+	<div className="table-container">
+		<Button className="btn-default rounded text-black" onClick={goBack}>
+			← Ortga
+		</Button>
+
+		<h2 className="page-title">
+			<FaThList /> Lidlar
+		</h2>
+
+		<div className="table-actions mb-7.5">
+			<InputGroup>
+				<InputGroupInput
+					type="text"
+					placeholder="Lidlarni ismi bo'yicha qidirsh ..."
+					value={searchTerm}
+					onChange={(e) => setSearchTerm(e.target.value)}
+				/>
+				<InputGroupAddon>
 					<FaSearch />
-					<input
-						type="text"
-						placeholder="Lidlarni ismi bo'yicha qidirsh ..."
-						value={searchTerm}
-						onChange={(e) => setSearchTerm(e.target.value)}
-					/>
-				</div>
+				</InputGroupAddon>
+			</InputGroup>
 
-				<button onClick={handleCreateLead}
-					className="btn btn-default bg-primary "
-				>
-					<FaPlus /> Lid qo'shish
-				</button>
-			</div>
+			<Button
+				onClick={handleCreateLead}
+				className="btn-default"
+			>
+				<FaPlus /> Lid qo'shish
+			</Button>
+		</div>
 
-			{leads && leads.length < 1 ? (
-				<p>Lidlar yo'q</p>
-			) : (
-				<table>
-					<thead>
-						<tr>
-							<th>
-								<FaThList /> Ism
-							</th>
-							<th>
-								<FaPhone /> Telefon
-							</th>
-							<th>Manba</th>
-							<th>Qiziqadigan Kurs</th>
-							<th>Izoh</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
-						{(leads || [])
-							.filter(
-								(l) =>
-									l.full_name &&
-									l.full_name.toLowerCase().includes(searchTerm.toLowerCase()),
-							)
-							.map((l) => (
-								<tr key={l.id}>
-									<td>{l.full_name}</td>
-									<td><p
+		{leads && leads.length < 1 ? (
+			<p>Lidlar yo'q</p>
+		) : (
+			<Table>
+				<TableHeader>
+					<TableRow>
+						<TableHead>
+							<FaThList /> Ism
+						</TableHead>
+
+						<TableHead>
+							<FaPhone /> Telefon
+						</TableHead>
+
+						<TableHead>Manba</TableHead>
+
+						<TableHead>Qiziqadigan Kurs</TableHead>
+
+						<TableHead>Izoh</TableHead>
+
+						<TableHead></TableHead>
+					</TableRow>
+				</TableHeader>
+
+				<TableBody>
+					{(leads || [])
+						.filter(
+							(l) =>
+								l.full_name &&
+								l.full_name
+									.toLowerCase()
+									.includes(searchTerm.toLowerCase()),
+						)
+						.map((l) => (
+							<TableRow key={l.id}>
+								<TableCell>{l.full_name}</TableCell>
+
+								<TableCell>
+									<p
 										onClick={(e) => {
 											e.stopPropagation();
 											navigator.clipboard.writeText(l.phone);
@@ -149,60 +180,70 @@ export default function Leads() {
 											}, 2000);
 										}}
 										data-copied="false"
-										className="copy-phone">{l.phone}</p></td>
-									<td>{l.source}</td>
-
-									<td>
-										{courseData.find(c => c.name === l.interested_course)?.name || "-"}
-									</td>
-
-									<td>{l.comment}</td>
-									<td
-										style={{ width: "10px" }}
-										onClick={(e) => e.stopPropagation()}
+										className="copy-phone"
 									>
-										<button
-											className="icon-button"
-											onClick={(e) => handleActionMenu(e, l)}
-										>
-											<FaEllipsisV />
-										</button>
-									</td>
-								</tr>
-							))}
-					</tbody>
-				</table>
-			)}
+										{l.phone}
+									</p>
+								</TableCell>
 
-			<ActionMenu
-				isOpen={actionMenu.isOpen}
-				position={actionMenu.position}
-				onClose={() => setActionMenu((s) => ({ ...s, isOpen: false }))}
-				entityLabel="Lead"
-				onEdit={() => {
-					const l = actionMenu.lead;
-					if (!l) return;
-					setEditingLead(l);
-					setIsModalOpen(true);
-					setActionMenu((m) => ({ ...m, isOpen: false }));
-				}}
-				onDelete={() => handleDeleteLead(actionMenu.lead)}
-			/>
+								<TableCell>{l.source}</TableCell>
 
-			<LeadModal
-				isOpen={isModalOpen}
-				onClose={() => setIsModalOpen(false)}
-				initialData={editingLead}
-				onSubmit={async (data) => {
-					if (editingLead) {
-						await updateLead({ id: editingLead.id, data });
-					} else {
-						await createLead(data);
-					}
-					setIsModalOpen(false);
-					setEditingLead(null);
-				}}
-			/>
-		</div>
-	);
+								<TableCell>
+									{
+										courseData.find(
+											(c) => c.name === l.interested_course,
+										)?.name || "-"
+									}
+								</TableCell>
+
+								<TableCell>{l.comment}</TableCell>
+
+								<TableCell
+									style={{ width: "10px" }}
+									onClick={(e) => e.stopPropagation()}
+								>
+									<Button
+										className="icon-button"
+										onClick={(e) => handleActionMenu(e, l)}
+									>
+										<FaEllipsisV />
+									</Button>
+								</TableCell>
+							</TableRow>
+						))}
+				</TableBody>
+			</Table>
+		)}
+
+		<ActionMenu
+			isOpen={actionMenu.isOpen}
+			position={actionMenu.position}
+			onClose={() => setActionMenu((s) => ({ ...s, isOpen: false }))}
+			entityLabel="Lead"
+			onEdit={() => {
+				const l = actionMenu.lead;
+				if (!l) return;
+				setEditingLead(l);
+				setIsModalOpen(true);
+				setActionMenu((m) => ({ ...m, isOpen: false }));
+			}}
+			onDelete={() => handleDeleteLead(actionMenu.lead)}
+		/>
+
+		<LeadModal
+			isOpen={isModalOpen}
+			onClose={() => setIsModalOpen(false)}
+			initialData={editingLead}
+			onSubmit={async (data) => {
+				if (editingLead) {
+					await updateLead({ id: editingLead.id, data });
+				} else {
+					await createLead(data);
+				}
+				setIsModalOpen(false);
+				setEditingLead(null);
+			}}
+		/>
+	</div>
+);
 }

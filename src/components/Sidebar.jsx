@@ -35,7 +35,7 @@ export function AppSidebar() {
 		<Sidebar collapsible="icon">
 
 
-			<SidebarContent className={"mt-20"}>
+			<SidebarContent className={"mt-17.5"}>
 				<SidebarGroup>
 					<SidebarMenu>
 						{filteredSidebar.map((item) => {
@@ -44,7 +44,7 @@ export function AppSidebar() {
 							const isActive = location.pathname === fullPath;
 							if (!item.children) {
 								return (
-									<SidebarMenuItem key={item.path}>
+									<SidebarMenuItem key={item.path} className="p-0 m-0">
 										<SidebarMenuButton
 											asChild
 											tooltip={item.label}
@@ -69,7 +69,7 @@ export function AppSidebar() {
 							);
 							return (
 								<Collapsible key={item.label} className="group/collapsible">
-									<SidebarMenuItem>
+									<SidebarMenuItem className="p-0 m-0">
 										<CollapsibleTrigger asChild>
 											<SidebarMenuButton
 												tooltip={item.label}

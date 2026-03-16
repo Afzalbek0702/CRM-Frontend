@@ -11,6 +11,23 @@ import {
     FaUser,
 } from "react-icons/fa";
 import { BsCalendar2DateFill, BsCreditCard2BackFill } from "react-icons/bs";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table"
+import {
+    InputGroup,
+    InputGroupAddon,
+    InputGroupButton,
+    InputGroupInput,
+    InputGroupText,
+    InputGroupTextarea,
+} from "@/components/ui/input-group"
+import { Button } from "@/components/ui/button";
 
 
 export default function ExpensesTable() {
@@ -53,7 +70,6 @@ export default function ExpensesTable() {
 
     return (
         <div className="table-container">
-
             {/* Summary */}
             <div className="expense-summary">
                 <strong>Jami harajatlar:</strong>{" "}
@@ -61,41 +77,57 @@ export default function ExpensesTable() {
             </div>
 
             <div className="table-actions mb-[30px]">
-                <button className="btn1" onClick={() => setIsModalOpen(true)}>
+                <Button className="btn1" onClick={() => setIsModalOpen(true)}>
                     Xarajat qo'shish
-                </button>
+                </Button>
             </div>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th><BsCalendar2DateFill /> Sana</th>
-                        <th><FaMoneyBillWave /> Tavsif</th>
-                        <th><FaMoneyBillWave /> Miqdor</th>
-                        <th><BsCreditCard2BackFill /> To'lov turi</th>
-                        <th><FaUser /> Kiritgan</th>
-                        <th></th>
-                    </tr>
-                </thead>
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>
+                            <BsCalendar2DateFill /> Sana
+                        </TableHead>
 
-                <tbody>
+                        <TableHead>
+                            <FaMoneyBillWave /> Tavsif
+                        </TableHead>
+
+                        <TableHead>
+                            <FaMoneyBillWave /> Miqdor
+                        </TableHead>
+
+                        <TableHead>
+                            <BsCreditCard2BackFill /> To'lov turi
+                        </TableHead>
+
+                        <TableHead>
+                            <FaUser /> Kiritgan
+                        </TableHead>
+
+                        <TableHead></TableHead>
+                    </TableRow>
+                </TableHeader>
+
+                <TableBody>
                     {(expenses || []).length === 0 ? (
-                        <tr>
-                            <td colSpan="6">Xarajatlar topilmadi.</td>
-                        </tr>
+                        <TableRow>
+                            <TableCell colSpan={6}>
+                                Xarajatlar topilmadi.
+                            </TableCell>
+                        </TableRow>
                     ) : (
                         (expenses || []).map((e) => (
-                            <tr key={e.id}>
-                                <td>{formatDate(e.created_at)}</td>
-                                <td>{e.description}</td>
-                                <td>
+                            <TableRow key={e.id}>
+                                <TableCell>{formatDate(e.created_at)}</TableCell>
+                                <TableCell>{e.description}</TableCell>
+                                <TableCell>
                                     {e.amount?.toLocaleString() ?? 0} so'm
-                                </td>
-                                <td>{e.method}</td>
-                                <td>{e.created_by}</td>
-
-                                <td style={{ width: "10px" }}>
-                                    <button
+                                </TableCell>
+                                <TableCell>{e.method}</TableCell>
+                                <TableCell>{e.created_by}</TableCell>
+                                <TableCell style={{ width: "10px" }}>
+                                    <Button
                                         className="icon-button"
                                         onClick={(ev) => {
                                             const rect =
@@ -120,13 +152,13 @@ export default function ExpensesTable() {
                                         }}
                                     >
                                         <FaEllipsisV />
-                                    </button>
-                                </td>
-                            </tr>
+                                    </Button>
+                                </TableCell>
+                            </TableRow>
                         ))
                     )}
-                </tbody>
-            </table>
+                </TableBody>
+            </Table>
 
             <ActionMenu
                 isOpen={actionMenu.isOpen}
@@ -157,16 +189,12 @@ export default function ExpensesTable() {
                     setEditingExpense(null);
                 }}
                 initialData={editingExpense}
-                onSubmit={ (formData) => {
+                onSubmit={(formData) => {
                     if (editingExpense) {
-                         updateExpense(
-                            editingExpense.id,
-                            formData
-                        );
+                        updateExpense(editingExpense.id, formData);
                     } else {
-                         createExpense(formData);
+                        createExpense(formData);
                     }
-
                     setIsModalOpen(false);
                     setEditingExpense(null);
                 }}

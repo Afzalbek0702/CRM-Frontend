@@ -4,7 +4,23 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useConfirm } from "../components/ConfirmProvider";
 import { withConfirm } from "../helpers/withConfirm";
 import { goBack } from "../utils/navigate.js";
-
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table"
+import {
+    InputGroup,
+    InputGroupAddon,
+    InputGroupButton,
+    InputGroupInput,
+    InputGroupText,
+    InputGroupTextarea,
+} from "@/components/ui/input-group"
+import { Button } from "@/components/ui/button";
 import { FaUsers, FaPhone, FaPlus, FaEllipsisV, FaSearch } from "react-icons/fa";
 import { useState } from "react";
 import { useAuth } from "../context/authContext";
@@ -73,75 +89,82 @@ export default function Workers() {
 
     return (
         <div className="table-container">
-            <button className="btn btn-default bg-primary " onClick={goBack}>
+            <Button className="btn-default" onClick={goBack}>
                 ← Ortga
-            </button>
+            </Button>
+
             <h2>
                 <FaUsers /> Xodimlar
             </h2>
 
             <div className="table-actions mb-[30px]">
-                <div className="search-box">
-                    <FaSearch />
-                    <input
+                <InputGroup>
+                    <InputGroupInput
                         type="text"
                         placeholder="Xodimlarni qidirish..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
-                </div>
+                    <InputGroupAddon>
+                        <FaSearch />
+                    </InputGroupAddon>
+                </InputGroup>
 
                 {/* <div className="filters">
-                    <select
-                        value={filter}
-                        onChange={(e) => setFilter(e.target.value)}
-                    >
-                        <option value="all">Barchasi</option>
-                        <option value="teachers">O'qituvchilar</option>
-                        <option value="admins">Adminlar</option>
-                        <option value="managers">Managerlar</option>
-                    </select>
-                </div> */}
+			<select
+				value={filter}
+				onChange={(e) => setFilter(e.target.value)}
+			>
+				<option value="all">Barchasi</option>
+				<option value="teachers">O'qituvchilar</option>
+				<option value="admins">Adminlar</option>
+				<option value="managers">Managerlar</option>
+			</select>
+		</div> */}
 
-                <button
-                    className="btn btn-default bg-primary  text-nowrap"
+                <Button
+                    className="btn-default"
                     onClick={() => {
                         setEditingWorker(null);
                         setIsModalOpen(true);
                     }}
                 >
                     <FaPlus /> Xodim qo'shish
-                </button>
+                </Button>
             </div>
 
             {filteredWorkers.length < 1 ? (
                 <p>Xodimlar yo'q</p>
             ) : (
-                <table>
-                    <thead>
-                        <tr>
-                            <th>
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>
                                 <FaUsers /> Ism
-                            </th>
-                            <th>
-                                <FaPhone /> Telefon
-                            </th>
-                            <th>Lavozim</th>
-                            <th>Role</th>
-                            <th></th>
-                        </tr>
-                    </thead>
+                            </TableHead>
 
-                    <tbody>
+                            <TableHead>
+                                <FaPhone /> Telefon
+                            </TableHead>
+
+                            <TableHead>Lavozim</TableHead>
+
+                            <TableHead>Role</TableHead>
+
+                            <TableHead></TableHead>
+                        </TableRow>
+                    </TableHeader>
+
+                    <TableBody>
                         {filteredWorkers.map((w) => (
-                            <tr
+                            <TableRow
                                 key={w.id}
                                 onClick={() => handleRowClick(w.id)}
-                                style={{ cursor: "pointer" }}
+                                className="cursor-pointer"
                             >
-                                <td>{w.full_name}</td>
+                                <TableCell>{w.full_name}</TableCell>
 
-                                <td>
+                                <TableCell>
                                     <p
                                         onClick={(e) => {
                                             e.stopPropagation();
@@ -159,17 +182,17 @@ export default function Workers() {
                                     >
                                         {w.phone}
                                     </p>
-                                </td>
+                                </TableCell>
 
-                                <td>{w.position || "-"}</td>
+                                <TableCell>{w.position || "-"}</TableCell>
 
-                                <td>{w.role || "-"}</td>
+                                <TableCell>{w.role || "-"}</TableCell>
 
-                                <td
+                                <TableCell
                                     style={{ width: "10px" }}
                                     onClick={(e) => e.stopPropagation()}
                                 >
-                                    <button
+                                    <Button
                                         className="icon-button"
                                         onClick={(e) => {
                                             const rect =
@@ -194,18 +217,20 @@ export default function Workers() {
                                         }}
                                     >
                                         <FaEllipsisV />
-                                    </button>
-                                </td>
-                            </tr>
+                                    </Button>
+                                </TableCell>
+                            </TableRow>
                         ))}
-                    </tbody>
-                </table>
+                    </TableBody>
+                </Table>
             )}
 
             <ActionMenu
                 isOpen={actionMenu.isOpen}
                 position={actionMenu.position}
-                onClose={() => setActionMenu((s) => ({ ...s, isOpen: false }))}
+                onClose={() =>
+                    setActionMenu((s) => ({ ...s, isOpen: false }))
+                }
                 entityLabel="Worker"
                 onEdit={() => {
                     const w = actionMenu.worker;

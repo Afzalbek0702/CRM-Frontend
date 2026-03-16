@@ -34,32 +34,57 @@ export default function Payments() {
 	}
 
 	return (
-		<div className="table-container">
-			<button className="btn btn-default bg-primary " onClick={goBack}>
+		<div className="space-y-4">
+			<Button variant="default" onClick={goBack}>
 				← Ortga
-			</button>
-			<h2 className="upperCaseHeader">
-				{category === "income" ? "To'lovlar" :
-					category === "salary" ? "Ish haqlari" :
-						category === "expenses" ? "Harajatlar" :
-							category === "debtors" ? "Qarzdorlar" : ""}
+			</Button>
+
+			<h2 className="text-xl font-semibold uppercase">
+				{category === "income"
+					? "To'lovlar"
+					: category === "salary"
+						? "Ish haqlari"
+						: category === "expenses"
+							? "Harajatlar"
+							: category === "debtors"
+								? "Qarzdorlar"
+								: ""}
 			</h2>
 
 			{category === "debtors" && (
-				<div className="table-actions mb-[30px]">
-					<div className="search-box">
-						<FaSearch />
-						<input
-							type="text"
-							placeholder="O'quvchilarni ismi bo'yicha qidirish..."
-							value={searchTerm}
-							onChange={(e) => setSearchTerm(e.target.value)}
-						/>
-					</div>
+				<div className="flex items-center gap-2 mb-6">
+					<Input
+						type="text"
+						placeholder="O'quvchilarni ismi bo'yicha qidirish..."
+						value={searchTerm}
+						onChange={(e) => setSearchTerm(e.target.value)}
+						icon={<FaSearch className="text-sm" />}
+					/>
 				</div>
 			)}
 
-			<div className="payments-table-container">
+			<div className="overflow-x-auto">
+				{category === "income" && (
+					<Table>
+						<TableHeader>
+							<TableRow>
+								<TableHead>O'quvchi</TableHead>
+								<TableHead>Miqdor</TableHead>
+								<TableHead>Sana</TableHead>
+							</TableRow>
+						</TableHeader>
+						<TableBody>
+							{payments?.map((p) => (
+								<TableRow key={p.id}>
+									<TableCell>{p.student_name}</TableCell>
+									<TableCell>{p.amount?.toLocaleString() ?? 0} so'm</TableCell>
+									<TableCell>{p.date?.split("T")[0]}</TableCell>
+								</TableRow>
+							))}
+						</TableBody>
+					</Table>
+				)}
+
 				{renderContent()}
 			</div>
 		</div>

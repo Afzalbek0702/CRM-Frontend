@@ -2,7 +2,23 @@ import { useMemo } from "react";
 import Loader from "../components/Loader";
 import { usePayments } from "../services/payment/usePayments";
 import { useStudent } from "../services/student/useStudent"; // adjust if needed
-
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table"
+import {
+	InputGroup,
+	InputGroupAddon,
+	InputGroupButton,
+	InputGroupInput,
+	InputGroupText,
+	InputGroupTextarea,
+} from "@/components/ui/input-group"
+import { Button } from "@/components/ui/button";
 export default function DebtorsTable({ searchTerm = "" }) {
 	const { payments, isLoading: paymentsLoading } = usePayments();
 	const { students, isLoading: studentsLoading } = useStudent();
@@ -61,49 +77,63 @@ export default function DebtorsTable({ searchTerm = "" }) {
 					<strong>Jami qarz:</strong>{" "}
 					{totalOutstandingDebt.toLocaleString()} so'm
 				</div>
+
 				<div>
 					<strong>Qarzdorlar soni:</strong> {numberOfDebtors}
 				</div>
 			</div>
 
 			{/* Table */}
-			<table>
-				<thead>
-					<tr>
-						<th>O'quvchi</th>
-						<th>Guruh</th>
-						<th>Kurs narxi</th>
-						<th>To'langan</th>
-						<th>Qolgan</th>
-						<th>Oxirgi to'lov</th>
-					</tr>
-				</thead>
+			<Table>
+				<TableHeader>
+					<TableRow>
+						<TableHead>O'quvchi</TableHead>
+						<TableHead>Guruh</TableHead>
+						<TableHead>Kurs narxi</TableHead>
+						<TableHead>To'langan</TableHead>
+						<TableHead>Qolgan</TableHead>
+						<TableHead>Oxirgi to'lov</TableHead>
+					</TableRow>
+				</TableHeader>
 
-				<tbody>
+				<TableBody>
 					{filtered.length === 0 ? (
-						<tr>
-							<td colSpan="6">Qarzdorlar topilmadi.</td>
-						</tr>
+						<TableRow>
+							<TableCell colSpan={6}>
+								Qarzdorlar topilmadi.
+							</TableCell>
+						</TableRow>
 					) : (
 						filtered.map((d) => (
-							<tr key={d.id}>
-								<td>{d.student_name}</td>
-								<td>{d.group_name}</td>
-								<td>{d.course_price.toLocaleString()} so'm</td>
-								<td>{d.total_paid.toLocaleString()} so'm</td>
-								<td style={{ color: "red" }}>
+							<TableRow key={d.id}>
+								<TableCell>{d.student_name}</TableCell>
+
+								<TableCell>{d.group_name}</TableCell>
+
+								<TableCell>
+									{d.course_price.toLocaleString()} so'm
+								</TableCell>
+
+								<TableCell>
+									{d.total_paid.toLocaleString()} so'm
+								</TableCell>
+
+								<TableCell style={{ color: "red" }}>
 									{d.remaining.toLocaleString()} so'm
-								</td>
-								<td>
+								</TableCell>
+
+								<TableCell>
 									{d.last_payment
-										? new Date(d.last_payment).toLocaleDateString()
+										? new Date(
+											d.last_payment
+										).toLocaleDateString()
 										: "-"}
-								</td>
-							</tr>
+								</TableCell>
+							</TableRow>
 						))
 					)}
-				</tbody>
-			</table>
+				</TableBody>
+			</Table>
 		</div>
 	);
 }

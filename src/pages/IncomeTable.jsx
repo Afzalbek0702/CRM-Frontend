@@ -58,31 +58,54 @@ export default function IncomeTable() {
       {payments && payments.length < 1 ? (
         <p>To'lovlar yo'q</p>
       ) : (
-        <table>
-          <thead>
-            <tr>
-              <th><BsCalendar2DateFill /> Sana</th>
-              <th><FaUserGraduate /> O'quvchi</th>
-              <th><FaUsers /> Guruh</th>
-              <th><FaMoneyBillWave /> Miqdor</th>
-              <th><BsCreditCard2BackFill /> Tur</th>
-              <th></th>
-            </tr>
-          </thead>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>
+                <BsCalendar2DateFill /> Sana
+              </TableHead>
 
-          <tbody>
+              <TableHead>
+                <FaUserGraduate /> O'quvchi
+              </TableHead>
+
+              <TableHead>
+                <FaUsers /> Guruh
+              </TableHead>
+
+              <TableHead>
+                <FaMoneyBillWave /> Miqdor
+              </TableHead>
+
+              <TableHead>
+                <BsCreditCard2BackFill /> Tur
+              </TableHead>
+
+              <TableHead></TableHead>
+            </TableRow>
+          </TableHeader>
+
+          <TableBody>
             {(payments || []).map((p) => (
-              <tr key={p.id}>
-                <td>{formatDate(p.paid_at)}</td>
-                <td>{p.student_name}</td>
-                <td>{p.group_name}</td>
-                <td>{p.amount?.toLocaleString() ?? 0} so'm</td>
-                <td>{p.method}</td>
-                <td style={{ width: "10px" }}>
-                  <button
+              <TableRow key={p.id}>
+                <TableCell>{formatDate(p.paid_at)}</TableCell>
+
+                <TableCell>{p.student_name}</TableCell>
+
+                <TableCell>{p.group_name}</TableCell>
+
+                <TableCell>
+                  {p.amount?.toLocaleString() ?? 0} so'm
+                </TableCell>
+
+                <TableCell>{p.method}</TableCell>
+
+                <TableCell style={{ width: "10px" }}>
+                  <Button
                     className="icon-button"
                     onClick={(e) => {
-                      const rect = e.currentTarget.getBoundingClientRect();
+                      const rect =
+                        e.currentTarget.getBoundingClientRect();
 
                       const menuHeight = 100;
                       const menuWidth = 150;
@@ -90,20 +113,36 @@ export default function IncomeTable() {
                       const scrollY = window.scrollY;
                       const scrollX = window.scrollX;
 
-                      const absoluteTop = rect.top + scrollY;
-                      const absoluteBottom = rect.bottom + scrollY;
+                      const absoluteTop =
+                        rect.top + scrollY;
+                      const absoluteBottom =
+                        rect.bottom + scrollY;
 
-                      const viewportBottom = scrollY + window.innerHeight;
-                      const viewportRight = scrollX + window.innerWidth;
+                      const viewportBottom =
+                        scrollY + window.innerHeight;
+                      const viewportRight =
+                        scrollX + window.innerWidth;
 
                       const top =
-                        absoluteBottom + menuHeight > viewportBottom
-                          ? absoluteTop - menuHeight - 8
+                        absoluteBottom + menuHeight >
+                          viewportBottom
+                          ? absoluteTop -
+                          menuHeight -
+                          8
                           : absoluteBottom + 8;
 
-                      let left = rect.right + scrollX - menuWidth;
-                      if (left + menuWidth > viewportRight) {
-                        left = viewportRight - menuWidth - 10;
+                      let left =
+                        rect.right +
+                        scrollX -
+                        menuWidth;
+                      if (
+                        left + menuWidth >
+                        viewportRight
+                      ) {
+                        left =
+                          viewportRight -
+                          menuWidth -
+                          10;
                       }
                       if (left < scrollX) {
                         left = scrollX + 10;
@@ -115,17 +154,17 @@ export default function IncomeTable() {
                           top: top + "px",
                           left: left + "px",
                         },
-                        payment: p
+                        payment: p,
                       });
                     }}
                   >
                     <FaEllipsisV />
-                  </button>
-                </td>
-              </tr>
+                  </Button>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       )}
 
       <ActionMenu

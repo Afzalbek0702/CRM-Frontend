@@ -7,7 +7,23 @@ import { useTeachers } from "../services/teacher/useTeachers.js";
 import { useConfirm } from "../components/ConfirmProvider.jsx";
 import { withConfirm } from "../helpers/withConfirm.js";
 import { goBack } from "../utils/navigate.js";
-
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table"
+import {
+	InputGroup,
+	InputGroupAddon,
+	InputGroupButton,
+	InputGroupInput,
+	InputGroupText,
+	InputGroupTextarea,
+} from "@/components/ui/input-group"
+import { Button } from "@/components/ui/button";
 import {
 	FaEllipsisV,
 	FaUserGraduate,
@@ -66,17 +82,21 @@ export default function Students() {
 
 	return (
 		<div className="table-container">
-			<button className="btn btn-default bg-primary " onClick={goBack}>
+			<Button className="btn btn-default bg-primary " onClick={goBack}>
 				← Ortga
-			</button>
+			</Button>
+
 			<h2>
 				<FaUserGraduate /> O'quvchilar
 			</h2>
+
 			<div className="table-actions mb-[30px]">
 				<div className="filters">
 					<select
 						value={selectedTeacher}
-						onChange={(e) => setSelectedTeacher(Number(e.target.value) || "")}
+						onChange={(e) =>
+							setSelectedTeacher(Number(e.target.value) || "")
+						}
 					>
 						<option value="">Hamma o'qituvchilar</option>
 						{teachers.map((t) => (
@@ -88,7 +108,9 @@ export default function Students() {
 
 					<select
 						value={selectedGroup}
-						onChange={(e) => setSelectedGroup(Number(e.target.value) || "")} // converts to number
+						onChange={(e) =>
+							setSelectedGroup(Number(e.target.value) || "")
+						}
 					>
 						<option value="">Hamma guruhlar</option>
 						{groups.map((g) => (
@@ -98,16 +120,20 @@ export default function Students() {
 						))}
 					</select>
 				</div>
-				<div className="search-box">
-					<FaSearch />
-					<input
+
+				<InputGroup>
+					<InputGroupInput
 						type="text"
 						placeholder="O'quvchilarni ismi bo'yicha qidirsh ..."
 						value={searchTerm}
 						onChange={(e) => setSearchTerm(e.target.value)}
 					/>
-				</div>
-				<button
+					<InputGroupAddon>
+						<FaSearch />
+					</InputGroupAddon>
+				</InputGroup>
+
+				<Button
 					className="btn btn-default bg-primary  text-nowrap"
 					onClick={() => {
 						setEditingStudent(null);
@@ -115,49 +141,61 @@ export default function Students() {
 					}}
 				>
 					<FaPlus /> O'quvchi qo'shish
-				</button>
+				</Button>
 			</div>
 
 			{students && students.length < 1 ? (
 				<p>Studentlar yo'q</p>
 			) : (
-				<table>
-					<thead>
-						<tr>
-							<th>
+				<Table>
+					<TableHeader>
+						<TableRow>
+							<TableHead>
 								<FaUserGraduate /> Ism
-							</th>
-							<th>
+							</TableHead>
+
+							<TableHead>
 								<FaUsers /> Guruh nomi
-							</th>
-							<th>
+							</TableHead>
+
+							<TableHead>
 								<FaPhone /> Telefon
-							</th>
-							<th>
+							</TableHead>
+
+							<TableHead>
 								<FaBirthdayCake /> Tug'ilgan kun
-							</th>
-							<th>
+							</TableHead>
+
+							<TableHead>
 								<FaUsers /> Ota-onasi
-							</th>
-							<th>
+							</TableHead>
+
+							<TableHead>
 								<FaPhone /> Ota-onasi telefon
-							</th>
-							<th>
+							</TableHead>
+
+							<TableHead>
 								<FaWallet /> Balance
-							</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
+							</TableHead>
+
+							<TableHead></TableHead>
+						</TableRow>
+					</TableHeader>
+
+					<TableBody>
 						{(students || [])
 							.filter((s) =>
-								s.full_name.toLowerCase().includes(searchTerm.toLowerCase())
+								s.full_name
+									.toLowerCase()
+									.includes(searchTerm.toLowerCase())
 							)
 							.filter((s) => {
 								if (!selectedTeacher) return true;
 								if (!s.groups) return false;
 
-								const groupObj = groups.find(g => g.id === s.groups.id);
+								const groupObj = groups.find(
+									(g) => g.id === s.groups.id
+								);
 								return groupObj?.teacher_id === selectedTeacher;
 							})
 							.filter((s) => {
@@ -170,30 +208,34 @@ export default function Students() {
 								const formatDate = (d) => {
 									if (!d) return "";
 									return String(d).split("T")[0];
-
-
-
 								};
 
 								return (
-									<tr
+									<TableRow
 										key={s.id}
 										onClick={() => handleRowClick(s.id)}
-										style={{ cursor: "pointer" }}
+										className="cursor-pointer"
 									>
-										<td>{s.full_name}</td>
-										<td>
-											{Array.isArray(s.groups) && s.groups.length > 0
-												? s.groups.map(g => g.name).join(", ")
+										<TableCell>{s.full_name}</TableCell>
+
+										<TableCell>
+											{Array.isArray(s.groups) &&
+												s.groups.length > 0
+												? s.groups
+													.map((g) => g.name)
+													.join(", ")
 												: s.groups && s.groups.name
 													? s.groups.name
 													: "No Group"}
-										</td>
-										<td>
+										</TableCell>
+
+										<TableCell>
 											<p
 												onClick={(e) => {
 													e.stopPropagation();
-													navigator.clipboard.writeText(s.phone);
+													navigator.clipboard.writeText(
+														s.phone
+													);
 
 													const el = e.currentTarget;
 													el.dataset.copied = "true";
@@ -203,16 +245,25 @@ export default function Students() {
 													}, 2000);
 												}}
 												data-copied="false"
-												className="copy-phone">{s.phone}</p>
-										</td>
+												className="copy-phone"
+											>
+												{s.phone}
+											</p>
+										</TableCell>
 
-										<td>{formatDate(s.birthday)}</td>
-										<td>{s.parents_name}</td>
-										<td>
+										<TableCell>
+											{formatDate(s.birthday)}
+										</TableCell>
+
+										<TableCell>{s.parents_name}</TableCell>
+
+										<TableCell>
 											<p
 												onClick={(e) => {
 													e.stopPropagation();
-													navigator.clipboard.writeText(s.parents_phone);
+													navigator.clipboard.writeText(
+														s.parents_phone
+													);
 
 													const el = e.currentTarget;
 													el.dataset.copied = "true";
@@ -222,38 +273,73 @@ export default function Students() {
 													}, 2000);
 												}}
 												data-copied="false"
-												className="copy-phone">{s.parents_phone}</p>
-										</td>
-										<td>{s.monthly_paid?.toLocaleString() ?? 0} so&apos;m</td>
-										<td
+												className="copy-phone"
+											>
+												{s.parents_phone}
+											</p>
+										</TableCell>
+
+										<TableCell>
+											{s.monthly_paid?.toLocaleString() ??
+												0}{" "}
+											so&apos;m
+										</TableCell>
+
+										<TableCell
 											style={{ width: "10px" }}
-											onClick={(e) => e.stopPropagation()}
+											onClick={(e) =>
+												e.stopPropagation()
+											}
 										>
-											<button
+											<Button
 												className="icon-button"
 												onClick={(e) => {
-													const rect = e.currentTarget.getBoundingClientRect();
+													const rect =
+														e.currentTarget.getBoundingClientRect();
 
 													const menuHeight = 110;
 													const menuWidth = 150;
 
-													const scrollY = window.scrollY;
-													const scrollX = window.scrollX;
+													const scrollY =
+														window.scrollY;
+													const scrollX =
+														window.scrollX;
 
-													const absoluteTop = rect.top + scrollY;
-													const absoluteBottom = rect.bottom + scrollY;
+													const absoluteTop =
+														rect.top + scrollY;
+													const absoluteBottom =
+														rect.bottom + scrollY;
 
-													const viewportBottom = scrollY + window.innerHeight;
-													const viewportRight = scrollX + window.innerWidth;
+													const viewportBottom =
+														scrollY +
+														window.innerHeight;
+													const viewportRight =
+														scrollX +
+														window.innerWidth;
 
 													const top =
-														absoluteBottom + menuHeight > viewportBottom
-															? absoluteTop - menuHeight - 8
-															: absoluteBottom + 8;
+														absoluteBottom +
+															menuHeight >
+															viewportBottom
+															? absoluteTop -
+															menuHeight -
+															8
+															: absoluteBottom +
+															8;
 
-													let left = rect.right + scrollX - menuWidth;
-													if (left + menuWidth > viewportRight) {
-														left = viewportRight - menuWidth - 10;
+													let left =
+														rect.right +
+														scrollX -
+														menuWidth;
+													if (
+														left +
+														menuWidth >
+														viewportRight
+													) {
+														left =
+															viewportRight -
+															menuWidth -
+															10;
 													}
 													if (left < scrollX) {
 														left = scrollX + 10;
@@ -263,26 +349,30 @@ export default function Students() {
 														isOpen: true,
 														position: {
 															top: top + "px",
-															left: left + "px",
+															left:
+																left +
+																"px",
 														},
 														student: s,
 													});
 												}}
 											>
 												<FaEllipsisV />
-											</button>
-										</td>
-									</tr>
+											</Button>
+										</TableCell>
+									</TableRow>
 								);
 							})}
-					</tbody>
-				</table>
+					</TableBody>
+				</Table>
 			)}
 
 			<ActionMenu
 				isOpen={actionMenu.isOpen}
 				position={actionMenu.position}
-				onClose={() => setActionMenu((s) => ({ ...s, isOpen: false }))}
+				onClose={() =>
+					setActionMenu((s) => ({ ...s, isOpen: false }))
+				}
 				entityLabel="Student"
 				onEdit={() => {
 					const s = actionMenu.student;
@@ -306,7 +396,11 @@ export default function Students() {
 				initialData={editingStudent}
 				onSubmit={async (formData) => {
 					if (editingStudent) {
-						console.log("Updating student:", editingStudent?.id, formData);
+						console.log(
+							"Updating student:",
+							editingStudent?.id,
+							formData
+						);
 						await updateStudent(editingStudent.id, formData);
 					} else {
 						await createStudent(formData);
@@ -325,7 +419,10 @@ export default function Students() {
 				initialGroupId={addToGroupStudent?.group_id}
 				onConfirm={async (groupId) => {
 					if (!addToGroupStudent) return;
-					await addToGroup(addToGroupStudent.id, Number(groupId));
+					await addToGroup(
+						addToGroupStudent.id,
+						Number(groupId)
+					);
 					setAddToGroupOpen(false);
 					setAddToGroupStudent(null);
 				}}
