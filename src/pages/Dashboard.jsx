@@ -109,31 +109,36 @@ export default function Dashboard() {
 			)}
 			{user?.role === "CEO" ? (
 				<div className="flex gap-7.5 mt-5">
-					<div className="max-w-150 w-full">
+					<div className="max-w-150 w-full table-container">
 						<h2 className="border-l-2 border-primary pl-2.5 mb-5">Bugungi darslar</h2>
-						{todayLessons && todayLessons.length < 1 ? (
-							<p>Darslar yo'q</p>
-						) : (
-							<Table>
-								<TableCaption>Bugungi darslar</TableCaption>
-								<TableHeader className={"bg-"}>
-									<TableRow className={"text-black"}>
-										<TableHead>
-											<FaUsers /> Guruh Nomi
-										</TableHead>
-										<TableHead>
-											<FaBook /> Kurs
-										</TableHead>
-										<TableHead>
-											<FaChalkboardTeacher /> O'qituvchi
-										</TableHead>
-										<TableHead>
-											<FaClock /> Dars Vaqti
-										</TableHead>
+
+						<Table>
+							<TableCaption>Bugungi darslar</TableCaption>
+							<TableHeader>
+								<TableRow>
+									<TableHead>
+										<FaUsers /> Guruh Nomi
+									</TableHead>
+									<TableHead>
+										<FaBook /> Kurs
+									</TableHead>
+									<TableHead>
+										<FaChalkboardTeacher /> O'qituvchi
+									</TableHead>
+									<TableHead>
+										<FaClock /> Dars Vaqti
+									</TableHead>
+								</TableRow>
+							</TableHeader>
+							<TableBody>
+								{todayLessons.length === 0 ? (
+									<TableRow>
+										<TableCell colSpan={8}>
+											Darslar topilmadi topilmadi.
+										</TableCell>
 									</TableRow>
-								</TableHeader>
-								<TableBody>
-									{todayLessons?.map((lesson) => (
+								) : (
+									todayLessons?.map((lesson) => (
 										<TableRow
 											key={lesson.id}
 											onClick={() => handleRowClick(lesson.id)}
@@ -144,37 +149,44 @@ export default function Dashboard() {
 											<TableCell>{lesson.teacher_name}</TableCell>
 											<TableCell>{lesson.lesson_time}</TableCell>
 										</TableRow>
-									))}
-								</TableBody>
-							</Table>
-						)}
+									)))}
+							</TableBody>
+						</Table>
+
 					</div>
 
 					<div className="dashboard-today-lesson absent-students flex-1">
+						<div className="table-container">
 						<h2 className="border-l-2 border-primary pl-2.5 mb-5">
 							Bugun kelmagan o'quvchilar
 						</h2>
 
-						<div className="table-container">
-							{students && students.length < 1 ? (
-								<p>Studentlar yo'q</p>
-							) : absentStudents && absentStudents.length > 0 ? (
-								<Table>
-									<TableHead className={"bg-primary"}>
-										<TableRow className={"bg-primary"}>
-											<TableHeader>
-												<FaUsers /> O'quvchi Nomi
-											</TableHeader>
-											<TableHeader>
-												<FaUsers /> Guruh
-											</TableHeader>
-											<TableHeader>
-												<FaPhone /> Telefon
-											</TableHeader>
+						
+
+							<Table>
+								<TableHead>
+									<TableRow>
+										<TableHeader>
+											<FaUsers /> O'quvchi Nomi
+										</TableHeader>
+										<TableHeader>
+											<FaUsers /> Guruh
+										</TableHeader>
+										<TableHeader>
+											<FaPhone /> Telefon
+										</TableHeader>
+									</TableRow>
+								</TableHead>
+								<TableBody>
+									{absentStudents.length === 0 ? (
+										<TableRow>
+											<TableCell colSpan={8}>
+												Kelmagan o'quvchilar topilmadi.
+											</TableCell>
 										</TableRow>
-									</TableHead>
-									<TableBody>
-										{absentStudents.map((student) => (
+									) : (
+
+										absentStudents.map((student) => (
 											<TableRow
 												key={student.student_id}
 												onClick={() => handleRowClick(student.group_id)}
@@ -200,12 +212,12 @@ export default function Dashboard() {
 													{student.phone}
 												</TableCell>
 											</TableRow>
-										))}
-									</TableBody>
-								</Table>
-							) : (
-								<p>Bugun hamma o'quvchilar kelib qolipdi! 🎉</p>
-							)}
+										)))
+									}
+								</TableBody>
+							</Table>
+
+
 						</div>
 					</div>
 				</div>

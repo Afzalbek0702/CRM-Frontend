@@ -24,6 +24,19 @@ import {
 	InputGroupTextarea,
 } from "@/components/ui/input-group"
 import { Button } from "@/components/ui/button";
+import { Check, ChevronsUpDown } from "lucide-react"
+import {
+	Command,
+	CommandEmpty,
+	CommandGroup,
+	CommandInput,
+	CommandItem,
+} from "@/components/ui/command"
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover"
 import {
 	FaEllipsisV,
 	FaUserGraduate,
@@ -62,6 +75,8 @@ export default function Students() {
 		position: { top: 0, left: 0 },
 		student: null,
 	});
+	const [openGroup, setOpenGroup] = useState(false)
+	const [openTeacher, setOpenTeacher] = useState(false)
 	const [addToGroupOpen, setAddToGroupOpen] = useState(false);
 	const [addToGroupStudent, setAddToGroupStudent] = useState(null);
 	const { tenant } = useParams();
@@ -90,39 +105,12 @@ export default function Students() {
 				<FaUserGraduate /> O'quvchilar
 			</h2>
 
-			<div className="table-actions mb-[30px]">
-				<div className="filters">
-					<select
-						value={selectedTeacher}
-						onChange={(e) =>
-							setSelectedTeacher(Number(e.target.value) || "")
-						}
-					>
-						<option value="">Hamma o'qituvchilar</option>
-						{teachers.map((t) => (
-							<option key={t.id} value={t.id}>
-								{t.full_name}
-							</option>
-						))}
-					</select>
+			<div className="table-actions mb-7.5">
 
-					<select
-						value={selectedGroup}
-						onChange={(e) =>
-							setSelectedGroup(Number(e.target.value) || "")
-						}
-					>
-						<option value="">Hamma guruhlar</option>
-						{groups.map((g) => (
-							<option key={g.id} value={g.id}>
-								{g.name}
-							</option>
-						))}
-					</select>
-				</div>
 
-				<InputGroup>
+				<InputGroup className={"max-w-[500px]"}>
 					<InputGroupInput
+						
 						type="text"
 						placeholder="O'quvchilarni ismi bo'yicha qidirsh ..."
 						value={searchTerm}
@@ -142,48 +130,166 @@ export default function Students() {
 				>
 					<FaPlus /> O'quvchi qo'shish
 				</Button>
+
+
 			</div>
 
-			{students && students.length < 1 ? (
-				<p>Studentlar yo'q</p>
-			) : (
-				<Table>
-					<TableHeader>
+			<div className="filters mb-7.5">
+
+				<Popover open={openTeacher} onOpenChange={setOpenTeacher}>
+					<PopoverTrigger asChild>
+						<Button
+							variant="outline"
+							role="combobox"
+							aria-expanded={openTeacher}
+							className="w-[250px] justify-between btn-default"
+						>
+							{selectedTeacher
+								? teachers.find((t) => t.id === selectedTeacher)?.full_name
+								: "Hamma o'qituvchilar"}
+							<ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
+						</Button>
+					</PopoverTrigger>
+
+					<PopoverContent className="w-[250px] p-0">
+						<Command>
+							<CommandInput placeholder="Qidirish..." />
+							<CommandEmpty>Topilmadi.</CommandEmpty>
+
+							<CommandGroup>
+								<CommandItem
+									value="all"
+									onSelect={() => {
+										setSelectedTeacher("")
+										setOpenTeacher(false)
+									}}
+								>
+									Hamma o'qituvchilar
+								</CommandItem>
+
+								{teachers.map((t) => (
+									<CommandItem
+										key={t.id}
+										value={t.full_name}
+										onSelect={() => {
+											setSelectedTeacher(t.id)
+											setOpenTeacher(false)
+										}}
+									>
+										{t.full_name}
+										<Check
+											className={`ml-auto h-4 w-4 ${selectedTeacher === t.id ? "opacity-100" : "opacity-0"
+												}`}
+										/>
+									</CommandItem>
+								))}
+							</CommandGroup>
+						</Command>
+					</PopoverContent>
+				</Popover>
+
+				<Popover open={openGroup} onOpenChange={setOpenGroup} className={"btn-default"}>
+					<PopoverTrigger asChild>
+						<Button
+							variant="outline"
+							role="combobox"
+							aria-expanded={openGroup}
+							className="w-[250px] justify-between btn-default"
+						>
+							{selectedGroup
+								? groups.find((g) => g.id === selectedGroup)?.name
+								: "Hamma guruhlar"}
+							<ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
+						</Button>
+					</PopoverTrigger>
+
+					<PopoverContent className="w-[250px] p-0">
+						<Command>
+							<CommandInput placeholder="Qidirish..." />
+							<CommandEmpty>Topilmadi.</CommandEmpty>
+
+							<CommandGroup>
+								<CommandItem
+									value="all"
+									onSelect={() => {
+										setSelectedGroup("")
+										setOpenGroup(false)
+									}}
+								>
+									Hamma guruhlar
+								</CommandItem>
+
+								{groups.map((g) => (
+									<CommandItem
+										key={g.id}
+										value={g.name}
+										onSelect={() => {
+											setSelectedGroup(g.id)
+											setOpenGroup(false)
+										}}
+									>
+										{g.name}
+										<Check
+											className={`ml-auto h-4 w-4 ${selectedGroup === g.id ? "opacity-100" : "opacity-0"
+												}`}
+										/>
+									</CommandItem>
+								))}
+							</CommandGroup>
+						</Command>
+					</PopoverContent>
+				</Popover>
+
+
+
+
+			</div>
+
+
+			<Table>
+				<TableHeader>
+					<TableRow>
+						<TableHead>
+							<div><FaUserGraduate /> Ism</div>
+						</TableHead>
+
+						<TableHead>
+							<div><FaUsers /> Guruh nomi</div>
+						</TableHead>
+
+						<TableHead>
+							<div><FaPhone /> Telefon</div>
+						</TableHead>
+
+						<TableHead>
+							<div><FaBirthdayCake /> Tug'ilgan kun</div>
+						</TableHead>
+
+						<TableHead>
+							<div><FaUsers /> Ota-onasi</div>
+						</TableHead>
+
+						<TableHead>
+							<div><FaPhone /> Ota-onasi telefon</div>
+						</TableHead>
+
+						<TableHead>
+							<div><FaWallet /> Balance</div>
+						</TableHead>
+
+						<TableHead></TableHead>
+					</TableRow>
+				</TableHeader>
+
+				<TableBody>
+					{students.length === 0 ? (
 						<TableRow>
-							<TableHead>
-								<FaUserGraduate /> Ism
-							</TableHead>
-
-							<TableHead>
-								<FaUsers /> Guruh nomi
-							</TableHead>
-
-							<TableHead>
-								<FaPhone /> Telefon
-							</TableHead>
-
-							<TableHead>
-								<FaBirthdayCake /> Tug'ilgan kun
-							</TableHead>
-
-							<TableHead>
-								<FaUsers /> Ota-onasi
-							</TableHead>
-
-							<TableHead>
-								<FaPhone /> Ota-onasi telefon
-							</TableHead>
-
-							<TableHead>
-								<FaWallet /> Balance
-							</TableHead>
-
-							<TableHead></TableHead>
+							<TableCell colSpan={8}>
+								O'quvchilar topilmadi.
+							</TableCell>
 						</TableRow>
-					</TableHeader>
-
-					<TableBody>
-						{(students || [])
+					) : (
+						(students || [])
 							.filter((s) =>
 								s.full_name
 									.toLowerCase()
@@ -362,10 +468,10 @@ export default function Students() {
 										</TableCell>
 									</TableRow>
 								);
-							})}
-					</TableBody>
-				</Table>
-			)}
+							}))}
+				</TableBody>
+			</Table>
+
 
 			<ActionMenu
 				isOpen={actionMenu.isOpen}

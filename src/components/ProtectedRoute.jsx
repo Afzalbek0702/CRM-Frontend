@@ -1,12 +1,13 @@
 import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
+import Loader from "./Loader";
 
 export default function ProtectedRoute({ children }) {
 	const { user, loading } = useAuth();
 	const navigate = useNavigate();
 
 	if (loading) {
-		return <div>Checking authentication...</div>;
+		return <Loader></Loader>;
 	}
 
 	if (!user) {

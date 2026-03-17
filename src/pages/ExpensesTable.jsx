@@ -86,23 +86,23 @@ export default function ExpensesTable() {
                 <TableHeader>
                     <TableRow>
                         <TableHead>
-                            <BsCalendar2DateFill /> Sana
+                            <div><BsCalendar2DateFill /> Sana</div>
                         </TableHead>
 
                         <TableHead>
-                            <FaMoneyBillWave /> Tavsif
+                            <div><FaMoneyBillWave /> Tavsif</div>
                         </TableHead>
 
                         <TableHead>
-                            <FaMoneyBillWave /> Miqdor
+                            <div><FaMoneyBillWave /> Miqdor</div>
                         </TableHead>
 
                         <TableHead>
-                            <BsCreditCard2BackFill /> To'lov turi
+                            <div><BsCreditCard2BackFill /> To'lov turi</div>
                         </TableHead>
 
                         <TableHead>
-                            <FaUser /> Kiritgan
+                            <div><FaUser /> Kiritgan</div>
                         </TableHead>
 
                         <TableHead></TableHead>

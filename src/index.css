@@ -2553,7 +2553,7 @@ table::-webkit-scrollbar {
 		width: 100% !important;
 	}
 
-	Students table table[style*="width: 100%"] {
+	 table table[style*="width: 100%"] {
 		font-size: 12px !important;
 	}
 
@@ -2563,13 +2563,7 @@ table::-webkit-scrollbar {
 	}
 }
 
-Table Actions and Search .table-actions {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	margin-bottom: 30px;
-	gap: 20px;
-}
+
 
 .search-box {
 	display: flex;
@@ -3544,13 +3538,6 @@ Select styling .side-panel select {
 	}
 }
 
-.copy-phone {
-	cursor: pointer;
-	position: relative;
-	display: block;
-	width: 20%;
-}
-
 .copy-phone::after {
 	content: "Copied!";
 	position: absolute;
@@ -4470,14 +4457,26 @@ input[type="number"] {
 	overflow-x: auto;
 	overflow-y: hidden;
 }
-.table-container table {
-	/* color: black; */
+ .table-actions {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 30px;
+	gap: 20px;
+}
+table::-webkit-scrollbar {
+	display: none;
 }
 .table-container thead {
 	background-color: var(--primary);
-	/* border-bottom: 1px solid var(--color-primary); */
 	border-radius: 4px;
-
+}
+.table-container thead div {
+	display: flex;
+	justify-items: center;
+	gap: 2%;
+	align-items: center;
 }
 .table-container thead:first-child{
 	border-top-left-radius: 4px;
@@ -4491,6 +4490,14 @@ input[type="number"] {
 .table-container tbody tr:hover {
 	background-color: #2a2821;
 	transition: background-color 0.5s;
+}
+.table-container table th {
+	color: black;
+	white-space: nowrap;
+}
+.table-container input {
+	max-width: 400px;
+	width: 100%;
 }
 
 .btn-default {
@@ -4532,7 +4539,6 @@ input[type="number"] {
 .table-actions div {
 	border-radius: 4px;
 }
-
 
 
 

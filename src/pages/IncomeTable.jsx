@@ -12,6 +12,23 @@ import {
   FaUsers,
 } from "react-icons/fa";
 import { BsCalendar2DateFill, BsCreditCard2BackFill } from "react-icons/bs";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+  InputGroupText,
+  InputGroupTextarea,
+} from "@/components/ui/input-group"
+import { Button } from "@/components/ui/button";
 
 export default function IncomeTable() {
   const confirm = useConfirm();
@@ -55,38 +72,44 @@ export default function IncomeTable() {
 
   return (
     <div className="table-container">
-      {payments && payments.length < 1 ? (
-        <p>To'lovlar yo'q</p>
-      ) : (
-        <Table>
-          <TableHeader>
+
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>
+              <div><BsCalendar2DateFill /> Sana</div>
+            </TableHead>
+
+            <TableHead>
+              <div><FaUserGraduate /> O'quvchi</div>
+            </TableHead>
+
+            <TableHead>
+              <div><FaUsers /> Guruh</div>
+            </TableHead>
+
+            <TableHead>
+              <div><FaMoneyBillWave /> Miqdor</div>
+            </TableHead>
+
+            <TableHead>
+              <div><BsCreditCard2BackFill /> Tur</div>
+            </TableHead>
+
+            <TableHead></TableHead>
+          </TableRow>
+        </TableHeader>
+
+        <TableBody>
+
+          {(payments || []).length === 0 ? (
             <TableRow>
-              <TableHead>
-                <BsCalendar2DateFill /> Sana
-              </TableHead>
-
-              <TableHead>
-                <FaUserGraduate /> O'quvchi
-              </TableHead>
-
-              <TableHead>
-                <FaUsers /> Guruh
-              </TableHead>
-
-              <TableHead>
-                <FaMoneyBillWave /> Miqdor
-              </TableHead>
-
-              <TableHead>
-                <BsCreditCard2BackFill /> Tur
-              </TableHead>
-
-              <TableHead></TableHead>
+              <TableCell colSpan={6}>
+                To'lovlar topilmadi.
+              </TableCell>
             </TableRow>
-          </TableHeader>
-
-          <TableBody>
-            {(payments || []).map((p) => (
+          ) : (
+            (payments || []).map((p) => (
               <TableRow key={p.id}>
                 <TableCell>{formatDate(p.paid_at)}</TableCell>
 
@@ -162,10 +185,11 @@ export default function IncomeTable() {
                   </Button>
                 </TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      )}
+            )))}
+
+        </TableBody>
+      </Table>
+
 
       <ActionMenu
         isOpen={actionMenu.isOpen}

@@ -6,7 +6,23 @@ import SalaryTable from "./SalaryTable";
 import ExpensesTable from "./ExpensesTable";
 import DebtorsTable from "./DebtorsTable";
 import { goBack } from "../utils/navigate.js";
-
+import { Button } from "@/components/ui/button";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table"
+import {
+	InputGroup,
+	InputGroupAddon,
+	InputGroupButton,
+	InputGroupInput,
+	InputGroupText,
+	InputGroupTextarea,
+} from "@/components/ui/input-group"
 export default function Payments() {
 	const { category: rawCategory } = useParams();
 	const category = rawCategory ?? "income";
@@ -34,12 +50,12 @@ export default function Payments() {
 	}
 
 	return (
-		<div className="space-y-4">
-			<Button variant="default" onClick={goBack}>
+		<div className="space-y-4 table-container">
+			<Button variant="default" className={"btn-default"} onClick={goBack}>
 				← Ortga
 			</Button>
 
-			<h2 className="text-xl font-semibold uppercase">
+			<h2 className="text-xl font-semibold">
 				{category === "income"
 					? "To'lovlar"
 					: category === "salary"
@@ -53,38 +69,21 @@ export default function Payments() {
 
 			{category === "debtors" && (
 				<div className="flex items-center gap-2 mb-6">
-					<Input
-						type="text"
-						placeholder="O'quvchilarni ismi bo'yicha qidirish..."
-						value={searchTerm}
-						onChange={(e) => setSearchTerm(e.target.value)}
-						icon={<FaSearch className="text-sm" />}
-					/>
+					<InputGroup>
+						<InputGroupInput
+							type="text"
+							placeholder="O'quvchilarni ismi bo'yicha qidirish..."
+							value={searchTerm}
+							onChange={(e) => setSearchTerm(e.target.value)}
+						/>
+						<InputGroupAddon>
+							<FaSearch className="text-sm" />
+						</InputGroupAddon>
+					</InputGroup>
 				</div>
 			)}
 
 			<div className="overflow-x-auto">
-				{category === "income" && (
-					<Table>
-						<TableHeader>
-							<TableRow>
-								<TableHead>O'quvchi</TableHead>
-								<TableHead>Miqdor</TableHead>
-								<TableHead>Sana</TableHead>
-							</TableRow>
-						</TableHeader>
-						<TableBody>
-							{payments?.map((p) => (
-								<TableRow key={p.id}>
-									<TableCell>{p.student_name}</TableCell>
-									<TableCell>{p.amount?.toLocaleString() ?? 0} so'm</TableCell>
-									<TableCell>{p.date?.split("T")[0]}</TableCell>
-								</TableRow>
-							))}
-						</TableBody>
-					</Table>
-				)}
-
 				{renderContent()}
 			</div>
 		</div>

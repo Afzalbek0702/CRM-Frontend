@@ -112,13 +112,12 @@ export default function Settings() {
 
     return (
         <div className="table-container">
-            <Button onClick={goBack}>← Ortga</Button>
-            <h1>Admin Sozlamalari</h1>
+            <Button className={"btn-default"} onClick={goBack}>← Ortga</Button>
+            <h2>Admin Sozlamalari</h2>
 
-            {/* Courses Section */}
-            <h2>Kurslar</h2>
+            <h3>Kurslar</h3>
             <div className="mb-5">
-                <Button onClick={openCreateModal} variant="primary">
+                <Button onClick={openCreateModal} variant="primary" className={"btn-default"}>
                     <FaPlus /> Kurs qo'shish
                 </Button>
             </div>
@@ -164,9 +163,9 @@ export default function Settings() {
             <hr className="my-10" />
 
             {/* Rooms Section */}
-            <h2>Xonalar</h2>
+            <h3>Xonalar</h3>
             <div className="mb-5">
-                <Button onClick={openCreateRoom} variant="primary">
+                <Button className={"btn-default"} onClick={openCreateRoom} variant="primary">
                     <FaPlus /> Xona qo'shish
                 </Button>
             </div>

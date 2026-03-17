@@ -81,22 +81,22 @@ export default function SalaryTable() {
 		<TableHeader>
 			<TableRow>
 				<TableHead>
-					<BsCalendar2DateFill /> Sana
+					<div><BsCalendar2DateFill /> Sana</div>
 				</TableHead>
 
 				<TableHead>
-					<FaUserTie /> Xodim
+					<div><FaUserTie /> Xodim</div>
 				</TableHead>
 
 				<TableHead>
-					<FaMoneyBillWave /> Miqdor
+					<div><FaMoneyBillWave /> Miqdor</div>
 				</TableHead>
 
 				<TableHead>
-					<BsCreditCard2BackFill /> To'lov turi
+					<div><BsCreditCard2BackFill /> To'lov turi</div>
 				</TableHead>
 
-				<TableHead>Izoh</TableHead>
+				<TableHead><div>Izoh</div></TableHead>
 
 				<TableHead></TableHead>
 			</TableRow>

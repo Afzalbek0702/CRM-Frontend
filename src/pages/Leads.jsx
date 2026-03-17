@@ -99,151 +99,157 @@ export default function Leads() {
 	)
 
 	return (
-	<div className="table-container">
-		<Button className="btn-default rounded text-black" onClick={goBack}>
-			← Ortga
-		</Button>
-
-		<h2 className="page-title">
-			<FaThList /> Lidlar
-		</h2>
-
-		<div className="table-actions mb-7.5">
-			<InputGroup>
-				<InputGroupInput
-					type="text"
-					placeholder="Lidlarni ismi bo'yicha qidirsh ..."
-					value={searchTerm}
-					onChange={(e) => setSearchTerm(e.target.value)}
-				/>
-				<InputGroupAddon>
-					<FaSearch />
-				</InputGroupAddon>
-			</InputGroup>
-
-			<Button
-				onClick={handleCreateLead}
-				className="btn-default"
-			>
-				<FaPlus /> Lid qo'shish
+		<div className="table-container">
+			<Button className="btn-default rounded text-black" onClick={goBack}>
+				← Ortga
 			</Button>
-		</div>
 
-		{leads && leads.length < 1 ? (
-			<p>Lidlar yo'q</p>
-		) : (
+			<h2 className="page-title">
+				<FaThList /> Lidlar
+			</h2>
+
+			<div className="table-actions mb-7.5">
+				<InputGroup>
+					<InputGroupInput
+						type="text"
+						placeholder="Lidlarni ismi bo'yicha qidirsh ..."
+						value={searchTerm}
+						onChange={(e) => setSearchTerm(e.target.value)}
+					/>
+					<InputGroupAddon>
+						<FaSearch />
+					</InputGroupAddon>
+				</InputGroup>
+
+				<Button
+					onClick={handleCreateLead}
+					className="btn-default"
+				>
+					<FaPlus /> Lid qo'shish
+				</Button>
+			</div>
+
+
 			<Table>
 				<TableHeader>
 					<TableRow>
 						<TableHead>
-							<FaThList /> Ism
+							<div><FaThList /> Ism</div>
 						</TableHead>
 
 						<TableHead>
-							<FaPhone /> Telefon
+							<div><FaPhone /> Telefon</div>
 						</TableHead>
 
-						<TableHead>Manba</TableHead>
+						<TableHead><div>Manba</div></TableHead>
 
-						<TableHead>Qiziqadigan Kurs</TableHead>
+						<TableHead><div>Qiziqadigan Kurs</div></TableHead>
 
-						<TableHead>Izoh</TableHead>
+						<TableHead><div>Izoh</div></TableHead>
 
 						<TableHead></TableHead>
 					</TableRow>
 				</TableHeader>
 
 				<TableBody>
-					{(leads || [])
-						.filter(
-							(l) =>
-								l.full_name &&
-								l.full_name
-									.toLowerCase()
-									.includes(searchTerm.toLowerCase()),
-						)
-						.map((l) => (
-							<TableRow key={l.id}>
-								<TableCell>{l.full_name}</TableCell>
 
-								<TableCell>
-									<p
-										onClick={(e) => {
-											e.stopPropagation();
-											navigator.clipboard.writeText(l.phone);
+					{leads.length === 0 ? (
+						<TableRow>
+							<TableCell colSpan={6}>
+								Lidlar topilmadi.
+							</TableCell>
+						</TableRow>
+					) : (
+						(leads || [])
+							.filter(
+								(l) =>
+									l.full_name &&
+									l.full_name
+										.toLowerCase()
+										.includes(searchTerm.toLowerCase()),
+							)
+							.map((l) => (
+								<TableRow key={l.id}>
+									<TableCell>{l.full_name}</TableCell>
 
-											const el = e.currentTarget;
-											el.dataset.copied = "true";
+									<TableCell>
+										<p
+											onClick={(e) => {
+												e.stopPropagation();
+												navigator.clipboard.writeText(l.phone);
 
-											setTimeout(() => {
-												el.dataset.copied = "false";
-											}, 2000);
-										}}
-										data-copied="false"
-										className="copy-phone"
+												const el = e.currentTarget;
+												el.dataset.copied = "true";
+
+												setTimeout(() => {
+													el.dataset.copied = "false";
+												}, 2000);
+											}}
+											data-copied="false"
+											className="copy-phone"
+										>
+											{l.phone}
+										</p>
+									</TableCell>
+
+									<TableCell>{l.source}</TableCell>
+
+									<TableCell>
+										{
+											courseData.find(
+												(c) => c.name === l.interested_course,
+											)?.name || "-"
+										}
+									</TableCell>
+
+									<TableCell>{l.comment}</TableCell>
+
+									<TableCell
+										style={{ width: "10px" }}
+										onClick={(e) => e.stopPropagation()}
 									>
-										{l.phone}
-									</p>
-								</TableCell>
-
-								<TableCell>{l.source}</TableCell>
-
-								<TableCell>
-									{
-										courseData.find(
-											(c) => c.name === l.interested_course,
-										)?.name || "-"
-									}
-								</TableCell>
-
-								<TableCell>{l.comment}</TableCell>
-
-								<TableCell
-									style={{ width: "10px" }}
-									onClick={(e) => e.stopPropagation()}
-								>
-									<Button
-										className="icon-button"
-										onClick={(e) => handleActionMenu(e, l)}
-									>
-										<FaEllipsisV />
-									</Button>
-								</TableCell>
-							</TableRow>
-						))}
+										<Button
+											className="icon-button"
+											onClick={(e) => handleActionMenu(e, l)}
+										>
+											<FaEllipsisV />
+										</Button>
+									</TableCell>
+								</TableRow>
+							)))}
 				</TableBody>
 			</Table>
-		)}
 
-		<ActionMenu
-			isOpen={actionMenu.isOpen}
-			position={actionMenu.position}
-			onClose={() => setActionMenu((s) => ({ ...s, isOpen: false }))}
-			entityLabel="Lead"
-			onEdit={() => {
-				const l = actionMenu.lead;
-				if (!l) return;
-				setEditingLead(l);
-				setIsModalOpen(true);
-				setActionMenu((m) => ({ ...m, isOpen: false }));
-			}}
-			onDelete={() => handleDeleteLead(actionMenu.lead)}
-		/>
 
-		<LeadModal
-			isOpen={isModalOpen}
-			onClose={() => setIsModalOpen(false)}
-			initialData={editingLead}
-			onSubmit={async (data) => {
-				if (editingLead) {
-					await updateLead({ id: editingLead.id, data });
-				} else {
-					await createLead(data);
-				}
-				setIsModalOpen(false);
-				setEditingLead(null);
-			}}
-		/>
-	</div>
-);
+			<ActionMenu
+				isOpen={actionMenu.isOpen}
+				position={actionMenu.position}
+				onClose={() => setActionMenu((s) => ({ ...s, isOpen: false }))}
+				entityLabel="Lead"
+				onEdit={() => {
+					const l = actionMenu.lead;
+					if (!l) return;
+					setEditingLead(l);
+					setIsModalOpen(true);
+					setActionMenu((m) => ({ ...m, isOpen: false }));
+				}}
+				onDelete={() => handleDeleteLead(actionMenu.lead)}
+			/>
+
+			<LeadModal
+				isOpen={isModalOpen}
+				onClose={() => setIsModalOpen(false)}
+				initialData={editingLead}
+				onSubmit={async (data) => {
+					if (editingLead) {
+						await updateLead({ id: editingLead.id, data });
+					} else {
+						await createLead(data);
+					}
+					setIsModalOpen(false);
+					setEditingLead(null);
+				}}
+			/>
+		</div>
+	);
 }

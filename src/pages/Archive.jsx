@@ -13,17 +13,29 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { Check, ChevronsUpDown, Search } from "lucide-react"
+import { Button } from "@/components/ui/button"
 import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
+	Command,
+	CommandEmpty,
+	CommandGroup,
+	CommandInput,
+	CommandItem,
+} from "@/components/ui/command"
+import {
+	InputGroup,
+	InputGroupAddon,
+	InputGroupButton,
+	InputGroupInput,
+	InputGroupText,
+	InputGroupTextarea,
+} from "@/components/ui/input-group"
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover"
 import "./Archive.css";
-import { Button } from "@/components/ui/button.jsx";
-import { Input } from "@/components/ui/input.jsx";
 
 export default function Archive() {
 	const { category } = useParams();
@@ -37,6 +49,9 @@ export default function Archive() {
 		useAllArchivedPayments,
 		useAllArchivedTeachers,
 	} = useArchive();
+
+	const [openTeacher, setOpenTeacher] = useState(false)
+	const [openGroup, setOpenGroup] = useState(false)
 
 	const {
 		data: students = [],
@@ -78,8 +93,8 @@ export default function Archive() {
 	}
 
 	return (
-		<div className="archive-container">
-			<Button onClick={goBack}>← Ortga</Button>
+		<div className="table-container">
+			<Button className={"btn-default"} onClick={goBack}>← Ortga</Button>
 
 			<h2>
 				Arxiv -{" "}
@@ -100,51 +115,130 @@ export default function Archive() {
 
 			{category === "students" && (
 				<>
+
+					<div className="flex items-center gap-2 mb-6">
+						<InputGroup>
+							<InputGroupInput
+								type="text"
+								placeholder="Ismi orqali qidirish"
+								value={searchTerm}
+								onChange={(e) => setSearchTerm(e.target.value)}
+							/>
+
+							<InputGroupAddon>
+								<FaSearch className="text-sm" />
+							</InputGroupAddon>
+						</InputGroup>
+					</div>
+
+
 					<div className="flex items-center gap-5 mb-4">
-						<Select onValueChange={(value) => setSelectedTeacher(Number(value) || "")}>
-							<SelectTrigger>
-								<SelectValue placeholder="Hamma O'qtuvchilar" />
-							</SelectTrigger>
-							<SelectContent position="popper">
-								<SelectGroup>
-									{teachers.map((t) => (
-										<SelectItem key={t.id} value={t.id}>
-											{t.full_name}
-										</SelectItem>
-									))}
-								</SelectGroup>
-							</SelectContent>
-						</Select>
+						<Popover open={openTeacher} onOpenChange={setOpenTeacher}>
+							<PopoverTrigger asChild>
+								<Button
+									variant="outline"
+									role="combobox"
+									className="w-[220px] justify-between btn-default"
+								>
+									{selectedTeacher
+										? teachers.find((t) => t.id === selectedTeacher)?.full_name
+										: "Hamma O'qituvchilar"}
+									<ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
+								</Button>
+							</PopoverTrigger>
 
-						<Select onValueChange={(value) => setSelectedGroup(Number(value) || "")}>
-							<SelectTrigger>
-								<SelectValue placeholder="Hamma guruhlar" />
-							</SelectTrigger>
-							<SelectContent position="popper">
-								<SelectGroup>
-									{archivedGroups.map((g) => (
-										<SelectItem key={g.id} value={g.id}>
-											{g.name}
-										</SelectItem>
-									))}
-								</SelectGroup>
-							</SelectContent>
-						</Select>
+							<PopoverContent className="w-[220px] p-0">
+								<Command>
+									<CommandInput placeholder="Qidirish..." />
+									<CommandEmpty>Topilmadi.</CommandEmpty>
+
+									<CommandGroup>
+										<CommandItem
+											onSelect={() => {
+												setSelectedTeacher("")
+												setOpenTeacher(false)
+											}}
+										>
+											Hamma O'qituvchilar
+										</CommandItem>
+
+										{teachers.map((t) => (
+											<CommandItem
+												key={t.id}
+												value={t.full_name}
+												onSelect={() => {
+													setSelectedTeacher(t.id)
+													setOpenTeacher(false)
+												}}
+											>
+												{t.full_name}
+												<Check
+													className={`ml-auto h-4 w-4 ${selectedTeacher === t.id ? "opacity-100" : "opacity-0"
+														}`}
+												/>
+											</CommandItem>
+										))}
+									</CommandGroup>
+								</Command>
+							</PopoverContent>
+						</Popover>
+
+						<Popover open={openGroup} onOpenChange={setOpenGroup}>
+							<PopoverTrigger asChild>
+								<Button
+									variant="outline"
+									role="combobox"
+									className="w-[220px] justify-between btn-default"
+								>
+									{selectedGroup
+										? archivedGroups.find((g) => g.id === selectedGroup)?.name
+										: "Hamma guruhlar"}
+									<ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
+								</Button>
+							</PopoverTrigger>
+
+							<PopoverContent className="w-[220px] p-0">
+								<Command>
+									<CommandInput placeholder="Qidirish..." />
+									<CommandEmpty>Topilmadi.</CommandEmpty>
+
+									<CommandGroup>
+										<CommandItem
+											onSelect={() => {
+												setSelectedGroup("")
+												setOpenGroup(false)
+											}}
+										>
+											Hamma guruhlar
+										</CommandItem>
+
+										{archivedGroups.map((g) => (
+											<CommandItem
+												key={g.id}
+												value={g.name}
+												onSelect={() => {
+													setSelectedGroup(g.id)
+													setOpenGroup(false)
+												}}
+											>
+												{g.name}
+												<Check
+													className={`ml-auto h-4 w-4 ${selectedGroup === g.id ? "opacity-100" : "opacity-0"
+														}`}
+												/>
+											</CommandItem>
+										))}
+									</CommandGroup>
+								</Command>
+							</PopoverContent>
+						</Popover>
 					</div>
 
-					<div className="flex items-center ml-15 mb-5 rounded-3xl px-3 py-4 w-[320px] border duration-150">
-						<FaSearch className="text-sm mr-2.5" />
-						<Input
-							type="text"
-							placeholder="Ismi orqali qidirish"
-							value={searchTerm}
-							onChange={(e) => setSearchTerm(e.target.value)}
-						/>
-					</div>
+
 				</>
 			)}
 
-			<div className="ml-15 mr-5 rounded-3xl overflow-x-auto overflow-y-visible">
+			<div>
 				{/* Students Table */}
 				{category === "students" && (
 					<Table>
@@ -160,42 +254,49 @@ export default function Archive() {
 							</TableRow>
 						</TableHeader>
 						<TableBody>
-							{students
-								?.filter((s) =>
-									s.full_name?.toLowerCase().includes(searchTerm.toLowerCase()),
-								)
-								.filter(
-									(s) =>
-										!selectedTeacher ||
-										s.groups?.some((studentGroupName) => {
-											const groupObj = archivedGroups.find(
-												(g) => g.name === studentGroupName,
-											);
-											return groupObj?.teacher_id === selectedTeacher;
-										}),
-								)
-								.filter(
-									(s) =>
-										!selectedGroup ||
-										s.archivedGroups?.includes(
-											archivedGroups.find((g) => g.id === selectedGroup)?.name,
-										),
-								)
-								.map((s) => (
-									<TableRow key={s.id}>
-										<TableCell>{s.full_name}</TableCell>
-										<TableCell>{s.groups?.[0] || "No Group"}</TableCell>
-										<TableCell>{s.phone}</TableCell>
-										<TableCell>{s.birthday?.split("T")[0]}</TableCell>
-										<TableCell>{s.parents_name}</TableCell>
-										<TableCell>{s.parents_phone}</TableCell>
-										<TableCell>
-											<span className="balance-badge">
-												{s.monthly_paid?.toLocaleString() ?? 0} so'm
-											</span>
-										</TableCell>
-									</TableRow>
-								))}
+							{students.length === 0 ? (
+								<TableRow>
+									<TableCell colSpan={7}>
+										O'quvchilar topilmadi.
+									</TableCell>
+								</TableRow>
+							) : (
+								students
+									?.filter((s) =>
+										s.full_name?.toLowerCase().includes(searchTerm.toLowerCase()),
+									)
+									.filter(
+										(s) =>
+											!selectedTeacher ||
+											s.groups?.some((studentGroupName) => {
+												const groupObj = archivedGroups.find(
+													(g) => g.name === studentGroupName,
+												);
+												return groupObj?.teacher_id === selectedTeacher;
+											}),
+									)
+									.filter(
+										(s) =>
+											!selectedGroup ||
+											s.archivedGroups?.includes(
+												archivedGroups.find((g) => g.id === selectedGroup)?.name,
+											),
+									)
+									.map((s) => (
+										<TableRow key={s.id}>
+											<TableCell>{s.full_name}</TableCell>
+											<TableCell>{s.groups?.[0] || "No Group"}</TableCell>
+											<TableCell>{s.phone}</TableCell>
+											<TableCell>{s.birthday?.split("T")[0]}</TableCell>
+											<TableCell>{s.parents_name}</TableCell>
+											<TableCell>{s.parents_phone}</TableCell>
+											<TableCell>
+												<span className="balance-badge">
+													{s.monthly_paid?.toLocaleString() ?? 0} so'm
+												</span>
+											</TableCell>
+										</TableRow>
+									)))}
 						</TableBody>
 					</Table>
 				)}
@@ -211,13 +312,20 @@ export default function Archive() {
 							</TableRow>
 						</TableHeader>
 						<TableBody>
-							{teachers?.map((t) => (
-								<TableRow key={t.id}>
-									<TableCell>{t.full_name}</TableCell>
-									<TableCell>{t.phone}</TableCell>
-									<TableCell>{t.source}</TableCell>
+							{students.length === 0 ? (
+								<TableRow>
+									<TableCell colSpan={6}>
+										O'qituvchilar topilmadi.
+									</TableCell>
 								</TableRow>
-							))}
+							) : (
+								teachers?.map((t) => (
+									<TableRow key={t.id}>
+										<TableCell>{t.full_name}</TableCell>
+										<TableCell>{t.phone}</TableCell>
+										<TableCell>{t.source}</TableCell>
+									</TableRow>
+								)))}
 						</TableBody>
 					</Table>
 				)}
@@ -233,13 +341,20 @@ export default function Archive() {
 							</TableRow>
 						</TableHeader>
 						<TableBody>
-							{leads?.map((l) => (
-								<TableRow key={l.id}>
-									<TableCell>{l.full_name}</TableCell>
-									<TableCell>{l.phone}</TableCell>
-									<TableCell>{l.source}</TableCell>
+							{leads.length === 0 ? (
+								<TableRow>
+									<TableCell colSpan={6}>
+										Lidlar topilmadi.
+									</TableCell>
 								</TableRow>
-							))}
+							) : (
+								leads?.map((l) => (
+									<TableRow key={l.id}>
+										<TableCell>{l.full_name}</TableCell>
+										<TableCell>{l.phone}</TableCell>
+										<TableCell>{l.source}</TableCell>
+									</TableRow>
+								)))}
 						</TableBody>
 					</Table>
 				)}
@@ -255,17 +370,24 @@ export default function Archive() {
 							</TableRow>
 						</TableHeader>
 						<TableBody>
-							{payments?.map((p) => (
-								<TableRow key={p.id}>
-									<TableCell>{p.student_name}</TableCell>
-									<TableCell>
-										<span className="balance-badge">
-											{p.amount?.toLocaleString() ?? 0}
-										</span>
+							{payments.length === 0 ? (
+								<TableRow>
+									<TableCell colSpan={6}>
+										To'lovlar topilmadi.
 									</TableCell>
-									<TableCell>{p.date?.split("T")[0]}</TableCell>
 								</TableRow>
-							))}
+							) : (
+								payments?.map((p) => (
+									<TableRow key={p.id}>
+										<TableCell>{p.student_name}</TableCell>
+										<TableCell>
+											<span className="balance-badge">
+												{p.amount?.toLocaleString() ?? 0}
+											</span>
+										</TableCell>
+										<TableCell>{p.date?.split("T")[0]}</TableCell>
+									</TableRow>
+								)))}
 						</TableBody>
 					</Table>
 				)}
@@ -284,26 +406,33 @@ export default function Archive() {
 							</TableRow>
 						</TableHeader>
 						<TableBody>
-							{archivedGroups.map((g) => (
-								<TableRow key={g.id}>
-									<TableCell>{g.name}</TableCell>
-									<TableCell>
-										<span className="balance-badge">{g.price} ming so'm</span>
-									</TableCell>
-									<TableCell>{g.lesson_time}</TableCell>
-									<TableCell>{g.course_type}</TableCell>
-									<TableCell className="teacher">{g.teacher}</TableCell>
-									<TableCell>
-										{Array.isArray(g.lesson_days)
-											? g.lesson_days.map((day) => (
-												<span key={day} className="day-pill">
-													{day}
-												</span>
-											))
-											: g.lesson_days}
+							{archivedGroups.length === 0 ? (
+								<TableRow>
+									<TableCell colSpan={6}>
+										Guruhlar topilmadi.
 									</TableCell>
 								</TableRow>
-							))}
+							) : (
+								archivedGroups.map((g) => (
+									<TableRow key={g.id}>
+										<TableCell>{g.name}</TableCell>
+										<TableCell>
+											<span className="balance-badge">{g.price} ming so'm</span>
+										</TableCell>
+										<TableCell>{g.lesson_time}</TableCell>
+										<TableCell>{g.course_type}</TableCell>
+										<TableCell className="teacher">{g.teacher}</TableCell>
+										<TableCell>
+											{Array.isArray(g.lesson_days)
+												? g.lesson_days.map((day) => (
+													<span key={day} className="day-pill">
+														{day}
+													</span>
+												))
+												: g.lesson_days}
+										</TableCell>
+									</TableRow>
+								)))}
 						</TableBody>
 					</Table>
 				)}

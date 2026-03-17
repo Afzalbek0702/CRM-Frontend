@@ -169,7 +169,7 @@ export default function Groups() {
 			<div className="table-actions mb-7.5">
 				<InputGroup>
 					<InputGroupInput value={searchTerm}
-						onChange={(e) => setSearchTerm(e.target.value)} placeholder="Guruh nomi bo'yicha qidirish" className={"hover:bg-primary"}/>
+						onChange={(e) => setSearchTerm(e.target.value)} placeholder="Guruh nomi bo'yicha qidirish" />
 					<InputGroupAddon>
 						<FaSearch />
 					</InputGroupAddon>
@@ -201,56 +201,61 @@ export default function Groups() {
 
 
 
-			{groupsWithCount && groupsWithCount.length < 1 ? (
-				<p>Guruhlar yo'q</p>
-			) : (
 
-				<Table>
 
-					<TableHeader>
+			<Table>
+
+				<TableHeader>
+					<TableRow>
+						<TableHead>
+							<div>
+								<HiOutlinePencilAlt /> Nomi
+							</div>
+						</TableHead>
+
+						<TableHead>
+							<div>
+								<FaDollarSign /> Narx
+							</div>
+						</TableHead>
+
+						<TableHead>
+							<div>
+								<FaClock /> Dars vaqti
+							</div>
+						</TableHead>
+
+						<TableHead>
+							<div>
+								<FaBook /> Kurs turi
+							</div>
+						</TableHead>
+
+						<TableHead>
+							<div>
+								<FaChalkboardTeacher /> O'qituvchi
+							</div>
+						</TableHead>
+
+						<TableHead>
+							<div>
+								<FaCalendarAlt /> Dars kunlari
+							</div>
+						</TableHead >
+
+						<TableHead />
+					</TableRow>
+				</TableHeader>
+
+				<TableBody>
+					{groupsWithCount.length === 0 ? (
 						<TableRow>
-							<TableHead>
-								<div className="flex items-center gap-1">
-									<HiOutlinePencilAlt /> Nomi
-								</div>
-							</TableHead>
-
-							<TableHead>
-								<div className="flex items-center gap-1">
-									<FaDollarSign /> Narx
-								</div>
-							</TableHead>
-
-							<TableHead>
-								<div className="flex items-center gap-1">
-									<FaClock /> Dars vaqti
-								</div>
-							</TableHead>
-
-							<TableHead>
-								<div className="flex items-center gap-1">
-									<FaBook /> Kurs turi
-								</div>
-							</TableHead>
-
-							<TableHead>
-								<div className="flex items-center gap-1">
-									<FaChalkboardTeacher /> O'qituvchi
-								</div>
-							</TableHead>
-
-							<TableHead>
-								<div className="flex items-center gap-1">
-									<FaCalendarAlt /> Dars kunlari
-								</div>
-							</TableHead >
-
-							<TableHead />
+							<TableCell colSpan={7}>
+								Guruhlar topilmadi.
+							</TableCell>
 						</TableRow>
-					</TableHeader>
-
-					<TableBody>
-						{groupsWithCount
+					) : (
+						groupsWithCount
 							.filter(
 								(g) =>
 									g.name &&
@@ -312,11 +317,11 @@ export default function Groups() {
 										</button>
 									</TableCell>
 								</TableRow>
-							))}
-					</TableBody>
+							)))}
+				</TableBody>
 
-				</Table>
-			)}
+			</Table>
+
 		</div>
 	);
 }

@@ -132,31 +132,38 @@ export default function Workers() {
                     <FaPlus /> Xodim qo'shish
                 </Button>
             </div>
-
-            {filteredWorkers.length < 1 ? (
-                <p>Xodimlar yo'q</p>
-            ) : (
                 <Table>
                     <TableHeader>
                         <TableRow>
                             <TableHead>
-                                <FaUsers /> Ism
+                                <div>
+                                    <FaUsers /> Ism
+                                </div>
                             </TableHead>
 
                             <TableHead>
-                                <FaPhone /> Telefon
+                                <div>
+                                    <FaPhone /> Telefon
+                                </div>
                             </TableHead>
 
-                            <TableHead>Lavozim</TableHead>
+                            <TableHead><div>Lavozim</div></TableHead>
 
-                            <TableHead>Role</TableHead>
+                            <TableHead><div>Role</div></TableHead>
 
                             <TableHead></TableHead>
                         </TableRow>
                     </TableHeader>
 
                     <TableBody>
-                        {filteredWorkers.map((w) => (
+                        {filteredWorkers.length === 0 ? (
+						<TableRow>
+							<TableCell colSpan={6}>
+								O'quvchilar topilmadi.
+							</TableCell>
+						</TableRow>
+					) : (
+                        filteredWorkers.map((w) => (
                             <TableRow
                                 key={w.id}
                                 onClick={() => handleRowClick(w.id)}
@@ -220,10 +227,10 @@ export default function Workers() {
                                     </Button>
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        )))}
                     </TableBody>
                 </Table>
-            )}
+            
 
             <ActionMenu
                 isOpen={actionMenu.isOpen}
