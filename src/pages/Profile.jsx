@@ -2,6 +2,7 @@ import { useAuth } from "../context/authContext";
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { goBack } from "../utils/navigate.js";
+import { Button } from "@/components/ui/button";
 
 
 export default function Profile() {
@@ -14,12 +15,13 @@ export default function Profile() {
     }
 
     if (!user) return <div className="profile-loading">Loading profile...</div>;
+    
 
     return (
         <>
-            <button className="btn btn-default bg-primary " onClick={goBack}>
+            <Button className="btn-default" onClick={goBack}>
                 ← Ortga
-            </button>
+            </Button>
 
             <div className="profile-container">
                 <div className="profile-card">

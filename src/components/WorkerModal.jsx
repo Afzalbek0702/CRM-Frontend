@@ -3,12 +3,34 @@ import {
 	FaUser,
 	FaPhone,
 	FaSave,
-	FaTimes,
 	FaDollarSign,
 	FaBriefcase,
 	FaBirthdayCake,
 	FaLock,
 } from "react-icons/fa";
+import { Calendar as CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
+
+import { Button } from "@/components/ui/button";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogFooter,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 
 export default function WorkerModal({ isOpen, onClose, onSubmit, initialData }) {
 	const [formData, setFormData] = useState({
@@ -23,19 +45,25 @@ export default function WorkerModal({ isOpen, onClose, onSubmit, initialData }) 
 		img: null,
 	});
 
+	const [date, setDate] = useState();
+
 	useEffect(() => {
 		if (initialData) {
+			const birthday = initialData.birthday
+				? String(initialData.birthday).split("T")[0]
+				: "";
 			setFormData({
 				full_name: initialData.full_name || "",
 				phone: initialData.phone || "",
 				password: "",
 				salary: initialData.salary || "",
-				birthday: initialData.birthday || "",
+				birthday,
 				position: initialData.position || "",
 				role: initialData.role || "",
 				salary_type: initialData.salary_type || "CASH",
 				img: null,
 			});
+			setDate(birthday ? new Date(birthday) : undefined);
 		} else {
 			setFormData({
 				full_name: "",
@@ -48,183 +76,199 @@ export default function WorkerModal({ isOpen, onClose, onSubmit, initialData }) 
 				salary_type: "CASH",
 				img: null,
 			});
+			setDate(undefined);
 		}
 	}, [initialData, isOpen]);
 
-	if (!isOpen) return null;
-
 	const handleChange = (e) => {
 		const { name, value } = e.target;
+		setFormData((prev) => ({ ...prev, [name]: value }));
+	};
+
+	const handleSelect = (selectedDate) => {
+		setDate(selectedDate);
 		setFormData((prev) => ({
 			...prev,
-			[name]: value,
+			birthday: selectedDate ? format(selectedDate, "yyyy-MM-dd") : "",
 		}));
 	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-
 		const payload = {
 			...formData,
 			role: formData.role.toUpperCase(),
 			salary_type: formData.salary_type.toUpperCase(),
 		};
-
-		console.log(payload);
-		
-
 		await onSubmit(payload);
 	};
 
 	return (
-		<>
-			<div className="side-panel-backdrop" onClick={onClose}></div>
+		<Dialog open={isOpen} onOpenChange={onClose}>
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>
+						{initialData ? "Xodimni tahrirlash" : "Yangi xodim qo'shish"}
+					</DialogTitle>
+				</DialogHeader>
 
-			<div className="side-panel" onClick={(e) => e.stopPropagation()}>
-				<div className="panel-header">
-					<div className="panel-title-section">
-						<h2>
-							{initialData ? "Xodimni tahrirlash" : "Yangi xodim qo'shish"}
-						</h2>
-					</div>
-
-					<button className="close-button" onClick={onClose}>
-						<FaTimes />
-					</button>
-				</div>
-
-				<form className="modal-form" onSubmit={handleSubmit}>
-					<div className="form-group">
-						<label className="form-label">
-							<FaUser /> Ism
-						</label>
-						<input
-							className="form-input"
-							name="full_name"
-							value={formData.full_name}
-							onChange={handleChange}
-							required
-						/>
-					</div>
-
-					<div className="form-group">
-						<label className="form-label">
-							<FaPhone /> Telefon
-						</label>
-						<input
-							className="form-input"
-							name="phone"
-							value={formData.phone}
-							onChange={handleChange}
-							required
-						/>
-					</div>
-
-					{!initialData && (
-						<div className="form-group">
-							<label className="form-label">
-								<FaLock /> Parol
-							</label>
-							<input
-								type="password"
-								className="form-input"
-								name="password"
-								value={formData.password}
+				<form onSubmit={handleSubmit}>
+					<div className="modal-inputs flex flex-col gap-4">
+						<div>
+							<Label>
+								<FaUser /> Ism
+							</Label>
+							<Input
+								name="full_name"
+								value={formData.full_name}
 								onChange={handleChange}
 								required
 							/>
 						</div>
-					)}
 
-					<div className="form-group">
-						<label className="form-label">
-							<FaDollarSign /> Maosh
-						</label>
-						<input
-							type="number"
-							className="form-input"
-							name="salary"
-							value={formData.salary}
-							onChange={handleChange}
-						/>
+						<div>
+							<Label>
+								<FaPhone /> Telefon
+							</Label>
+							<Input
+								name="phone"
+								value={formData.phone}
+								onChange={handleChange}
+								required
+							/>
+						</div>
+
+						{!initialData && (
+							<div>
+								<Label>
+									<FaLock /> Parol
+								</Label>
+								<Input
+									type="password"
+									name="password"
+									value={formData.password}
+									onChange={handleChange}
+									required
+								/>
+							</div>
+						)}
+
+						<div>
+							<Label>
+								<FaDollarSign /> Maosh
+							</Label>
+							<Input
+								type="number"
+								name="salary"
+								value={formData.salary}
+								onChange={handleChange}
+							/>
+						</div>
+
+						<div>
+							<Label className="flex items-center gap-2">
+								<FaBirthdayCake /> Tug'ilgan sana
+							</Label>
+
+							<Popover>
+								<PopoverTrigger asChild>
+									<Button
+										variant="outline"
+										data-empty={!date}
+										className={cn(
+											"w-full justify-start text-left font-normal",
+											!date && "text-muted-foreground"
+										)}
+									>
+										<CalendarIcon className="mr-2 h-4 w-4" />
+										{date ? format(date, "PPP") : "Pick a date"}
+									</Button>
+								</PopoverTrigger>
+
+								<PopoverContent className="w-auto p-0">
+									<Calendar
+										mode="single"
+										selected={date}
+										onSelect={handleSelect}
+										initialFocus
+									/>
+								</PopoverContent>
+							</Popover>
+						</div>
+
+						<div>
+							<Label>
+								<FaBriefcase /> Lavozim
+							</Label>
+							<Select
+								value={formData.position}
+								onValueChange={(value) =>
+									setFormData((prev) => ({ ...prev, position: value }))
+								}
+							>
+								<SelectTrigger>
+									<SelectValue placeholder="Tanlang" />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectItem value="Teacher">Teacher</SelectItem>
+									<SelectItem value="Manager">Manager</SelectItem>
+									<SelectItem value="Administrator">Administrator</SelectItem>
+									<SelectItem value="Other">Other</SelectItem>
+								</SelectContent>
+							</Select>
+						</div>
+
+						<div>
+							<Label>Role</Label>
+							<Select
+								value={formData.role}
+								onValueChange={(value) =>
+									setFormData((prev) => ({ ...prev, role: value }))
+								}
+							>
+								<SelectTrigger>
+									<SelectValue placeholder="Tanlang" />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectItem value="ADMIN">Admin</SelectItem>
+									<SelectItem value="MANAGER">Manager</SelectItem>
+									<SelectItem value="TEACHER">Teacher</SelectItem>
+									<SelectItem value="CEO">CEO</SelectItem>
+								</SelectContent>
+							</Select>
+						</div>
+
+						<div>
+							<Label>Maosh turi</Label>
+							<Select
+								value={formData.salary_type}
+								onValueChange={(value) =>
+									setFormData((prev) => ({ ...prev, salary_type: value }))
+								}
+							>
+								<SelectTrigger>
+									<SelectValue />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectItem value="CASH">Naqd</SelectItem>
+									<SelectItem value="BANK_TRANSFER">Bank Transfer</SelectItem>
+									<SelectItem value="OTHER">Other</SelectItem>
+								</SelectContent>
+							</Select>
+						</div>
 					</div>
 
-					<div className="form-group">
-						<label className="form-label">
-							<FaBirthdayCake /> Tug'ilgan sana
-						</label>
-						<input
-							type="date"
-							className="form-input"
-							name="birthday"
-							value={formData.birthday}
-							onChange={handleChange}
-						/>
-					</div>
-
-					<div className="form-group">
-						<label className="form-label">
-							<FaBriefcase /> Lavozim
-						</label>
-						<select
-							className="form-input"
-							name="position"
-							value={formData.position}
-							onChange={handleChange}
-							required
-						>
-							<option value="">Tanlang</option>
-							<option value="Teacher">Teacher</option>
-							<option value="Manager">Manager</option>
-							<option value="Administrator">Administrator</option>
-							<option value="Director">Director</option>
-							<option value="Accountant">Accountant</option>
-							<option value="Other">Other</option>
-						</select>
-					</div>
-
-					<div className="form-group">
-						<label className="form-label">Role</label>
-						<select
-							className="form-input"
-							name="role"
-							value={formData.role}
-							onChange={handleChange}
-							required
-						>
-							<option value="">Tanlang</option>
-							<option value="ADMIN">Admin</option>
-							<option value="MANAGER">Manager</option>
-							<option value="TEACHER">Teacher</option>
-							<option value="CEO">CEO</option>
-						</select>
-					</div>
-
-					<div className="form-group">
-						<label className="form-label">Maosh turi</label>
-						<select
-							className="form-input"
-							name="salary_type"
-							value={formData.salary_type}
-							onChange={handleChange}
-						>
-							<option value="CASH">Naqd </option>
-							<option value="BANK_TRANSFER">Bank Transfer</option>
-							<option value="OTHER">Other</option>
-						</select>
-					</div>
-
-					<div className="panel-buttons">
-						<button type="button" className="btn btn-cancel" onClick={onClose}>
+					<DialogFooter>
+						<Button type="button" variant="outline" onClick={onClose} className="btn-cancel">
 							Bekor qilish
-						</button>
+						</Button>
 
-						<button type="submit" className="btn btn-default flex justify-center">
+						<Button type="submit" className="btn-default">
 							<FaSave /> Saqlash
-						</button>
-					</div>
+						</Button>
+					</DialogFooter>
 				</form>
-			</div>
-		</>
+			</DialogContent>
+		</Dialog>
 	);
 }

@@ -6,22 +6,30 @@ import { FaPlus, FaTrash, FaEdit, FaEllipsisV, FaTimes } from "react-icons/fa";
 import ActionMenu from "../components/ActionMenu";
 import { goBack } from "../utils/navigate.js";
 import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
 } from "@/components/ui/table"
-import {
-	InputGroup,
-	InputGroupAddon,
-	InputGroupButton,
-	InputGroupInput,
-	InputGroupText,
-	InputGroupTextarea,
-} from "@/components/ui/input-group"
 import { Button } from "@/components/ui/button";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 
 export default function Settings() {
@@ -208,42 +216,124 @@ export default function Settings() {
 
             {/* Modals */}
             {modalOpen && (
-                <SidePanel onClose={() => setModalOpen(false)}>
-                    <h2>{editingCourse ? "Edit Course" : "New Course"}</h2>
-                    <p>{editingCourse ? "Update course details" : "Create a new course"}</p>
-                    <form onSubmit={handleSubmit}>
-                        <div className="form-grid">
-                            <Input label="Ism" name="name" value={formData.name} onChange={handleChange} required />
-                            <Input label="Narx" type="number" name="price" value={formData.price} onChange={handleChange} required />
-                            <Input label="Darslar soni" type="number" name="lesson_count" value={formData.lesson_count} onChange={handleChange} required />
-                        </div>
-                        <div className="panel-buttons">
-                            <Button variant="secondary" onClick={() => setModalOpen(false)}><FaTimes /> Bekor qilish</Button>
-                            <Button type="submit" variant="primary">
-                                {editingCourse ? <><FaEdit /> Yangilar</> : <><FaPlus /> Yaratish</>}
-                            </Button>
-                        </div>
-                    </form>
-                </SidePanel>
+                <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>
+                                {editingCourse ? "Edit Course" : "New Course"}
+                            </DialogTitle>
+                        </DialogHeader>
+
+                        <form onSubmit={handleSubmit}>
+                            <div className="modal-inputs">
+                                <div>
+                                    <Label>Ism</Label>
+                                    <Input
+                                        name="name"
+                                        value={formData.name}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+
+                                <div>
+                                    <Label>Narx</Label>
+                                    <Input
+                                        type="number"
+                                        name="price"
+                                        value={formData.price}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+
+                                <div>
+                                    <Label>Darslar soni</Label>
+                                    <Input
+                                        type="number"
+                                        name="lesson_count"
+                                        value={formData.lesson_count}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <DialogFooter>
+                                <Button type="button" variant="outline" onClick={() => setModalOpen(false)} className={"btn-cancel"}>
+                                    <FaTimes /> Bekor qilish
+                                </Button>
+
+                                <Button type="submit" className={"btn-default"}>
+                                    {editingCourse ? (
+                                        <>
+                                            <FaEdit /> Yangilash
+                                        </>
+                                    ) : (
+                                        <>
+                                            <FaPlus /> Yaratish
+                                        </>
+                                    )}
+                                </Button>
+                            </DialogFooter>
+                        </form>
+                    </DialogContent>
+                </Dialog>
             )}
 
             {roomModalOpen && (
-                <SidePanel onClose={() => setRoomModalOpen(false)}>
-                    <h2>{editingRoom ? "Edit Room" : "New Room"}</h2>
-                    <p>{editingRoom ? "Xona infolarini yangilar" : "Yangi xona yaratish"}</p>
-                    <form onSubmit={handleRoomSubmit}>
-                        <div className="form-grid">
-                            <Input label="Ism" name="name" value={roomForm.name} onChange={handleRoomChange} required />
-                            <Input label="Hajm" type="number" name="capacity" value={roomForm.capacity} onChange={handleRoomChange} required />
-                        </div>
-                        <div className="panel-buttons">
-                            <Button variant="secondary" onClick={() => setRoomModalOpen(false)}><FaTimes /> Bekor qilish</Button>
-                            <Button type="submit" variant="primary">
-                                {editingRoom ? <><FaEdit /> Yangilash</> : <><FaPlus /> Yaratish</>}
-                            </Button>
-                        </div>
-                    </form>
-                </SidePanel>
+                <Dialog open={roomModalOpen} onOpenChange={setRoomModalOpen}>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>
+                                {editingRoom ? "Edit Room" : "New Room"}
+                            </DialogTitle>
+                        </DialogHeader>
+
+                        <form onSubmit={handleRoomSubmit}>
+                            <div className="modal-inputs">
+                                <div>
+                                    <Label>Ism</Label>
+                                    <Input
+                                        name="name"
+                                        value={roomForm.name}
+                                        onChange={handleRoomChange}
+                                        required
+                                    />
+                                </div>
+
+                                <div>
+                                    <Label>Hajm</Label>
+                                    <Input
+                                        type="number"
+                                        name="capacity"
+                                        value={roomForm.capacity}
+                                        onChange={handleRoomChange}
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <DialogFooter>
+                                <Button type="button" variant="outline" onClick={() => setRoomModalOpen(false)} className={"btn-cancel"}>
+                                    <FaTimes /> Bekor qilish
+                                </Button>
+
+                                <Button type="submit" className={"btn-default"}>
+                                    {editingRoom ? (
+                                        <>
+                                            <FaEdit /> Yangilash
+                                        </>
+                                    ) : (
+                                        <>
+                                            <FaPlus /> Yaratish
+                                        </>
+                                    )}
+                                </Button>
+                            </DialogFooter>
+                        </form>
+                    </DialogContent>
+                </Dialog>
             )}
 
             {/* Action Menu */}

@@ -116,7 +116,7 @@ export default function Archive() {
 			{category === "students" && (
 				<>
 
-					<div className="flex items-center gap-2 mb-6">
+					<div className=" table-actions flex items-center gap-2 mb-6">
 						<InputGroup>
 							<InputGroupInput
 								type="text"

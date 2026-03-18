@@ -9,6 +9,7 @@ import {
     FaEllipsisV,
     FaMoneyBillWave,
     FaUser,
+    FaPlus
 } from "react-icons/fa";
 import { BsCalendar2DateFill, BsCreditCard2BackFill } from "react-icons/bs";
 import {
@@ -70,15 +71,14 @@ export default function ExpensesTable() {
 
     return (
         <div className="table-container">
-            {/* Summary */}
             <div className="expense-summary">
                 <strong>Jami harajatlar:</strong>{" "}
                 {totalExpenses.toLocaleString()} so'm
             </div>
 
             <div className="table-actions mb-[30px]">
-                <Button className="btn1" onClick={() => setIsModalOpen(true)}>
-                    Xarajat qo'shish
+                <Button className="btn-default" onClick={() => setIsModalOpen(true)}>
+                    <FaPlus /> Xarajat qo'shish
                 </Button>
             </div>
 

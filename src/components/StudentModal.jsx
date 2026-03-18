@@ -6,15 +6,30 @@ import {
 	FaUsers,
 	FaSave,
 	FaPlus,
-	FaTimes,
 } from "react-icons/fa";
+import { Calendar as CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
 
-export default function StudentModal({
-	isOpen,
-	onClose,
-	onSubmit,
-	initialData,
-}) {
+import { Button } from "@/components/ui/button";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogDescription,
+	DialogFooter,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Calendar } from "@/components/ui/calendar";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+
+export default function StudentModal({ isOpen, onClose, onSubmit, initialData }) {
 	const [formData, setFormData] = useState({
 		full_name: "",
 		phone: "",
@@ -24,10 +39,14 @@ export default function StudentModal({
 		balance: "",
 	});
 
+	// Date object for Calendar
+	const [date, setDate] = useState();
+
 	useEffect(() => {
 		if (initialData) {
 			const rawBirthday = initialData.birthday;
 			const birthday = rawBirthday ? String(rawBirthday).split("T")[0] : "";
+
 			setFormData({
 				full_name: initialData.full_name || "",
 				phone: initialData.phone || "",
@@ -36,6 +55,8 @@ export default function StudentModal({
 				parents_phone: initialData.parents_phone || "",
 				balance: initialData.balance ?? "",
 			});
+
+			setDate(birthday ? new Date(birthday) : undefined);
 		} else {
 			setFormData({
 				full_name: "",
@@ -45,24 +66,34 @@ export default function StudentModal({
 				parents_phone: "",
 				balance: "",
 			});
+			setDate(undefined);
 		}
 	}, [initialData, isOpen]);
-
-	if (!isOpen) return null;
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		setFormData((p) => ({ ...p, [name]: value }));
 	};
 
+	const handleSelect = (selectedDate) => {
+		setDate(selectedDate);
+		setFormData((prev) => ({
+			...prev,
+			birthday: selectedDate ? format(selectedDate, "yyyy-MM-dd") : "",
+		}));
+	};
+
 	const handleSubmit = (e) => {
 		e.preventDefault();
+
 		const payload = {
 			...formData,
 			birthday: formData.birthday || null,
-			balance: Number(formData.balance || 0)
+			balance: Number(formData.balance || 0),
 		};
+
 		onSubmit(payload);
+
 		setFormData({
 			full_name: "",
 			phone: "",
@@ -71,115 +102,117 @@ export default function StudentModal({
 			parents_phone: "",
 			balance: "",
 		});
+		setDate(undefined);
 	};
 
-	const stop = (e) => e.stopPropagation();
-
 	return (
-		<>
-			<div className="side-panel-backdrop" onClick={onClose}></div>
-			<div className="side-panel" onClick={stop}>
-				<div className="panel-header">
-					<div className="panel-title-section">
-						<div className="panel-icon">
-							{initialData ? <FaSave /> : <FaPlus />}
-						</div>
-						<div>
-							<h2>{initialData ? "Edit Student" : "New Student"}</h2>
-							<p className="panel-subtitle">
-								{initialData ? "Update student details" : "Add a new student"}
-							</p>
-						</div>
-					</div>
-					<button className="close-button" onClick={onClose}>
-						<FaTimes />
-					</button>
-				</div>
+		<Dialog open={isOpen} onOpenChange={onClose}>
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>{initialData ? "Edit Student" : "New Student"}</DialogTitle>
+					<DialogDescription>
+						{initialData ? "Update student details" : "Add a new student"}
+					</DialogDescription>
+				</DialogHeader>
 
-				<form onSubmit={handleSubmit} className="modal-form">
-					<div className="form-grid">
-						<div className="form-group full-width">
-							<label className="form-label">
-								<FaUser className="field-icon" /> Ism familiya
-							</label>
-							<input
+				<form onSubmit={handleSubmit}>
+					<div className="modal-inputs flex flex-col gap-4">
+						<div>
+							<Label>
+								<FaUser /> Ism familiya
+							</Label>
+							<Input
 								name="full_name"
-								className="form-input"
 								required
 								value={formData.full_name}
 								onChange={handleChange}
 							/>
 						</div>
 
-						<div className="form-group">
-							<label className="form-label">
-								<FaPhone className="field-icon" /> Telefon raqam
-							</label>
-							<input
+						<div>
+							<Label>
+								<FaPhone /> Telefon raqam
+							</Label>
+							<Input
 								name="phone"
-								className="form-input"
 								required
 								value={formData.phone}
 								onChange={handleChange}
 							/>
 						</div>
 
-						<div className="form-group">
-							<label className="form-label">
-								<FaBirthdayCake className="field-icon" /> Tug'ilgan kun
-							</label>
-							<input
-								name="birthday"
-								type="date"
-								className="form-input"
-								value={formData.birthday}
-								onChange={handleChange}
-							/>
+						<div>
+							<Label>
+								<FaBirthdayCake /> Tug'ilgan kun
+							</Label>
+
+							<Popover>
+								<PopoverTrigger asChild>
+									<Button
+										variant="outline"
+										data-empty={!date}
+										className={cn(
+											"w-full justify-start text-left font-normal",
+											!date && "text-muted-foreground"
+										)}
+									>
+										<CalendarIcon className="mr-2 h-4 w-4" />
+										{date ? format(date, "PPP") : "Pick a date"}
+									</Button>
+								</PopoverTrigger>
+
+								<PopoverContent className="w-auto p-0">
+									<Calendar
+										mode="single"
+										selected={date}
+										onSelect={handleSelect}
+										initialFocus
+									/>
+								</PopoverContent>
+							</Popover>
 						</div>
 
-						<div className="form-group full-width">
-							<label className="form-label">
-								<FaUsers className="field-icon" /> Ota-ona ismi
-							</label>
-							<input
+						<div>
+							<Label>
+								<FaUsers /> Ota-ona ismi
+							</Label>
+							<Input
 								name="parents_name"
-								className="form-input"
 								value={formData.parents_name}
 								onChange={handleChange}
 							/>
 						</div>
 
-						<div className="form-group full-width">
-							<label className="form-label">
-								<FaPhone className="field-icon" /> Ota-ona raqami
-							</label>
-							<input
+						<div>
+							<Label>
+								<FaPhone /> Ota-ona raqami
+							</Label>
+							<Input
 								name="parents_phone"
-								className="form-input"
 								value={formData.parents_phone}
 								onChange={handleChange}
 							/>
 						</div>
 
-						<div className="form-group">
-							<label className="form-label">
-								<FaPlus className="field-icon" /> Balance
-							</label>
-							<input
+						<div>
+							<Label>
+								<FaPlus /> Balance
+							</Label>
+							<Input
 								name="balance"
 								type="number"
-								className="form-input"
 								value={formData.balance}
 								onChange={handleChange}
 							/>
 						</div>
 					</div>
 
-					<div className="panel-buttons">
-						<button type="button" className="btn btn-cancel" onClick={onClose}>
-							<FaTimes /> Bekor qilish
-						</button>
-						<button type="submit" className="btn btn-default flex justify-center">
+					<DialogFooter>
+						<Button type="button" variant="outline" onClick={onClose} className="btn-cancel">
+							Bekor qilish
+						</Button>
+
+						<Button type="submit" className="btn-default">
 							{initialData ? (
 								<>
 									<FaSave /> Saqlash
@@ -189,10 +222,10 @@ export default function StudentModal({
 									<FaPlus /> Yaratish
 								</>
 							)}
-						</button>
-					</div>
+						</Button>
+					</DialogFooter>
 				</form>
-			</div>
-		</>
+			</DialogContent>
+		</Dialog>
 	);
 }

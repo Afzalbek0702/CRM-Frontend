@@ -4,6 +4,14 @@ import { useGroups } from "../services/group/useGroups";
 
 import { Button } from "@/components/ui/button"
 import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogDescription,
+	DialogFooter,
+} from "@/components/ui/dialog";
+import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
@@ -18,7 +26,6 @@ import {
 } from "@/components/ui/command"
 
 import { Check, ChevronsUpDown } from "lucide-react"
-import { cn } from "@/lib/utils"
 
 export default function AddToGroupModal({ isOpen, onClose, onConfirm, initialGroupId = null }) {
 	const { groups, loading } = useGroups();
@@ -37,112 +44,66 @@ export default function AddToGroupModal({ isOpen, onClose, onConfirm, initialGro
 	};
 
 	return (
-		<>
-			<div className="side-panel-backdrop" onClick={onClose}></div>
-			<div className="side-panel" onClick={(e) => e.stopPropagation()}>
-				<div className="panel-header">
-					<div className="panel-title-section">
-						<div className="panel-icon">
-							<FaUsers />
-						</div>
-						<div>
-							<h2>Guruhga qo'shish</h2>
-							<p className="panel-subtitle">
-								Talabani qo'shish uchun guruhni tanlang
-							</p>
-						</div>
-					</div>
-					<button className="close-button" onClick={onClose}>
-						<FaTimes />
-					</button>
+		<Dialog open={isOpen} onOpenChange={onClose}>
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>Guruhga qo'shish</DialogTitle>
+					<DialogDescription>
+						Talabani qo'shish uchun guruhni tanlang
+					</DialogDescription>
+				</DialogHeader>
+
+				<div className="modal-inputs">
+					<Popover open={open} onOpenChange={setOpen}>
+						<PopoverTrigger asChild>
+							<Button variant="outline" role="combobox" aria-expanded={open}>
+								{selected
+									? groups.find((g) => g.id === selected)?.name
+									: "Guruhni tanlang"}
+								<ChevronsUpDown />
+							</Button>
+						</PopoverTrigger>
+
+						<PopoverContent>
+							<Command>
+								<CommandInput placeholder="Guruh qidirish..." />
+
+								<CommandEmpty>Guruh topilmadi.</CommandEmpty>
+
+								<CommandGroup>
+									{loading ? (
+										<CommandItem disabled>Yuklanmoqda...</CommandItem>
+									) : (
+										groups.map((g) => (
+											<CommandItem
+												key={g.id}
+												value={g.name}
+												onSelect={() => {
+													setSelected(g.id);
+													setOpen(false);
+												}}
+											>
+												{selected === g.id && <Check />}
+												{g.name}
+											</CommandItem>
+										))
+									)}
+								</CommandGroup>
+							</Command>
+						</PopoverContent>
+					</Popover>
 				</div>
 
-				<div className="modal-form">
-					<div className="form-grid">
-						<div className="form-group full-width">
-							<label className="form-label">Guruhni tanlang</label>
-							{/* <select
-								className="form-input"
-								value={selected || ""}
-								onChange={(e) => setSelected(e.target.value)}
-							>
-								<option value="">-- Gruhni tanlang --</option>
-								{loading ? (
-									<option value="">Yuklanmoqda...</option>
-								) : (
-									groups.map((g) => (
-										<option key={g.id} value={g.id}>
-											{g.name}
-										</option>
-									))
-								)}
-							</select> */}
+				<DialogFooter>
+					<Button variant="outline" onClick={onClose}>
+						Bekor qilish
+					</Button>
 
-							<Popover open={open} onOpenChange={setOpen}>
-								<PopoverTrigger asChild>
-									<Button
-										variant="outline"
-										role="combobox"
-										aria-expanded={open}
-										className="w-full justify-between"
-									>
-										{selected
-											? groups.find((g) => g.id === selected)?.name
-											: "Guruhni tanlang"}
-										<ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
-									</Button>
-								</PopoverTrigger>
-
-								<PopoverContent className="w-full p-0">
-									<Command>
-										<CommandInput placeholder="Guruh qidirish..." />
-
-										<CommandEmpty>Guruh topilmadi.</CommandEmpty>
-
-										<CommandGroup>
-											{loading ? (
-												<CommandItem disabled>Yuklanmoqda...</CommandItem>
-											) : (
-												groups.map((g) => (
-													<CommandItem
-														key={g.id}
-														value={g.name}
-														onSelect={() => {
-															setSelected(g.id);
-															setOpen(false);
-														}}
-													>
-														<Check
-															className={cn(
-																"mr-2 h-4 w-4",
-																selected === g.id ? "opacity-100" : "opacity-0"
-															)}
-														/>
-														{g.name}
-													</CommandItem>
-												))
-											)}
-										</CommandGroup>
-									</Command>
-								</PopoverContent>
-							</Popover>
-						</div>
-					</div>
-
-					<div className="panel-buttons">
-						<button type="button" className="btn btn-cancel" onClick={onClose}>
-							<FaTimes /> Bekor qilish
-						</button>
-						<button
-							type="button"
-							className="btn btn-default flex justify-center"
-							onClick={handleConfirm}
-						>
-							<FaCheck /> Qo'shish
-						</button>
-					</div>
-				</div>
-			</div>
-		</>
+					<Button onClick={handleConfirm}>
+						<FaCheck /> Qo'shish
+					</Button>
+				</DialogFooter>
+			</DialogContent>
+		</Dialog>
 	);
 }

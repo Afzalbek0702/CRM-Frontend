@@ -1,6 +1,24 @@
 import { useEffect, useState } from "react";
-import { FaPlus, FaTimes, FaMoneyBillWave } from "react-icons/fa";
+import { FaPlus, FaMoneyBillWave, FaEdit } from "react-icons/fa";
 import { useAuth } from "../context/authContext";
+
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function ExpenseModal({
   isOpen,
@@ -8,13 +26,13 @@ export default function ExpenseModal({
   onSubmit,
   initialData = null,
 }) {
-	const { user } = useAuth();
-   
+  const { user } = useAuth();
+
   const [form, setForm] = useState({
     description: "",
     amount: "",
-    method: "cash",
-    created_by: '',
+    method: "CASH",
+    created_by: "",
   });
 
   useEffect(() => {
@@ -22,8 +40,8 @@ export default function ExpenseModal({
       setForm({
         description: initialData.description || "",
         amount: initialData.amount || "",
-        method: initialData.method || "cash",
-        created_by: user.id,
+        method: initialData.method || "CASH",
+        created_by: user?.id || "",
       });
     } else {
       resetForm();
@@ -34,7 +52,7 @@ export default function ExpenseModal({
     setForm({
       description: "",
       amount: "",
-      method: "cash",
+      method: "CASH",
       created_by: "",
     });
   }
@@ -47,104 +65,81 @@ export default function ExpenseModal({
     }));
   }
 
-   function handleSubmit(e) {
+  function handleSubmit(e) {
     e.preventDefault();
 
     if (!form.description || !form.amount) return;
 
     onSubmit({
       ...form,
-       amount: Number(form.amount),
-      created_by: user.id,
+      amount: Number(form.amount),
+      created_by: user?.id,
     });
 
     resetForm();
   }
 
-  if (!isOpen) return null;
-
   return (
-    <>
-      <div className="side-panel-backdrop" onClick={onClose}></div>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>
+            {initialData ? "Edit Expense" : "New Expense"}
+          </DialogTitle>
+        </DialogHeader>
 
-      <div className="side-panel" onClick={(e) => e.stopPropagation()}>
-        <div className="panel-header">
-          <div className="panel-title-section">
-            <div className="panel-icon">
-              {initialData ? <FaEdit /> : <FaPlus />}
-            </div>
+        <form onSubmit={handleSubmit}>
+          <div className="modal-inputs">
             <div>
-              <h2>{initialData ? "Edit Expense" : "New Expense"}</h2>
-              <p className="panel-subtitle">
-                {initialData
-                  ? "Update expense details"
-                  : "Record a new expense"}
-              </p>
-            </div>
-          </div>
-
-          <button className="close-button" onClick={onClose}>
-            <FaTimes />
-          </button>
-        </div>
-
-        <form onSubmit={handleSubmit} className="modal-form">
-          <div className="form-grid">
-            <div className="form-group full-width">
-              <label className="form-label">
-                <FaMoneyBillWave className="field-icon" /> Tavsif
-              </label>
-              <input
+              <Label>
+                <FaMoneyBillWave /> Tavsif
+              </Label>
+              <Input
                 type="text"
                 name="description"
-                className="form-input"
                 value={form.description}
                 onChange={handleChange}
                 required
               />
             </div>
 
-            <div className="form-group">
-              <label className="form-label">
-                Miqdor
-              </label>
-              <input
+            <div>
+              <Label>Miqdor</Label>
+              <Input
                 type="number"
                 name="amount"
-                className="form-input"
                 value={form.amount}
                 onChange={handleChange}
                 required
               />
             </div>
 
-            <div className="form-group">
-              <label className="form-label">
-                Turi
-              </label>
-              <select
-                name="method"
-                className="form-input"
+            <div>
+              <Label>Turi</Label>
+              <Select
                 value={form.method}
-                onChange={handleChange}
+                onValueChange={(value) =>
+                  setForm((prev) => ({ ...prev, method: value }))
+                }
               >
-                <option value="CASH">Naqd pul</option>
-                <option value="CARD">Carta</option>
-                <option value="TRANSFER">Xisob raqam</option>
-              </select>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="CASH">Naqd pul</SelectItem>
+                  <SelectItem value="CARD">Carta</SelectItem>
+                  <SelectItem value="TRANSFER">Xisob raqam</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
-          <div className="panel-buttons">
-            <button
-              type="button"
-              className="btn btn-cancel"
-              onClick={onClose}
-            >
-              <FaTimes /> Bekor qilish
-            </button>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={onClose} className={"btn-cancel"}>
+              Bekor qilish
+            </Button>
 
-            <button type="submit" className="btn btn-default flex justify-center">
+            <Button type="submit" className={"btn-default"}>
               {initialData ? (
                 <>
                   <FaEdit /> Saqlash
@@ -154,10 +149,10 @@ export default function ExpenseModal({
                   <FaPlus /> Yaratish
                 </>
               )}
-            </button>
-          </div>
+            </Button>
+          </DialogFooter>
         </form>
-      </div>
-    </>
+      </DialogContent>
+    </Dialog>
   );
 }

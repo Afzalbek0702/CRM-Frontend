@@ -1,8 +1,28 @@
 import { useState, useEffect } from "react";
-import { FaUsers, FaBook, FaDollarSign, FaClock, FaCalendarAlt, FaChalkboardTeacher, FaTimes, FaSave, FaPlus, FaDoorOpen } from "react-icons/fa";
-import { useTeachers } from '../services/teacher/useTeachers'
+import { FaUsers, FaBook, FaDollarSign, FaClock, FaCalendarAlt, FaChalkboardTeacher, FaSave, FaPlus, FaDoorOpen } from "react-icons/fa";
+import { useTeachers } from '../services/teacher/useTeachers';
 import { useCourse } from "../services/course/useCourse";
 import { useRoom } from "../services/room/useRoom";
+
+import { Button } from "@/components/ui/button";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+    DialogFooter,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+
 export default function Modal({ isOpen, onClose, onSubmit, title, initialData }) {
     const [formData, setFormData] = useState({
         name: "",
@@ -13,10 +33,11 @@ export default function Modal({ isOpen, onClose, onSubmit, title, initialData })
         teacher_id: "",
         room_id: "",
     });
-    const [isAnimating, setIsAnimating] = useState(false);
-    const { teachers } = useTeachers()
+
+    const { teachers } = useTeachers();
     const { courseData } = useCourse();
     const { roomData: rooms } = useRoom();
+
     useEffect(() => {
         if (initialData) {
             setFormData({
@@ -25,8 +46,8 @@ export default function Modal({ isOpen, onClose, onSubmit, title, initialData })
                 price: initialData.price || "",
                 lesson_time: initialData.lesson_time || "",
                 lesson_days: Array.isArray(initialData.lesson_days) ? initialData.lesson_days : [],
-                teacher_id: initialData.teacher_id ?? null,
-                room_id: initialData.room_id ?? null,
+                teacher_id: initialData.teacher_id ?? "",
+                room_id: initialData.room_id ?? "",
             });
         } else {
             setFormData({
@@ -39,31 +60,16 @@ export default function Modal({ isOpen, onClose, onSubmit, title, initialData })
                 room_id: "",
             });
         }
-
-        // Trigger animation when modal opens
-        if (isOpen) {
-            setIsAnimating(true);
-            const timer = setTimeout(() => setIsAnimating(false), 400);
-            return () => clearTimeout(timer);
-        }
     }, [initialData, isOpen]);
 
     const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    const dayNames = {
-        "Mon": "Dushanba",
-        "Tue": "Seshanba",
-        "Wed": "Chorshanba",
-        "Thu": "Payshanba",
-        "Fri": "Juma",
-        "Sat": "Shanba"
-    };
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
 
         setFormData((prev) => {
             let updated = { ...prev, [name]: value };
 
-            
             if (name === "course_type") {
                 const selectedCourse = courseData.find(
                     (c) => c.id.toString() === value.toString()
@@ -71,14 +77,13 @@ export default function Modal({ isOpen, onClose, onSubmit, title, initialData })
                 if (selectedCourse) {
                     updated.price = selectedCourse.price || "";
                 } else {
-                    updated.price = ""; 
+                    updated.price = "";
                 }
             }
 
             return updated;
         });
     };
-
 
     const handleDayToggle = (day) => {
         setFormData((prev) => ({
@@ -103,180 +108,165 @@ export default function Modal({ isOpen, onClose, onSubmit, title, initialData })
         });
     };
 
-    if (!isOpen) return null;
-
-
-    const handlePanelClick = (e) => {
-        e.stopPropagation();
-    };
-
     return (
-        <>
-            <div className="side-panel-backdrop" onClick={onClose}></div>
-            <div className={`side-panel ${isAnimating ? 'modal-entering' : ''}`} onClick={handlePanelClick}>
-                <div className="panel-header">
-                    <div className="panel-title-section">
-                        <div className="panel-icon">
-                            {initialData ? <FaSave /> : <FaPlus />}
-                        </div>
-                        <div>
-                            <h2>{title}</h2>
-                            <p className="panel-subtitle">
-                                {initialData ? "Guruh ma'lumotlarini tahrirlang" : "Yangi guruh yarating va dars jadvalini belgilang"}
-                            </p>
-                        </div>
-                    </div>
-                    <button className="close-button" onClick={onClose}>
-                        <FaTimes />
-                    </button>
-                </div>
+        <Dialog open={isOpen} onOpenChange={onClose}>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>{title}</DialogTitle>
+                    <DialogDescription>
+                        {initialData
+                            ? "Guruh ma'lumotlarini tahrirlang"
+                            : "Yangi guruh yarating va dars jadvalini belgilang"}
+                    </DialogDescription>
+                </DialogHeader>
 
-                <form onSubmit={handleSubmit} className="modal-form">
-                    <div className="form-grid">
-                        <div className="form-group">
-                            <label className="form-label">
-                                <FaUsers className="field-icon" />
-                                Guruh nomi
-                            </label>
-                            <input
-                                type="text"
+                <form onSubmit={handleSubmit}>
+                    <div className="modal-inputs">
+                        <div>
+                            <Label>
+                                <FaUsers /> Guruh nomi
+                            </Label>
+                            <Input
                                 name="name"
                                 value={formData.name}
                                 onChange={handleInputChange}
-                                placeholder="Masalan: Frontend-101"
-                                className="form-input"
                                 required
                             />
                         </div>
 
-                        <div className="form-group">
-                            <label className="form-label">
-                                <FaBook className="field-icon" />
-                                Kurs turi
-                            </label>
-                            <select
-                                name="course_type"
+                        <div>
+                            <Label>
+                                <FaBook /> Kurs turi
+                            </Label>
+                            <Select
                                 value={formData.course_type}
-                                onChange={handleInputChange}
-                                className="form-input"
-                                required
+                                onValueChange={(value) =>
+                                    handleInputChange({ target: { name: "course_type", value } })
+                                }
                             >
-                                <option value="">Kurs turini tanlang</option>
-                                {courseData.map((course) => (
-                                    <option key={course.id} value={course.id}>
-                                        {course.name}
-                                    </option>
-                                ))}
-                            </select>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Kurs turini tanlang" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {courseData.map((course) => (
+                                        <SelectItem key={course.id} value={String(course.id)}>
+                                            {course.name}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
                         </div>
 
-                        <div className="form-group">
-                            <label className="form-label">
-                                <FaDollarSign className="field-icon" />
-                                Oylik narx
-                            </label>
-                            <div className="input-with-prefix">
-                                <span className="input-prefix">$</span>
-                                <input
-                                    type="number"
-                                    name="price"
-                                    value={formData.price}
-                                    onChange={handleInputChange}
-                                    placeholder="0"
-                                    className="form-input"
-                                    required
-                                />
-                            </div>
+                        <div>
+                            <Label>
+                                <FaDollarSign /> Oylik narx
+                            </Label>
+                            <Input
+                                type="number"
+                                name="price"
+                                value={formData.price}
+                                onChange={handleInputChange}
+                                required
+                            />
                         </div>
 
-                        <div className="form-group">
-                            <label className="form-label">
-                                <FaClock className="field-icon" />
-                                Dars vaqti
-                            </label>
-                            <input
-                                type="text"
+                        <div>
+                            <Label>
+                                <FaClock /> Dars vaqti
+                            </Label>
+                            <Input
                                 name="lesson_time"
                                 value={formData.lesson_time}
                                 onChange={handleInputChange}
-                                placeholder="Masalan: 09:00-10:30"
-                                className="form-input"
                                 required
                             />
                         </div>
 
-                        <div className="form-group full-width">
-                            <label className="form-label">
-                                <FaCalendarAlt className="field-icon" />
-                                Dars kunlari
-                            </label>
-                            <div className="days-grid">
+                        <div>
+                            <Label>
+                                <FaCalendarAlt /> Dars kunlari
+                            </Label>
+                            <div>
                                 {days.map((day) => (
-                                    <div
+                                    <Button
+                                        type="button"
                                         key={day}
-                                        className={`day-chip ${formData.lesson_days.includes(day) ? 'selected' : ''}`}
+                                        variant={formData.lesson_days.includes(day) ? "default" : "outline"}
+                                        className={formData.lesson_days.includes(day) ? "btn-default" : "rounded"}
                                         onClick={() => handleDayToggle(day)}
                                     >
-                                        <div className="day-short">{day}</div>
-                                        <div className="day-full">{dayNames[day]}</div>
-                                    </div>
+                                        {day}
+                                    </Button>
                                 ))}
                             </div>
                         </div>
 
-                        <div className="form-group full-width">
-                            <label className="form-label">
-                                <FaChalkboardTeacher className="field-icon" />
-                                O'qituvchi
-                            </label>
-                            <select
-                                name="teacher_id"
-                                value={formData.teacher_id || ''}
-                                onChange={handleInputChange}
-                                className="form-input"
-                                required
+                        <div>
+                            <Label>
+                                <FaChalkboardTeacher /> O'qituvchi
+                            </Label>
+                            <Select
+                                value={formData.teacher_id}
+                                onValueChange={(value) =>
+                                    setFormData((prev) => ({ ...prev, teacher_id: value }))
+                                }
                             >
-                                <option value="">O'qituvchini tanlang</option>
-                                {teachers.map((teacher) => (
-                                    <option key={teacher.id} value={teacher.id}>
-                                        {teacher.full_name}
-                                    </option>
-                                ))}
-                            </select>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="O'qituvchini tanlang" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {teachers.map((teacher) => (
+                                        <SelectItem key={teacher.id} value={String(teacher.id)}>
+                                            {teacher.full_name}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
                         </div>
 
-                        <div className="form-group full-width">
-                            <label className="form-label">
-                                <FaDoorOpen className="field-icon" />
-                                Xona
-                            </label>
-                            <select
-                                name="room_id"
-                                value={formData.room_id || ''}
-                                onChange={handleInputChange}
-                                className="form-input"
-                                required
+                        <div>
+                            <Label>
+                                <FaDoorOpen /> Xona
+                            </Label>
+                            <Select
+                                value={formData.room_id}
+                                onValueChange={(value) =>
+                                    setFormData((prev) => ({ ...prev, room_id: value }))
+                                }
                             >
-                                <option value="">Xonani tanlang</option>
-                                {rooms.map((r) => (
-                                    <option key={r.room_id} value={r.room_id}>
-                                        {r.room_name}
-                                    </option>
-                                ))}
-                            </select>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Xonani tanlang" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {rooms.map((r) => (
+                                        <SelectItem key={r.room_id} value={String(r.room_id)}>
+                                            {r.room_name}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
                         </div>
                     </div>
 
-                    <div className="panel-buttons">
-                        <button type="button" className="btn btn-cancel" onClick={onClose}>
-                            <FaTimes /> Bekor qilish
-                        </button>
-                        <button type="submit" className="btn btn-default flex justify-center">
-                            {initialData ? <><FaSave /> Saqlash</> : <><FaPlus /> Yaratish</>}
-                        </button>
-                    </div>
+                    <DialogFooter>
+                        <Button type="button" variant="outline" className={"btn-cancel"} onClick={onClose}>
+                            Bekor qilish
+                        </Button>
+
+                        <Button type="submit" className={"btn-default"}>
+                            {initialData ? (
+                                <>
+                                    <FaSave /> Saqlash
+                                </>
+                            ) : (
+                                <>
+                                    <FaPlus /> Yaratish
+                                </>
+                            )}
+                        </Button>
+                    </DialogFooter>
                 </form>
-            </div>
-        </>
+            </DialogContent>
+        </Dialog>
     );
 }

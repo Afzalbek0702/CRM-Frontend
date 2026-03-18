@@ -1,27 +1,41 @@
-/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import {
-	FaUser,
-	FaUsers,
 	FaDollarSign,
 	FaCreditCard,
 	FaSave,
 	FaPlus,
-	FaTimes,
 } from "react-icons/fa";
+
+import { Button } from "@/components/ui/button";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogDescription,
+	DialogFooter,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 
 export default function PaymentModal({
 	isOpen,
 	onClose,
 	onSubmit,
 	initialData,
-	student
+	student,
 }) {
-	
 	const [formData, setFormData] = useState({
 		amount: "",
-		method: "Cash",
+		method: "CASH",
 		paid_at: "",
 	});
 
@@ -30,22 +44,21 @@ export default function PaymentModal({
 			const paidDate = initialData.paid_at
 				? String(initialData.paid_at).split("T")[0]
 				: "";
+
 			setFormData({
 				amount: initialData.amount || "",
-				method: initialData.method || "Cash",
+				method: initialData.method || "CASH",
 				paid_at: paidDate,
 			});
 		} else {
 			const today = new Date().toISOString().split("T")[0];
 			setFormData({
 				amount: "",
-				method: "Cash",
+				method: "CASH",
 				paid_at: today,
 			});
 		}
 	}, [initialData, isOpen]);
-
-	if (!isOpen) return null;
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
@@ -54,80 +67,82 @@ export default function PaymentModal({
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
+
 		if (!formData.amount || parseFloat(formData.amount) <= 0) {
 			toast.error("To'lov miqdori 0 dan katta bo'lishi kerak");
 			return;
 		}
+
 		const payload = {
 			...formData,
 			amount: Number(formData.amount),
 			student_id: student?.id,
 		};
+
 		onSubmit(payload);
+
 		setFormData({
 			amount: "",
-			method: "Cash",
+			method: "CASH",
 			paid_at: new Date().toISOString().split("T")[0],
 		});
 	};
 
-	const stop = (e) => e.stopPropagation();
-
 	return (
-		<>
-			<div className="side-panel-backdrop" onClick={onClose}></div>
-			<div className="side-panel" onClick={stop}>
-				<div className="panel-header">
-					<div className="panel-title-section">
-						<div className="panel-icon">{initialData ? <FaSave /> : <FaPlus />}</div>
-						<div>
-							<h2>{initialData ? "Edit Payment" : "New Payment"}</h2>
-							<p className="panel-subtitle">
-								{initialData ? "Update payment details" : "Record a new payment"}
-							</p>
-						</div>
-					</div>
-					<button className="close-button" onClick={onClose}><FaTimes /></button>
-				</div>
+		<Dialog open={isOpen} onOpenChange={onClose}>
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>
+						{initialData ? "Edit Payment" : "New Payment"}
+					</DialogTitle>
+					<DialogDescription>
+						{initialData
+							? "Update payment details"
+							: "Record a new payment"}
+					</DialogDescription>
+				</DialogHeader>
 
-				<form onSubmit={handleSubmit} className="modal-form">
-					<div className="form-grid">
-						<div className="form-group">
-							<label className="form-label">
-								<FaDollarSign className="field-icon" /> Miqdor
-							</label>
-							<input
+				<form onSubmit={handleSubmit}>
+					<div className="modal-inputs">
+						<div>
+							<Label>
+								<FaDollarSign /> Miqdor
+							</Label>
+							<Input
 								name="amount"
 								type="number"
-								className="form-input"
 								required
 								value={formData.amount}
 								onChange={handleChange}
 							/>
 						</div>
 
-						<div className="form-group">
-							<label className="form-label">
-								<FaCreditCard className="field-icon" /> Turi
-							</label>
-							<select
-								name="method"
-								className="form-input"
+						<div>
+							<Label>
+								<FaCreditCard /> Turi
+							</Label>
+							<Select
 								value={formData.method}
-								onChange={handleChange}
+								onValueChange={(value) =>
+									setFormData((prev) => ({ ...prev, method: value }))
+								}
 							>
-								<option value="CASH">Naqd pul</option>
-								<option value="CARD">Carta</option>
-								<option value="TRANSFER">Xisob raqam</option>
-							</select>
+								<SelectTrigger>
+									<SelectValue />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectItem value="CASH">Naqd pul</SelectItem>
+									<SelectItem value="CARD">Carta</SelectItem>
+									<SelectItem value="TRANSFER">Xisob raqam</SelectItem>
+								</SelectContent>
+							</Select>
 						</div>
 
-						<div className="form-group full-width">
-							<label className="form-label">Oy uchun to'lov</label>
-							<input
+						<div>
+							<Label>Oy uchun to'lov</Label>
+							<Input
 								name="paid_at"
 								type="month"
-								className="form-input"
 								required
 								value={formData.paid_at}
 								onChange={handleChange}
@@ -135,16 +150,25 @@ export default function PaymentModal({
 						</div>
 					</div>
 
-					<div className="panel-buttons">
-						<button type="button" className="btn btn-cancel" onClick={onClose}>
-							<FaTimes /> Bekor qilish
-						</button>
-						<button type="submit" className="btn btn-default flex justify-center">
-							{initialData ? <><FaSave /> Saqlash</> : <><FaPlus /> Yaratish</>}
-						</button>
-					</div>
+					<DialogFooter>
+						<Button type="button" variant="outline" onClick={onClose}>
+							Bekor qilish
+						</Button>
+
+						<Button type="submit">
+							{initialData ? (
+								<>
+									<FaSave /> Saqlash
+								</>
+							) : (
+								<>
+									<FaPlus /> Yaratish
+								</>
+							)}
+						</Button>
+					</DialogFooter>
 				</form>
-			</div>
-		</>
+			</DialogContent>
+		</Dialog>
 	);
 }

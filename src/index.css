@@ -4495,8 +4495,8 @@ table::-webkit-scrollbar {
 	color: black;
 	white-space: nowrap;
 }
-.table-container input {
-	max-width: 400px;
+.table-container div.input-group {
+	max-width: 500px;
 	width: 100%;
 }
 
@@ -4508,9 +4508,9 @@ table::-webkit-scrollbar {
 }
 
 .btn-cancel {
+	border-radius: 4px;
     background-color: white;
     color: black;
-    border: 1px solid white;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -4539,8 +4539,19 @@ table::-webkit-scrollbar {
 .table-actions div {
 	border-radius: 4px;
 }
+form .modal-inputs{
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	margin-bottom: 16px;
 
-
+}
+form .modal-inputs label {
+	margin-bottom: 5px;
+}
+form .modal-inputs input, form .modal-inputs button {
+	border-radius: 4px;
+}
 
 
 

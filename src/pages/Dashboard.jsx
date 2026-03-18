@@ -113,28 +113,27 @@ export default function Dashboard() {
 						<h2 className="border-l-2 border-primary pl-2.5 mb-5">Bugungi darslar</h2>
 
 						<Table>
-							<TableCaption>Bugungi darslar</TableCaption>
 							<TableHeader>
 								<TableRow>
 									<TableHead>
-										<FaUsers /> Guruh Nomi
+										<div><FaUsers /> Guruh Nomi</div>
 									</TableHead>
 									<TableHead>
-										<FaBook /> Kurs
+										<div><FaBook /> Kurs</div>
 									</TableHead>
 									<TableHead>
-										<FaChalkboardTeacher /> O'qituvchi
+										<div><FaChalkboardTeacher /> O'qituvchi</div>
 									</TableHead>
 									<TableHead>
-										<FaClock /> Dars Vaqti
+										<div><FaClock /> Dars Vaqti</div>
 									</TableHead>
 								</TableRow>
 							</TableHeader>
 							<TableBody>
-								{todayLessons.length === 0 ? (
+								{todayLessons?.length === 0 ? (
 									<TableRow>
 										<TableCell colSpan={8}>
-											Darslar topilmadi topilmadi.
+											Darslar topilmadi.
 										</TableCell>
 									</TableRow>
 								) : (
@@ -164,21 +163,21 @@ export default function Dashboard() {
 						
 
 							<Table>
-								<TableHead>
+								<TableHeader>
 									<TableRow>
-										<TableHeader>
-											<FaUsers /> O'quvchi Nomi
-										</TableHeader>
-										<TableHeader>
-											<FaUsers /> Guruh
-										</TableHeader>
-										<TableHeader>
-											<FaPhone /> Telefon
-										</TableHeader>
+										<TableHead>
+											<div><FaUsers /> O'quvchi Nomi</div>
+										</TableHead>
+										<TableHead>
+											<div><FaUsers /> Guruh</div>
+										</TableHead>
+										<TableHead>
+											<div><FaPhone /> Telefon</div>
+										</TableHead>
 									</TableRow>
-								</TableHead>
+								</TableHeader>
 								<TableBody>
-									{absentStudents.length === 0 ? (
+									{absentStudents?.length === 0 ? (
 										<TableRow>
 											<TableCell colSpan={8}>
 												Kelmagan o'quvchilar topilmadi.
@@ -186,7 +185,7 @@ export default function Dashboard() {
 										</TableRow>
 									) : (
 
-										absentStudents.map((student) => (
+										absentStudents?.map((student) => (
 											<TableRow
 												key={student.student_id}
 												onClick={() => handleRowClick(student.group_id)}

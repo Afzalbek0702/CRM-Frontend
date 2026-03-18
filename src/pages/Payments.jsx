@@ -68,7 +68,7 @@ export default function Payments() {
 			</h2>
 
 			{category === "debtors" && (
-				<div className="flex items-center gap-2 mb-6">
+				<div className=" table-actions flex items-center gap-2 mb-6">
 					<InputGroup>
 						<InputGroupInput
 							type="text"

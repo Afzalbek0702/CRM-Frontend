@@ -108,7 +108,7 @@ export default function Students() {
 			<div className="table-actions mb-7.5">
 
 
-				<InputGroup className={"max-w-[500px]"}>
+				<InputGroup>
 					<InputGroupInput
 						
 						type="text"
@@ -122,7 +122,7 @@ export default function Students() {
 				</InputGroup>
 
 				<Button
-					className="btn btn-default bg-primary  text-nowrap"
+					className="btn-default"
 					onClick={() => {
 						setEditingStudent(null);
 						setIsModalOpen(true);
