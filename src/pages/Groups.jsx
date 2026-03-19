@@ -293,7 +293,7 @@ export default function Groups() {
 											g.lesson_days.map((day) => (
 												<span
 													key={day}
-													className="day-pill px-[10px] py-[3px] rounded-[10px]"
+													className="day-pill px-2.5 py-0.75 rounded-[10px]"
 												>
 													{day}
 												</span>
@@ -306,7 +306,7 @@ export default function Groups() {
 									</TableCell>
 
 									<TableCell
-										className="w-[10px]"
+										className="w-2.5"
 										onClick={(e) => e.stopPropagation()}
 									>
 										<button

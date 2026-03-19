@@ -142,7 +142,7 @@ export default function Students() {
 							variant="outline"
 							role="combobox"
 							aria-expanded={openTeacher}
-							className="w-[250px] justify-between btn-default"
+							className="w-62.5 justify-between btn-default"
 						>
 							{selectedTeacher
 								? teachers.find((t) => t.id === selectedTeacher)?.full_name
@@ -151,7 +151,7 @@ export default function Students() {
 						</Button>
 					</PopoverTrigger>
 
-					<PopoverContent className="w-[250px] p-0">
+					<PopoverContent className="w-62.5 p-0">
 						<Command>
 							<CommandInput placeholder="Qidirish..." />
 							<CommandEmpty>Topilmadi.</CommandEmpty>
@@ -194,7 +194,7 @@ export default function Students() {
 							variant="outline"
 							role="combobox"
 							aria-expanded={openGroup}
-							className="w-[250px] justify-between btn-default"
+							className="w-62.5 justify-between btn-default"
 						>
 							{selectedGroup
 								? groups.find((g) => g.id === selectedGroup)?.name
@@ -203,7 +203,7 @@ export default function Students() {
 						</Button>
 					</PopoverTrigger>
 
-					<PopoverContent className="w-[250px] p-0">
+					<PopoverContent className="w-62.5 p-0">
 						<Command>
 							<CommandInput placeholder="Qidirish..." />
 							<CommandEmpty>Topilmadi.</CommandEmpty>

@@ -58,7 +58,7 @@ export default function SalaryTable() {
 
   return (
     <div className="table-container">
-	<div className="table-actions mb-[30px]">
+	<div className="table-actions mb-7.5">
 		<div style={{ marginBottom: "16px" }}>
 			<Button
 				className="btn btn-default bg-primary  text-nowrap"

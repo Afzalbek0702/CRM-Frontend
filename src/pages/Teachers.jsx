@@ -49,7 +49,7 @@ export default function Teachers() {
 			<h2>
 				<FaChalkboardTeacher /> O'qituvchilar
 			</h2>
-			<div className="table-actions mb-[30px]">
+			<div className="table-actions mb-7.5">
 				<div className="search-box">
 					<FaSearch />
 					<input

@@ -157,7 +157,7 @@ export default function GuruhlarInfo() {
 
 			<div className="flex gap-6 flex-1 min-h-0">
 				{/* LEFT PANEL */}
-				<div className="flex flex-col w-[500px] min-h-0 gap-4">
+				<div className="flex flex-col w-125 min-h-0 gap-4">
 					<Card>
 						<CardHeader>
 							<CardTitle>{group.name}</CardTitle>
@@ -249,7 +249,7 @@ export default function GuruhlarInfo() {
 						<h3>Davomat</h3>
 
 						<Select value={month} onValueChange={setMonth}>
-							<SelectTrigger className="w-[200px]">
+							<SelectTrigger className="w-50">
 								<SelectValue />
 							</SelectTrigger>
 							<SelectContent>

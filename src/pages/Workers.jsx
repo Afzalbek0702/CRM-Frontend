@@ -97,7 +97,7 @@ export default function Workers() {
                 <FaUsers /> Xodimlar
             </h2>
 
-            <div className="table-actions mb-[30px]">
+            <div className="table-actions mb-7.5">
                 <InputGroup>
                     <InputGroupInput
                         type="text"
