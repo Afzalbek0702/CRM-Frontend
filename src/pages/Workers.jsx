@@ -110,7 +110,18 @@ export default function Workers() {
                     </InputGroupAddon>
                 </InputGroup>
 
-                {/* <div className="filters">
+                <Button
+                    className="btn-default"
+                    onClick={() => {
+                        setEditingWorker(null);
+                        setIsModalOpen(true);
+                    }}
+                >
+                    <FaPlus /> Xodim qo'shish
+                </Button>
+            </div>
+
+            {/* <div className="filters">
 			<select
 				value={filter}
 				onChange={(e) => setFilter(e.target.value)}
@@ -122,16 +133,9 @@ export default function Workers() {
 			</select>
 		</div> */}
 
-                <Button
-                    className="btn-default"
-                    onClick={() => {
-                        setEditingWorker(null);
-                        setIsModalOpen(true);
-                    }}
-                >
-                    <FaPlus /> Xodim qo'shish
-                </Button>
-            </div>
+        {/* filterlar qo'shmoqchi edim bo'madi. shuni siz qoshib berin  */}
+
+
                 <Table>
                     <TableHeader>
                         <TableRow>

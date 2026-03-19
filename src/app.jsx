@@ -7,7 +7,7 @@ import GroupInfo from "./pages/GroupInfo";
 import Students from "./pages/Students";
 import StudentDetail from "./pages/StudentDetail";
 import Teachers from "./pages/Teachers";
-import TeacherDetail from "./pages/TeacherDetail";
+import TeacherDetail from "./pages/WorkerDetail";
 import Payments from "./pages/Payments";
 import Login from "./pages/Login";
 import Superadmin from "./pages/Superadmin";
@@ -43,7 +43,7 @@ export default function App() {
 				<Route path="students" element={<Students />} />
 				<Route path="students/:id" element={<StudentDetail />} />
 				<Route path="teachers" element={<Teachers />} />
-				<Route path="teachers/:id" element={<TeacherDetail />} />
+				<Route path="workers/:id" element={<TeacherDetail />} />
 				<Route path="settings" element={<Settings />} />
 				<Route path="payments" element={<Payments />} />
 				<Route path="payments/:category" element={<Payments />} />
