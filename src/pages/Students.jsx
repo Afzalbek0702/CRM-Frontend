@@ -47,7 +47,7 @@ import {
 	ChevronsUpDown,
 	GraduationCap,
 	Users,
-	Settings2,
+	Settings,
 } from "lucide-react";
 
 import Loader from "../components/Loader.jsx";
@@ -134,12 +134,12 @@ export default function Students() {
 				</div>
 				<Button
 					onClick={() => {
-						setEditingWorker(null);
+						setEditingStudent(null);
 						setIsModalOpen(true);
 					}}
 					className="btn-default bg-primary rounded-md hover:bg-primary/90 shadow-lg shadow-primary/20 gap-2 font-semibold"
 				>
-					<Plus className="h-4 w-4" /> Xodim qo'shish
+					<Plus className="h-4 w-4" /> O'quvchi qo'shish
 				</Button>
 			</div>
 
@@ -351,7 +351,10 @@ export default function Students() {
 											>
 												<DropdownMenuItem
 													className="cursor-pointer hover:bg-gray-800 focus:bg-gray-800 focus:text-white"
-													onClick={() => setModal({ isOpen: true, data: s })}
+													onClick={() => {
+														setEditingStudent(s);
+														setIsModalOpen(true);
+													}}
 												>
 													<FaEdit className="mr-2 text-blue-400" /> Tahrirlash
 												</DropdownMenuItem>

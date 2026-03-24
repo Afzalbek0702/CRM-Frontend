@@ -48,7 +48,7 @@ export const sidebarConfig = [
     },
     {
         key: "workers",
-        label: "Ishchilar",
+        label: "Xodimlar",
         icon: FaUsers,
         path: "workers",
         roles: ["CEO"]

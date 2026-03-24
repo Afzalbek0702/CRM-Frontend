@@ -61,7 +61,7 @@ export default function IncomeTable() {
 
 	const handleConfirmDelete = async () => {
 		if (deleteId) {
-			await deleteSalary(deleteId);
+			await deletePayment(deleteId);
 			setDeleteId(null);
 		}
 	};
