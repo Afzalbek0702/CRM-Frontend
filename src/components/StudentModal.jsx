@@ -94,6 +94,7 @@ export default function StudentModal({
 			...formData,
 			balance: Number(formData.balance || 0),
 			phone: PhoneUtils.cleanPhone(formData.phone),
+			parents_phone: PhoneUtils.cleanPhone(formData.parents_phone),
 		});
 		onClose();
 	};
