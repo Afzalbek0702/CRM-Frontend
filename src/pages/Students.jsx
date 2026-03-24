@@ -137,7 +137,7 @@ export default function Students() {
 						setEditingWorker(null);
 						setIsModalOpen(true);
 					}}
-					className="bg-primary rounded-md hover:bg-primary/90 shadow-lg shadow-primary/20 gap-2 font-semibold"
+					className="btn-default bg-primary rounded-md hover:bg-primary/90 shadow-lg shadow-primary/20 gap-2 font-semibold"
 				>
 					<Plus className="h-4 w-4" /> Xodim qo'shish
 				</Button>
@@ -216,7 +216,7 @@ export default function Students() {
 							<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 						</Button>
 					</PopoverTrigger>
-					<PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
+					<PopoverContent className="w-(--radix-popover-trigger-width) p-0">
 						<Command>
 							<CommandInput placeholder="Guruhni qidirish..." />
 							<CommandEmpty>Topilmadi.</CommandEmpty>

@@ -73,7 +73,7 @@ export default function SalaryTable() {
 					</span>
 				</div>
 				<Button
-					className="bg-primary text-black hover:opacity-90 flex items-center gap-2"
+					className="btn-default bg-primary text-black hover:opacity-90 flex items-center gap-2"
 					onClick={() => setModal({ isOpen: true, data: null })}
 				>
 					<FaPlus /> Yangi ish haqi
@@ -85,31 +85,31 @@ export default function SalaryTable() {
 				<Table>
 					<TableHeader className="bg-primary">
 						<TableRow>
-							<TableHead className="text-primary-foreground font-bold whitespace-nowrap">
+							<TableHead className="text-black font-bold whitespace-nowrap">
 								<div className="flex items-center gap-2">
 									<CalendarDays className="h-4 w-4" /> Sana
 								</div>
 							</TableHead>
 
-							<TableHead className="text-primary-foreground font-bold">
+							<TableHead className="text-black font-bold">
 								<div className="flex items-center gap-2">
 									<UserCheck className="h-4 w-4" /> Xodim
 								</div>
 							</TableHead>
 
-							<TableHead className="text-primary-foreground font-bold">
+							<TableHead className="text-black font-bold">
 								<div className="flex items-center gap-2">
 									<Wallet className="h-4 w-4" /> Miqdor
 								</div>
 							</TableHead>
 
-							<TableHead className="text-primary-foreground font-bold">
+							<TableHead className="text-black font-bold">
 								<div className="flex items-center gap-2">
 									<Landmark className="h-4 w-4" /> To'lov turi
 								</div>
 							</TableHead>
 
-							<TableHead className="text-primary-foreground font-bold">
+							<TableHead className="text-black font-bold">
 								<div className="flex items-center gap-2">
 									<StickyNote className="h-4 w-4" /> Izoh
 								</div>

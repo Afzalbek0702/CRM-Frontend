@@ -170,9 +170,7 @@ table::-webkit-scrollbar {
 }
 
 .btn-default {
-	background-color: var(--primary);
 	color: black;
-	border-radius: 4px;
 	cursor: pointer;
 }
 
@@ -218,5 +216,4 @@ form .modal-inputs input,
 form .modal-inputs button {
 	border-radius: 4px;
 }
-
 /* UTILITY CSS TUGADI! */

@@ -109,7 +109,7 @@ export default function Groups() {
 				</InputGroup>
 				<Button
 					onClick={() => setModal({ open: true, edit: false, data: null })}
-					className="bg-primary rounded-md hover:bg-primary/90 shadow-lg shadow-primary/20 gap-2 font-semibold"
+					className="btn-default bg-primary rounded-md hover:bg-primary/90 shadow-lg shadow-primary/20 gap-2 font-semibold"
 				>
 					<Plus className="h-4 w-4" /> Yangi guruh qo'shish
 				</Button>
@@ -181,7 +181,7 @@ export default function Groups() {
 									>
 										<TableCell>
 											{g.name}{" "}
-											<span id="studentCounter">[{g.studentCount}]</span>
+											<span className="text-primary ml-0.5">[{g.studentCount}]</span>
 										</TableCell>
 										<TableCell>{g.price} ming so'm</TableCell>
 										<TableCell>{g.lesson_time}</TableCell>
@@ -195,13 +195,13 @@ export default function Groups() {
 													g.lesson_days.map((day) => (
 														<span
 															key={day}
-															className="day-pill px-2.5 py-0.75 rounded-[10px]"
+															className="bg-[#fcd34d]/10 text-[#fcd34d] border border-[#fcd34d]/20 px-3 py-1 rounded-full text-xs font-medium px-2.5 py-0.75 rounded-[10px]"
 														>
 															{day}
 														</span>
 													))
 												) : (
-													<span className="day-pill">{g.lesson_days}</span>
+													<span className="bg-[#fcd34d]/10 text-[#fcd34d] border border-[#fcd34d]/20 px-3 py-1 rounded-full text-xs font-medium">{g.lesson_days}</span>
 												)}
 											</div>
 										</TableCell>

@@ -116,7 +116,7 @@ export default function WorkerDetail() {
 						<CardDescription className="flex items-center gap-2">
 							<Calendar className="h-4 w-4" /> Ish tartibi
 						</CardDescription>
-						<CardTitle className="text-2xl font-medium text-base">
+						<CardTitle className="text-2xl font-medium">
 							Full-time (Standart)
 						</CardTitle>
 					</CardHeader>

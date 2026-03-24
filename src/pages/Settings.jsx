@@ -240,7 +240,7 @@ export default function Settings() {
 							<h3 className="text-lg font-medium">O'quv xonalari</h3>
 							<Button
 								onClick={() => setRoomModal({ open: true, data: null })}
-								className="gap-2"
+								className="btn-default gap-2"
 							>
 								<Plus className="h-4 w-4" /> Xona qo'shish
 							</Button>

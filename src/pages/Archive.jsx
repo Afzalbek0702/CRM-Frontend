@@ -282,31 +282,31 @@ export default function Archive() {
 						<Table>
 							<TableHeader>
 								<TableRow className="bg-primary hover:bg-primary/95">
-									<TableHead className="text-primary-foreground">
+									<TableHead className="text-black">
 										<div className="flex items-center gap-2">
 											<User className="h-4 w-4" /> Ism
 										</div>
 									</TableHead>
 
-									<TableHead className="text-primary-foreground">
+									<TableHead className="text-black">
 										<div className="flex items-center gap-2">
 											<Phone className="h-4 w-4" /> Telefon
 										</div>
 									</TableHead>
 
-									<TableHead className="text-primary-foreground">
+									<TableHead className="text-black">
 										<div className="flex items-center gap-2">
 											<Globe className="h-4 w-4" /> Manba
 										</div>
 									</TableHead>
 
-									<TableHead className="text-primary-foreground">
+									<TableHead className="text-black">
 										<div className="flex items-center gap-2">
 											<BookOpen className="h-4 w-4" /> Qiziqadigan Kurs
 										</div>
 									</TableHead>
 
-									<TableHead className="text-primary-foreground">
+									<TableHead className="text-black">
 										<div className="flex items-center gap-2">
 											<MessageSquare className="h-4 w-4" /> Izoh
 										</div>

@@ -73,31 +73,31 @@ export default function IncomeTable() {
 				<Table>
 					<TableHeader>
 						<TableRow className="bg-primary hover:bg-primary/95 transition-colors">
-							<TableHead className="text-primary-foreground font-bold">
+							<TableHead className="text-black font-bold">
 								<div className="flex items-center gap-2">
 									<Calendar className="h-4 w-4" /> Sana
 								</div>
 							</TableHead>
 
-							<TableHead className="text-primary-foreground font-bold">
+							<TableHead className="text-black font-bold">
 								<div className="flex items-center gap-2">
 									<UserCircle className="h-4 w-4" /> O'quvchi
 								</div>
 							</TableHead>
 
-							<TableHead className="text-primary-foreground font-bold">
+							<TableHead className="text-black font-bold">
 								<div className="flex items-center gap-2">
 									<Users className="h-4 w-4" /> Guruh
 								</div>
 							</TableHead>
 
-							<TableHead className="text-primary-foreground font-bold">
+							<TableHead className="text-black font-bold">
 								<div className="flex items-center gap-2">
 									<Banknote className="h-4 w-4" /> Miqdor
 								</div>
 							</TableHead>
 
-							<TableHead className="text-primary-foreground font-bold">
+							<TableHead className="text-black font-bold">
 								<div className="flex items-center gap-2">
 									<CreditCard className="h-4 w-4" /> Tur
 								</div>

@@ -256,7 +256,7 @@ export default function GuruhlarInfo() {
 						<Button
 							onClick={saveAttendance}
 							disabled={isSaving || !isDirty}
-							className={`${isDirty ? "bg-yellow-500 hover:bg-yellow-600 text-black animate-pulse" : "bg-green-600"}`}
+							className={`${isDirty ? "bg-yellow-500 hover:bg-yellow-600 text-black animate-pulse" : "bg-transparent text-white border border-amber-50"}`}
 						>
 							{isSaving
 								? "Saqlanmoqda..."

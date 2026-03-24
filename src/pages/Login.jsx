@@ -103,7 +103,7 @@ const handlePhoneChange = (e) => {
 						<Button
 							type="submit"
 							disabled={loading}
-							className="w-full font-semibold shadow-md active:scale-[0.98] transition-transform"
+							className="btn-default w-full font-semibold shadow-md active:scale-[0.98] transition-transform"
 						>
 							{loading ? (
 								<>

@@ -6,7 +6,6 @@ import Groups from "./pages/Groups";
 import GroupInfo from "./pages/GroupInfo";
 import Students from "./pages/Students";
 import StudentDetail from "./pages/StudentDetail";
-import Teachers from "./pages/Teachers";
 import TeacherDetail from "./pages/WorkerDetail";
 import Payments from "./pages/Payments";
 import Login from "./pages/Login";
@@ -42,7 +41,6 @@ export default function App() {
 				<Route path="groups/:id" element={<GroupInfo />} />
 				<Route path="students" element={<Students />} />
 				<Route path="students/:id" element={<StudentDetail />} />
-				<Route path="teachers" element={<Teachers />} />
 				<Route path="workers/:id" element={<TeacherDetail />} />
 				<Route path="settings" element={<Settings />} />
 				<Route path="payments" element={<Payments />} />

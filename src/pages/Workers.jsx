@@ -78,6 +78,8 @@ export default function Workers() {
 		return matchesSearch && matchesFilter;
 	});
 
+	
+
 	return (
 		<div className="space-y-6 bg-background min-h-screen animate-in fade-in duration-500">
 			{/* Header qismi */}
@@ -95,7 +97,7 @@ export default function Workers() {
 						setEditingWorker(null);
 						setIsModalOpen(true);
 					}}
-					className="bg-primary rounded-md hover:bg-primary/90 shadow-lg shadow-primary/20 gap-2 font-semibold"
+					className="btn-default bg-primary rounded-md hover:bg-primary/90 shadow-lg shadow-primary/20 gap-2 font-semibold"
 				>
 					<Plus className="h-4 w-4" /> Xodim qo'shish
 				</Button>
@@ -136,19 +138,19 @@ export default function Workers() {
 				<Table>
 					<TableHeader>
 						<TableRow className="bg-primary hover:bg-primary/95 transition-colors">
-							<TableHead className="text-primary-foreground font-semibold">
+							<TableHead className="text-black font-semibold">
 								<div className="flex items-center gap-2">
 									<UserRound className="h-4 w-4" /> Xodim ismi
 								</div>
 							</TableHead>
 
-							<TableHead className="text-primary-foreground font-semibold">
+							<TableHead className="text-black font-semibold">
 								<div className="flex items-center gap-2">
 									<PhoneCall className="h-4 w-4" /> Telefon
 								</div>
 							</TableHead>
 
-							<TableHead className="text-primary-foreground font-semibold">
+							<TableHead className="text-black font-semibold">
 								<div className="flex items-center gap-2">
 									<BriefcaseBusiness className="h-4 w-4" /> Lavozimi
 								</div>

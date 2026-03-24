@@ -32,10 +32,10 @@ export function AppSidebar() {
 	const filteredSidebar = filterSidebarByRole(sidebarConfig, user?.role);
 
 	return (
-		<Sidebar collapsible="icon">
+		<Sidebar collapsible="icon" className={"group-data-[state=collapsed]:w-8"}>
 
 
-			<SidebarContent className={"pt-17.5"}>
+			<SidebarContent className={"pt-17.5 group-data-[state=collapsed]:w-8 overflow-hidden"}>
 				<SidebarGroup>
 					<SidebarMenu>
 						{filteredSidebar.map((item) => {
@@ -49,12 +49,12 @@ export function AppSidebar() {
 											asChild
 											tooltip={item.label}
 											isActive={isActive}
-											className={"rounded-none h-10 px-2.5 py-3 "}
+											className={"rounded-none h-10 px-2.5 py-3"}
 										>
 											<NavLink
 												to={`/${tenant}/${item.path}`}
 												className={({ isActive }) =>
-													isActive ? "font-medium" : ""
+													` ${isActive ? "font-medium" : ""}`
 												}
 											>
 												<Icon />
@@ -68,14 +68,14 @@ export function AppSidebar() {
 								(child) => location.pathname === `/${tenant}/${child.path}`,
 							);
 							return (
-								<Collapsible key={item.label} className="group/collapsible">
-									<SidebarMenuItem className="p-0 m-0">
+								<Collapsible key={item.label} className="group/collapsible w-full">
+									<SidebarMenuItem className="p-0 m-0 ">
 										<CollapsibleTrigger asChild>
 											<SidebarMenuButton
 												tooltip={item.label}
 												isActive={isChildActive}
 												className={
-													"rounded-none h-10 px-2.5 py-3 "
+													"rounded-none h-10 px-2.5 py-3"
 												}
 											>
 												<Icon />
@@ -100,7 +100,7 @@ export function AppSidebar() {
 																<NavLink
 																	to={`/${tenant}/${child.path}`}
 																	className={({ isActive }) =>
-																		isActive ? "text-primary font-bold" : ""
+																		` ${isActive ? "text-primary font-bold" : ""}`
 																	}
 																>
 																	<span>{child.label}</span>

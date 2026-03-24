@@ -92,13 +92,16 @@ export default function Header() {
 							value={searchTerm}
 							onChange={(e) => {
 								setSearchTerm(e.target.value);
-								setIsSearchOpen(true);
+								if (e.target.value.trim()) setIsSearchOpen(true);
 							}}
 							className="w-full bg-transparent border-none outline-none text-sm placeholder:text-muted-foreground"
 						/>
 						{searchTerm && (
 							<button
-								onClick={() => setSearchTerm("")}
+								onClick={() => {
+									setSearchTerm("");
+									setIsSearchOpen(false);
+								}}
 								className="text-muted-foreground hover:text-foreground transition-colors"
 							>
 								<FaTimes className="w-3.5 h-3.5" />
@@ -107,8 +110,14 @@ export default function Header() {
 					</div>
 
 					{/* Result Dropdown */}
-					{isSearchOpen && totalResults > 0 && (
+					{isSearchOpen && searchTerm.trim() && totalResults > 0 && (
 						<div className="absolute top-12 left-0 right-0 max-h-[70vh] overflow-y-auto rounded-xl border border-border bg-popover shadow-xl animate-in fade-in zoom-in-95 duration-200">
+							<ResultSection
+								title="Lidlar"
+								items={searchResults.leads}
+								icon="🎯"
+								onClick={(item) => handleNavigate(`/leads/${item.id}`)}
+							/>
 							<ResultSection
 								title="O'quvchilar"
 								items={searchResults.students}
@@ -134,7 +143,6 @@ export default function Header() {
 
 			{/* Right Actions */}
 			<div className="flex items-center gap-4">
-				<ThemeToggle />
 				<NavLink to={`/${tenant}/profile`} className="group">
 					<div className="p-0.5 rounded-full border border-border group-hover:border-primary transition-colors">
 						<img

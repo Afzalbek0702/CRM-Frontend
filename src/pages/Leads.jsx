@@ -119,7 +119,7 @@ const [convertModal, setConvertModal] = useState({ isOpen: false, leadData: null
 
 				<Button
 					onClick={() => setModal({ isOpen: true, data: null })}
-					className="bg-primary rounded-md hover:bg-primary/90 shadow-lg shadow-primary/20 gap-2 font-semibold"
+					className="btn-default bg-primary rounded-md hover:bg-primary/90 shadow-lg shadow-primary/20 gap-2 font-semibold"
 				>
 					<Plus className="h-4 w-4" /> Yangi lid qo'shish
 				</Button>
@@ -129,31 +129,31 @@ const [convertModal, setConvertModal] = useState({ isOpen: false, leadData: null
 				<Table>
 					<TableHeader>
 						<TableRow className="bg-primary hover:bg-primary/95">
-							<TableHead className="text-primary-foreground">
+							<TableHead className="text-black">
 								<div className="flex items-center gap-2">
 									<User className="h-4 w-4" /> Ism
 								</div>
 							</TableHead>
 
-							<TableHead className="text-primary-foreground">
+							<TableHead className="text-black">
 								<div className="flex items-center gap-2">
 									<Phone className="h-4 w-4" /> Telefon
 								</div>
 							</TableHead>
 
-							<TableHead className="text-primary-foreground">
+							<TableHead className="text-black">
 								<div className="flex items-center gap-2">
 									<Globe className="h-4 w-4" /> Manba
 								</div>
 							</TableHead>
 
-							<TableHead className="text-primary-foreground">
+							<TableHead className="text-black">
 								<div className="flex items-center gap-2">
 									<BookOpen className="h-4 w-4" /> Qiziqadigan Kurs
 								</div>
 							</TableHead>
 
-							<TableHead className="text-primary-foreground">
+							<TableHead className="text-black">
 								<div className="flex items-center gap-2">
 									<MessageSquare className="h-4 w-4" /> Izoh
 								</div>
