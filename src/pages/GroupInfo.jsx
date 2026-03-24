@@ -52,10 +52,11 @@ import {
 	InputGroupInput,
 	InputGroupAddon,
 } from "@/components/ui/input-group";
+import { getUzDays } from "@/utils/weekday";
 
 export default function GuruhlarInfo() {
-   const { id } = useParams();
-   const navigate = useNavigate();
+	const { id } = useParams();
+	const navigate = useNavigate();
 	const { loading, error, fetchById } = useGroups();
 	const { removeFromGroup } = useStudent();
 	const { createPayment } = usePayments();
@@ -112,10 +113,7 @@ export default function GuruhlarInfo() {
 	return (
 		<div className="space-y-6 bg-background min-h-screen animate-in fade-in duration-500">
 			{/* Back Button */}
-			<Button
-				onClick={() => navigate(-1)}
-				className="btn-default"
-			>
+			<Button onClick={() => navigate(-1)} className="btn-default">
 				<FaArrowLeft /> Ortga qaytish
 			</Button>
 
@@ -151,23 +149,21 @@ export default function GuruhlarInfo() {
 							<div className="col-span-2 pt-2">
 								<p className="text-gray-500 mb-2">Dars kunlari</p>
 								<div className="flex flex-wrap gap-2">
-									{Array.isArray(group.lesson_days)
-										? group.lesson_days.map((day) => (
-												<span
-													key={day}
-													className="bg-[#fcd34d]/10 text-[#fcd34d] border border-[#fcd34d]/20 px-3 py-1 rounded-full text-xs font-medium"
-												>
-													{day}
-												</span>
-											))
-										: group.lesson_days}
+									{getUzDays(group.lesson_days).map((day) => (
+										<span
+											key={day}
+											className="day-pill px-2.5 py-0.5 rounded-[10px] bg-primary text-black"
+										>
+											{day}
+										</span>
+									))}
 								</div>
 							</div>
 						</CardContent>
 					</Card>
 
 					{/* Student List Section */}
-					<div className="bg-[#1f1f1f] p-5 rounded-lg border border-[#ffffff1a] flex flex-col h-[500px]">
+					<div className="bg-[#1f1f1f] p-5 rounded-lg border border-[#ffffff1a] flex flex-col h-125">
 						<h3 className="text-lg font-bold mb-4">
 							O'quvchilar ({filteredStudents.length})
 						</h3>
@@ -238,33 +234,33 @@ export default function GuruhlarInfo() {
 
 				{/* RIGHT PANEL: Attendance */}
 				<div className="xl:col-span-8 bg-[#1f1f1f] p-6 rounded-lg border border-[#ffffff1a]">
-               <div className="flex items-center justify-between mb-6">
+					<div className="flex items-center justify-between mb-6">
 						<h3 className="text-xl font-bold">Davomat</h3>
-                  <div className="flex gap-4">
-						<Select value={month} onValueChange={setMonth}>
-							<SelectTrigger className="w-48 bg-black/40 border-[#ffffff26] text-white">
-								<SelectValue />
-							</SelectTrigger>
-							<SelectContent className="bg-[#1f1f1f] border-[#ffffff1a] text-white">
-								{months.map((m) => (
-									<SelectItem key={m.value} value={m.value}>
-										{m.label}
-									</SelectItem>
-								))}
-							</SelectContent>
-						</Select>
-						<Button
-							onClick={saveAttendance}
-							disabled={isSaving || !isDirty}
-							className={`${isDirty ? "bg-yellow-500 hover:bg-yellow-600 text-black animate-pulse" : "bg-green-600"}`}
-						>
-							{isSaving
-								? "Saqlanmoqda..."
-								: isDirty
-									? "O'zgarishlarni saqlash *"
-									: "Saqlangan"}
-						</Button>
-                  </div>
+						<div className="flex gap-4">
+							<Select value={month} onValueChange={setMonth}>
+								<SelectTrigger className="w-48 bg-black/40 border-[#ffffff26] text-white">
+									<SelectValue />
+								</SelectTrigger>
+								<SelectContent className="bg-[#1f1f1f] border-[#ffffff1a] text-white">
+									{months.map((m) => (
+										<SelectItem key={m.value} value={m.value}>
+											{m.label}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
+							<Button
+								onClick={saveAttendance}
+								disabled={isSaving || !isDirty}
+								className={`${isDirty ? "bg-yellow-500 hover:bg-yellow-600 text-black animate-pulse" : "bg-green-600"}`}
+							>
+								{isSaving
+									? "Saqlanmoqda..."
+									: isDirty
+										? "O'zgarishlarni saqlash *"
+										: "Saqlangan"}
+							</Button>
+						</div>
 					</div>
 
 					<div className="relative overflow-x-auto rounded-md border border-[#ffffff1a]">
@@ -277,7 +273,7 @@ export default function GuruhlarInfo() {
 									{attendance[0]?.days.map((day, idx) => (
 										<TableHead
 											key={idx}
-											className="text-center min-w-[50px] px-1 text-[10px] md:text-xs"
+											className="text-center min-w-12.5 px-1 text-[10px] md:text-xs"
 										>
 											<div className="flex flex-col items-center">
 												<span className="text-white font-bold">

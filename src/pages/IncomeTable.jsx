@@ -126,7 +126,7 @@ export default function IncomeTable() {
 									</TableCell>
 									<TableCell>{p.group_name}</TableCell>
 									<TableCell className="text-primary font-semibold">
-										{p.amount?.toLocaleString() ?? 0} so'm
+										{p.amount? Number(p.amount) /1000: 0} ming so'm
 									</TableCell>
 									<TableCell>
 										<span className="bg-gray-800 px-2 py-1 rounded text-xs text-gray-300">

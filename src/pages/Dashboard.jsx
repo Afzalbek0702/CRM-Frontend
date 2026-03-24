@@ -6,10 +6,6 @@ import { useNavigate, NavLink, useParams } from "react-router-dom";
 import {
 	FaUsers,
 	FaClock,
-	FaBook,
-	FaChalkboardTeacher,
-	FaPhone,
-	FaCheckCircle,
 } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
 import { useAuth } from "../context/authContext";
@@ -70,11 +66,11 @@ export default function Dashboard() {
 						<NavLink to={`/${tenant}/students`}>
 							<StatsCards
 								data={students?.length || 0}
-								type="Jami O'quvchilar"
+								type="O'quvchilar"
 							/>
 						</NavLink>
 						<NavLink to={`/${tenant}/groups`}>
-							<StatsCards data={groups?.length || 0} type="Jami Guruhlar" />
+							<StatsCards data={groups?.length || 0} type="Guruhlar" />
 						</NavLink>
 					</>
 				) : (

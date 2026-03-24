@@ -73,13 +73,9 @@ export default function StudentModal({
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		setFormData((p) => ({ ...p, [name]: value }));
-	};
-	const handlePhoneChange = (e) => {
-		const formatted = PhoneUtils.formatPhone(e.target.value);
-		setFormData({ ...formData, phone: formatted });
-	};
+   };
+   
 	const handleKeyDown = (e) => {
-		// Agar foydalanuvchi "+(998) " qismini o'chirmoqchi bo'lsa, to'xtatib qolamiz
 		if (e.key === "Backspace" && e.target.value.length <= 7) {
 			e.preventDefault();
 		}
@@ -149,7 +145,10 @@ export default function StudentModal({
 								placeholder="+998 90 123 45 67"
 								className="bg-zinc-900 border-zinc-800"
 								value={formData.phone}
-								onChange={handlePhoneChange}
+								onChange={(e) => {
+									const formatted = PhoneUtils.formatPhone(e.target.value);
+									setFormData({ ...formData, phone: formatted });
+								}}
 								onKeyDown={handleKeyDown}
 							/>
 						</div>
@@ -188,11 +187,11 @@ export default function StudentModal({
 						{/* Ota-ona ma'lumotlari - Ajratilgan blok */}
 						<div className="sm:col-span-2 mt-2">
 							<div className="flex items-center gap-2 mb-4">
-								<div className="h-[1px] flex-1 bg-zinc-800"></div>
+								<div className="h-px flex-1 bg-zinc-800"></div>
 								<span className="text-[10px] uppercase tracking-wider text-zinc-500 font-bold">
 									Ota-ona ma'lumotlari
 								</span>
-								<div className="h-[1px] flex-1 bg-zinc-800"></div>
+								<div className="h-px flex-1 bg-zinc-800"></div>
 							</div>
 						</div>
 
@@ -218,7 +217,10 @@ export default function StudentModal({
 								placeholder="+998 99 888 77 66"
 								className="bg-zinc-900 border-zinc-800"
 								value={formData.parents_phone}
-								onChange={handlePhoneChange}
+								onChange={(e) => {
+									const formatted = PhoneUtils.formatPhone(e.target.value);
+									setFormData({ ...formData, parents_phone: formatted });
+								}}
 								onKeyDown={handleKeyDown}
 							/>
 						</div>

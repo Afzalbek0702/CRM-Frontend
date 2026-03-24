@@ -48,6 +48,7 @@ import {
 	CalendarRange,
 	MoreHorizontal,
 } from "lucide-react";
+import { getUzDays } from "@/utils/weekday";
 export default function Groups() {
 	const navigate = useNavigate();
 	const { tenant } = useParams();
@@ -84,6 +85,7 @@ export default function Groups() {
 			setDeleteId(null);
 		}
 	};
+	console.log(getUzDays(groupsWithCount[0].lesson_days));
 
 	if (loading) return <Loader />;
 
@@ -183,7 +185,9 @@ export default function Groups() {
 											{g.name}{" "}
 											<span id="studentCounter">[{g.studentCount}]</span>
 										</TableCell>
-										<TableCell>{g.price} ming so'm</TableCell>
+										<TableCell>
+											{g.price ? Number(g.price) / 1000 : 0} ming so'm
+										</TableCell>
 										<TableCell>{g.lesson_time}</TableCell>
 										<TableCell>{g.course_type}</TableCell>
 										<TableCell className="teacher">
@@ -191,7 +195,7 @@ export default function Groups() {
 										</TableCell>
 										<TableCell>
 											<div className="flex gap-1">
-												{Array.isArray(g.lesson_days) ? (
+												{/* {Array.isArray(g.lesson_days) ? (
 													g.lesson_days.map((day) => (
 														<span
 															key={day}
@@ -202,7 +206,15 @@ export default function Groups() {
 													))
 												) : (
 													<span className="day-pill">{g.lesson_days}</span>
-												)}
+												)} */}
+												{getUzDays(g.lesson_days).map((day) => (
+													<span
+														key={day}
+														className="day-pill px-2.5 py-0.5 rounded-[10px] bg-primary text-black"
+													>
+														{day}
+													</span>
+												))}
 											</div>
 										</TableCell>
 
@@ -226,7 +238,9 @@ export default function Groups() {
 												>
 													<DropdownMenuItem
 														className="cursor-pointer hover:bg-gray-800 focus:bg-gray-800 focus:text-white"
-														onClick={() => setModal({ open: true,edit:true, data: g })}
+														onClick={() =>
+															setModal({ open: true, edit: true, data: g })
+														}
 													>
 														<FaEdit className="mr-2 text-blue-400" /> Tahrirlash
 													</DropdownMenuItem>

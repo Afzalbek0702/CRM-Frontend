@@ -134,7 +134,7 @@ export default function Header() {
 
 			{/* Right Actions */}
 			<div className="flex items-center gap-4">
-				<ThemeToggle />
+				{/* <ThemeToggle /> */}
 				<NavLink to={`/${tenant}/profile`} className="group">
 					<div className="p-0.5 rounded-full border border-border group-hover:border-primary transition-colors">
 						<img

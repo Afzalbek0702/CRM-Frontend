@@ -56,7 +56,7 @@ export default function StudentDetail() {
 			}
 		};
 		loadStudent();
-	}, [id, groups, fetchById]);
+	}, [id]);
 
 	if (loading || !student) return <Loader />;
 	if (error)
