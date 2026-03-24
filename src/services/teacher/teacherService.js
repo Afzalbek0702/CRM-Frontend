@@ -6,7 +6,6 @@ export const teacherService = {
 
 	getById: (id) =>
 		api.get(`${endpoints.TEACHERS}/${id}`).then((r) => {
-			console.log("API response:", r);
 			return r.data;
 		}),
 

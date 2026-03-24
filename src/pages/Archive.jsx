@@ -1,44 +1,51 @@
 import { useParams } from "react-router-dom";
 import Loader from "../components/Loader.jsx";
 import { useArchive } from "../services/archive/useArchive.js";
-import { FaSearch } from "react-icons/fa";
+import {
+	FaBook,
+	FaCalendarAlt,
+	FaChalkboardTeacher,
+	FaClock,
+	FaDollarSign,
+} from "react-icons/fa";
 import { useState } from "react";
-import { goBack } from "../utils/navigate.js";
+import { useNavigate } from "react-router-dom";
 import {
 	Table,
 	TableBody,
-	TableCaption,
 	TableCell,
 	TableHead,
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { Check, ChevronsUpDown, Search } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import {
-	Command,
-	CommandEmpty,
-	CommandGroup,
-	CommandInput,
-	CommandItem,
-} from "@/components/ui/command"
-import {
-	InputGroup,
-	InputGroupAddon,
-	InputGroupButton,
-	InputGroupInput,
-	InputGroupText,
-	InputGroupTextarea,
-} from "@/components/ui/input-group"
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@/components/ui/popover"
+	Calendar,
+	CalendarDays,
+	GraduationCap,
+	Phone,
+	Users,
+	Wallet,
+	User,
+	Users2,
+	Globe,
+	BookOpen,
+	MessageSquare,
+	UserRound,
+	PhoneForwarded,
+   Share2,
+   CircleDollarSign,
+   CreditCard,
+   ArrowLeft
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
 import "./Archive.css";
+import { HiOutlinePencilAlt } from "react-icons/hi";
+import PhoneUtils from "@/utils/phoneFormat.js";
+import { useCourse } from "@/services/course/useCourse.js";
 
 export default function Archive() {
 	const { category } = useParams();
+	const navigate = useNavigate();
 	const [searchTerm, setSearchTerm] = useState("");
 	const [selectedTeacher, setSelectedTeacher] = useState("");
 	const [selectedGroup, setSelectedGroup] = useState("");
@@ -50,8 +57,8 @@ export default function Archive() {
 		useAllArchivedTeachers,
 	} = useArchive();
 
-	const [openTeacher, setOpenTeacher] = useState(false)
-	const [openGroup, setOpenGroup] = useState(false)
+	const [openTeacher, setOpenTeacher] = useState(false);
+	const [openGroup, setOpenGroup] = useState(false);
 
 	const {
 		data: students = [],
@@ -73,7 +80,7 @@ export default function Archive() {
 		isLoading: loadingTeachers,
 		error: errorTeachers,
 	} = useAllArchivedTeachers();
-
+   const {courseData} = useCourse()
 	if (
 		(category === "students" && loadingStudents) ||
 		(category === "leads" && loadingLeads) ||
@@ -93,10 +100,11 @@ export default function Archive() {
 	}
 
 	return (
-		<div className="table-container">
-			<Button className={"btn-default"} onClick={goBack}>← Ortga</Button>
-
-			<h2>
+		<div className="space-y-6 bg-background min-h-screen animate-in fade-in duration-500">
+			<Button onClick={() => navigate(-1)} className="btn-default">
+				<ArrowLeft className="h-4 w-4" /> Ortga qaytish
+			</Button>
+			<h2 className="page-title flex items-center gap-2 text-2xl font-bold my-6">
 				Arxiv -{" "}
 				<span>
 					{category === "students"
@@ -113,328 +121,402 @@ export default function Archive() {
 				</span>
 			</h2>
 
-			{category === "students" && (
-				<>
-
-					<div className=" table-actions flex items-center gap-2 mb-6">
-						<InputGroup>
-							<InputGroupInput
-								type="text"
-								placeholder="Ismi orqali qidirish"
-								value={searchTerm}
-								onChange={(e) => setSearchTerm(e.target.value)}
-							/>
-
-							<InputGroupAddon>
-								<FaSearch className="text-sm" />
-							</InputGroupAddon>
-						</InputGroup>
-					</div>
-
-
-					<div className="flex items-center gap-5 mb-4">
-						<Popover open={openTeacher} onOpenChange={setOpenTeacher}>
-							<PopoverTrigger asChild>
-								<Button
-									variant="outline"
-									role="combobox"
-									className="w-[220px] justify-between btn-default"
-								>
-									{selectedTeacher
-										? teachers.find((t) => t.id === selectedTeacher)?.full_name
-										: "Hamma O'qituvchilar"}
-									<ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
-								</Button>
-							</PopoverTrigger>
-
-							<PopoverContent className="w-[220px] p-0">
-								<Command>
-									<CommandInput placeholder="Qidirish..." />
-									<CommandEmpty>Topilmadi.</CommandEmpty>
-
-									<CommandGroup>
-										<CommandItem
-											onSelect={() => {
-												setSelectedTeacher("")
-												setOpenTeacher(false)
-											}}
-										>
-											Hamma O'qituvchilar
-										</CommandItem>
-
-										{teachers.map((t) => (
-											<CommandItem
-												key={t.id}
-												value={t.full_name}
-												onSelect={() => {
-													setSelectedTeacher(t.id)
-													setOpenTeacher(false)
-												}}
-											>
-												{t.full_name}
-												<Check
-													className={`ml-auto h-4 w-4 ${selectedTeacher === t.id ? "opacity-100" : "opacity-0"
-														}`}
-												/>
-											</CommandItem>
-										))}
-									</CommandGroup>
-								</Command>
-							</PopoverContent>
-						</Popover>
-
-						<Popover open={openGroup} onOpenChange={setOpenGroup}>
-							<PopoverTrigger asChild>
-								<Button
-									variant="outline"
-									role="combobox"
-									className="w-[220px] justify-between btn-default"
-								>
-									{selectedGroup
-										? archivedGroups.find((g) => g.id === selectedGroup)?.name
-										: "Hamma guruhlar"}
-									<ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
-								</Button>
-							</PopoverTrigger>
-
-							<PopoverContent className="w-[220px] p-0">
-								<Command>
-									<CommandInput placeholder="Qidirish..." />
-									<CommandEmpty>Topilmadi.</CommandEmpty>
-
-									<CommandGroup>
-										<CommandItem
-											onSelect={() => {
-												setSelectedGroup("")
-												setOpenGroup(false)
-											}}
-										>
-											Hamma guruhlar
-										</CommandItem>
-
-										{archivedGroups.map((g) => (
-											<CommandItem
-												key={g.id}
-												value={g.name}
-												onSelect={() => {
-													setSelectedGroup(g.id)
-													setOpenGroup(false)
-												}}
-											>
-												{g.name}
-												<Check
-													className={`ml-auto h-4 w-4 ${selectedGroup === g.id ? "opacity-100" : "opacity-0"
-														}`}
-												/>
-											</CommandItem>
-										))}
-									</CommandGroup>
-								</Command>
-							</PopoverContent>
-						</Popover>
-					</div>
-
-
-				</>
-			)}
-
 			<div>
 				{/* Students Table */}
 				{category === "students" && (
-					<Table>
-						<TableHeader>
-							<TableRow>
-								<TableHead>Ism</TableHead>
-								<TableHead>Guruh</TableHead>
-								<TableHead>Telefon</TableHead>
-								<TableHead>Tug'ilgan Kun</TableHead>
-								<TableHead>Ota-Ona Ismi</TableHead>
-								<TableHead>Ota-Ona Raqami</TableHead>
-								<TableHead>Balance</TableHead>
-							</TableRow>
-						</TableHeader>
-						<TableBody>
-							{students.length === 0 ? (
+					<div className="rounded-md border shadow-sm overflow-hidden">
+						<Table>
+							<TableHeader className="bg-primary">
 								<TableRow>
-									<TableCell colSpan={7}>
-										O'quvchilar topilmadi.
-									</TableCell>
+									<TableHead className="text-black font-bold whitespace-nowrap">
+										<div className="flex items-center gap-2">
+											<GraduationCap className="h-4 w-4" /> Ism
+										</div>
+									</TableHead>
+
+									<TableHead className="text-black font-bold whitespace-nowrap">
+										<div className="flex items-center gap-2">
+											<Users className="h-4 w-4" /> Guruh
+										</div>
+									</TableHead>
+
+									<TableHead className="text-black font-bold whitespace-nowrap">
+										<div className="flex items-center gap-2">
+											<Phone className="h-4 w-4" /> Telefon
+										</div>
+									</TableHead>
+
+									<TableHead className="text-black font-bold whitespace-nowrap">
+										<div className="flex items-center gap-2">
+											<Calendar className="h-4 w-4" /> Tug'ilgan kun
+										</div>
+									</TableHead>
+									<TableHead className="text-black font-bold whitespace-nowrap">
+										<div className="flex items-center gap-2">
+											<UserRound className="h-4 w-4" /> Ota-ona ismi
+										</div>
+									</TableHead>
+									<TableHead className="text-black font-bold whitespace-nowrap">
+										<div className="flex items-center gap-2">
+											<PhoneForwarded className="h-4 w-4 " /> Ota-ona raqami
+										</div>
+									</TableHead>
+
+									<TableHead className="text-black font-bold whitespace-nowrap">
+										<div className="flex items-center gap-2">
+											<Wallet className="h-4 w-4" /> Balans
+										</div>
+									</TableHead>
 								</TableRow>
-							) : (
-								students
-									?.filter((s) =>
-										s.full_name?.toLowerCase().includes(searchTerm.toLowerCase()),
-									)
-									.filter(
-										(s) =>
-											!selectedTeacher ||
-											s.groups?.some((studentGroupName) => {
-												const groupObj = archivedGroups.find(
-													(g) => g.name === studentGroupName,
-												);
-												return groupObj?.teacher_id === selectedTeacher;
-											}),
-									)
-									.filter(
-										(s) =>
-											!selectedGroup ||
-											s.archivedGroups?.includes(
-												archivedGroups.find((g) => g.id === selectedGroup)?.name,
-											),
-									)
-									.map((s) => (
-										<TableRow key={s.id}>
-											<TableCell>{s.full_name}</TableCell>
-											<TableCell>{s.groups?.[0] || "No Group"}</TableCell>
-											<TableCell>{s.phone}</TableCell>
-											<TableCell>{s.birthday?.split("T")[0]}</TableCell>
-											<TableCell>{s.parents_name}</TableCell>
-											<TableCell>{s.parents_phone}</TableCell>
-											<TableCell>
-												<span className="balance-badge">
-													{s.monthly_paid?.toLocaleString() ?? 0} so'm
-												</span>
-											</TableCell>
-										</TableRow>
-									)))}
-						</TableBody>
-					</Table>
+							</TableHeader>
+							<TableBody>
+								{students.length === 0 ? (
+									<TableRow>
+										<TableCell
+											colSpan={6}
+											className="h-24 text-center text-muted-foreground"
+										>
+											O'quvchilar topilmadi.
+										</TableCell>
+									</TableRow>
+								) : (
+									students
+										?.filter((s) =>
+											s.full_name
+												?.toLowerCase()
+												.includes(searchTerm.toLowerCase()),
+										)
+										.filter(
+											(s) =>
+												!selectedTeacher ||
+												s.groups?.some((studentGroupName) => {
+													const groupObj = archivedGroups.find(
+														(g) => g.name === studentGroupName,
+													);
+													return groupObj?.teacher_id === selectedTeacher;
+												}),
+										)
+										.filter(
+											(s) =>
+												!selectedGroup ||
+												s.archivedGroups?.includes(
+													archivedGroups.find((g) => g.id === selectedGroup)
+														?.name,
+												),
+										)
+										.map((s) => (
+											<TableRow key={s.id}>
+												<TableCell>{s.full_name}</TableCell>
+												<TableCell>{s.groups?.[0] || "No Group"}</TableCell>
+												<TableCell>{PhoneUtils.formatPhone(s.phone)}</TableCell>
+												<TableCell>{s.birthday?.split("T")[0]}</TableCell>
+												<TableCell>{s.parents_name}</TableCell>
+												<TableCell>
+													{PhoneUtils.formatPhone(s.parents_phone)}
+												</TableCell>
+												<TableCell>
+													<span className="balance-badge">
+														{s.monthly_paid?.toLocaleString() ?? 0} so'm
+													</span>
+												</TableCell>
+											</TableRow>
+										))
+								)}
+							</TableBody>
+						</Table>
+					</div>
 				)}
 
 				{/* Teachers Table */}
 				{category === "teachers" && (
-					<Table>
-						<TableHeader>
-							<TableRow>
-								<TableHead>Ism</TableHead>
-								<TableHead>Telefon</TableHead>
-								<TableHead>Manba</TableHead>
-							</TableRow>
-						</TableHeader>
-						<TableBody>
-							{students.length === 0 ? (
+					<div className="rounded-md border shadow-sm overflow-hidden">
+						<Table>
+							<TableHeader className="bg-primary">
 								<TableRow>
-									<TableCell colSpan={6}>
-										O'qituvchilar topilmadi.
-									</TableCell>
+									<TableHead className="text-black font-bold whitespace-nowrap">
+										<div className="flex items-center gap-2">
+											<User className="h-4 w-4" /> Ism
+										</div>
+									</TableHead>
+
+									<TableHead className="text-black font-bold whitespace-nowrap">
+										<div className="flex items-center gap-2">
+											<Phone className="h-4 w-4" /> Telefon
+										</div>
+									</TableHead>
+
+									<TableHead className="text-black font-bold whitespace-nowrap">
+										<div className="flex items-center gap-2">
+											<Share2 className="h-4 w-4" /> Manba
+										</div>
+									</TableHead>
 								</TableRow>
-							) : (
-								teachers?.map((t) => (
-									<TableRow key={t.id}>
-										<TableCell>{t.full_name}</TableCell>
-										<TableCell>{t.phone}</TableCell>
-										<TableCell>{t.source}</TableCell>
+							</TableHeader>
+							<TableBody>
+								{students.length === 0 ? (
+									<TableRow>
+										<TableCell
+											colSpan={6}
+											className="h-24 text-center text-muted-foreground"
+										>
+											O'qituvchilar topilmadi.
+										</TableCell>
 									</TableRow>
-								)))}
-						</TableBody>
-					</Table>
+								) : (
+									teachers?.map((t) => (
+										<TableRow key={t.id}>
+											<TableCell>{t.full_name}</TableCell>
+											<TableCell>{PhoneUtils.formatPhone(t.phone)}</TableCell>
+											<TableCell>{t.source}</TableCell>
+										</TableRow>
+									))
+								)}
+							</TableBody>
+						</Table>
+					</div>
 				)}
 
 				{/* Leads Table */}
 				{category === "leads" && (
-					<Table>
-						<TableHeader>
-							<TableRow>
-								<TableHead>Ism</TableHead>
-								<TableHead>Telefon Raqam</TableHead>
-								<TableHead>Manba</TableHead>
-							</TableRow>
-						</TableHeader>
-						<TableBody>
-							{leads.length === 0 ? (
-								<TableRow>
-									<TableCell colSpan={6}>
-										Lidlar topilmadi.
-									</TableCell>
+					<div className="rounded-md border shadow-sm overflow-hidden">
+						<Table>
+							<TableHeader>
+								<TableRow className="bg-primary hover:bg-primary/95">
+									<TableHead className="text-primary-foreground">
+										<div className="flex items-center gap-2">
+											<User className="h-4 w-4" /> Ism
+										</div>
+									</TableHead>
+
+									<TableHead className="text-primary-foreground">
+										<div className="flex items-center gap-2">
+											<Phone className="h-4 w-4" /> Telefon
+										</div>
+									</TableHead>
+
+									<TableHead className="text-primary-foreground">
+										<div className="flex items-center gap-2">
+											<Globe className="h-4 w-4" /> Manba
+										</div>
+									</TableHead>
+
+									<TableHead className="text-primary-foreground">
+										<div className="flex items-center gap-2">
+											<BookOpen className="h-4 w-4" /> Qiziqadigan Kurs
+										</div>
+									</TableHead>
+
+									<TableHead className="text-primary-foreground">
+										<div className="flex items-center gap-2">
+											<MessageSquare className="h-4 w-4" /> Izoh
+										</div>
+									</TableHead>
 								</TableRow>
-							) : (
-								leads?.map((l) => (
-									<TableRow key={l.id}>
-										<TableCell>{l.full_name}</TableCell>
-										<TableCell>{l.phone}</TableCell>
-										<TableCell>{l.source}</TableCell>
+							</TableHeader>
+
+							<TableBody>
+								{leads?.length === 0 ? (
+									<TableRow>
+										<TableCell
+											colSpan={6}
+											className="text-center py-10 text-gray-500"
+										>
+											Lidlar topilmadi.
+										</TableCell>
 									</TableRow>
-								)))}
-						</TableBody>
-					</Table>
+								) : (
+									leads?.map((l) => (
+										<TableRow key={l.id} className="bg-card transition-colors">
+											<TableCell className="font-medium">
+												{l.full_name}
+											</TableCell>
+											<TableCell>
+												<span
+													onClick={(e) => handleCopyPhone(e, l.phone)}
+													className="cursor-pointer hover:text-blue-600 transition-colors underline decoration-dotted"
+												>
+													{PhoneUtils.formatPhone(l.phone)}
+												</span>
+											</TableCell>
+											<TableCell>{l.source}</TableCell>
+											<TableCell>
+												{courseData?.find((c) => c.name === l.interested_course)
+													?.name || "-"}
+											</TableCell>
+											<TableCell
+												className="max-w-50 truncate"
+												title={l.comment}
+											>
+												{l.comment}
+											</TableCell>
+										</TableRow>
+									))
+								)}
+							</TableBody>
+						</Table>
+					</div>
 				)}
 
 				{/* Payments Table */}
 				{category === "payments" && (
-					<Table>
-						<TableHeader>
-							<TableRow>
-								<TableHead>O'quvchi</TableHead>
-								<TableHead>Miqdor</TableHead>
-								<TableHead>Sana</TableHead>
-							</TableRow>
-						</TableHeader>
-						<TableBody>
-							{payments.length === 0 ? (
-								<TableRow>
-									<TableCell colSpan={6}>
-										To'lovlar topilmadi.
-									</TableCell>
+					<div className="rounded-md border overflow-hidden shadow-lg">
+						<Table>
+							<TableHeader className="bg-primary">
+								<TableRow className="hover:bg-primary/95">
+									<TableHead className="text-black font-bold whitespace-nowrap">
+										<div className="flex items-center gap-2">
+											<CalendarDays className="h-4 w-4" /> Sana
+										</div>
+									</TableHead>
+
+									<TableHead className="text-black font-bold whitespace-nowrap">
+										<div className="flex items-center gap-2">
+											<GraduationCap className="h-4 w-4" /> O'quvchi
+										</div>
+									</TableHead>
+
+									<TableHead className="text-black font-bold whitespace-nowrap">
+										<div className="flex items-center gap-2">
+											<Users2 className="h-4 w-4" /> Guruh
+										</div>
+									</TableHead>
+
+									<TableHead className="text-black font-bold whitespace-nowrap">
+										<div className="flex items-center gap-2">
+											<CircleDollarSign className="h-4 w-4" /> Miqdor
+										</div>
+									</TableHead>
+
+									<TableHead className="text-black font-bold whitespace-nowrap">
+										<div className="flex items-center gap-2">
+											<CreditCard className="h-4 w-4" /> Tur
+										</div>
+									</TableHead>
 								</TableRow>
-							) : (
-								payments?.map((p) => (
-									<TableRow key={p.id}>
-										<TableCell>{p.student_name}</TableCell>
-										<TableCell>
-											<span className="balance-badge">
-												{p.amount?.toLocaleString() ?? 0}
-											</span>
+							</TableHeader>
+
+							<TableBody>
+								{(payments || []).length === 0 ? (
+									<TableRow>
+										<TableCell
+											colSpan={6}
+											className="text-center py-10 text-gray-500"
+										>
+											To'lovlar topilmadi.
 										</TableCell>
-										<TableCell>{p.date?.split("T")[0]}</TableCell>
 									</TableRow>
-								)))}
-						</TableBody>
-					</Table>
+								) : (
+									payments.map((p) => (
+										<TableRow key={p.id} className="bg-card">
+											<TableCell>{formatDate(p.paid_at)}</TableCell>
+											<TableCell className="font-medium">
+												{p.student_name}
+											</TableCell>
+											<TableCell>{p.group_name}</TableCell>
+											<TableCell className="text-primary font-semibold">
+												{p.amount?.toLocaleString() ?? 0} so'm
+											</TableCell>
+											<TableCell>
+												<span className="bg-gray-800 px-2 py-1 rounded text-xs text-gray-300">
+													{p.method}
+												</span>
+											</TableCell>
+										</TableRow>
+									))
+								)}
+							</TableBody>
+						</Table>
+					</div>
 				)}
 
 				{/* Groups Table */}
 				{category === "groups" && (
-					<Table>
-						<TableHeader>
-							<TableRow>
-								<TableHead>Nomi</TableHead>
-								<TableHead>Narx</TableHead>
-								<TableHead>Dars vaqti</TableHead>
-								<TableHead>Kurs turi</TableHead>
-								<TableHead>O'qituvchi</TableHead>
-								<TableHead>Dars kunlari</TableHead>
-							</TableRow>
-						</TableHeader>
-						<TableBody>
-							{archivedGroups.length === 0 ? (
+					<div className="rounded-md border shadow-sm overflow-hidden">
+						<Table>
+							<TableHeader className="bg-primary">
 								<TableRow>
-									<TableCell colSpan={6}>
-										Guruhlar topilmadi.
-									</TableCell>
+									<TableHead>
+										<div className="flex items-center gap-1">
+											<HiOutlinePencilAlt /> Nomi
+										</div>
+									</TableHead>
+									<TableHead>
+										<div className="flex items-center gap-1">
+											<FaDollarSign /> Narx
+										</div>
+									</TableHead>
+									<TableHead>
+										<div className="flex items-center gap-1">
+											<FaClock /> Dars vaqti
+										</div>
+									</TableHead>
+									<TableHead>
+										<div className="flex items-center gap-1">
+											<FaBook /> Kurs turi
+										</div>
+									</TableHead>
+									<TableHead>
+										<div className="flex items-center gap-1">
+											<FaChalkboardTeacher /> O'qituvchi
+										</div>
+									</TableHead>
+									<TableHead>
+										<div className="flex items-center gap-1">
+											<FaCalendarAlt /> Dars kunlari
+										</div>
+									</TableHead>
 								</TableRow>
-							) : (
-								archivedGroups.map((g) => (
-									<TableRow key={g.id}>
-										<TableCell>{g.name}</TableCell>
-										<TableCell>
-											<span className="balance-badge">{g.price} ming so'm</span>
-										</TableCell>
-										<TableCell>{g.lesson_time}</TableCell>
-										<TableCell>{g.course_type}</TableCell>
-										<TableCell className="teacher">{g.teacher}</TableCell>
-										<TableCell>
-											{Array.isArray(g.lesson_days)
-												? g.lesson_days.map((day) => (
-													<span key={day} className="day-pill">
-														{day}
-													</span>
-												))
-												: g.lesson_days}
+							</TableHeader>
+
+							<TableBody>
+								{archivedGroups?.length === 0 ? (
+									<TableRow>
+										<TableCell
+											colSpan={6}
+											className="text-center py-10 text-gray-500"
+										>
+											Guruhlar topilmadi.
 										</TableCell>
 									</TableRow>
-								)))}
-						</TableBody>
-					</Table>
+								) : (
+									archivedGroups?.map((g) => (
+										<TableRow
+											key={g.id}
+											onClick={() => navigate(`/${tenant}/groups/${g.id}`)}
+											className="cursor-pointer bg-card"
+										>
+											<TableCell>
+												{g.name}{" "}
+												<span id="studentCounter">[{g.studentCount}]</span>
+											</TableCell>
+											<TableCell>{g.price} ming so'm</TableCell>
+											<TableCell>{g.lesson_time}</TableCell>
+											<TableCell>{g.course_type}</TableCell>
+											<TableCell className="teacher">
+												{g.teachers?.full_name}
+											</TableCell>
+											<TableCell>
+												<div className="flex gap-1">
+													{Array.isArray(g.lesson_days) ? (
+														g.lesson_days.map((day) => (
+															<span
+																key={day}
+																className="day-pill px-2.5 py-0.75 rounded-[10px]"
+															>
+																{day}
+															</span>
+														))
+													) : (
+														<span className="day-pill">{g.lesson_days}</span>
+													)}
+												</div>
+											</TableCell>
+										</TableRow>
+									))
+								)}
+							</TableBody>
+						</Table>
+					</div>
 				)}
 			</div>
 		</div>

@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
-import { FaUsers, FaTimes, FaCheck } from "react-icons/fa";
+import { useState, useEffect, useMemo } from "react";
+import { FaCheck } from "react-icons/fa";
+import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
 import { useGroups } from "../services/group/useGroups";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
 	Dialog,
 	DialogContent,
@@ -15,76 +16,107 @@ import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
-} from "@/components/ui/popover"
-
+} from "@/components/ui/popover";
 import {
 	Command,
 	CommandEmpty,
 	CommandGroup,
 	CommandInput,
 	CommandItem,
-} from "@/components/ui/command"
+} from "@/components/ui/command";
+import { cn } from "@/lib/utils"; // Shadcn ning standart helperi
 
-import { Check, ChevronsUpDown } from "lucide-react"
+export default function AddToGroupModal({
+	isOpen,
+	onClose,
+	onConfirm,
+	initialGroupId = null,
+}) {
+	const { groups = [], loading } = useGroups();
+	const [selectedId, setSelectedId] = useState(initialGroupId);
+	const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
-export default function AddToGroupModal({ isOpen, onClose, onConfirm, initialGroupId = null }) {
-	const { groups, loading } = useGroups();
-	const [selected, setSelected] = useState(initialGroupId);
-	const [open, setOpen] = useState(false);
-
+	// Modal ochilganda tanlangan qiymatni reset qilish
 	useEffect(() => {
-		setSelected(initialGroupId ?? "");
+		if (isOpen) {
+			setSelectedId(initialGroupId ?? "");
+		}
 	}, [initialGroupId, isOpen]);
 
-	if (!isOpen) return null;
+	// Tanlangan guruh nomini topish (Memoize qilingan)
+	const selectedGroupName = useMemo(() => {
+		return groups.find((g) => g.id === selectedId)?.name || "Guruhni tanlang";
+	}, [groups, selectedId]);
 
 	const handleConfirm = () => {
-		if (!selected) return;
-		onConfirm(selected);
+		if (!selectedId) return;
+		onConfirm(selectedId);
+		onClose(); // Tasdiqlangach modalni yopish
 	};
 
 	return (
 		<Dialog open={isOpen} onOpenChange={onClose}>
-			<DialogContent>
+			<DialogContent className="sm:max-w-106.25 bg-zinc-950 border-zinc-800 text-white">
 				<DialogHeader>
-					<DialogTitle>Guruhga qo'shish</DialogTitle>
-					<DialogDescription>
-						Talabani qo'shish uchun guruhni tanlang
+					<DialogTitle className="text-xl font-semibold">
+						Guruhga qo'shish
+					</DialogTitle>
+					<DialogDescription className="text-zinc-400">
+						Talabani o'qitishni boshlash uchun kerakli guruhni tanlang.
 					</DialogDescription>
 				</DialogHeader>
 
-				<div className="modal-inputs">
-					<Popover open={open} onOpenChange={setOpen}>
+				<div className="py-6">
+					<Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
 						<PopoverTrigger asChild>
-							<Button variant="outline" role="combobox" aria-expanded={open}>
-								{selected
-									? groups.find((g) => g.id === selected)?.name
-									: "Guruhni tanlang"}
-								<ChevronsUpDown />
+							<Button
+								variant="outline"
+								role="combobox"
+								aria-expanded={isPopoverOpen}
+								className="w-full justify-between bg-zinc-900 border-zinc-800 hover:bg-zinc-800 text-zinc-200"
+							>
+								<span className="truncate">{selectedGroupName}</span>
+								<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 							</Button>
 						</PopoverTrigger>
 
-						<PopoverContent>
-							<Command>
-								<CommandInput placeholder="Guruh qidirish..." />
-
-								<CommandEmpty>Guruh topilmadi.</CommandEmpty>
-
-								<CommandGroup>
+						<PopoverContent
+							className="w-full p-0 bg-zinc-900 border-zinc-800"
+							align="start"
+						>
+							<Command className="bg-zinc-900">
+								<CommandInput
+									placeholder="Guruh nomini yozing..."
+									className="text-white border-none focus:ring-0"
+								/>
+								<CommandEmpty className="py-6 text-center text-sm text-zinc-500">
+									Guruh topilmadi.
+								</CommandEmpty>
+								<CommandGroup className="max-h-60 overflow-y-auto custom-scrollbar">
 									{loading ? (
-										<CommandItem disabled>Yuklanmoqda...</CommandItem>
+										<div className="flex items-center justify-center py-6">
+											<Loader2 className="h-5 w-5 animate-spin text-yellow-500" />
+										</div>
 									) : (
-										groups.map((g) => (
+										groups.map((group) => (
 											<CommandItem
-												key={g.id}
-												value={g.name}
+												key={group.id}
+												value={group.name}
 												onSelect={() => {
-													setSelected(g.id);
-													setOpen(false);
+													setSelectedId(group.id);
+													setIsPopoverOpen(false);
 												}}
+												className="text-zinc-300 aria-selected:bg-zinc-800 aria-selected:text-white cursor-pointer"
 											>
-												{selected === g.id && <Check />}
-												{g.name}
+												<Check
+													className={cn(
+														"mr-2 h-4 w-4 text-primary",
+														selectedId === group.id
+															? "opacity-100"
+															: "opacity-0",
+													)}
+												/>
+												{group.name}
 											</CommandItem>
 										))
 									)}
@@ -94,13 +126,20 @@ export default function AddToGroupModal({ isOpen, onClose, onConfirm, initialGro
 					</Popover>
 				</div>
 
-				<DialogFooter>
-					<Button variant="outline" onClick={onClose}>
+				<DialogFooter className="gap-2 sm:gap-0">
+					<Button
+						variant="ghost"
+						onClick={onClose}
+						className="text-zinc-400 hover:text-white hover:bg-zinc-900"
+					>
 						Bekor qilish
 					</Button>
-
-					<Button onClick={handleConfirm}>
-						<FaCheck /> Qo'shish
+					<Button
+						onClick={handleConfirm}
+						disabled={!selectedId || loading}
+						className="bg-primary hover:bg-primary/90 text-black font-medium"
+					>
+						<FaCheck className="mr-2" /> Qo'shish
 					</Button>
 				</DialogFooter>
 			</DialogContent>

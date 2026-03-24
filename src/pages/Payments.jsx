@@ -1,90 +1,81 @@
-import { useParams } from "react-router-dom";
-import { useState } from "react";
-import { FaMoneyBillWave, FaSearch } from "react-icons/fa";
+import { useNavigate, useParams } from "react-router-dom";
+import { useState, useMemo } from "react";
+
+// UI Components
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ArrowLeft, Search } from "lucide-react";
+
+// Tables
 import IncomeTable from "./IncomeTable";
 import SalaryTable from "./SalaryTable";
 import ExpensesTable from "./ExpensesTable";
 import DebtorsTable from "./DebtorsTable";
-import { goBack } from "../utils/navigate.js";
-import { Button } from "@/components/ui/button";
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from "@/components/ui/table"
-import {
-	InputGroup,
-	InputGroupAddon,
-	InputGroupButton,
-	InputGroupInput,
-	InputGroupText,
-	InputGroupTextarea,
-} from "@/components/ui/input-group"
-export default function Payments() {
-	const { category: rawCategory } = useParams();
-	const category = rawCategory ?? "income";
 
+export default function Payments() {
+   const { category: rawCategory } = useParams();
+   const navigate = useNavigate();   
+	const category = rawCategory ?? "income";
 	const [searchTerm, setSearchTerm] = useState("");
 
-	function renderContent() {
-		switch (category) {
-			case "income":
-				return <IncomeTable />;
-			case "salary":
-				return <SalaryTable />;
-			case "expenses":
-				return <ExpensesTable />;
-			case "debtors":
-				return <DebtorsTable searchTerm={searchTerm} />;
-			default:
-				return <p>Invalid category</p>;
-		}
-	}
+	const config = {
+		income: { title: "To'lovlar", component: <IncomeTable /> },
+		salary: { title: "Ish haqlari", component: <SalaryTable /> },
+		expenses: { title: "Xarajatlar", component: <ExpensesTable /> },
+		debtors: {
+			title: "Qarzdorlar",
+			component: <DebtorsTable searchTerm={searchTerm} />,
+		},
+	};
 
-	const validCategories = ["income", "salary", "debtors", "expenses"];
-	if (!validCategories.includes(category)) {
-		return <p>Invalid category</p>;
+	const activeConfig = config[category];
+
+	if (!activeConfig) {
+		return (
+			<div className="p-10 text-center">
+				<h2 className="text-destructive font-bold">
+					Xatolik: Bunday bo'lim mavjud emas.
+				</h2>
+				<div>
+					<Button onClick={()=>navigate(-1)} className="btn-default">
+						<ArrowLeft className="h-4 w-4" /> Ortga qaytish
+					</Button>
+				</div>
+			</div>
+		);
 	}
 
 	return (
-		<div className="space-y-4 table-container">
-			<Button variant="default" className={"btn-default"} onClick={goBack}>
-				← Ortga
-			</Button>
+		<div className="space-y-6 bg-background min-h-screen animate-in fade-in duration-500">
+			<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+				<div className="flex items-center gap-4">
+					<div>
+						<Button onClick={() => navigate(-1)} className="btn-default">
+							<ArrowLeft className="h-4 w-4" /> Ortga qaytish
+						</Button>
+						<h2 className="text-3xl font-bold tracking-tight flex items-center gap-3 mt-3">
+							{activeConfig.title}
+						</h2>
+					</div>
+				</div>
 
-			<h2 className="text-xl font-semibold">
-				{category === "income"
-					? "To'lovlar"
-					: category === "salary"
-						? "Ish haqlari"
-						: category === "expenses"
-							? "Harajatlar"
-							: category === "debtors"
-								? "Qarzdorlar"
-								: ""}
-			</h2>
-
-			{category === "debtors" && (
-				<div className=" table-actions flex items-center gap-2 mb-6">
-					<InputGroup>
-						<InputGroupInput
-							type="text"
-							placeholder="O'quvchilarni ismi bo'yicha qidirish..."
+				{category === "debtors" && (
+					<div className="relative w-full sm:w-72">
+						<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+						<Input
+							type="search"
+							placeholder="Ism bo'yicha qidirish..."
+							className="pl-9 bg-muted/50 focus:bg-background"
 							value={searchTerm}
 							onChange={(e) => setSearchTerm(e.target.value)}
 						/>
-						<InputGroupAddon>
-							<FaSearch className="text-sm" />
-						</InputGroupAddon>
-					</InputGroup>
-				</div>
-			)}
+					</div>
+				)}
+			</div>
 
-			<div className="overflow-x-auto">
-				{renderContent()}
+			{/* Jadval qismi */}
+			<div className="rounded-xl ">
+				<div className="overflow-x-auto">{activeConfig.component}</div>
 			</div>
 		</div>
 	);

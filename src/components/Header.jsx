@@ -1,209 +1,174 @@
-import { useState, useRef, useEffect } from "react";
-import { FaSearch, FaTimes, FaChevronLeft } from "react-icons/fa";
+import { useState, useRef, useEffect, useMemo } from "react";
+import { FaSearch, FaTimes } from "react-icons/fa";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { useStudent } from "../services/student/useStudent";
 import { useGroups } from "../services/group/useGroups";
 import { useTeachers } from "../services/teacher/useTeachers";
 import { useLeads } from "../services/lead/useLeads";
 import { useAuth } from "../context/authContext";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
 import { SidebarTrigger } from "./ui/sidebar";
 import { ThemeToggle } from "./ThemeToggle";
+import { cn } from "@/lib/utils";
 
-export default function Header({ isExpanded, onToggle, mobileOpen }) {
+export default function Header() {
 	const [searchTerm, setSearchTerm] = useState("");
-	const [searchResults, setSearchResults] = useState({
-		students: [],
-		groups: [],
-		teachers: [],
-		leads: [],
-	});
-	const { user } = useAuth();
 	const [isSearchOpen, setIsSearchOpen] = useState(false);
 	const searchRef = useRef(null);
 	const navigate = useNavigate();
+	const { tenant } = useParams();
+	const { user } = useAuth();
+
+	// Ma'lumotlarni olish
 	const { students = [] } = useStudent();
 	const { groups = [] } = useGroups();
 	const { teachers = [] } = useTeachers();
 	const { leads = [] } = useLeads();
-	const { tenant } = useParams();
+
+	// Click outside - qidiruv oynasini yopish
 	useEffect(() => {
-		const handleClickOutside = (event) => {
-			if (searchRef.current && !searchRef.current.contains(event.target)) {
+		const handleClickOutside = (e) => {
+			if (searchRef.current && !searchRef.current.contains(e.target)) {
 				setIsSearchOpen(false);
 			}
 		};
-
 		document.addEventListener("mousedown", handleClickOutside);
 		return () => document.removeEventListener("mousedown", handleClickOutside);
 	}, []);
 
-	const handleSearch = (value) => {
-		setSearchTerm(value);
+	// Qidiruv mantiqi (Optimallashgan)
+	const searchResults = useMemo(() => {
+		const query = searchTerm.toLowerCase().trim();
+		if (!query) return { students: [], groups: [], teachers: [], leads: [] };
 
-		if (value.trim() === "") {
-			setSearchResults({
-				students: [],
-				groups: [],
-				teachers: [],
-				leads: [],
-			});
-			return;
-		}
-
-		const lowerValue = value.toLowerCase();
-
-		const results = {
-			students: (students || []).filter((s) =>
-				s.full_name?.toLowerCase().includes(lowerValue),
-			),
-			groups: (groups || []).filter((g) =>
-				g.name?.toLowerCase().includes(lowerValue),
-			),
-			teachers: (teachers || []).filter((t) =>
-				t.full_name?.toLowerCase().includes(lowerValue),
-			),
-			leads: (leads || []).filter((l) =>
-				l.full_name?.toLowerCase().includes(lowerValue),
-			),
+		return {
+			students: students
+				.filter((s) => s.full_name?.toLowerCase().includes(query))
+				.slice(0, 5),
+			groups: groups
+				.filter((g) => g.name?.toLowerCase().includes(query))
+				.slice(0, 5),
+			teachers: teachers
+				.filter((t) => t.full_name?.toLowerCase().includes(query))
+				.slice(0, 5),
+			leads: leads
+				.filter((l) => l.full_name?.toLowerCase().includes(query))
+				.slice(0, 5),
 		};
+	}, [searchTerm, students, groups, teachers, leads]);
 
-		setSearchResults(results);
-		setIsSearchOpen(true);
-	};
+	const totalResults = Object.values(searchResults).flat().length;
 
-	const handleResultClick = (type, item) => {
-		switch (type) {
-			case "student":
-				navigate(`/${tenant}/students/${item.id}`);
-				break;
-			case "group":
-				navigate(`/${tenant}/groups/${item.id}`);
-				break;
-			case "teacher":
-				navigate(`/${tenant}/teachers/${item.id}`);
-				break;
-			case "lead":
-				navigate(`/${tenant}/leads`);
-				break;
-			default:
-				break;
-		}
+	const handleNavigate = (path) => {
+		navigate(`/${tenant}${path}`);
 		setSearchTerm("");
-		setSearchResults({
-			students: [],
-			groups: [],
-			teachers: [],
-			leads: [],
-		});
 		setIsSearchOpen(false);
 	};
 
-	const totalResults = Object.values(searchResults).reduce(
-		(sum, arr) => sum + arr.length,
-		0,
-	);
-
 	return (
-		<header className="bg-secondary fixed top-0 left-0 z-50 flex h-17.5 w-full items-center justify-between px-5">
-			<div className="flex items-center gap-3">
-				<SidebarTrigger className="-ml-3" />
-				<h5 className="flex items-center gap-2 font-semibold">
-					<img src="/logo.jpg" alt="Logo" width={21} height={21} />
-					Data space CRM
-				</h5>
+		<header className="fixed top-0 left-0 z-50 flex h-16 w-full items-center justify-between px-5 bg-background border-b border-border shadow-sm">
+			<div className="flex items-center gap-4">
+				<SidebarTrigger className="hover:bg-accent p-2 rounded-md transition-colors" />
+				<div className="flex items-center gap-2">
+					<img src="/logo.jpg" alt="Logo" className="w-8 h-8 rounded-md" />
+					<span className="hidden md:block font-bold text-lg tracking-tight">
+						DataSpace CRM
+					</span>
+				</div>
 			</div>
 
+			{/* Search Section - Faqat CEO uchun */}
 			{user?.role === "CEO" && (
-				<div className="relative flex-1 max-w-125 w-full my-5" ref={searchRef}>
-					<div className="relative flex items-center gap-2.5 px-2 py-0.5 rounded-md border border-[#ffd00c33] bg-[#ffffff0d]">
-						<FaSearch className="text-md text-gray-400 ml-4" />
+				<div className="relative flex-1 max-w-lg mx-6" ref={searchRef}>
+					<div
+						className={cn(
+							"flex items-center gap-3 px-4 py-1.5 rounded-full border transition-all duration-200 bg-muted/50 focus-within:bg-background focus-within:ring-2 focus-within:ring-primary/20",
+							isSearchOpen ? "border-primary/50" : "border-transparent",
+						)}
+					>
+						<FaSearch className="text-muted-foreground w-4 h-4" />
 						<input
 							type="text"
-							placeholder="Qidirish..."
+							placeholder="Tizim bo'ylab qidirish..."
 							value={searchTerm}
-							onChange={(e) => handleSearch(e.target.value)}
-							className="h-9 w-full text-sm bg-none border-none outline-none"
+							onChange={(e) => {
+								setSearchTerm(e.target.value);
+								setIsSearchOpen(true);
+							}}
+							className="w-full bg-transparent border-none outline-none text-sm placeholder:text-muted-foreground"
 						/>
-
 						{searchTerm && (
 							<button
-								onClick={() => {
-									setSearchTerm("");
-									setSearchResults({
-										students: [],
-										groups: [],
-										teachers: [],
-										leads: [],
-									});
-									setIsSearchOpen(false);
-								}}
-								className="absolute right-3"
+								onClick={() => setSearchTerm("")}
+								className="text-muted-foreground hover:text-foreground transition-colors"
 							>
-								<FaTimes />
+								<FaTimes className="w-3.5 h-3.5" />
 							</button>
 						)}
 					</div>
 
+					{/* Result Dropdown */}
 					{isSearchOpen && totalResults > 0 && (
-						<div className="absolute max-h-105 top-12 left-0 right-0 overflow-y-auto rounded-lg border border-[#2c230e] bg-BgColor">
-							{searchResults.students.length > 0 && (
-								<div className="py-2 w-full">
-									<div className="px-3 py-1 text-xs font-semibold text-primary">
-										O'quvchilar
-									</div>
-
-									{searchResults.students.map((student) => (
-										<button
-											key={`student-${student.id}`}
-											onClick={() => handleResultClick("student", student)}
-											className="flex w-full items-center gap-2 px-2.5 py-4 bg-[rgba(255, 208, 12, 0.1)]"
-										>
-											<span>👤</span>
-											{student.full_name}
-										</button>
-									))}
-								</div>
-							)}
-
-							{searchResults.groups.length > 0 && (
-								<div className="py-2 w-full">
-									<div className="px-3 py-1 text-xs font-semibold text-primary">
-										Guruhlar
-									</div>
-
-									{searchResults.groups.map((group) => (
-										<button
-											key={`group-${group.id}`}
-											onClick={() => handleResultClick("group", group)}
-											className="flex w-full items-center gap-2 px-3 py-2 text-left hover:text-primary"
-										>
-											👥 {group.name}
-										</button>
-									))}
-								</div>
-							)}
+						<div className="absolute top-12 left-0 right-0 max-h-[70vh] overflow-y-auto rounded-xl border border-border bg-popover shadow-xl animate-in fade-in zoom-in-95 duration-200">
+							<ResultSection
+								title="O'quvchilar"
+								items={searchResults.students}
+								icon="👤"
+								onClick={(item) => handleNavigate(`/students/${item.id}`)}
+							/>
+							<ResultSection
+								title="Guruhlar"
+								items={searchResults.groups}
+								icon="👥"
+								onClick={(item) => handleNavigate(`/groups/${item.id}`)}
+							/>
+							<ResultSection
+								title="O'qituvchilar"
+								items={searchResults.teachers}
+								icon="👨‍🏫"
+								onClick={(item) => handleNavigate(`/teachers/${item.id}`)}
+							/>
 						</div>
 					)}
 				</div>
 			)}
 
-			{/* RIGHT */}
-			<div className="flex items-center">
-				<div className="flex items-center gap-3 mr-2">
-					<ThemeToggle />
-				</div>
-				<NavLink to={`/${tenant}/profile`}>
-					<img
-						src="/logo.jpg"
-						alt="Profile"
-						width={30}
-						height={30}
-						className="rounded-full"
-					/>
+			{/* Right Actions */}
+			<div className="flex items-center gap-4">
+				<ThemeToggle />
+				<NavLink to={`/${tenant}/profile`} className="group">
+					<div className="p-0.5 rounded-full border border-border group-hover:border-primary transition-colors">
+						<img
+							src="/logo.jpg"
+							alt="Profile"
+							className="w-8 h-8 rounded-full object-cover"
+						/>
+					</div>
 				</NavLink>
 			</div>
 		</header>
+	);
+}
+
+// Yordamchi komponent - Natijalar bo'limi uchun
+function ResultSection({ title, items, icon, onClick }) {
+	if (items.length === 0) return null;
+	return (
+		<div className="p-2 border-b border-border last:border-none">
+			<div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+				{title}
+			</div>
+			{items.map((item) => (
+				<button
+					key={item.id}
+					onClick={() => onClick(item)}
+					className="flex w-full items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors hover:bg-accent hover:text-accent-foreground text-left"
+				>
+					<span className="text-lg">{icon}</span>
+					<span className="truncate font-medium">
+						{item.full_name || item.name}
+					</span>
+				</button>
+			))}
+		</div>
 	);
 }

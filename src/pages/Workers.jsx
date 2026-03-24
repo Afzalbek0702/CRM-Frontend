@@ -1,275 +1,266 @@
-import Loader from "../components/Loader";
-import { useWorker } from "../services/worker/useWorker";
-import { useNavigate, useParams } from "react-router-dom";
-import { useConfirm } from "../components/ConfirmProvider";
-import { withConfirm } from "../helpers/withConfirm";
-import { goBack } from "../utils/navigate.js";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"
-import {
-    InputGroup,
-    InputGroupAddon,
-    InputGroupButton,
-    InputGroupInput,
-    InputGroupText,
-    InputGroupTextarea,
-} from "@/components/ui/input-group"
-import { Button } from "@/components/ui/button";
-import { FaUsers, FaPhone, FaPlus, FaEllipsisV, FaSearch } from "react-icons/fa";
 import { useState } from "react";
-import { useAuth } from "../context/authContext";
+import { useNavigate, useParams } from "react-router-dom";
+import { useWorker } from "../services/worker/useWorker";
+// Shadcn UI komponentlari
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+import {
+	Search,
+	Plus,
+	MoreVertical,
+	Edit2,
+	Trash2,
+	UserCheck,
+	Phone,
+	ArrowLeft,
+	Shield,
+   UserRound,
+   PhoneCall,
+   BriefcaseBusiness,
+} from "lucide-react";
+
+import Loader from "../components/Loader";
 import WorkerModal from "../components/WorkerModal";
-import ActionMenu from "../components/ActionMenu";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
+import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
+import PhoneUtils from "@/utils/phoneFormat";
 
 export default function Workers() {
-    const confirm = useConfirm();
-    const navigate = useNavigate();
-    const { tenant } = useParams();
-    const { user } = useAuth();
-    const { workerData, isLoading, createWorker, updateWorker, removeWorker } =
-        useWorker();
-    console.log(user);
+	const navigate = useNavigate();
+	const { tenant } = useParams();
+	const { workerData, isLoading, createWorker, updateWorker, removeWorker } =
+		useWorker();
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editingWorker, setEditingWorker] = useState(null);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [filter, setFilter] = useState("all");
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [editingWorker, setEditingWorker] = useState(null);
+	const [searchTerm, setSearchTerm] = useState("");
+	const [filter, setFilter] = useState("all");
+   const [deleteId, setDeleteId] = useState(null);
 
-    const [actionMenu, setActionMenu] = useState({
-        isOpen: false,
-        position: { top: 0, left: 0 },
-        worker: null,
-    });
+	// O'chirish funksiyasi
+	const handleConfirmDelete = async () => {
+		if (deleteId) {
+			await deleteGroup(deleteId);
+			setDeleteId(null);
+		}
+	};
 
-    const handleRowClick = (workerId) => {
-        navigate(`/${tenant}/workers/${workerId}`);
-    };
+   if (isLoading) return <Loader />;
+   
+	const filteredWorkers = (workerData || []).filter((w) => {
+		const matchesSearch = w.full_name
+			?.toLowerCase()
+			.includes(searchTerm.toLowerCase());
+		const matchesFilter =
+			filter === "all" ||
+			(filter === "teachers" && w.position?.toLowerCase() === "teacher") ||
+			(filter === "admins" && w.role === "admin") ||
+			(filter === "managers" && w.role === "manager");
 
-    const handleDeleteWorker = withConfirm(
-        confirm,
-        "Are you sure you want to delete this worker?",
-        async (worker) => {
-            await removeWorker(worker.id);
-            setActionMenu((m) => ({ ...m, isOpen: false }));
-        }
-    );
+		return matchesSearch && matchesFilter;
+	});
 
-    if (isLoading) return <Loader />;
+	return (
+		<div className="space-y-6 bg-background min-h-screen animate-in fade-in duration-500">
+			{/* Header qismi */}
+			<div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+				<div>
+					<Button onClick={() => navigate(-1)} className="btn-default mb-3">
+						<ArrowLeft className="h-4 w-4" /> Ortga qaytish
+					</Button>
+					<h1 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-3">
+						<UserCheck className="h-8 w-8 text-primary" /> Xodimlar
+					</h1>
+				</div>
+				<Button
+					onClick={() => {
+						setEditingWorker(null);
+						setIsModalOpen(true);
+					}}
+					className="bg-primary rounded-md hover:bg-primary/90 shadow-lg shadow-primary/20 gap-2 font-semibold"
+				>
+					<Plus className="h-4 w-4" /> Xodim qo'shish
+				</Button>
+			</div>
 
-    let filteredWorkers = workerData;
+			{/* Qidiruv va Filtrlar */}
+			<div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
+				{/* <div className="relative w-full lg:max-w-sm border"> */}
+				<InputGroup className="max-w-md">
+					<InputGroupInput
+						placeholder="Ism bo'yicha qidirish..."
+						// className="pl-10 border-none bg-transparent focus-visible:ring-0"
+						value={searchTerm}
+						onChange={(e) => setSearchTerm(e.target.value)}
+					/>
+					<InputGroupAddon>
+						<Search />
+					</InputGroupAddon>
+				</InputGroup>
+				{/* </div> */}
 
-    if (filter === "teachers") {
-        filteredWorkers = workerData.filter(
-            (w) => w.position?.toLowerCase() === "teacher"
-        );
-    }
+				<Tabs
+					value={filter}
+					onValueChange={setFilter}
+					className="w-full lg:w-auto"
+				>
+					<TabsList className="bg-card border">
+						<TabsTrigger value="all">Barchasi</TabsTrigger>
+						<TabsTrigger value="teachers">Ustozlar</TabsTrigger>
+						<TabsTrigger value="admins">Adminlar</TabsTrigger>
+						<TabsTrigger value="managers">Managerlar</TabsTrigger>
+					</TabsList>
+				</Tabs>
+			</div>
 
-    if (filter === "admins") {
-        filteredWorkers = workerData.filter((w) => w.role === "admin");
-    }
+			{/* Jadval */}
+			<div className="rounded-md border shadow-xl overflow-hidden">
+				<Table>
+					<TableHeader>
+						<TableRow className="bg-primary hover:bg-primary/95 transition-colors">
+							<TableHead className="text-primary-foreground font-semibold">
+								<div className="flex items-center gap-2">
+									<UserRound className="h-4 w-4" /> Xodim ismi
+								</div>
+							</TableHead>
 
-    if (filter === "managers") {
-        filteredWorkers = workerData.filter((w) => w.role === "manager");
-    }
+							<TableHead className="text-primary-foreground font-semibold">
+								<div className="flex items-center gap-2">
+									<PhoneCall className="h-4 w-4" /> Telefon
+								</div>
+							</TableHead>
 
-    filteredWorkers = filteredWorkers.filter(
-        (w) =>
-            w.full_name &&
-            w.full_name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+							<TableHead className="text-primary-foreground font-semibold">
+								<div className="flex items-center gap-2">
+									<BriefcaseBusiness className="h-4 w-4" /> Lavozimi
+								</div>
+							</TableHead>
 
-    console.log(workerData);
-
-
-    return (
-        <div className="table-container">
-            <Button className="btn-default" onClick={goBack}>
-                ← Ortga
-            </Button>
-
-            <h2>
-                <FaUsers /> Xodimlar
-            </h2>
-
-            <div className="table-actions mb-7.5">
-                <InputGroup>
-                    <InputGroupInput
-                        type="text"
-                        placeholder="Xodimlarni qidirish..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                    <InputGroupAddon>
-                        <FaSearch />
-                    </InputGroupAddon>
-                </InputGroup>
-
-                <Button
-                    className="btn-default"
-                    onClick={() => {
-                        setEditingWorker(null);
-                        setIsModalOpen(true);
-                    }}
-                >
-                    <FaPlus /> Xodim qo'shish
-                </Button>
-            </div>
-
-            {/* <div className="filters">
-			<select
-				value={filter}
-				onChange={(e) => setFilter(e.target.value)}
-			>
-				<option value="all">Barchasi</option>
-				<option value="teachers">O'qituvchilar</option>
-				<option value="admins">Adminlar</option>
-				<option value="managers">Managerlar</option>
-			</select>
-		</div> */}
-
-        {/* filterlar qo'shmoqchi edim bo'madi. shuni siz qoshib berin  */}
-
-
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>
-                                <div>
-                                    <FaUsers /> Ism
-                                </div>
-                            </TableHead>
-
-                            <TableHead>
-                                <div>
-                                    <FaPhone /> Telefon
-                                </div>
-                            </TableHead>
-
-                            <TableHead><div>Lavozim</div></TableHead>
-
-                            <TableHead><div>Role</div></TableHead>
-
-                            <TableHead></TableHead>
-                        </TableRow>
-                    </TableHeader>
-
-                    <TableBody>
-                        {filteredWorkers.length === 0 ? (
-						<TableRow>
-							<TableCell colSpan={6}>
-								O'quvchilar topilmadi.
-							</TableCell>
+							<TableHead></TableHead>
 						</TableRow>
-					) : (
-                        filteredWorkers.map((w) => (
-                            <TableRow
-                                key={w.id}
-                                onClick={() => handleRowClick(w.id)}
-                                className="cursor-pointer"
-                            >
-                                <TableCell>{w.full_name}</TableCell>
+					</TableHeader>
+					<TableBody>
+						{filteredWorkers.length === 0 ? (
+							<TableRow>
+								<TableCell
+									colSpan={4}
+									className="h-32 text-center text-muted-foreground"
+								>
+									Xodimlar topilmadi.
+								</TableCell>
+							</TableRow>
+						) : (
+							filteredWorkers.map((w) => (
+								<TableRow
+									key={w.id}
+									onClick={() => navigate(`/${tenant}/workers/${w.id}`)}
+									className="cursor-pointer bg-card"
+								>
+									<TableCell>
+										<div className="flex items-center gap-3">
+											<div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+												{w.full_name?.charAt(0).toUpperCase()}
+											</div>
+											{w.full_name}
+										</div>
+									</TableCell>
+									<TableCell>
+										<span className="flex items-center gap-2 font-mono text-sm text-muted-foreground">
+											<Phone className="h-3 w-3" />{" "}
+											{PhoneUtils.formatPhone(w.phone)}
+										</span>
+									</TableCell>
+									<TableCell>
+										<Badge
+											variant={w.role === "admin" ? "default" : "secondary"}
+											className="gap-1"
+										>
+											{w.role === "admin" && <Shield className="h-3 w-3" />}
+											{w.position || w.role}
+										</Badge>
+									</TableCell>
+									<TableCell
+										className={"flex justify-end"}
+										onClick={(e) => e.stopPropagation()}
+									>
+										<DropdownMenu>
+											<DropdownMenuTrigger asChild>
+												<Button
+													variant="ghost"
+													size="icon"
+													className="h-8 w-8 hover:bg-muted"
+												>
+													<MoreVertical className="h-4 w-4" />
+												</Button>
+											</DropdownMenuTrigger>
+											<DropdownMenuContent
+												align="end"
+												className="w-48 shadow-2xl"
+											>
+												<DropdownMenuLabel>Amallar</DropdownMenuLabel>
+												<DropdownMenuSeparator />
+												<DropdownMenuItem
+													onClick={() => {
+														setEditingWorker(w);
+														setIsModalOpen(true);
+													}}
+												>
+													<Edit2 className="mr-2 h-4 w-4 text-blue-500" />{" "}
+													Tahrirlash
+												</DropdownMenuItem>
+												<DropdownMenuItem
+													className="text-destructive focus:bg-destructive focus:text-destructive-foreground"
+													onClick={() => setDeleteId(w.id)}
+												>
+													<Trash2 className="mr-2 h-4 w-4" /> O'chirish
+												</DropdownMenuItem>
+											</DropdownMenuContent>
+										</DropdownMenu>
+									</TableCell>
+								</TableRow>
+							))
+						)}
+					</TableBody>
+				</Table>
+			</div>
 
-                                <TableCell>
-                                    <p
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            navigator.clipboard.writeText(w.phone);
-
-                                            const el = e.currentTarget;
-                                            el.dataset.copied = "true";
-
-                                            setTimeout(() => {
-                                                el.dataset.copied = "false";
-                                            }, 2000);
-                                        }}
-                                        data-copied="false"
-                                        className="copy-phone"
-                                    >
-                                        {w.phone}
-                                    </p>
-                                </TableCell>
-
-                                <TableCell>{w.position || "-"}</TableCell>
-
-                                <TableCell>{w.role || "-"}</TableCell>
-
-                                <TableCell
-                                    style={{ width: "10px" }}
-                                    onClick={(e) => e.stopPropagation()}
-                                >
-                                    <Button
-                                        className="icon-button"
-                                        onClick={(e) => {
-                                            const rect =
-                                                e.currentTarget.getBoundingClientRect();
-
-                                            setActionMenu({
-                                                isOpen: true,
-                                                position: {
-                                                    top:
-                                                        rect.bottom +
-                                                        window.scrollY +
-                                                        8 +
-                                                        "px",
-                                                    left:
-                                                        rect.right +
-                                                        window.scrollX -
-                                                        150 +
-                                                        "px",
-                                                },
-                                                worker: w,
-                                            });
-                                        }}
-                                    >
-                                        <FaEllipsisV />
-                                    </Button>
-                                </TableCell>
-                            </TableRow>
-                        )))}
-                    </TableBody>
-                </Table>
-            
-
-            <ActionMenu
-                isOpen={actionMenu.isOpen}
-                position={actionMenu.position}
-                onClose={() =>
-                    setActionMenu((s) => ({ ...s, isOpen: false }))
-                }
-                entityLabel="Worker"
-                onEdit={() => {
-                    const w = actionMenu.worker;
-                    setEditingWorker(w);
-                    setIsModalOpen(true);
-                    setActionMenu((m) => ({ ...m, isOpen: false }));
-                }}
-                onDelete={() => handleDeleteWorker(actionMenu.worker)}
-            />
-
-            <WorkerModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                initialData={editingWorker}
-                onSubmit={async (formData) => {
-                    if (editingWorker) {
-                        await updateWorker({
-                            id: editingWorker.id,
-                            data: formData,
-                        });
-                    } else {
-                        await createWorker(formData);
-                    }
-
-                    setIsModalOpen(false);
-                    setEditingWorker(null);
-                }}
-            />
-        </div>
-    );
+			<WorkerModal
+				isOpen={isModalOpen}
+				onClose={() => setIsModalOpen(false)}
+				initialData={editingWorker}
+				onSubmit={async (formData) => {
+					if (editingWorker) {
+						await updateWorker({ id: editingWorker.id, data: formData });
+					} else {
+						await createWorker(formData);
+					}
+					setIsModalOpen(false);
+					setEditingWorker(null);
+				}}
+			/>
+			<ConfirmDeleteModal
+				isOpen={!!deleteId}
+				onClose={() => setDeleteId(null)}
+				onConfirm={handleConfirmDelete}
+			/>
+		</div>
+	);
 }

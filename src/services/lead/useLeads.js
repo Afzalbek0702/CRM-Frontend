@@ -56,7 +56,7 @@ export const useLeads = () => {
 	});
 	const convertLeadToGroupMutation = useMutation({
 		mutationFn: ({ id, group_id }) =>
-			leadsService.convertLeadToGroup(id, group_id),
+         leadsService.convertLeadToGroup(id, group_id),
 		onSuccess: () => {
 			toast.success("Lead muffafaqqiyatli guruhga qo'shildi");
 			queryClient.invalidateQueries({ queryKey: LEADS_QUERY_KEY });

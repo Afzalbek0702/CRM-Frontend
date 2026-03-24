@@ -2,225 +2,187 @@ import { useState } from "react";
 import { usePayments } from "../services/payment/usePayments";
 import Loader from "../components/Loader";
 import PaymentModal from "../components/PaymentModal";
-import ActionMenu from "../components/ActionMenu";
-import { useConfirm } from "../components/ConfirmProvider";
-import { withConfirm } from "../helpers/withConfirm";
+import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
+// Icons
 import {
-  FaEllipsisV,
-  FaUserGraduate,
-  FaMoneyBillWave,
-  FaUsers,
+	FaEllipsisV,
+	FaUserGraduate,
+	FaMoneyBillWave,
+	FaUsers,
+	FaEdit,
+	FaTrash,
 } from "react-icons/fa";
 import { BsCalendar2DateFill, BsCreditCard2BackFill } from "react-icons/bs";
+
+// shadcn UI
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table";
 import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupButton,
-  InputGroupInput,
-  InputGroupText,
-  InputGroupTextarea,
-} from "@/components/ui/input-group"
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-
+import {
+	Calendar,
+	UserCircle,
+	Users,
+	Banknote,
+	CreditCard,
+	MoreHorizontal,
+} from "lucide-react";
 export default function IncomeTable() {
-  const confirm = useConfirm();
-  const {
-    payments,
-    isLoading,
-    createPayment,
-    updatePayment,
-    deletePayment,
-  } = usePayments();
+	const { payments, isLoading, createPayment, updatePayment, deletePayment } =
+		usePayments();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingPayment, setEditingPayment] = useState(null);
-  const [selectedStudent, setSelectedStudent] = useState("");
-  const [selectedGroup, setSelectedGroup] = useState("");
-  const [selectedTeacher, setSelectedTeacher] = useState("");
-  const [dateFrom, setDateFrom] = useState("");
-  const [dateTo, setDateTo] = useState("");
+	const [modal, setModal] = useState({ isOpen: false, data: null });
+	const [deleteId, setDeleteId] = useState(null);
 
-  const [actionMenu, setActionMenu] = useState({
-    isOpen: false,
-    position: { top: 0, left: 0 },
-    payment: null,
-  });
+	if (isLoading) return <Loader />;
 
-  if (isLoading) return <Loader />;
+	const formatDate = (d) => (d ? new Date(d).toLocaleDateString() : "");
 
+	const handleFormSubmit = async (formData) => {
+		if (modal.data) {
+			await updatePayment(modal.data.id, formData);
+		} else {
+			await createPayment(formData);
+		}
+		setModal({ isOpen: false, data: null });
+	};
 
-  const formatDate = (d) =>
-    d ? new Date(d).toLocaleDateString() : "";
+	const handleConfirmDelete = async () => {
+		if (deleteId) {
+			await deleteSalary(deleteId);
+			setDeleteId(null);
+		}
+	};
 
-  const handleDeletePayment = withConfirm(
-    confirm,
-    "Are you sure you want to delete this payment?",
-    async (teacher) => {
-      await deletePayment(teacher.id);
-      setActionMenu((m) => ({ ...m, isOpen: false }));
-    }
+	return (
+		<div className="w-full h-auto text-white overflow-x-auto">
+			{/* Jadval qismi */}
+			<div className="rounded-md border overflow-hidden shadow-lg">
+				<Table>
+					<TableHeader>
+						<TableRow className="bg-primary hover:bg-primary/95 transition-colors">
+							<TableHead className="text-primary-foreground font-bold">
+								<div className="flex items-center gap-2">
+									<Calendar className="h-4 w-4" /> Sana
+								</div>
+							</TableHead>
 
-  )
+							<TableHead className="text-primary-foreground font-bold">
+								<div className="flex items-center gap-2">
+									<UserCircle className="h-4 w-4" /> O'quvchi
+								</div>
+							</TableHead>
 
-  return (
-    <div className="table-container">
+							<TableHead className="text-primary-foreground font-bold">
+								<div className="flex items-center gap-2">
+									<Users className="h-4 w-4" /> Guruh
+								</div>
+							</TableHead>
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>
-              <div><BsCalendar2DateFill /> Sana</div>
-            </TableHead>
+							<TableHead className="text-primary-foreground font-bold">
+								<div className="flex items-center gap-2">
+									<Banknote className="h-4 w-4" /> Miqdor
+								</div>
+							</TableHead>
 
-            <TableHead>
-              <div><FaUserGraduate /> O'quvchi</div>
-            </TableHead>
+							<TableHead className="text-primary-foreground font-bold">
+								<div className="flex items-center gap-2">
+									<CreditCard className="h-4 w-4" /> Tur
+								</div>
+							</TableHead>
 
-            <TableHead>
-              <div><FaUsers /> Guruh</div>
-            </TableHead>
+							<TableHead></TableHead>
+						</TableRow>
+					</TableHeader>
 
-            <TableHead>
-              <div><FaMoneyBillWave /> Miqdor</div>
-            </TableHead>
+					<TableBody>
+						{(payments || []).length === 0 ? (
+							<TableRow>
+								<TableCell
+									colSpan={6}
+									className="text-center py-10 text-gray-500"
+								>
+									To'lovlar topilmadi.
+								</TableCell>
+							</TableRow>
+						) : (
+							payments.map((p) => (
+								<TableRow key={p.id} className="bg-card">
+									<TableCell>{formatDate(p.paid_at)}</TableCell>
+									<TableCell className="font-medium">
+										{p.student_name}
+									</TableCell>
+									<TableCell>{p.group_name}</TableCell>
+									<TableCell className="text-primary font-semibold">
+										{p.amount?.toLocaleString() ?? 0} so'm
+									</TableCell>
+									<TableCell>
+										<span className="bg-gray-800 px-2 py-1 rounded text-xs text-gray-300">
+											{p.method}
+										</span>
+									</TableCell>
+									<TableCell className={"flex justify-end"}>
+										<DropdownMenu>
+											<DropdownMenuTrigger asChild>
+												<Button
+													variant="ghost"
+													size="icon"
+													className="h-8 w-8 hover:bg-gray-700 text-white"
+												>
+													<FaEllipsisV />
+												</Button>
+											</DropdownMenuTrigger>
+											<DropdownMenuContent
+												align="end"
+												className="w-32 bg-card border-gray-700 text-white"
+											>
+												<DropdownMenuItem
+													className="cursor-pointer hover:bg-gray-800 focus:bg-gray-800 focus:text-white"
+													onClick={() => setModal({ isOpen: true, data: p })}
+												>
+													<FaEdit className="mr-2 text-blue-400" /> Tahrirlash
+												</DropdownMenuItem>
+												<DropdownMenuSeparator />
+												<DropdownMenuItem
+													className="cursor-pointer text-red-500 hover:bg-gray-800 focus:bg-gray-800 "
+													onClick={() => setDeleteId(p.id)}
+												>
+													<FaTrash className="mr-2 text-red-500" /> O'chirish
+												</DropdownMenuItem>
+											</DropdownMenuContent>
+										</DropdownMenu>
+									</TableCell>
+								</TableRow>
+							))
+						)}
+					</TableBody>
+				</Table>
+			</div>
 
-            <TableHead>
-              <div><BsCreditCard2BackFill /> Tur</div>
-            </TableHead>
-
-            <TableHead></TableHead>
-          </TableRow>
-        </TableHeader>
-
-        <TableBody>
-
-          {(payments || []).length === 0 ? (
-            <TableRow>
-              <TableCell colSpan={6}>
-                To'lovlar topilmadi.
-              </TableCell>
-            </TableRow>
-          ) : (
-            (payments || []).map((p) => (
-              <TableRow key={p.id}>
-                <TableCell>{formatDate(p.paid_at)}</TableCell>
-
-                <TableCell>{p.student_name}</TableCell>
-
-                <TableCell>{p.group_name}</TableCell>
-
-                <TableCell>
-                  {p.amount?.toLocaleString() ?? 0} so'm
-                </TableCell>
-
-                <TableCell>{p.method}</TableCell>
-
-                <TableCell style={{ width: "10px" }}>
-                  <Button
-                    className="icon-button"
-                    onClick={(e) => {
-                      const rect =
-                        e.currentTarget.getBoundingClientRect();
-
-                      const menuHeight = 100;
-                      const menuWidth = 150;
-
-                      const scrollY = window.scrollY;
-                      const scrollX = window.scrollX;
-
-                      const absoluteTop =
-                        rect.top + scrollY;
-                      const absoluteBottom =
-                        rect.bottom + scrollY;
-
-                      const viewportBottom =
-                        scrollY + window.innerHeight;
-                      const viewportRight =
-                        scrollX + window.innerWidth;
-
-                      const top =
-                        absoluteBottom + menuHeight >
-                          viewportBottom
-                          ? absoluteTop -
-                          menuHeight -
-                          8
-                          : absoluteBottom + 8;
-
-                      let left =
-                        rect.right +
-                        scrollX -
-                        menuWidth;
-                      if (
-                        left + menuWidth >
-                        viewportRight
-                      ) {
-                        left =
-                          viewportRight -
-                          menuWidth -
-                          10;
-                      }
-                      if (left < scrollX) {
-                        left = scrollX + 10;
-                      }
-
-                      setActionMenu({
-                        isOpen: true,
-                        position: {
-                          top: top + "px",
-                          left: left + "px",
-                        },
-                        payment: p,
-                      });
-                    }}
-                  >
-                    <FaEllipsisV />
-                  </Button>
-                </TableCell>
-              </TableRow>
-            )))}
-
-        </TableBody>
-      </Table>
-
-
-      <ActionMenu
-        isOpen={actionMenu.isOpen}
-        position={actionMenu.position}
-        onClose={() =>
-          setActionMenu((s) => ({ ...s, isOpen: false }))
-        }
-        entityLabel="Payment"
-        onEdit={() => {
-          const p = actionMenu.payment;
-          setEditingPayment(p);
-          setIsModalOpen(true);
-          setActionMenu((m) => ({ ...m, isOpen: false }));
-        }}
-        onDelete={() => handleDeletePayment(actionMenu.payment)}
-      />
-
-      <PaymentModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        initialData={editingPayment}
-        onSubmit={async (formData) => {
-          if (editingPayment) {
-            await updatePayment(editingPayment.id, formData);
-          } else {
-            await createPayment(formData);
-          }
-          setIsModalOpen(false);
-          setEditingPayment(null);
-        }}
-      />
-    </div>
-  );
+			{/* Modal Komponenti */}
+			<PaymentModal
+				isOpen={modal.isOpen}
+				onClose={() => setModal({ isOpen: false, data: null })}
+				initialData={modal.data}
+				onSubmit={handleFormSubmit}
+			/>
+			<ConfirmDeleteModal
+				isOpen={!!deleteId}
+				onClose={() => setDeleteId(null)}
+				onConfirm={handleConfirmDelete}
+			/>
+		</div>
+	);
 }

@@ -1,24 +1,45 @@
-const cleanUzPhone = (formattedPhone) => {
-	return formattedPhone.replace(/\D/g, "");
-};
-function formatPhone(value) {
-	let digits = value.replace(/\D/g, "");
+const PhoneUtils = {
+	// Backendga yuborish uchun: +(998) 90-542-37-47 -> 998905423747
+	cleanPhone: (formattedPhone) => {
+		const digits = formattedPhone.replace(/\D/g, "");
+		// Agar raqamlar 998 bilan boshlanmasa, uni qo'shib qo'yamiz
+		return digits.startsWith("998") ? digits : `998${digits}`;
+	},
 
-	if (digits.startsWith("998")) {
-		digits = digits.slice(3);
-	}
+	// Input uchun va Table uchun formatlash: 998905423747 -> +(998) 90-542-37-47
+	formatPhone: (value) => {
+		if (!value) return "+(998) ";
 
-	if (digits.length > 9) {
+		// Faqat raqamlarni olamiz
+		let digits = value.replace(/\D/g, "");
+
+		// Agar boshida 998 bo'lsa, uni formatlash uchun vaqtincha olib tashlaymiz
+		if (digits.startsWith("998")) {
+			digits = digits.slice(3);
+		}
+
+		// Faqat 9 ta raqam qoldiramiz (kod + raqam)
 		digits = digits.slice(0, 9);
-	}
 
-	let result = "+(998) ";
+		let result = "+(998) ";
 
-	if (digits.length >= 1) result += digits.slice(0, 2);
-	if (digits.length >= 3) result += "-" + digits.slice(2, 5);
-	if (digits.length >= 6) result += "-" + digits.slice(5, 7);
-	if (digits.length >= 8) result += "-" + digits.slice(7, 9);
+		// Format: +(998) 90-542-37-47
+		if (digits.length > 0) {
+			result += digits.slice(0, 2); // 90
+		}
+		if (digits.length > 2) {
+			result += "-" + digits.slice(2, 5); // 542
+		}
+		if (digits.length > 5) {
+			result += "-" + digits.slice(5, 7); // 37
+		}
+		if (digits.length > 7) {
+			result += "-" + digits.slice(7, 9); // 47
+		}
 
-	return result;
-}
-export default {cleanUzPhone, formatPhone}
+		return result;
+	},
+};
+
+export default PhoneUtils;
+   

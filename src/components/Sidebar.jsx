@@ -35,7 +35,7 @@ export function AppSidebar() {
 		<Sidebar collapsible="icon">
 
 
-			<SidebarContent className={"mt-17.5"}>
+			<SidebarContent className={"pt-17.5"}>
 				<SidebarGroup>
 					<SidebarMenu>
 						{filteredSidebar.map((item) => {
@@ -49,7 +49,7 @@ export function AppSidebar() {
 											asChild
 											tooltip={item.label}
 											isActive={isActive}
-											className={"rounded-none h-10 px-2.5 py-3 hover:bg-card"}
+											className={"rounded-none h-10 px-2.5 py-3 "}
 										>
 											<NavLink
 												to={`/${tenant}/${item.path}`}
@@ -75,12 +75,12 @@ export function AppSidebar() {
 												tooltip={item.label}
 												isActive={isChildActive}
 												className={
-													"rounded-none h-10 px-2.5 py-3 hover:bg-card"
+													"rounded-none h-10 px-2.5 py-3 "
 												}
 											>
 												<Icon />
 												<span>{item.label}</span>
-												<ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90 hover:bg-card" />
+												<ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90 " />
 											</SidebarMenuButton>
 										</CollapsibleTrigger>
 										<CollapsibleContent>
@@ -94,7 +94,7 @@ export function AppSidebar() {
 																asChild
 																isActive={isSubActive}
 																className={
-																	"rounded-none h-10 px-2.5 py-3 hover:bg-card"
+																	"rounded-none h-10 px-2.5 py-3 "
 																}
 															>
 																<NavLink

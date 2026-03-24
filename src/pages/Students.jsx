@@ -1,12 +1,10 @@
-import Loader from "../components/Loader.jsx";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useStudent } from "../services/student/useStudent.js";
 import { useGroups } from "../services/group/useGroups.js";
 import { useTeachers } from "../services/teacher/useTeachers.js";
-import { useConfirm } from "../components/ConfirmProvider.jsx";
-import { withConfirm } from "../helpers/withConfirm.js";
-import { goBack } from "../utils/navigate.js";
+
+// Shadcn UI
 import {
 	Table,
 	TableBody,
@@ -14,47 +12,57 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow,
-} from "@/components/ui/table"
-import {
-	InputGroup,
-	InputGroupAddon,
-	InputGroupButton,
-	InputGroupInput,
-	InputGroupText,
-	InputGroupTextarea,
-} from "@/components/ui/input-group"
+} from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Check, ChevronsUpDown } from "lucide-react"
+import { Input } from "@/components/ui/input";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover";
 import {
 	Command,
 	CommandEmpty,
 	CommandGroup,
 	CommandInput,
 	CommandItem,
-} from "@/components/ui/command"
+} from "@/components/ui/command";
+
+// Ikonkalar
 import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@/components/ui/popover"
-import {
-	FaEllipsisV,
-	FaUserGraduate,
-	FaPhone,
-	FaBirthdayCake,
-	FaUsers,
-	FaWallet,
-	FaPlus,
-} from "react-icons/fa";
-import { FaSearch } from "react-icons/fa";
+	Search,
+	Plus,
+	ArrowLeft,
+	Phone,
+	Calendar,
+	Wallet,
+	Check,
+	ChevronsUpDown,
+	GraduationCap,
+	Users,
+	Settings2,
+} from "lucide-react";
+
+import Loader from "../components/Loader.jsx";
 import StudentModal from "../components/StudentModal.jsx";
-import ActionMenu from "../components/ActionMenu.jsx";
 import AddToGroupModal from "../components/AddToGroupModal.jsx";
+import { FaEdit, FaEllipsisV, FaPlus, FaTrash } from "react-icons/fa";
+import ConfirmDeleteModal from "@/components/ConfirmDeleteModal.jsx";
+import PhoneUtils from "@/utils/phoneFormat.js";
 
 export default function Students() {
 	const navigate = useNavigate();
+	const { tenant } = useParams();
+
 	const {
-		students,
+		students = [],
 		loading,
 		error,
 		createStudent,
@@ -62,476 +70,347 @@ export default function Students() {
 		deleteStudent,
 		addToGroup,
 	} = useStudent();
-	const { groups } = useGroups();
-	const { teachers } = useTeachers();
+
+	const { groups = [] } = useGroups();
+	const { teachers = [] } = useTeachers();
+
+	// State-lar
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [editingStudent, setEditingStudent] = useState(null);
-	const confirm = useConfirm();
 	const [searchTerm, setSearchTerm] = useState("");
 	const [selectedTeacher, setSelectedTeacher] = useState("");
 	const [selectedGroup, setSelectedGroup] = useState("");
-	const [actionMenu, setActionMenu] = useState({
-		isOpen: false,
-		position: { top: 0, left: 0 },
-		student: null,
-	});
-	const [openGroup, setOpenGroup] = useState(false)
-	const [openTeacher, setOpenTeacher] = useState(false)
 	const [addToGroupOpen, setAddToGroupOpen] = useState(false);
 	const [addToGroupStudent, setAddToGroupStudent] = useState(null);
-	const { tenant } = useParams();
-	const handleRowClick = (studentId) => {
-		navigate(`/${tenant}/students/${studentId}`);
-	};
-	const handleDeleteStudent = withConfirm(
-		confirm,
-		"Are you sure you want to delete with student?",
-		async (student) => {
-			await deleteStudent(student.id);
-			setActionMenu((m) => ({ ...m, isOpen: false }));
+
+	const [openGroup, setOpenGroup] = useState(false);
+	const [openTeacher, setOpenTeacher] = useState(false);
+	const [deleteId, setDeleteId] = useState(null);
+	// Filtrlash mantiqi
+	const filteredStudents = useMemo(() => {
+		return students
+			.filter((s) =>
+				s.full_name?.toLowerCase().includes(searchTerm.toLowerCase()),
+			)
+			.filter((s) => {
+				if (!selectedTeacher) return true;
+				const groupObj = groups.find(
+					(g) => g.id === (s.groups?.id || s.group_id),
+				);
+				return groupObj?.teacher_id === selectedTeacher;
+			})
+			.filter((s) => {
+				if (!selectedGroup) return true;
+				return (s.groups?.id || s.group_id) === selectedGroup;
+			});
+	}, [students, searchTerm, selectedTeacher, selectedGroup, groups]);
+
+	const handleConfirmDelete = async () => {
+		if (deleteId) {
+			await deleteStudent(deleteId);
+			setDeleteId(null);
 		}
-	)
+	};
 
 	if (loading) return <Loader />;
-	if (error) return <div>Error</div>;
+	if (error)
+		return (
+			<div className="p-10 text-center text-destructive">
+				Xatolik yuz berdi...
+			</div>
+		);
 
 	return (
-		<div className="table-container">
-			<Button className="btn btn-default bg-primary " onClick={goBack}>
-				← Ortga
-			</Button>
+		<div className="space-y-6 bg-background min-h-screen animate-in fade-in duration-500">
+			{/* Header */}
+			<div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+				<div>
+					<Button onClick={() => navigate(-1)} className="btn-default">
+						<ArrowLeft className="h-4 w-4" /> Ortga qaytish
+					</Button>
+					<h2 className="text-3xl font-bold tracking-tight flex items-center gap-3 mt-3">
+						<GraduationCap className="h-8 w-8 text-primary" /> O'quvchilar
+					</h2>
+				</div>
+				<Button
+					onClick={() => {
+						setEditingWorker(null);
+						setIsModalOpen(true);
+					}}
+					className="bg-primary rounded-md hover:bg-primary/90 shadow-lg shadow-primary/20 gap-2 font-semibold"
+				>
+					<Plus className="h-4 w-4" /> Xodim qo'shish
+				</Button>
+			</div>
 
-			<h2>
-				<FaUserGraduate /> O'quvchilar
-			</h2>
-
-			<div className="table-actions mb-7.5">
-
-
-				<InputGroup>
-					<InputGroupInput
-						
-						type="text"
-						placeholder="O'quvchilarni ismi bo'yicha qidirsh ..."
+			{/* Qidiruv va Filtrlar */}
+			<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+				<div className="relative">
+					<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+					<Input
+						placeholder="Ism bo'yicha qidirish..."
+						className="pl-10"
 						value={searchTerm}
 						onChange={(e) => setSearchTerm(e.target.value)}
 					/>
-					<InputGroupAddon>
-						<FaSearch />
-					</InputGroupAddon>
-				</InputGroup>
+				</div>
 
-				<Button
-					className="btn-default"
-					onClick={() => {
-						setEditingStudent(null);
-						setIsModalOpen(true);
-					}}
-				>
-					<FaPlus /> O'quvchi qo'shish
-				</Button>
-
-
-			</div>
-
-			<div className="filters mb-7.5">
-
-				<Popover open={openTeacher} onOpenChange={setOpenTeacher}>
+				{/* O'qituvchi filtri */}
+				{/* <Popover open={openTeacher} onOpenChange={setOpenTeacher}>
 					<PopoverTrigger asChild>
 						<Button
 							variant="outline"
-							role="combobox"
-							aria-expanded={openTeacher}
-							className="w-62.5 justify-between btn-default"
+							className="justify-between w-full font-normal"
 						>
 							{selectedTeacher
 								? teachers.find((t) => t.id === selectedTeacher)?.full_name
 								: "Hamma o'qituvchilar"}
-							<ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
+							<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 						</Button>
 					</PopoverTrigger>
-
-					<PopoverContent className="w-62.5 p-0">
+					<PopoverContent className="w-(--radix-popover-trigger-width) p-0">
 						<Command>
-							<CommandInput placeholder="Qidirish..." />
+							<CommandInput placeholder="O'qituvchini qidirish..." />
 							<CommandEmpty>Topilmadi.</CommandEmpty>
-
 							<CommandGroup>
 								<CommandItem
-									value="all"
 									onSelect={() => {
-										setSelectedTeacher("")
-										setOpenTeacher(false)
+										setSelectedTeacher("");
+										setOpenTeacher(false);
 									}}
 								>
+									<Check
+										className={`mr-2 h-4 w-4 ${!selectedTeacher ? "opacity-100" : "opacity-0"}`}
+									/>
 									Hamma o'qituvchilar
 								</CommandItem>
-
 								{teachers.map((t) => (
 									<CommandItem
 										key={t.id}
-										value={t.full_name}
 										onSelect={() => {
-											setSelectedTeacher(t.id)
-											setOpenTeacher(false)
+											setSelectedTeacher(t.id);
+											setOpenTeacher(false);
 										}}
 									>
-										{t.full_name}
 										<Check
-											className={`ml-auto h-4 w-4 ${selectedTeacher === t.id ? "opacity-100" : "opacity-0"
-												}`}
+											className={`mr-2 h-4 w-4 ${selectedTeacher === t.id ? "opacity-100" : "opacity-0"}`}
 										/>
+										{t.full_name}
 									</CommandItem>
 								))}
 							</CommandGroup>
 						</Command>
 					</PopoverContent>
-				</Popover>
+				</Popover> */}
 
-				<Popover open={openGroup} onOpenChange={setOpenGroup} className={"btn-default"}>
+				{/* Guruh filtri */}
+				<Popover open={openGroup} onOpenChange={setOpenGroup}>
 					<PopoverTrigger asChild>
 						<Button
 							variant="outline"
-							role="combobox"
-							aria-expanded={openGroup}
-							className="w-62.5 justify-between btn-default"
+							className="justify-between w-full font-normal"
 						>
 							{selectedGroup
 								? groups.find((g) => g.id === selectedGroup)?.name
 								: "Hamma guruhlar"}
-							<ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
+							<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 						</Button>
 					</PopoverTrigger>
-
-					<PopoverContent className="w-62.5 p-0">
+					<PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
 						<Command>
-							<CommandInput placeholder="Qidirish..." />
+							<CommandInput placeholder="Guruhni qidirish..." />
 							<CommandEmpty>Topilmadi.</CommandEmpty>
-
 							<CommandGroup>
 								<CommandItem
-									value="all"
 									onSelect={() => {
-										setSelectedGroup("")
-										setOpenGroup(false)
+										setSelectedGroup("");
+										setOpenGroup(false);
 									}}
 								>
+									<Check
+										className={`mr-2 h-4 w-4 ${!selectedGroup ? "opacity-100" : "opacity-0"}`}
+									/>
 									Hamma guruhlar
 								</CommandItem>
-
 								{groups.map((g) => (
 									<CommandItem
 										key={g.id}
-										value={g.name}
 										onSelect={() => {
-											setSelectedGroup(g.id)
-											setOpenGroup(false)
+											setSelectedGroup(g.id);
+											setOpenGroup(false);
 										}}
 									>
-										{g.name}
 										<Check
-											className={`ml-auto h-4 w-4 ${selectedGroup === g.id ? "opacity-100" : "opacity-0"
-												}`}
+											className={`mr-2 h-4 w-4 ${selectedGroup === g.id ? "opacity-100" : "opacity-0"}`}
 										/>
+										{g.name}
 									</CommandItem>
 								))}
 							</CommandGroup>
 						</Command>
 					</PopoverContent>
 				</Popover>
-
-
-
-
 			</div>
 
+			{/* Jadval */}
+			<div className="rounded-md border shadow-sm overflow-hidden">
+				<Table>
+					<TableHeader className="bg-primary">
+						<TableRow className="hover:bg-primary/95">
+							<TableHead className="text-black font-bold whitespace-nowrap">
+								<div className="flex items-center gap-2">
+									<GraduationCap className="h-4 w-4" /> Ism
+								</div>
+							</TableHead>
 
-			<Table>
-				<TableHeader>
-					<TableRow>
-						<TableHead>
-							<div><FaUserGraduate /> Ism</div>
-						</TableHead>
+							<TableHead className="text-black font-bold whitespace-nowrap">
+								<div className="flex items-center gap-2">
+									<Users className="h-4 w-4" /> Guruh
+								</div>
+							</TableHead>
 
-						<TableHead>
-							<div><FaUsers /> Guruh nomi</div>
-						</TableHead>
+							<TableHead className="text-black font-bold whitespace-nowrap">
+								<div className="flex items-center gap-2">
+									<Phone className="h-4 w-4" /> Telefon
+								</div>
+							</TableHead>
 
-						<TableHead>
-							<div><FaPhone /> Telefon</div>
-						</TableHead>
+							<TableHead className="text-black font-bold whitespace-nowrap">
+								<div className="flex items-center gap-2">
+									<Calendar className="h-4 w-4" /> Tug'ilgan kun
+								</div>
+							</TableHead>
 
-						<TableHead>
-							<div><FaBirthdayCake /> Tug'ilgan kun</div>
-						</TableHead>
+							<TableHead className="text-black font-bold whitespace-nowrap">
+								<div className="flex items-center gap-2">
+									<Wallet className="h-4 w-4" /> Balans
+								</div>
+							</TableHead>
 
-						<TableHead>
-							<div><FaUsers /> Ota-onasi</div>
-						</TableHead>
-
-						<TableHead>
-							<div><FaPhone /> Ota-onasi telefon</div>
-						</TableHead>
-
-						<TableHead>
-							<div><FaWallet /> Balance</div>
-						</TableHead>
-
-						<TableHead></TableHead>
-					</TableRow>
-				</TableHeader>
-
-				<TableBody>
-					{students.length === 0 ? (
-						<TableRow>
-							<TableCell colSpan={8}>
-								O'quvchilar topilmadi.
-							</TableCell>
+							<TableHead className=""></TableHead>
 						</TableRow>
-					) : (
-						(students || [])
-							.filter((s) =>
-								s.full_name
-									.toLowerCase()
-									.includes(searchTerm.toLowerCase())
-							)
-							.filter((s) => {
-								if (!selectedTeacher) return true;
-								if (!s.groups) return false;
-
-								const groupObj = groups.find(
-									(g) => g.id === s.groups.id
-								);
-								return groupObj?.teacher_id === selectedTeacher;
-							})
-							.filter((s) => {
-								if (!selectedGroup) return true;
-								if (!s.groups) return false;
-
-								return s.groups.id === selectedGroup;
-							})
-							.map((s) => {
-								const formatDate = (d) => {
-									if (!d) return "";
-									return String(d).split("T")[0];
-								};
-
-								return (
-									<TableRow
-										key={s.id}
-										onClick={() => handleRowClick(s.id)}
-										className="cursor-pointer"
-									>
-										<TableCell>{s.full_name}</TableCell>
-
-										<TableCell>
-											{Array.isArray(s.groups) &&
-												s.groups.length > 0
-												? s.groups
-													.map((g) => g.name)
-													.join(", ")
-												: s.groups && s.groups.name
-													? s.groups.name
-													: "No Group"}
-										</TableCell>
-
-										<TableCell>
-											<p
-												onClick={(e) => {
-													e.stopPropagation();
-													navigator.clipboard.writeText(
-														s.phone
-													);
-
-													const el = e.currentTarget;
-													el.dataset.copied = "true";
-
-													setTimeout(() => {
-														el.dataset.copied = "false";
-													}, 2000);
-												}}
-												data-copied="false"
-												className="copy-phone"
-											>
-												{s.phone}
-											</p>
-										</TableCell>
-
-										<TableCell>
-											{formatDate(s.birthday)}
-										</TableCell>
-
-										<TableCell>{s.parents_name}</TableCell>
-
-										<TableCell>
-											<p
-												onClick={(e) => {
-													e.stopPropagation();
-													navigator.clipboard.writeText(
-														s.parents_phone
-													);
-
-													const el = e.currentTarget;
-													el.dataset.copied = "true";
-
-													setTimeout(() => {
-														el.dataset.copied = "false";
-													}, 2000);
-												}}
-												data-copied="false"
-												className="copy-phone"
-											>
-												{s.parents_phone}
-											</p>
-										</TableCell>
-
-										<TableCell>
-											{s.monthly_paid?.toLocaleString() ??
-												0}{" "}
-											so&apos;m
-										</TableCell>
-
-										<TableCell
-											style={{ width: "10px" }}
-											onClick={(e) =>
-												e.stopPropagation()
+					</TableHeader>
+					<TableBody>
+						{filteredStudents.length === 0 ? (
+							<TableRow>
+								<TableCell
+									colSpan={6}
+									className="h-24 text-center text-muted-foreground"
+								>
+									O'quvchilar topilmadi.
+								</TableCell>
+							</TableRow>
+						) : (
+							filteredStudents.map((s) => (
+								<TableRow
+									key={s.id}
+									onClick={() => navigate(`/${tenant}/students/${s.id}`)}
+									className="cursor-pointer bg-card transition-colors"
+								>
+									<TableCell className="font-semibold">{s.full_name}</TableCell>
+									<TableCell>
+										{s.groups?.name ||
+											(Array.isArray(s.groups)
+												? s.groups[0]?.name
+												: "Guruhsiz")}
+									</TableCell>
+									<TableCell className="font-mono text-sm">
+										{PhoneUtils.formatPhone(s.phone)}
+									</TableCell>
+									<TableCell>
+										{s.birthday ? s.birthday.split("T")[0] : "-"}
+									</TableCell>
+									<TableCell>
+										<span
+											className={
+												s.monthly_paid < 0
+													? "text-destructive"
+													: "text-green-600"
 											}
 										>
-											<Button
-												className="icon-button"
-												onClick={(e) => {
-													const rect =
-														e.currentTarget.getBoundingClientRect();
-
-													const menuHeight = 110;
-													const menuWidth = 150;
-
-													const scrollY =
-														window.scrollY;
-													const scrollX =
-														window.scrollX;
-
-													const absoluteTop =
-														rect.top + scrollY;
-													const absoluteBottom =
-														rect.bottom + scrollY;
-
-													const viewportBottom =
-														scrollY +
-														window.innerHeight;
-													const viewportRight =
-														scrollX +
-														window.innerWidth;
-
-													const top =
-														absoluteBottom +
-															menuHeight >
-															viewportBottom
-															? absoluteTop -
-															menuHeight -
-															8
-															: absoluteBottom +
-															8;
-
-													let left =
-														rect.right +
-														scrollX -
-														menuWidth;
-													if (
-														left +
-														menuWidth >
-														viewportRight
-													) {
-														left =
-															viewportRight -
-															menuWidth -
-															10;
-													}
-													if (left < scrollX) {
-														left = scrollX + 10;
-													}
-
-													setActionMenu({
-														isOpen: true,
-														position: {
-															top: top + "px",
-															left:
-																left +
-																"px",
-														},
-														student: s,
-													});
-												}}
+											{s.monthly_paid?.toLocaleString()} so'm
+										</span>
+									</TableCell>
+									<TableCell
+										className={"flex justify-end"}
+										onClick={(e) => e.stopPropagation()}
+									>
+										<DropdownMenu>
+											<DropdownMenuTrigger asChild>
+												<Button
+													variant="ghost"
+													size="icon"
+													className="h-8 w-8 hover:bg-gray-700 text-white"
+												>
+													<FaEllipsisV />
+												</Button>
+											</DropdownMenuTrigger>
+											<DropdownMenuContent
+												align="end"
+												className="w-44 bg-card border-gray-700 text-white"
 											>
-												<FaEllipsisV />
-											</Button>
-										</TableCell>
-									</TableRow>
-								);
-							}))}
-				</TableBody>
-			</Table>
+												<DropdownMenuItem
+													className="cursor-pointer hover:bg-gray-800 focus:bg-gray-800 focus:text-white"
+													onClick={() => setModal({ isOpen: true, data: s })}
+												>
+													<FaEdit className="mr-2 text-blue-400" /> Tahrirlash
+												</DropdownMenuItem>
+												<DropdownMenuSeparator />
 
+												<DropdownMenuItem
+													className="cursor-pointer hover:bg-gray-800 focus:bg-gray-800 focus:text-white"
+													onClick={() => {
+														(setAddToGroupOpen(true), setAddToGroupStudent(s));
+													}}
+												>
+													<FaPlus className="mr-2 text-green-400" /> Guruhga
+													qo'shish
+												</DropdownMenuItem>
+												<DropdownMenuSeparator />
+												<DropdownMenuItem
+													className="cursor-pointer text-red-500 hover:bg-gray-800 focus:bg-gray-800 "
+													onClick={() => setDeleteId(s.id)}
+												>
+													<FaTrash className="mr-2 text-red-500" /> O'chirish
+												</DropdownMenuItem>
+											</DropdownMenuContent>
+										</DropdownMenu>
+									</TableCell>
+								</TableRow>
+							))
+						)}
+					</TableBody>
+				</Table>
+			</div>
 
-			<ActionMenu
-				isOpen={actionMenu.isOpen}
-				position={actionMenu.position}
-				onClose={() =>
-					setActionMenu((s) => ({ ...s, isOpen: false }))
-				}
-				entityLabel="Student"
-				onEdit={() => {
-					const s = actionMenu.student;
-					setEditingStudent(s);
-					setIsModalOpen(true);
-					setActionMenu((m) => ({ ...m, isOpen: false }));
-				}}
-				onDelete={() => handleDeleteStudent(actionMenu.student)}
-				onAddToGroup={() => {
-					const s = actionMenu.student;
-					if (!s) return;
-					setAddToGroupStudent(s);
-					setAddToGroupOpen(true);
-					setActionMenu((m) => ({ ...m, isOpen: false }));
-				}}
-			/>
-
+			{/* Modallar */}
 			<StudentModal
 				isOpen={isModalOpen}
 				onClose={() => setIsModalOpen(false)}
 				initialData={editingStudent}
 				onSubmit={async (formData) => {
 					if (editingStudent) {
-						console.log(
-							"Updating student:",
-							editingStudent?.id,
-							formData
-						);
 						await updateStudent(editingStudent.id, formData);
 					} else {
 						await createStudent(formData);
 					}
 					setIsModalOpen(false);
-					setEditingStudent(null);
 				}}
 			/>
 
 			<AddToGroupModal
 				isOpen={addToGroupOpen}
-				onClose={() => {
-					setAddToGroupOpen(false);
-					setAddToGroupStudent(null);
-				}}
+				onClose={() => setAddToGroupOpen(false)}
 				initialGroupId={addToGroupStudent?.group_id}
 				onConfirm={async (groupId) => {
-					if (!addToGroupStudent) return;
-					await addToGroup(
-						addToGroupStudent.id,
-						Number(groupId)
-					);
+					await addToGroup(addToGroupStudent.id, Number(groupId));
 					setAddToGroupOpen(false);
-					setAddToGroupStudent(null);
 				}}
+			/>
+			<ConfirmDeleteModal
+				isOpen={!!deleteId}
+				onClose={() => setDeleteId(null)}
+				onConfirm={handleConfirmDelete}
 			/>
 		</div>
 	);

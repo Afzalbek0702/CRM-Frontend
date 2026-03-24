@@ -1,15 +1,20 @@
-import Loader from "../components/Loader";
-import { useLeads } from "../services/lead/useLeads";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { useCourse } from "../services/course/useCourse";
-import { FaEllipsisV, FaThList, FaPlus, FaSearch, FaPhone } from "react-icons/fa";
-import { useState } from "react";
-import ActionMenu from "../components/ActionMenu";
+import {
+	FaEllipsisV,
+	FaThList,
+	FaPlus,
+	FaSearch,
+	FaPhone,
+	FaEdit,
+	FaTrash,
+} from "react-icons/fa";
+
+// UI Components
+import Loader from "../components/Loader";
 import LeadModal from "../components/LeadModal";
-import { useConfirm } from "../components/ConfirmProvider";
-import { withConfirm } from "../helpers/withConfirm";
-import { goBack } from "../utils/navigate.js";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
 	Table,
 	TableBody,
@@ -17,102 +22,93 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 import {
 	InputGroup,
 	InputGroupAddon,
-	InputGroupButton,
 	InputGroupInput,
-	InputGroupText,
-	InputGroupTextarea,
-} from "@/components/ui/input-group"
+} from "@/components/ui/input-group";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+// Hooks & Utils
+import { useLeads } from "../services/lead/useLeads";
+import { useCourse } from "../services/course/useCourse";
+import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
+import {
+	ArrowLeft,
+	BookOpen,
+	Globe,
+	MessageSquare,
+	Phone,
+	Plus,
+	User,
+	UserPlus,
+} from "lucide-react";
+import AddToGroupModal from "@/components/AddToGroupModal";
+import PhoneUtils from "@/utils/phoneFormat";
 
 export default function Leads() {
-	const confirm = useConfirm();
 	const navigate = useNavigate();
-	const { leads, isLoading, createLead, updateLead, deleteLead, convertLeadToGroup } = useLeads();
-	const [searchTerm, setSearchTerm] = useState("");
-	const [actionMenu, setActionMenu] = useState({
-		isOpen: false,
-		position: { top: 0, left: 0 },
-		lead: null,
-	});
+
+	const { leads, isLoading, createLead, updateLead, deleteLead,convertLeadToGroup } = useLeads();
 	const { courseData } = useCourse();
-	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [editingLead, setEditingLead] = useState(null);
-	const [addToGroupLead, setAddToGroupLead] = useState(null);
-	const [addToGroupOpen, setAddToGroupOpen] = useState(false);
 
-	const handleCreateLead = () => {
-		setEditingLead(null);
-		setIsModalOpen(true);
-	};
+	const [searchTerm, setSearchTerm] = useState("");
+	const [modal, setModal] = useState({ isOpen: false, data: null });
+	const [deleteId, setDeleteId] = useState(null);
+const [convertModal, setConvertModal] = useState({ isOpen: false, leadData: null });
+	// Qidiruvni optimallashtirish
+	const filteredLeads = useMemo(() => {
+		return (leads || []).filter((l) =>
+			l.full_name?.toLowerCase().includes(searchTerm.toLowerCase()),
+		);
+	}, [leads, searchTerm]);
 
-	const handleActionMenu = (e, lead) => {
-		const rect = e.currentTarget.getBoundingClientRect();
-
-		const menuHeight = 100;
-		const menuWidth = 150;
-
-		const scrollY = window.scrollY;
-		const scrollX = window.scrollX;
-
-		const absoluteTop = rect.top + scrollY;
-		const absoluteBottom = rect.bottom + scrollY;
-
-		const viewportBottom = scrollY + window.innerHeight;
-		const viewportRight = scrollX + window.innerWidth;
-
-		const top =
-			absoluteBottom + menuHeight > viewportBottom
-				? absoluteTop - menuHeight - 8
-				: absoluteBottom + 8;
-
-		let left = rect.right + scrollX - menuWidth;
-		if (left + menuWidth > viewportRight) {
-			left = viewportRight - menuWidth - 10;
+	const handleConfirmDelete = async () => {
+		if (deleteId) {
+			await deleteLead(deleteId);
+			setDeleteId(null);
 		}
-		if (left < scrollX) {
-			left = scrollX + 10;
-		}
-
-		setActionMenu({
-			isOpen: true,
-			position: {
-				top: top + "px",
-				left: left + "px",
-			},
-			lead: lead,
-		});
 	};
+	const handleCopyPhone = (e, phone) => {
+		e.stopPropagation();
+		navigator.clipboard.writeText(phone);
+   };
+   const handleConvertToGroup = async (groupId) => {
+      if (convertModal.leadData && groupId) {
+         console.log(convertModal.leadData);
+         console.log(groupId);
+         
+         await convertLeadToGroup({
+						id: convertModal.leadData.id,
+						group_id: groupId,
+					});
+         setConvertModal({ isOpen: false, leadData: null });
+      }
+   };
 
 	if (isLoading) return <Loader />;
 
-	const handleDeleteLead = withConfirm(
-		confirm,
-		"Are you sure you want to delete this lead?",
-		async (lead) => {
-			await deleteLead(lead.id);
-			setActionMenu((m) => ({ ...m, isOpen: false }));
-		}
-
-	)
-
 	return (
-		<div className="table-container">
-			<Button className="btn-default rounded text-black" onClick={goBack}>
-				← Ortga
+		<div className="space-y-6 bg-background min-h-screen animate-in fade-in duration-500">
+			<Button onClick={() => navigate(-1)} className="btn-default">
+				<ArrowLeft className="h-4 w-4" /> Ortga qaytish
 			</Button>
 
-			<h2 className="page-title">
-				<FaThList /> Lidlar
+			<h2 className="text-3xl font-bold tracking-tight flex items-center gap-3 mt-3">
+				<FaThList className="h-8 w-8 text-primary" /> Lidlar
 			</h2>
 
-			<div className="table-actions mb-7.5">
-				<InputGroup>
+			<div className="w-full items-center mb-6 flex justify-between gap-4 mt-4">
+				<InputGroup className="max-w-md">
 					<InputGroupInput
-						type="text"
-						placeholder="Lidlarni ismi bo'yicha qidirsh ..."
+						placeholder="Lidlarni ismi bo'yicha qidirish..."
 						value={searchTerm}
 						onChange={(e) => setSearchTerm(e.target.value)}
 					/>
@@ -122,133 +118,143 @@ export default function Leads() {
 				</InputGroup>
 
 				<Button
-					onClick={handleCreateLead}
-					className="btn-default"
+					onClick={() => setModal({ isOpen: true, data: null })}
+					className="bg-primary rounded-md hover:bg-primary/90 shadow-lg shadow-primary/20 gap-2 font-semibold"
 				>
-					<FaPlus /> Lid qo'shish
+					<Plus className="h-4 w-4" /> Yangi lid qo'shish
 				</Button>
 			</div>
 
+			<div className="rounded-md border shadow-sm overflow-hidden">
+				<Table>
+					<TableHeader>
+						<TableRow className="bg-primary hover:bg-primary/95">
+							<TableHead className="text-primary-foreground">
+								<div className="flex items-center gap-2">
+									<User className="h-4 w-4" /> Ism
+								</div>
+							</TableHead>
 
-			<Table>
-				<TableHeader>
-					<TableRow>
-						<TableHead>
-							<div><FaThList /> Ism</div>
-						</TableHead>
+							<TableHead className="text-primary-foreground">
+								<div className="flex items-center gap-2">
+									<Phone className="h-4 w-4" /> Telefon
+								</div>
+							</TableHead>
 
-						<TableHead>
-							<div><FaPhone /> Telefon</div>
-						</TableHead>
+							<TableHead className="text-primary-foreground">
+								<div className="flex items-center gap-2">
+									<Globe className="h-4 w-4" /> Manba
+								</div>
+							</TableHead>
 
-						<TableHead><div>Manba</div></TableHead>
+							<TableHead className="text-primary-foreground">
+								<div className="flex items-center gap-2">
+									<BookOpen className="h-4 w-4" /> Qiziqadigan Kurs
+								</div>
+							</TableHead>
 
-						<TableHead><div>Qiziqadigan Kurs</div></TableHead>
-
-						<TableHead><div>Izoh</div></TableHead>
-
-						<TableHead></TableHead>
-					</TableRow>
-				</TableHeader>
-
-				<TableBody>
-
-					{leads.length === 0 ? (
-						<TableRow>
-							<TableCell colSpan={6}>
-								Lidlar topilmadi.
-							</TableCell>
+							<TableHead className="text-primary-foreground">
+								<div className="flex items-center gap-2">
+									<MessageSquare className="h-4 w-4" /> Izoh
+								</div>
+							</TableHead>
+							<TableHead className="w-12.5"></TableHead>
 						</TableRow>
-					) : (
-						(leads || [])
-							.filter(
-								(l) =>
-									l.full_name &&
-									l.full_name
-										.toLowerCase()
-										.includes(searchTerm.toLowerCase()),
-							)
-							.map((l) => (
-								<TableRow key={l.id}>
-									<TableCell>{l.full_name}</TableCell>
+					</TableHeader>
 
+					<TableBody>
+						{filteredLeads.length === 0 ? (
+							<TableRow>
+								<TableCell
+									colSpan={6}
+									className="text-center py-10 text-gray-500"
+								>
+									Lidlar topilmadi.
+								</TableCell>
+							</TableRow>
+						) : (
+							filteredLeads.map((l) => (
+								<TableRow key={l.id} className="bg-card transition-colors">
+									<TableCell className="font-medium">{l.full_name}</TableCell>
 									<TableCell>
-										<p
-											onClick={(e) => {
-												e.stopPropagation();
-												navigator.clipboard.writeText(l.phone);
-
-												const el = e.currentTarget;
-												el.dataset.copied = "true";
-
-												setTimeout(() => {
-													el.dataset.copied = "false";
-												}, 2000);
-											}}
-											data-copied="false"
-											className="copy-phone"
+										<span
+											onClick={(e) => handleCopyPhone(e, l.phone)}
+											className="cursor-pointer hover:text-blue-600 transition-colors underline decoration-dotted"
 										>
-											{l.phone}
-										</p>
+											{PhoneUtils.formatPhone(l.phone)}
+										</span>
 									</TableCell>
-
 									<TableCell>{l.source}</TableCell>
-
 									<TableCell>
-										{
-											courseData.find(
-												(c) => c.name === l.interested_course,
-											)?.name || "-"
-										}
+										{courseData.find((c) => c.name === l.interested_course)
+											?.name || "-"}
 									</TableCell>
-
-									<TableCell>{l.comment}</TableCell>
-
-									<TableCell
-										style={{ width: "10px" }}
-										onClick={(e) => e.stopPropagation()}
-									>
-										<Button
-											className="icon-button"
-											onClick={(e) => handleActionMenu(e, l)}
-										>
-											<FaEllipsisV />
-										</Button>
+									<TableCell className="max-w-50 truncate" title={l.comment}>
+										{l.comment}
+									</TableCell>
+									<TableCell className={"flex justify-end"}>
+										<DropdownMenu>
+											<DropdownMenuTrigger asChild>
+												<Button variant="ghost" size="icon" className="h-8 w-8">
+													<FaEllipsisV />
+												</Button>
+											</DropdownMenuTrigger>
+											<DropdownMenuContent align="end" className="w-44">
+												<DropdownMenuItem
+													onClick={() => setModal({ isOpen: true, data: l })}
+													className="cursor-pointer"
+												>
+													<FaEdit className="mr-2 text-blue-500" /> Tahrirlash
+												</DropdownMenuItem>
+												<DropdownMenuSeparator />
+												<DropdownMenuItem
+													onClick={() =>
+														setConvertModal({ isOpen: true, leadData: l })
+													}
+													className="cursor-pointer"
+												>
+													<UserPlus className="mr-2 h-4 w-4 text-green-500" />{" "}
+													Guruhga o'tkazish
+												</DropdownMenuItem>
+												<DropdownMenuSeparator />
+												<DropdownMenuItem
+													onClick={() => setDeleteId(l.id)}
+													className="cursor-pointer text-red-600 focus:text-red-600"
+												>
+													<FaTrash className="mr-2" /> O'chirish
+												</DropdownMenuItem>
+											</DropdownMenuContent>
+										</DropdownMenu>
 									</TableCell>
 								</TableRow>
-							)))}
-				</TableBody>
-			</Table>
-
-
-			<ActionMenu
-				isOpen={actionMenu.isOpen}
-				position={actionMenu.position}
-				onClose={() => setActionMenu((s) => ({ ...s, isOpen: false }))}
-				entityLabel="Lead"
-				onEdit={() => {
-					const l = actionMenu.lead;
-					if (!l) return;
-					setEditingLead(l);
-					setIsModalOpen(true);
-					setActionMenu((m) => ({ ...m, isOpen: false }));
-				}}
-				onDelete={() => handleDeleteLead(actionMenu.lead)}
-			/>
+							))
+						)}
+					</TableBody>
+				</Table>
+			</div>
 
 			<LeadModal
-				isOpen={isModalOpen}
-				onClose={() => setIsModalOpen(false)}
-				initialData={editingLead}
+				isOpen={modal.isOpen}
+				onClose={() => setModal({ isOpen: false, data: null })}
+				initialData={modal.data}
 				onSubmit={async (data) => {
-					if (editingLead) {
-						await updateLead({ id: editingLead.id, data });
-					} else {
-						await createLead(data);
-					}
-					setIsModalOpen(false);
-					setEditingLead(null);
+					modal.data
+						? await updateLead({ id: modal.data.id, data })
+						: await createLead(data);
+					setModal({ isOpen: false, data: null });
 				}}
+			/>
+			<ConfirmDeleteModal
+				isOpen={!!deleteId}
+				onClose={() => setDeleteId(null)}
+				onConfirm={handleConfirmDelete}
+			/>
+			<AddToGroupModal
+				isOpen={convertModal.isOpen}
+				onClose={() => setConvertModal({ isOpen: false, leadData: null })}
+				onConfirm={handleConvertToGroup}
+				// Agar lidning qiziqqan kursi bo'yicha guruhlarni filter qilmoqchi bo'lsangiz:
+				initialData={convertModal.leadData}
 			/>
 		</div>
 	);

@@ -11,13 +11,3 @@ export const navigateTo = (path) => {
 		window.location.href = path;
 	}
 };
-
-export const goBack = (tenant) => {
-	if (!navigateFunction) return;
-
-	if (window.history.length > 1) {
-		navigateFunction(-1);
-	} else {
-		navigateFunction(`/${tenant}/dashboard`);
-	}
-};

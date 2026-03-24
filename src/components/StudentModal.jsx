@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
 	FaUser,
 	FaPhone,
@@ -6,6 +6,7 @@ import {
 	FaUsers,
 	FaSave,
 	FaPlus,
+	FaWallet,
 } from "react-icons/fa";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
@@ -28,53 +29,61 @@ import {
 	PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import PhoneUtils from "@/utils/phoneFormat";
 
-export default function StudentModal({ isOpen, onClose, onSubmit, initialData }) {
-	const [formData, setFormData] = useState({
-		full_name: "",
-		phone: "",
-		birthday: "",
-		parents_name: "",
-		parents_phone: "",
-		balance: "",
-	});
+const INITIAL_STUDENT = {
+	full_name: "",
+	phone: "",
+	birthday: "",
+	parents_name: "",
+	parents_phone: "",
+	balance: "",
+};
 
-	// Date object for Calendar
+export default function StudentModal({
+	isOpen,
+	onClose,
+	onSubmit,
+	initialData,
+}) {
+	const [formData, setFormData] = useState(INITIAL_STUDENT);
 	const [date, setDate] = useState();
 
-	useEffect(() => {
+	const resetForm = useCallback(() => {
 		if (initialData) {
-			const rawBirthday = initialData.birthday;
-			const birthday = rawBirthday ? String(rawBirthday).split("T")[0] : "";
-
+			const bday = initialData.birthday
+				? String(initialData.birthday).split("T")[0]
+				: "";
 			setFormData({
-				full_name: initialData.full_name || "",
-				phone: initialData.phone || "",
-				birthday,
-				parents_name: initialData.parents_name || "",
-				parents_phone: initialData.parents_phone || "",
+				...initialData,
+				birthday: bday,
 				balance: initialData.balance ?? "",
 			});
-
-			setDate(birthday ? new Date(birthday) : undefined);
+			setDate(bday ? new Date(bday) : undefined);
 		} else {
-			setFormData({
-				full_name: "",
-				phone: "",
-				birthday: "",
-				parents_name: "",
-				parents_phone: "",
-				balance: "",
-			});
+			setFormData(INITIAL_STUDENT);
 			setDate(undefined);
 		}
-	}, [initialData, isOpen]);
+	}, [initialData]);
+
+	useEffect(() => {
+		if (isOpen) resetForm();
+	}, [isOpen, resetForm]);
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		setFormData((p) => ({ ...p, [name]: value }));
 	};
-
+	const handlePhoneChange = (e) => {
+		const formatted = PhoneUtils.formatPhone(e.target.value);
+		setFormData({ ...formData, phone: formatted });
+	};
+	const handleKeyDown = (e) => {
+		// Agar foydalanuvchi "+(998) " qismini o'chirmoqchi bo'lsa, to'xtatib qolamiz
+		if (e.key === "Backspace" && e.target.value.length <= 7) {
+			e.preventDefault();
+		}
+	};
 	const handleSelect = (selectedDate) => {
 		setDate(selectedDate);
 		setFormData((prev) => ({
@@ -85,143 +94,165 @@ export default function StudentModal({ isOpen, onClose, onSubmit, initialData })
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-
-		const payload = {
+		onSubmit({
 			...formData,
-			birthday: formData.birthday || null,
 			balance: Number(formData.balance || 0),
-		};
-
-		onSubmit(payload);
-
-		setFormData({
-			full_name: "",
-			phone: "",
-			birthday: "",
-			parents_name: "",
-			parents_phone: "",
-			balance: "",
+			phone: PhoneUtils.cleanPhone(formData.phone),
 		});
-		setDate(undefined);
+		onClose();
 	};
 
 	return (
 		<Dialog open={isOpen} onOpenChange={onClose}>
-			<DialogContent>
+			<DialogContent className="max-w-[95vw] sm:max-w-xl bg-zinc-950 border-zinc-800 text-white overflow-y-auto max-h-[95vh]">
 				<DialogHeader>
-					<DialogTitle>{initialData ? "Edit Student" : "New Student"}</DialogTitle>
-					<DialogDescription>
-						{initialData ? "Update student details" : "Add a new student"}
+					<DialogTitle className="text-xl font-bold flex items-center gap-2">
+						{initialData ? (
+							<FaSave className="text-primary" />
+						) : (
+							<FaPlus className="text-green-500" />
+						)}
+						{initialData
+							? "Talaba ma'lumotlarini tahrirlash"
+							: "Yangi talaba qo'shish"}
+					</DialogTitle>
+					<DialogDescription className="text-zinc-400">
+						Talaba va uning ota-onasi haqidagi asosiy ma'lumotlarni kiriting.
 					</DialogDescription>
 				</DialogHeader>
 
-				<form onSubmit={handleSubmit}>
-					<div className="modal-inputs flex flex-col gap-4">
-						<div>
-							<Label>
-								<FaUser /> Ism familiya
+				<form onSubmit={handleSubmit} className="space-y-6 py-2">
+					<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+						{/* Talaba ismi */}
+						<div className="sm:col-span-2 space-y-2">
+							<Label className="flex items-center gap-2 text-zinc-400">
+								<FaUser className="text-[10px]" /> To'liq ism familiyasi
 							</Label>
 							<Input
 								name="full_name"
 								required
+								placeholder="Ali Valiyev"
+								className="bg-zinc-900 border-zinc-800 focus:border-primary"
 								value={formData.full_name}
 								onChange={handleChange}
 							/>
 						</div>
 
-						<div>
-							<Label>
-								<FaPhone /> Telefon raqam
+						{/* Telefon va Tug'ilgan kun */}
+						<div className="space-y-2">
+							<Label className="flex items-center gap-2 text-zinc-400">
+								<FaPhone className="text-[10px]" /> Telefon raqami
 							</Label>
 							<Input
 								name="phone"
 								required
+								placeholder="+998 90 123 45 67"
+								className="bg-zinc-900 border-zinc-800"
 								value={formData.phone}
-								onChange={handleChange}
+								onChange={handlePhoneChange}
+								onKeyDown={handleKeyDown}
 							/>
 						</div>
 
-						<div>
-							<Label>
-								<FaBirthdayCake /> Tug'ilgan kun
+						<div className="space-y-2">
+							<Label className="flex items-center gap-2 text-zinc-400">
+								<FaBirthdayCake className="text-[10px]" /> Tug'ilgan kuni
 							</Label>
-
 							<Popover>
 								<PopoverTrigger asChild>
 									<Button
 										variant="outline"
-										data-empty={!date}
 										className={cn(
-											"w-full justify-start text-left font-normal",
-											!date && "text-muted-foreground"
+											"w-full justify-start text-left font-normal bg-zinc-900 border-zinc-800 hover:bg-zinc-800 hover:text-white",
+											!date && "text-muted-foreground",
 										)}
 									>
-										<CalendarIcon className="mr-2 h-4 w-4" />
-										{date ? format(date, "PPP") : "Pick a date"}
+										<CalendarIcon className="mr-2 h-4 w-4 text-primary" />
+										{date ? format(date, "dd-MM-yyyy") : "Sanani tanlang"}
 									</Button>
 								</PopoverTrigger>
-
-								<PopoverContent className="w-auto p-0">
+								<PopoverContent className="w-auto p-0 bg-zinc-900 border-zinc-800">
 									<Calendar
 										mode="single"
 										selected={date}
 										onSelect={handleSelect}
 										initialFocus
+										fromYear={1990}
+										toYear={new Date().getFullYear()}
+										captionLayout="dropdown-buttons"
 									/>
 								</PopoverContent>
 							</Popover>
 						</div>
 
-						<div>
-							<Label>
-								<FaUsers /> Ota-ona ismi
+						{/* Ota-ona ma'lumotlari - Ajratilgan blok */}
+						<div className="sm:col-span-2 mt-2">
+							<div className="flex items-center gap-2 mb-4">
+								<div className="h-[1px] flex-1 bg-zinc-800"></div>
+								<span className="text-[10px] uppercase tracking-wider text-zinc-500 font-bold">
+									Ota-ona ma'lumotlari
+								</span>
+								<div className="h-[1px] flex-1 bg-zinc-800"></div>
+							</div>
+						</div>
+
+						<div className="space-y-2">
+							<Label className="flex items-center gap-2 text-zinc-400">
+								<FaUsers className="text-[10px]" /> Ota-onasi ismi
 							</Label>
 							<Input
 								name="parents_name"
+								placeholder="Ismi va sharifi"
+								className="bg-zinc-900 border-zinc-800"
 								value={formData.parents_name}
 								onChange={handleChange}
 							/>
 						</div>
 
-						<div>
-							<Label>
-								<FaPhone /> Ota-ona raqami
+						<div className="space-y-2">
+							<Label className="flex items-center gap-2 text-zinc-400">
+								<FaPhone className="text-[10px]" /> Ota-onasi raqami
 							</Label>
 							<Input
 								name="parents_phone"
+								placeholder="+998 99 888 77 66"
+								className="bg-zinc-900 border-zinc-800"
 								value={formData.parents_phone}
-								onChange={handleChange}
+								onChange={handlePhoneChange}
+								onKeyDown={handleKeyDown}
 							/>
 						</div>
 
-						<div>
-							<Label>
-								<FaPlus /> Balance
+						{/* Balans - Alohida urg'u bilan */}
+						<div className="sm:col-span-2 space-y-2 pt-2">
+							<Label className="flex items-center gap-2 text-zinc-400">
+								<FaWallet className="text-[10px]" /> Dastlabki balans (so'm)
 							</Label>
 							<Input
 								name="balance"
 								type="number"
+								placeholder="0"
+								className="bg-zinc-900 border-zinc-800 font-mono text-primary"
 								value={formData.balance}
 								onChange={handleChange}
 							/>
 						</div>
 					</div>
 
-					<DialogFooter>
-						<Button type="button" variant="outline" onClick={onClose} className="btn-cancel">
+					<DialogFooter className="flex-col-reverse sm:flex-row gap-2 pt-4 border-t border-zinc-800">
+						<Button
+							type="button"
+							variant="ghost"
+							onClick={onClose}
+							className="text-zinc-400 hover:text-white"
+						>
 							Bekor qilish
 						</Button>
-
-						<Button type="submit" className="btn-default">
-							{initialData ? (
-								<>
-									<FaSave /> Saqlash
-								</>
-							) : (
-								<>
-									<FaPlus /> Yaratish
-								</>
-							)}
+						<Button
+							type="submit"
+							className="bg-primary hover:bg-primary/90 text-black font-bold px-8"
+						>
+							{initialData ? "Saqlash" : "Ro'yxatga olish"}
 						</Button>
 					</DialogFooter>
 				</form>
