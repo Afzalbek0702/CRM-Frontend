@@ -48,7 +48,7 @@ export default function Profile() {
 		<div className="max-w-4xl w-full mx-auto space-y-6 bg-background min-h-screen animate-in fade-in duration-500 p-2">
 			{/* Ortga qaytish tugmasi */}
 			<Button
-				variant="ghost"
+				
 				onClick={() => navigate(-1)}
 				className="btn-default"
 			>
@@ -61,7 +61,7 @@ export default function Profile() {
 						{/* Avatar qismi */}
 						<Avatar className="h-24 w-24 border-2 border-primary/20 shadow-xl">
 							<AvatarImage src={user?.avatar_url} />
-							<AvatarFallback className="bg-primary text-primary-foreground text-3xl font-bold">
+							<AvatarFallback className="bg-primary text-black text-3xl font-bold">
 								{user.username?.charAt(0).toUpperCase()}
 							</AvatarFallback>
 						</Avatar>

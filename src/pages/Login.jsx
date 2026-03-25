@@ -48,7 +48,7 @@ const handlePhoneChange = (e) => {
 
 	return (
 		<div className="flex min-h-screen items-center justify-center bg-background p-4 space-y-6 animate-in fade-in duration-500">
-			<Card className="w-full max-w-md border-border/60 shadow-lg">
+			<Card className="w-full max-w-96 border-border/60 shadow-lg">
 				<CardHeader className="space-y-2 text-center">
 					<div className="flex justify-center mb-2">
 						<div className="rounded-full bg-primary/10 p-3">

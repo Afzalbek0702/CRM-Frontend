@@ -71,10 +71,11 @@ export default function Workers() {
 			.includes(searchTerm.toLowerCase());
 		const matchesFilter =
 			filter === "all" ||
-			(filter === "teachers" && w.position?.toLowerCase() === "teacher") ||
-			(filter === "admins" && w.role === "admin") ||
-			(filter === "managers" && w.role === "manager");
-
+			(filter === "teachers" && w.role === "TEACHER") ||
+			(filter === "admins" && w.role === "ADMIN") ||
+			(filter === "managers" && w.role === "MANAGER");
+      console.log(w);
+      
 		return matchesSearch && matchesFilter;
 	});
 

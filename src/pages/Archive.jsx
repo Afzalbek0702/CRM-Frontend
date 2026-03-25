@@ -32,16 +32,17 @@ import {
 	MessageSquare,
 	UserRound,
 	PhoneForwarded,
-   Share2,
-   CircleDollarSign,
-   CreditCard,
-   ArrowLeft
+	Share2,
+	CircleDollarSign,
+	CreditCard,
+	ArrowLeft,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import "./Archive.css";
 import { HiOutlinePencilAlt } from "react-icons/hi";
 import PhoneUtils from "@/utils/phoneFormat.js";
 import { useCourse } from "@/services/course/useCourse.js";
+import { getUzDays } from "@/utils/weekday.js";
 
 export default function Archive() {
 	const { category } = useParams();
@@ -56,6 +57,15 @@ export default function Archive() {
 		useAllArchivedPayments,
 		useAllArchivedTeachers,
 	} = useArchive();
+
+	const formatDate = (dateStr) => {
+		if (!dateStr) return "-";
+		return new Date(dateStr).toLocaleDateString("uz-UZ", {
+			year: "numeric",
+			month: "2-digit",
+			day: "2-digit",
+		});
+	};
 
 	const [openTeacher, setOpenTeacher] = useState(false);
 	const [openGroup, setOpenGroup] = useState(false);
@@ -80,7 +90,7 @@ export default function Archive() {
 		isLoading: loadingTeachers,
 		error: errorTeachers,
 	} = useAllArchivedTeachers();
-   const {courseData} = useCourse()
+	const { courseData } = useCourse();
 	if (
 		(category === "students" && loadingStudents) ||
 		(category === "leads" && loadingLeads) ||
@@ -253,7 +263,7 @@ export default function Archive() {
 								</TableRow>
 							</TableHeader>
 							<TableBody>
-								{students.length === 0 ? (
+								{teachers.length === 0 ? (
 									<TableRow>
 										<TableCell
 											colSpan={6}
@@ -497,18 +507,14 @@ export default function Archive() {
 											</TableCell>
 											<TableCell>
 												<div className="flex gap-1">
-													{Array.isArray(g.lesson_days) ? (
-														g.lesson_days.map((day) => (
-															<span
-																key={day}
-																className="day-pill px-2.5 py-0.75 rounded-[10px]"
-															>
-																{day}
-															</span>
-														))
-													) : (
-														<span className="day-pill">{g.lesson_days}</span>
-													)}
+													{getUzDays(g.lesson_days).map((day) => (
+														<span
+															key={day}
+															className="day-pill px-2.5 py-0.5 rounded-[10px] bg-primary text-black"
+														>
+															{day}
+														</span>
+													))}
 												</div>
 											</TableCell>
 										</TableRow>

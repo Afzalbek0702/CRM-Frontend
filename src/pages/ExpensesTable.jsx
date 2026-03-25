@@ -59,7 +59,7 @@ export default function ExpensesTable() {
 			<div className="flex justify-between items-end mb-4">
 				<div className="bg-[#1F1F1F] p-4 rounded-md mb-6 border inline-block">
 					<strong className="text-gray-400">Jami harajatlar:</strong>{" "}
-					<span className="text-[var(--primary)] text-xl ml-2 font-bold">
+					<span className="text-primary text-xl ml-2 font-bold">
 						{totalExpenses.toLocaleString()} so'm
 					</span>
 				</div>
@@ -67,7 +67,7 @@ export default function ExpensesTable() {
 				{/* Actions */}
 				<div className="flex justify-between items-center mb-7.5 gap-5">
 					<Button
-						className="bg-[var(--primary)] text-black hover:opacity-90 flex gap-2 items-center"
+						className="bg-primary text-black hover:opacity-90 flex gap-2 items-center"
 						onClick={() => setModal({ isOpen: true, data: null })}
 					>
 						<FaPlus /> Xarajat qo'shish

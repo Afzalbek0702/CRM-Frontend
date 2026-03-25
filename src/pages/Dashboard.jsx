@@ -3,13 +3,10 @@ import StatsCards from "../components/Statscards";
 import { useStudent } from "../services/student/useStudent.js";
 import { useGroups } from "../services/group/useGroups.js";
 import { useNavigate, NavLink, useParams } from "react-router-dom";
+import { useLeads } from "@/services/lead/useLeads.js";
 import {
 	FaUsers,
 	FaClock,
-	FaBook,
-	FaChalkboardTeacher,
-	FaPhone,
-	FaCheckCircle,
 } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
 import { useAuth } from "../context/authContext";
@@ -31,6 +28,7 @@ export default function Dashboard() {
 	const { groups } = useGroups();
 	const { absentStudents, monthlyIncome, todayLessons, topDebtors, isLoading } =
 		useDashboard();
+	const { leads } = useLeads();
 
 	const handleRowClick = (groupId) => {
 		navigate(`/${tenant}/groups/${groupId}`);
@@ -76,6 +74,44 @@ export default function Dashboard() {
 						<NavLink to={`/${tenant}/groups`}>
 							<StatsCards data={groups?.length || 0} type="Guruhlar" />
 						</NavLink>
+					</>
+
+				) : user?.role === "ADMIN" ? (
+					<>
+						<NavLink to={`/${tenant}/leads`}>
+							<StatsCards data={leads?.length || 0} type="Lidlar" />
+						</NavLink>
+						<NavLink to={`/${tenant}/students`}>
+							<StatsCards data={students?.length || 0} type="O'quvchilar" />
+						</NavLink>
+						<NavLink to={`/${tenant}/groups`}>
+							<StatsCards data={groups?.length || 0} type="Guruhlar" />
+						</NavLink>
+						<StatsCards
+							data={absentStudents?.length || 0}
+							type="Bugun kelmaganlar"
+						/>
+					</>
+				) : user?.role === "MANAGER" ? (
+					<>
+						<NavLink to={`/${tenant}/leads`}>
+							<StatsCards data={leads?.length || 0} type="Lidlar" />
+						</NavLink>
+						<NavLink to={`/${tenant}/students`}>
+							<StatsCards data={students?.length || 0} type="O'quvchilar" />
+						</NavLink>
+						<StatsCards
+							data={
+								students?.filter((s) => s.registered_at?.startsWith(
+									new Date().toISOString().slice(0, 7)
+								)).length || 0
+							}
+							type="Yangi o'quvchilar"
+						/>
+						<StatsCards
+							data={absentStudents?.length || 0}
+							type="Bugun kelmaganlar"
+						/>
 					</>
 				) : (
 					<>

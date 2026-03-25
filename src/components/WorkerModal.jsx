@@ -101,7 +101,7 @@ export default function WorkerModal({
 			role: formData.role.toUpperCase(),
 			salary_type: formData.salary_type.toUpperCase(),
          salary: Number(formData.salary || 0),
-         phone: PhoneUtils.formatPhone(formData.phone),
+         phone: PhoneUtils.cleanPhone(formData.phone),
 		};
 
 		// Edit paytida parol kiritilmagan bo'lsa payload'dan olib tashlaymiz
