@@ -325,6 +325,8 @@ export default function Students() {
 											className={
 												s.monthly_paid < 0
 													? "text-destructive"
+													: s.monthly_paid === 0 
+													? "text-white"
 													: "text-green-600"
 											}
 										>

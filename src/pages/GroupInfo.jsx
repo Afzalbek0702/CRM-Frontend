@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import Loader from "../components/Loader";
 import PaymentModal from "../components/PaymentModal";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
+import { useAuth } from "@/context/authContext";
 
 // Hooks & Services
 import { useGroups } from "../services/group/useGroups";
@@ -55,6 +56,8 @@ import {
 import { getUzDays } from "@/utils/weekday";
 
 export default function GuruhlarInfo() {
+	const { role } = useAuth();
+
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const { loading, error, fetchById } = useGroups();
@@ -98,6 +101,11 @@ export default function GuruhlarInfo() {
 		};
 	});
 
+	const todayStr = new Date().toISOString().slice(0, 10);
+	const lessonDates = attendance[0]?.days.map((d) => d.date) || [];
+	const todayIndex = lessonDates.findIndex((d) => d >= todayStr);
+	const anchorIndex = todayIndex === -1 ? lessonDates.length - 1 : todayIndex;
+
 	const filteredStudents = students.filter((s) =>
 		s.full_name?.toLowerCase().includes(searchTerm.toLowerCase()),
 	);
@@ -109,6 +117,8 @@ export default function GuruhlarInfo() {
 			setDeleteId(null);
 		}
 	};
+
+
 
 	return (
 		<div className="space-y-6 bg-background min-h-screen animate-in fade-in duration-500">
@@ -270,23 +280,26 @@ export default function GuruhlarInfo() {
 									<TableHead className="w-48 sticky left-0 bg-[#161616] z-10 border-r border-[#ffffff1a] text-gray-400">
 										O'quvchi
 									</TableHead>
-									{attendance[0]?.days.map((day, idx) => (
-										<TableHead
-											key={idx}
-											className="text-center min-w-12.5 px-1 text-[10px] md:text-xs"
-										>
-											<div className="flex flex-col items-center">
-												<span className="text-white font-bold">
-													{new Date(day.date).getDate()}
-												</span>
-												<span className="text-gray-500 uppercase">
-													{new Date(day.date).toLocaleDateString("uz-UZ", {
-														weekday: "short",
-													})}
-												</span>
-											</div>
-										</TableHead>
-									))}
+									{attendance[0]?.days.map((day, idx) => {
+										return (
+											<TableHead
+												key={idx}
+												className="text-center min-w-12.5 px-1 text-[10px] md:text-xs"
+											>
+												<div className="flex flex-col items-center">
+													<span className="text-white font-bold">
+														{new Date(day.date).getDate()}
+													</span>
+													<span className="text-gray-500 uppercase">
+														{new Date(day.date).toLocaleDateString("uz-UZ", {
+															weekday: "short",
+														})}
+													</span>
+												</div>
+											</TableHead>
+										)
+
+									})}
 								</TableRow>
 							</TableHeader>
 							<TableBody>
@@ -295,19 +308,32 @@ export default function GuruhlarInfo() {
 										<TableCell className="sticky left-0 bg-[#1f1f1f] border-r border-zinc-800 whitespace-nowrap font-medium text-white">
 											{s.full_name}
 										</TableCell>
-										{s.days.map((day, idx) => (
-											<TableCell key={idx} className="p-0 text-center">
-												<div className="flex items-center justify-center py-3">
-													<Checkbox
-														checked={!!day.status}
-														onCheckedChange={(val) =>
-															updateLocalAttendance(s.student_id, day.date, val)
-														}
-														className="border-zinc-600 data-[state=checked]:bg-yellow-500 data-[state=checked]:text-black"
-													/>
-												</div>
-											</TableCell>
-										))}
+										{s.days.map((day, idx) => {
+											const isNotEnrolled = day.status === "NOT_ENROLLED";
+											const isFuture = new Date(day.date) > new Date();
+											const isTeacher = role === "TEACHER";
+											const outOfTeacherRange =
+												isTeacher && (idx < anchorIndex - 2 || idx > anchorIndex + 2);
+
+											return (
+												<TableCell key={idx} className="p-0 text-center">
+													<div className="flex items-center justify-center py-3">
+														{isNotEnrolled || outOfTeacherRange ? (
+															<span className="text-zinc-600 text-xs select-none">—</span>
+														) : (
+															<Checkbox
+																checked={!!day.status}
+																disabled={isFuture}
+																onCheckedChange={(val) =>
+																	updateLocalAttendance(s.student_id, day.date, val)
+																}
+																className="border-zinc-600 data-[state=checked]:bg-yellow-500 data-[state=checked]:text-black disabled:opacity-20 disabled:cursor-not-allowed"
+															/>
+														)}
+													</div>
+												</TableCell>
+											);
+										})}
 									</TableRow>
 								))}
 							</TableBody>

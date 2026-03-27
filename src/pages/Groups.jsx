@@ -85,7 +85,6 @@ export default function Groups() {
 			setDeleteId(null);
 		}
 	};
-	console.log(getUzDays(groupsWithCount[0].lesson_days));
 
 	if (loading) return <Loader />;
 
