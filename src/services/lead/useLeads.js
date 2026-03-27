@@ -66,14 +66,27 @@ export const useLeads = () => {
 			console.error(error.response?.data);
 		},
 	});
+	const convertLeadToStudentMutation = useMutation({
+		mutationFn: (id) =>
+         leadsService.convertLeadToStudent(id),
+		onSuccess: () => {
+			toast.success("Lead muffafaqqiyatli Talabalarga qo'shildi");
+			queryClient.invalidateQueries({ queryKey: LEADS_QUERY_KEY });
+		},
+		onError: (error) => {
+			toast.error("Leadni Talabalarga qo'shishda xatolik yuz berdi");
+			console.error(error.response?.data);
+		},
+	});
 	return {
 		leads,
 		isLoading,
 		error,
 		fetchById,
-		createLead: createLeadMutation.mutateAsync,
-		updateLead: updateLeadMutation.mutateAsync,
-		deleteLead: deleteLeadMutation.mutateAsync,
-		convertLeadToGroup: convertLeadToGroupMutation.mutateAsync,
+		createLead: createLeadMutation.mutate,
+		updateLead: updateLeadMutation.mutate,
+		deleteLead: deleteLeadMutation.mutate,
+		convertLeadToGroup: convertLeadToGroupMutation.mutate,
+		convertLeadToStudent: convertLeadToStudentMutation.mutate,
 	};
 };

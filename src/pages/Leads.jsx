@@ -3,9 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {
 	FaEllipsisV,
 	FaThList,
-	FaPlus,
 	FaSearch,
-	FaPhone,
 	FaEdit,
 	FaTrash,
 } from "react-icons/fa";
@@ -14,7 +12,6 @@ import {
 import Loader from "../components/Loader";
 import LeadModal from "../components/LeadModal";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
 	Table,
 	TableBody,
@@ -56,13 +53,24 @@ import PhoneUtils from "@/utils/phoneFormat";
 export default function Leads() {
 	const navigate = useNavigate();
 
-	const { leads, isLoading, createLead, updateLead, deleteLead,convertLeadToGroup } = useLeads();
+	const {
+		leads,
+		isLoading,
+		createLead,
+		updateLead,
+		deleteLead,
+      convertLeadToGroup,
+      convertLeadToStudent
+	} = useLeads();
 	const { courseData } = useCourse();
 
 	const [searchTerm, setSearchTerm] = useState("");
 	const [modal, setModal] = useState({ isOpen: false, data: null });
 	const [deleteId, setDeleteId] = useState(null);
-const [convertModal, setConvertModal] = useState({ isOpen: false, leadData: null });
+	const [convertModal, setConvertModal] = useState({
+		isOpen: false,
+		leadData: null,
+	});
 	// Qidiruvni optimallashtirish
 	const filteredLeads = useMemo(() => {
 		return (leads || []).filter((l) =>
@@ -70,28 +78,28 @@ const [convertModal, setConvertModal] = useState({ isOpen: false, leadData: null
 		);
 	}, [leads, searchTerm]);
 
-	const handleConfirmDelete = async () => {
+	const handleConfirmDelete = () => {
 		if (deleteId) {
-			await deleteLead(deleteId);
+			deleteLead(deleteId);
 			setDeleteId(null);
 		}
 	};
 	const handleCopyPhone = (e, phone) => {
 		e.stopPropagation();
 		navigator.clipboard.writeText(phone);
-   };
-   const handleConvertToGroup = async (groupId) => {
-      if (convertModal.leadData && groupId) {
-         console.log(convertModal.leadData);
-         console.log(groupId);
-         
-         await convertLeadToGroup({
-						id: convertModal.leadData.id,
-						group_id: groupId,
-					});
-         setConvertModal({ isOpen: false, leadData: null });
-      }
-   };
+	};
+	const handleConvertToGroup = (groupId) => {
+		if (convertModal.leadData && groupId) {
+			console.log(convertModal.leadData);
+			console.log(groupId);
+
+			convertLeadToGroup({
+				id: convertModal.leadData.id,
+				group_id: groupId,
+			});
+			setConvertModal({ isOpen: false, leadData: null });
+		}
+	};
 
 	if (isLoading) return <Loader />;
 
@@ -216,6 +224,15 @@ const [convertModal, setConvertModal] = useState({ isOpen: false, leadData: null
 													<UserPlus className="mr-2 h-4 w-4 text-green-500" />{" "}
 													Guruhga o'tkazish
 												</DropdownMenuItem>
+												<DropdownMenuItem
+													onClick={() =>
+														convertLeadToStudent(l.id)
+													}
+													className="cursor-pointer"
+												>
+													<UserPlus className="mr-2 h-4 w-4 text-green-500" />{" "}
+													Talabalarga o'tkazish
+												</DropdownMenuItem>
 												<DropdownMenuSeparator />
 												<DropdownMenuItem
 													onClick={() => setDeleteId(l.id)}
@@ -253,7 +270,6 @@ const [convertModal, setConvertModal] = useState({ isOpen: false, leadData: null
 				isOpen={convertModal.isOpen}
 				onClose={() => setConvertModal({ isOpen: false, leadData: null })}
 				onConfirm={handleConvertToGroup}
-				// Agar lidning qiziqqan kursi bo'yicha guruhlarni filter qilmoqchi bo'lsangiz:
 				initialData={convertModal.leadData}
 			/>
 		</div>

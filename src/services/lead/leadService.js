@@ -13,4 +13,6 @@ export const leadsService = {
 		api
 			.post(`${endpoints.LEADS}/${id}/convert-to-group`, { group_id })
 			.then((r) => r.data),
+	convertLeadToStudent: (id) =>
+		api.post(`${endpoints.LEADS}/${id}/convert-to-student`).then((r) => r.data),
 };

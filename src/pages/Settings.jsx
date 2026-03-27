@@ -207,7 +207,7 @@ export default function Settings() {
 															<DropdownMenuItem
 																className="cursor-pointer hover:bg-gray-800 focus:bg-gray-800 focus:text-white"
 																onClick={() =>
-																	setModal({ isOpen: true, data: course })
+																	setCourseModal({ open: true, data: course })
 																}
 															>
 																<Edit2 className="mr-2 text-blue-400" />{" "}
@@ -298,8 +298,14 @@ export default function Settings() {
 													{room.room_name}
 												</TableCell>
 												<TableCell>{room.capacity} ta joy</TableCell>
-												<TableCell>{room.group_name ? room.group_name : "-"}</TableCell>
-												<TableCell>{room.group_lesson_time ? room.group_lesson_time : "-"}</TableCell>
+												<TableCell>
+													{room.group_name ? room.group_name : "-"}
+												</TableCell>
+												<TableCell>
+													{room.group_lesson_time
+														? room.group_lesson_time
+														: "-"}
+												</TableCell>
 												<TableCell>
 													<div className="flex gap-1">
 														{Array.isArray(room.group_lesson_days) ? (
@@ -313,7 +319,9 @@ export default function Settings() {
 															))
 														) : (
 															<span className="day-pill">
-																{room.group_lesson_days ? room.group_lesson_days : "-"}
+																{room.group_lesson_days
+																	? room.group_lesson_days
+																	: "-"}
 															</span>
 														)}
 													</div>
@@ -336,7 +344,7 @@ export default function Settings() {
 															<DropdownMenuItem
 																className="cursor-pointer hover:bg-gray-800 focus:bg-gray-800 focus:text-white"
 																onClick={() =>
-																	setModal({ isOpen: true, data: room })
+																	setRoomModal({ open: true, data: room })
 																}
 															>
 																<Edit2 className="mr-2 text-blue-400" />{" "}
