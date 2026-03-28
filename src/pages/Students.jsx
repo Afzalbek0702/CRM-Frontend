@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useStudent } from "../services/student/useStudent.js";
 import { useGroups } from "../services/group/useGroups.js";
 import { useTeachers } from "../services/teacher/useTeachers.js";
+import toast from "react-hot-toast";
 
 // Shadcn UI
 import {
@@ -315,7 +316,16 @@ export default function Students() {
 												: "Guruhsiz")}
 									</TableCell>
 									<TableCell className="font-mono text-sm">
-										{PhoneUtils.formatPhone(s.phone)}
+										<button
+											onClick={(e) => {
+												e.stopPropagation();
+												navigator.clipboard.writeText(s.phone);
+												toast.success("Raqam muvaffaqiyatli ko'chirildi!")
+											}}
+											className="underline decoration-dotted hover:text-primary cursor-pointer"
+										>
+											{PhoneUtils.formatPhone(s.phone)}
+										</button>
 									</TableCell>
 									<TableCell>
 										{s.birthday ? s.birthday.split("T")[0] : "-"}
@@ -325,9 +335,9 @@ export default function Students() {
 											className={
 												s.monthly_paid < 0
 													? "text-destructive"
-													: s.monthly_paid === 0 
-													? "text-white"
-													: "text-green-600"
+													: s.monthly_paid === 0
+														? "text-white"
+														: "text-green-600"
 											}
 										>
 											{s.monthly_paid?.toLocaleString()} so'm

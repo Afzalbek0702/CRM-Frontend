@@ -10,6 +10,7 @@ import {
 } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
 import { useAuth } from "../context/authContext";
+import toast from "react-hot-toast";
 import {
 	Table,
 	TableBody,
@@ -34,10 +35,7 @@ export default function Dashboard() {
 		navigate(`/${tenant}/groups/${groupId}`);
 	};
 
-	// O'qituvchi uchun ma'lumotlarni filtrlash
-	const teacherGroups = groups?.filter((g) => g.teacher_id === user?.id) || [];
-	const teacherLessons =
-		todayLessons?.filter((l) => l.teacher_name === user?.username) || [];
+	
 
 	return (
 		<div className="space-y-6 bg-background min-h-screen animate-in fade-in duration-500">
@@ -113,20 +111,10 @@ export default function Dashboard() {
 							type="Bugun kelmaganlar"
 						/>
 					</>
-				) : (
-					<>
-						<StatsCards data={teacherGroups.length} type="Mening Guruhlarim" />
-						<StatsCards data={teacherLessons.length} type="Bugungi Darslar" />
-						<StatsCards
-							data={
-								absentStudents?.filter((s) => s.teacher_id === user?.id)
-									.length || 0
-							}
-							type="Kelmaganlar"
-						/>
-						<StatsCards data="100%" type="Dars Sifati" />
-					</>
-				)}
+				) : <>
+				<span>not available</span>
+				
+				</>}
 			</div>
 
 			{/* Jadvallar qismi */}
@@ -230,9 +218,9 @@ export default function Dashboard() {
 													onClick={(e) => {
 														e.stopPropagation();
 														navigator.clipboard.writeText(student.phone);
-														// Bu yerda Toast xabarnoma chiqarsangiz bo'ladi
+														toast.success("Raqam muvaffaqiyatli ko'chirildi!")
 													}}
-													className="text-xs bg-black/40 px-2 py-1 rounded border border-[#ffffff1a] hover:border-[#fcd34d] transition-colors"
+													className="underline decoration-dotted hover:text-primary cursor-pointer"
 												>
 													{PhoneUtils.formatPhone(student.phone)}
 												</button>

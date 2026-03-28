@@ -38,16 +38,16 @@ export function AuthProvider({ children }) {
 		}
 	};
 
-	const logout = async () => {
-		try {
-			await authService.logout();
-			setUser(null);
-			setTenant(null);
-			window.location.href = "/login";
-		} catch (error) {
-			console.error("Logout failed:", error);
-		}
-	};
+	// const logout = async () => {
+	// 	try {
+	// 		await authService.logout();
+	// 		setUser(null);
+	// 		setTenant(null);
+	// 		window.location.href = "/login";
+	// 	} catch (error) {
+	// 		console.error("Logout failed:", error);
+	// 	}
+	// };
 
 	return (
 		<AuthContext.Provider
@@ -56,7 +56,7 @@ export function AuthProvider({ children }) {
 				tenant,
 				setUser,
 				login,
-				logout,
+				// logout,
 				loading,
 			}}
 		>

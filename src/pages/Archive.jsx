@@ -218,11 +218,33 @@ export default function Archive() {
 											<TableRow key={s.id}>
 												<TableCell>{s.full_name}</TableCell>
 												<TableCell>{s.groups?.[0] || "No Group"}</TableCell>
-												<TableCell>{PhoneUtils.formatPhone(s.phone)}</TableCell>
+												<TableCell>
+
+													<button
+														onClick={(e) => {
+															e.stopPropagation();
+															navigator.clipboard.writeText(s.phone);
+															toast.success("Raqam muvaffaqiyatli ko'chirildi!")
+														}}
+														className="underline decoration-dotted hover:text-primary cursor-pointer"
+													>
+														{PhoneUtils.formatPhone(s.phone)}
+													</button>
+
+												</TableCell>
 												<TableCell>{s.birthday?.split("T")[0]}</TableCell>
 												<TableCell>{s.parents_name}</TableCell>
 												<TableCell>
-													{PhoneUtils.formatPhone(s.parents_phone)}
+													<button
+														onClick={(e) => {
+															e.stopPropagation();
+															navigator.clipboard.writeText(s.parents_phone);
+															toast.success("Raqam muvaffaqiyatli ko'chirildi!")
+														}}
+														className="underline decoration-dotted hover:text-primary cursor-pointer"
+													>
+														{PhoneUtils.formatPhone(s.parents_phone)}
+													</button>
 												</TableCell>
 												<TableCell>
 													<span className="balance-badge">

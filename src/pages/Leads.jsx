@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import {
 	FaEllipsisV,
 	FaThList,
@@ -59,8 +60,8 @@ export default function Leads() {
 		createLead,
 		updateLead,
 		deleteLead,
-      convertLeadToGroup,
-      convertLeadToStudent
+		convertLeadToGroup,
+		convertLeadToStudent
 	} = useLeads();
 	const { courseData } = useCourse();
 
@@ -185,12 +186,16 @@ export default function Leads() {
 								<TableRow key={l.id} className="bg-card transition-colors">
 									<TableCell className="font-medium">{l.full_name}</TableCell>
 									<TableCell>
-										<span
-											onClick={(e) => handleCopyPhone(e, l.phone)}
-											className="cursor-pointer hover:text-blue-600 transition-colors underline decoration-dotted"
+										<button
+											onClick={(e) => {
+												e.stopPropagation();
+												navigator.clipboard.writeText(l.phone);
+												toast.success("Raqam muvaffaqiyatli ko'chirildi!")
+											}}
+											className="underline decoration-dotted hover:text-primary cursor-pointer"
 										>
 											{PhoneUtils.formatPhone(l.phone)}
-										</span>
+										</button>
 									</TableCell>
 									<TableCell>{l.source}</TableCell>
 									<TableCell>

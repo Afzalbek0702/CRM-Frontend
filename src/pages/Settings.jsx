@@ -138,7 +138,7 @@ export default function Settings() {
 							<h3 className="text-lg font-medium">Barcha kurslar</h3>
 							<Button
 								onClick={() => setCourseModal({ open: true, data: null })}
-								className="gap-2"
+								className="gap-2 btn-default"
 							>
 								<Plus className="h-4 w-4" /> Kurs qo'shish
 							</Button>

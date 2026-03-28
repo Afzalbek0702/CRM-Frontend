@@ -116,7 +116,7 @@ export default function Header() {
 								title="Lidlar"
 								items={searchResults.leads}
 								icon="🎯"
-								onClick={(item) => handleNavigate(`/leads/${item.id}`)}
+								onClick={(item) => handleNavigate(`/leads`)}
 							/>
 							<ResultSection
 								title="O'quvchilar"
@@ -134,7 +134,7 @@ export default function Header() {
 								title="O'qituvchilar"
 								items={searchResults.teachers}
 								icon="👨‍🏫"
-								onClick={(item) => handleNavigate(`/teachers/${item.id}`)}
+								onClick={(item) => handleNavigate(`/workers/${item.id}`)}
 							/>
 						</div>
 					)}

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useWorker } from "../services/worker/useWorker";
+import toast from "react-hot-toast";
 // Shadcn UI komponentlari
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -186,10 +187,16 @@ export default function Workers() {
 										</div>
 									</TableCell>
 									<TableCell>
-										<span className="flex items-center gap-2 font-mono text-sm text-muted-foreground">
-											<Phone className="h-3 w-3" />{" "}
+										<button
+											onClick={(e) => {
+												e.stopPropagation();
+												navigator.clipboard.writeText(w.phone);
+												toast.success("Raqam muvaffaqiyatli ko'chirildi!")
+											}}
+											className="underline decoration-dotted hover:text-primary cursor-pointer"
+										>
 											{PhoneUtils.formatPhone(w.phone)}
-										</span>
+										</button>
 									</TableCell>
 									<TableCell>
 										<Badge

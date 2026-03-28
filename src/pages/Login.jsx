@@ -18,7 +18,7 @@ import PhoneUtils from "../utils/phoneFormat";
 
 const Login = () => {
 	const [formData, setFormData] = useState({ password: "", phone: "+(998)" });
-	const { login, loading } = useAuth();
+	const { login, loading, user } = useAuth();
 	const navigate = useNavigate();
 
 	const handleSubmit = async (e) => {
@@ -29,16 +29,20 @@ const Login = () => {
 				password: formData.password,
 			});
 			if (data?.tenant) {
-				navigate(`/${data.tenant}/dashboard`);
+				if (data?.user?.role === "TEACHER") {
+					navigate(`/${data.tenant}/groups`);
+				} else {
+					navigate(`/${data.tenant}/dashboard`);
+				}
 			}
 		} catch (err) {
 			console.error("Login hatoligi:", err);
 		}
 	};
-const handlePhoneChange = (e) => {
-	const formatted = PhoneUtils.formatPhone(e.target.value);
-	setFormData({ ...formData, phone: formatted });
-};
+	const handlePhoneChange = (e) => {
+		const formatted = PhoneUtils.formatPhone(e.target.value);
+		setFormData({ ...formData, phone: formatted });
+	};
 	const handleKeyDown = (e) => {
 		// Agar foydalanuvchi "+(998) " qismini o'chirmoqchi bo'lsa, to'xtatib qolamiz
 		if (e.key === "Backspace" && e.target.value.length <= 7) {

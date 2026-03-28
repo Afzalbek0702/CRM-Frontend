@@ -24,13 +24,15 @@ import {
 import PhoneUtils from "@/utils/phoneFormat";
 
 export default function Profile() {
-	const { user, logout } = useAuth();
+	const { user,
+		// logout
+	} = useAuth();
 	const { tenant } = useParams();
 	const navigate = useNavigate();
-   console.log(user);
-   
+	console.log(user);
+
 	const handleLogout = () => {
-		logout();
+		// logout();
 		navigate("/login");
 	};
 
@@ -48,7 +50,7 @@ export default function Profile() {
 		<div className="max-w-4xl w-full mx-auto space-y-6 bg-background min-h-screen animate-in fade-in duration-500 p-2">
 			{/* Ortga qaytish tugmasi */}
 			<Button
-				
+
 				onClick={() => navigate(-1)}
 				className="btn-default"
 			>
