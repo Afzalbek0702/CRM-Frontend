@@ -16,9 +16,11 @@ import Settings from "./pages/Settings";
 import Workers from "./pages/Workers";
 import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
+import NotAuthorized from "./pages/NotAuthorized";
 
 export default function App() {
 	const { tenant } = useParams();
+
 	return (
 		<Routes>
 			<Route path="/login" element={<Login />} />
@@ -47,6 +49,7 @@ export default function App() {
 				<Route path="payments/:category" element={<Payments />} />
 				<Route path="workers" element={<Workers />} />
 				<Route path="profile" element={<Profile />} />
+				<Route path="notauthorized" element={<NotAuthorized />} />
 			</Route>
 		</Routes>
 	);

@@ -49,9 +49,11 @@ import {
 	MoreHorizontal,
 } from "lucide-react";
 import { getUzDays } from "@/utils/weekday";
+import { useAuth } from "@/context/authContext";
 export default function Groups() {
 	const navigate = useNavigate();
 	const { tenant } = useParams();
+	const { user } = useAuth();
 	const { groups, loading, createGroup, deleteGroup, updateGroup } =
 		useGroups();
 	const { students } = useStudent();
@@ -108,12 +110,14 @@ export default function Groups() {
 						<FaSearch />
 					</InputGroupAddon>
 				</InputGroup>
-				<Button
-					onClick={() => setModal({ open: true, edit: false, data: null })}
-					className="btn-default bg-primary rounded-md hover:bg-primary/90 shadow-lg shadow-primary/20 gap-2 font-semibold"
-				>
-					<Plus className="h-4 w-4" /> Yangi guruh qo'shish
-				</Button>
+				{user.role === "CEO" || "MANAGER" ? (
+					<Button
+						onClick={() => setModal({ open: true, edit: false, data: null })}
+						className="btn-default bg-primary rounded-md hover:bg-primary/90 shadow-lg shadow-primary/20 gap-2 font-semibold"
+					>
+						<Plus className="h-4 w-4" /> Yangi guruh qo'shish
+					</Button>
+				) : null}
 			</div>
 			<div className="rounded-md border shadow-sm overflow-hidden">
 				<Table>

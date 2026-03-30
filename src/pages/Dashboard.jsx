@@ -20,6 +20,12 @@ import {
 	TableRow,
 } from "@/components/ui/table.jsx";
 import PhoneUtils from "@/utils/phoneFormat.js";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "@/components/ui/tooltip"
+import { Button } from "@/components/ui/button.jsx";
 
 export default function Dashboard() {
 	const navigate = useNavigate();
@@ -35,7 +41,7 @@ export default function Dashboard() {
 		navigate(`/${tenant}/groups/${groupId}`);
 	};
 
-	
+
 
 	return (
 		<div className="space-y-6 bg-background min-h-screen animate-in fade-in duration-500">
@@ -46,8 +52,17 @@ export default function Dashboard() {
 				</h1>
 				<p className="text-gray-400">
 					Xush kelibsiz,{" "}
-					<span className="text-primary font-medium">{user?.username}</span>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<Button variant="cancel" className={"text-primary font-medium cursor-pointer"} onClick={() => {navigate(`/${tenant}/profile`)}}>{user?.username}</Button>
+						</TooltipTrigger>
+						<TooltipContent side={"bottom"} className={"bg-black"}>
+							<p className="text-primary font-medium font-mono">{user?.role}</p>
+						</TooltipContent>
+					</Tooltip>
 				</p>
+
+
 			</div>
 
 			{/* Statistika Kartochkalari */}
@@ -112,8 +127,8 @@ export default function Dashboard() {
 						/>
 					</>
 				) : <>
-				<span>not available</span>
-				
+					<span>not available</span>
+
 				</>}
 			</div>
 

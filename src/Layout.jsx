@@ -1,12 +1,26 @@
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, Navigate, useParams } from "react-router-dom";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "./components/Sidebar";
 import Header from "./components/Header";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { routeRoles } from "./utils/authConfig";
+import { useAuth } from "./context/authContext";
 
 export default function Layout() {
 	const location = useLocation();
 	const isLoginPage = location.pathname.endsWith("/login");
+	const { user } = useAuth();
+	const { tenant } = useParams();
+
+	const pathSegment = location.pathname.split("/").slice(2).join("/");
+	const matchedKey = Object.keys(routeRoles).find(key =>
+		pathSegment === key || pathSegment.startsWith(key + "/")
+	);
+	const allowedRoles = matchedKey ? routeRoles[matchedKey] : null;
+
+	if (allowedRoles && (allowedRoles.includes("") || !allowedRoles.includes(user?.role))) {
+		return <Navigate to={`/${tenant}/notauthorized`} />;
+	}
 
 	if (isLoginPage) {
 		return <Outlet />;

@@ -33,7 +33,7 @@ import {
 	Users,
 	Wallet,
 	Info,
-   ArrowLeft,
+	ArrowLeft,
 } from "lucide-react";
 import PhoneUtils from "@/utils/phoneFormat";
 
@@ -118,9 +118,13 @@ export default function StudentDetail() {
 								value={`${student.balance?.toLocaleString() ?? 0} so'm`}
 								valueClass={
 									student.balance < 0
-										? "text-destructive font-bold"
-										: "text-green-600 font-bold"
+										? "text-destructive"
+										: student.balance === 0
+											? "text-white"
+											: "text-green-600"
 								}
+
+								// ishlamadiyuuu bu neytral rang. nimaga???
 							/>
 						</div>
 					</CardContent>

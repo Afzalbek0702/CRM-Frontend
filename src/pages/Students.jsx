@@ -57,6 +57,7 @@ import AddToGroupModal from "../components/AddToGroupModal.jsx";
 import { FaEdit, FaEllipsisV, FaPlus, FaTrash } from "react-icons/fa";
 import ConfirmDeleteModal from "@/components/ConfirmDeleteModal.jsx";
 import PhoneUtils from "@/utils/phoneFormat.js";
+import { useAuth } from "@/context/authContext.jsx";
 
 export default function Students() {
 	const navigate = useNavigate();
@@ -74,6 +75,7 @@ export default function Students() {
 
 	const { groups = [] } = useGroups();
 	const { teachers = [] } = useTeachers();
+	const { user } = useAuth();
 
 	// State-lar
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -133,15 +135,17 @@ export default function Students() {
 						<GraduationCap className="h-8 w-8 text-primary" /> O'quvchilar
 					</h2>
 				</div>
-				<Button
-					onClick={() => {
-						setEditingStudent(null);
-						setIsModalOpen(true);
-					}}
-					className="btn-default bg-primary rounded-md hover:bg-primary/90 shadow-lg shadow-primary/20 gap-2 font-semibold"
-				>
-					<Plus className="h-4 w-4" /> O'quvchi qo'shish
-				</Button>
+				{user.role === "CEO" || "MANAGER" ? (
+					<Button
+						onClick={() => {
+							setEditingStudent(null);
+							setIsModalOpen(true);
+						}}
+						className="btn-default bg-primary rounded-md hover:bg-primary/90 shadow-lg shadow-primary/20 gap-2 font-semibold"
+					>
+						<Plus className="h-4 w-4" /> O'quvchi qo'shish
+					</Button>
+				) : null}
 			</div>
 
 			{/* Qidiruv va Filtrlar */}
