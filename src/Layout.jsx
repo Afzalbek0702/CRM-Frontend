@@ -19,7 +19,7 @@ export default function Layout() {
 	const allowedRoles = matchedKey ? routeRoles[matchedKey] : null;
 
 	if (allowedRoles && (allowedRoles.includes("") || !allowedRoles.includes(user?.role))) {
-		return <Navigate to={`/${tenant}/notauthorized`} />;
+		return <Navigate to={`/${tenant}/notauthorized`} replace />;
 	}
 
 	if (isLoginPage) {

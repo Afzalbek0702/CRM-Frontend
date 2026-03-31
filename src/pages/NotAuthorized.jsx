@@ -9,7 +9,7 @@ const NotAuthorized = () => {
 
             <h1>Ruxsat berilmagan! (Error 403)</h1>
 
-            <Button onClick={() => navigate(-2)} className="btn-default">
+            <Button onClick={() => navigate(-1)} className="btn-default">
                 <ArrowLeft className="h-4 w-4" /> Ortga qaytish
             </Button>
         </div>
