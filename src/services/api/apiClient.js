@@ -2,8 +2,8 @@ import axios from "axios";
 import { navigateTo } from "@/utils/navigate";
 
 const api = axios.create({
-//   baseURL: "http://localhost:7000",
-  baseURL: "https://api-crm-data-space.vercel.app",
+  baseURL: "http://localhost:7000",
+//   baseURL: "https://api-crm-data-space.vercel.app",
   timeout: 7000,
   withCredentials: true,
   headers: {

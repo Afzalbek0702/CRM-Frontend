@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { ArrowLeft, Building2, ShieldCheck, Globe } from "lucide-react";
+import toast from "react-hot-toast";
 
 function Superadmin() {
    const navigate = useNavigate();
@@ -52,7 +53,7 @@ function Superadmin() {
 				adminPhone: phoneFormat.cleanPhone(formData.adminPhone),
 			};
 			await api.post("/superadmin", payload);
-			alert("Muvaffaqiyatli yaratildi!");
+			toast.success("Muvaffaqiyatli yaratildi!");
 		} catch (error) {
 			console.error(error);
 		}

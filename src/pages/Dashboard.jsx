@@ -1,16 +1,14 @@
 import { useDashboard } from "../services/dashboard/useDashboard.js";
-import StatsCards from "../components/Statscards";
 import { useStudent } from "../services/student/useStudent.js";
 import { useGroups } from "../services/group/useGroups.js";
-import { useNavigate, NavLink, useParams } from "react-router-dom";
 import { useLeads } from "@/services/lead/useLeads.js";
-import {
-	FaUsers,
-	FaClock,
-} from "react-icons/fa";
-import { MdDashboard } from "react-icons/md";
 import { useAuth } from "../context/authContext";
+import { useNavigate, NavLink, useParams } from "react-router-dom";
+import { useState, useMemo, useEffect } from "react";
 import toast from "react-hot-toast";
+import PhoneUtils from "@/utils/phoneFormat.js";
+
+// UI
 import {
 	Table,
 	TableBody,
@@ -19,7 +17,44 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table.jsx";
-import PhoneUtils from "@/utils/phoneFormat.js";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+	Card,
+	CardContent,
+	CardHeader,
+	CardTitle,
+	CardDescription,
+} from "@/components/ui/card";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "@/components/ui/tooltip.jsx";
+import StatsCards from "../components/Statscards";
+
+// Icons
+import {
+	FaChartLine,
+	FaUserGraduate,
+	FaBuilding,
+	FaClock,
+} from "react-icons/fa";
+import {
+	Clock,
+	AlertCircle,
+	Check,
+	Phone,
+	Copy,
+	Users,
+	GraduationCap,
+	BookOpen,
+	ArrowRight,
+	Bell,
+	Calendar,
+} from "lucide-react";
+import Loader from "@/components/Loader.jsx";
 
 export default function Dashboard() {
 	const navigate = useNavigate();
@@ -27,210 +62,447 @@ export default function Dashboard() {
 	const { tenant } = useParams();
 	const { students } = useStudent();
 	const { groups } = useGroups();
-	const { absentStudents, monthlyIncome, todayLessons, topDebtors, isLoading } =
-		useDashboard();
 	const { leads } = useLeads();
+	const {
+		absentStudents,
+		monthlyIncome,
+		todayLessons,
+		topDebtors,
+		groupData,
+		studentData,
+		debtAnalysis,
+		isLoading,
+	} = useDashboard();
 
-	const handleRowClick = (groupId) => {
-		navigate(`/${tenant}/groups/${groupId}`);
+	const [copiedPhone, setCopiedPhone] = useState(null);
+	const [time, setTime] = useState(new Date());
+	useEffect(() => {
+		const t = setInterval(() => setTime(new Date()), 60000);
+		return () => clearInterval(t);
+	}, []);
+
+	const copyPhone = async (p) => {
+		await navigator.clipboard.writeText(PhoneUtils.formatPhone(p));
+		setCopiedPhone(p);
+		toast.success("Raqam nusxalandi!");
+		setTimeout(() => setCopiedPhone(null), 2000);
+	};
+	const initials = (n) =>
+		n
+			? n
+					.split(" ")
+					.map((p) => p[0])
+					.join("")
+					.toUpperCase()
+			: "?";
+
+	const roleStats = useMemo(() => {
+		const base = {
+			students: studentData || 0,
+			groups: groupData || 0,
+			leads: leads?.length || 0,
+			absent: absentStudents?.length || 0,
+			income: monthlyIncome?.current_month_income || 0,
+			debtors: debtAnalysis?.thisMonthTotal || 0,
+		};
+		const cfg = {
+			CEO: [
+				{
+					data: base.income,
+					type: "Oylik Tushum",
+					percentage: monthlyIncome?.percentage,
+					trend: monthlyIncome?.status,
+					color: "amber",
+					href: `/${tenant}/payments`,
+				},
+				{
+					data: base.debtors,
+					type: "Qarzdorlar",
+					percentage: debtAnalysis?.diffPercentage,
+					trend: debtAnalysis?.trend,
+					color: "red",
+					href: `/${tenant}/payments/debtors`,
+				},
+				{
+					data: base.students?.total,
+					percentage: studentData?.growth,
+					trend: studentData?.status,
+					type: "O'quvchilar",
+					color: "blue",
+					href: `/${tenant}/students`,
+				},
+				{
+					data: base.groups?.total,
+					percentage: groupData?.growth,
+					trend: groupData?.status,
+					type: "Guruhlar",
+					color: "purple",
+					href: `/${tenant}/groups`,
+				},
+			],
+			ADMIN: [
+				{
+					data: base.leads,
+					type: "Lidlar",
+					color: "emerald",
+					href: `/${tenant}/leads`,
+				},
+				{
+					data: base.students,
+					type: "O'quvchilar",
+					color: "blue",
+					href: `/${tenant}/students`,
+				},
+				{ data: base.absent, type: "Bugun kelmaganlar", color: "orange" },
+				{
+					data: base.groups,
+					type: "Guruhlar",
+					color: "purple",
+					href: `/${tenant}/groups`,
+				},
+			],
+			MANAGER: [
+				{
+					data: base.leads,
+					type: "Lidlar",
+					color: "emerald",
+					href: `/${tenant}/leads`,
+				},
+				{
+					data:
+						students?.filter((s) =>
+							s.registered_at?.startsWith(new Date().toISOString().slice(0, 7)),
+						)?.length || 0,
+					type: "Yangi o'quvchilar",
+					color: "cyan",
+				},
+				{ data: base.absent, type: "Bugun kelmaganlar", color: "orange" },
+				{
+					data: base.students,
+					type: "Jami O'quvchilar",
+					color: "blue",
+					href: `/${tenant}/students`,
+				},
+			],
+		};
+		return cfg[user?.role] || cfg.ADMIN;
+	}, [
+		user?.role,
+		students,
+		studentData,
+		groups,
+		groupData,
+		leads,
+		absentStudents,
+		monthlyIncome,
+		debtAnalysis,
+		tenant,
+	]);
+
+	const quickActions = useMemo(() => {
+		const actions = {
+			CEO: [
+				{
+					icon: <FaChartLine className="w-4 h-4" />,
+					label: "To'lovlar",
+					href: `/${tenant}/payments`,
+					color: "amber",
+				},
+				{
+					icon: <FaUserGraduate className="w-4 h-4" />,
+					label: "O'quvchilar",
+					href: `/${tenant}/students`,
+					color: "blue",
+				},
+				{
+					icon: <FaBuilding className="w-4 h-4" />,
+					label: "Guruhlar",
+					href: `/${tenant}/groups`,
+					color: "purple",
+				},
+			],
+			ADMIN: [
+				{
+					icon: <Users className="w-4 h-4" />,
+					label: "Lidlar",
+					href: `/${tenant}/leads`,
+					color: "emerald",
+				},
+				{
+					icon: <GraduationCap className="w-4 h-4" />,
+					label: "O'quvchilar",
+					href: `/${tenant}/students`,
+					color: "blue",
+				},
+				{
+					icon: <BookOpen className="w-4 h-4" />,
+					label: "Guruhlar",
+					href: `/${tenant}/groups`,
+					color: "purple",
+				},
+			],
+			MANAGER: [
+				{
+					icon: <Users className="w-4 h-4" />,
+					label: "Yangi lidlar",
+					href: `/${tenant}/leads`,
+					color: "emerald",
+				},
+				{
+					icon: <GraduationCap className="w-4 h-4" />,
+					label: "Ro'yxatdan o'tganlar",
+					href: `/${tenant}/students`,
+					color: "blue",
+				},
+				{
+					icon: <AlertCircle className="w-4 h-4" />,
+					label: "Kelmaganlar",
+					href: `/${tenant}/attendance`,
+					color: "orange",
+				},
+			],
+		};
+		return actions[user?.role] || actions.ADMIN;
+	}, [user?.role, tenant]);
+
+	if (isLoading) return <Loader />;
+
+	const colors = {
+		amber: "text-amber-400 border-amber-400/30 bg-amber-400/10",
+		emerald: "text-emerald-400 border-emerald-400/30 bg-emerald-400/10",
+		blue: "text-sky-400 border-sky-400/30 bg-sky-400/10",
+		purple: "text-purple-400 border-purple-400/30 bg-purple-400/10",
+		red: "text-red-400 border-red-400/30 bg-red-400/10",
+		orange: "text-orange-400 border-orange-400/30 bg-orange-400/10",
 	};
 
-	
-
 	return (
-		<div className="space-y-6 bg-background min-h-screen animate-in fade-in duration-500">
-			{/* Header qismi */}
-			<div>
-				<h1 className="flex items-center gap-2 text-2xl font-semibold text-white">
-					<MdDashboard className="text-[#fcd34d]" /> Asosiy panel
-				</h1>
-				<p className="text-gray-400">
-					Xush kelibsiz,{" "}
-					<span className="text-primary font-medium">{user?.username}</span>
-				</p>
+		<div className="relative min-h-screen bg-background p-4">
+			{/* Simplified background */}
+			<div className="fixed inset-0 -z-10">
+				<div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl animate-pulse" />
+				<div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
 			</div>
 
-			{/* Statistika Kartochkalari */}
-			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-				{user?.role === "CEO" ? (
-					<>
-						<NavLink to={`/${tenant}/payments`}>
-							<StatsCards
-								data={monthlyIncome?.[0]?.total_income || 0}
-								type="Oylik Tushum"
-							/>
+			<div className="container mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4">
+				{/* Stats */}
+				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+					{roleStats.map((s, i) => (
+						<NavLink to={s.href || "#"} key={i} className="block">
+							<StatsCards {...s} />
 						</NavLink>
-						<NavLink to={`/${tenant}/payments/debtors`}>
-							<StatsCards data={topDebtors?.length || 0} type="Qarzdorlar" />
-						</NavLink>
-						<NavLink to={`/${tenant}/students`}>
-							<StatsCards
-								data={students?.length || 0}
-								type="O'quvchilar"
-							/>
-						</NavLink>
-						<NavLink to={`/${tenant}/groups`}>
-							<StatsCards data={groups?.length || 0} type="Guruhlar" />
-						</NavLink>
-					</>
-
-				) : user?.role === "ADMIN" ? (
-					<>
-						<NavLink to={`/${tenant}/leads`}>
-							<StatsCards data={leads?.length || 0} type="Lidlar" />
-						</NavLink>
-						<NavLink to={`/${tenant}/students`}>
-							<StatsCards data={students?.length || 0} type="O'quvchilar" />
-						</NavLink>
-						<NavLink to={`/${tenant}/groups`}>
-							<StatsCards data={groups?.length || 0} type="Guruhlar" />
-						</NavLink>
-						<StatsCards
-							data={absentStudents?.length || 0}
-							type="Bugun kelmaganlar"
-						/>
-					</>
-				) : user?.role === "MANAGER" ? (
-					<>
-						<NavLink to={`/${tenant}/leads`}>
-							<StatsCards data={leads?.length || 0} type="Lidlar" />
-						</NavLink>
-						<NavLink to={`/${tenant}/students`}>
-							<StatsCards data={students?.length || 0} type="O'quvchilar" />
-						</NavLink>
-						<StatsCards
-							data={
-								students?.filter((s) => s.registered_at?.startsWith(
-									new Date().toISOString().slice(0, 7)
-								)).length || 0
-							}
-							type="Yangi o'quvchilar"
-						/>
-						<StatsCards
-							data={absentStudents?.length || 0}
-							type="Bugun kelmaganlar"
-						/>
-					</>
-				) : <>
-				<span>not available</span>
-				
-				</>}
-			</div>
-
-			{/* Jadvallar qismi */}
-			<div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-				{/* 1. Bugungi darslar jadvali */}
-				<div className="bg-[#1f1f1f] p-6 rounded-lg border border-[#ffffff1a]">
-					<h2 className="text-lg font-bold mb-5 flex items-center gap-2 text-[#fcd34d]">
-						<FaClock /> Bugungi darslar
-					</h2>
-					<div className="overflow-x-auto">
-						<Table>
-							<TableHeader>
-								<TableRow className="hover:bg-transparent border-[#ffffff1a]">
-									<TableHead className="text-gray-400">Guruh / Kurs</TableHead>
-									<TableHead className="text-gray-400">O'qituvchi</TableHead>
-									<TableHead className="text-gray-400 text-right">
-										Vaqt
-									</TableHead>
-								</TableRow>
-							</TableHeader>
-							<TableBody>
-								{!todayLessons?.length ? (
-									<TableRow>
-										<TableCell
-											colSpan={3}
-											className="text-center py-8 text-gray-500"
-										>
-											Bugun darslar yo'q
-										</TableCell>
-									</TableRow>
-								) : (
-									todayLessons.map((lesson) => (
-										<TableRow
-											key={lesson.id}
-											onClick={() => handleRowClick(lesson.id)}
-											className="cursor-pointer border-[#ffffff1a] hover:bg-white/5"
-										>
-											<TableCell>
-												<div className="font-medium text-white">
-													{lesson.group_name}
-												</div>
-												<div className="text-xs text-gray-500 italic">
-													{lesson.course_type}
-												</div>
-											</TableCell>
-											<TableCell className="text-gray-300">
-												{lesson.teacher_name}
-											</TableCell>
-											<TableCell className="text-right text-[#fcd34d] font-mono">
-												{lesson.lesson_time}
-											</TableCell>
-										</TableRow>
-									))
-								)}
-							</TableBody>
-						</Table>
-					</div>
+					))}
 				</div>
 
-				{/* 2. Bugun kelmaganlar jadvali */}
-				<div className="bg-[#1f1f1f] p-6 rounded-lg border border-[#ffffff1a]">
-					<h2 className="text-lg font-bold mb-5 flex items-center gap-2 text-red-400">
-						<FaUsers /> Bugun kelmagan o'quvchilar
-					</h2>
-					<div className="overflow-x-auto text-white">
-						<Table>
-							<TableHeader>
-								<TableRow className="hover:bg-transparent border-[#ffffff1a]">
-									<TableHead className="text-gray-400">O'quvchi</TableHead>
-									<TableHead className="text-gray-400">Guruh</TableHead>
-									<TableHead className="text-gray-400 text-right">
-										Telefon
-									</TableHead>
-								</TableRow>
-							</TableHeader>
-							<TableBody>
-								{!absentStudents?.length ? (
-									<TableRow>
-										<TableCell
-											colSpan={3}
-											className="text-center py-8 text-green-500 font-medium"
-										>
-											Hamma o'quvchilar kelgan! 🎉
-										</TableCell>
-									</TableRow>
-								) : (
-									absentStudents.map((student) => (
-										<TableRow
-											key={student.student_id}
-											onClick={() => handleRowClick(student.group_id)}
-											className="cursor-pointer border-[#ffffff1a] hover:bg-white/5"
-										>
-											<TableCell className="font-medium">
-												{student.full_name}
-											</TableCell>
-											<TableCell className="text-gray-400 text-sm">
-												{student.group_name}
-											</TableCell>
-											<TableCell className="text-right">
-												<button
-													onClick={(e) => {
-														e.stopPropagation();
-														navigator.clipboard.writeText(student.phone);
-														toast.success("Raqam muvaffaqiyatli ko'chirildi!")
-													}}
-													className="underline decoration-dotted hover:text-primary cursor-pointer"
-												>
-													{PhoneUtils.formatPhone(student.phone)}
-												</button>
-											</TableCell>
+				{/* Tables Grid */}
+				<div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+					{/* Today's Lessons */}
+					<Card className="bg-[#1f1f1f]/80 border-white/10 backdrop-blur-xl">
+						<CardHeader className="pb-4">
+							<div className="flex items-center justify-between">
+								<div className="flex items-center gap-3">
+									<div className="p-2 rounded-lg bg-amber-400/10 border border-amber-400/20">
+										<Clock className="text-amber-400 w-5 h-5" />
+									</div>
+									<div>
+										<CardTitle className="text-white text-lg">
+											Bugungi darslar
+										</CardTitle>
+										<CardDescription className="text-gray-500">
+											{time.toLocaleDateString("uz-UZ", {
+												weekday: "long",
+												day: "numeric",
+												month: "long",
+											})}
+										</CardDescription>
+									</div>
+								</div>
+								<Badge variant="outline" className={colors.amber}>
+									{todayLessons?.length || 0} dars
+								</Badge>
+							</div>
+						</CardHeader>
+						<CardContent>
+							{!todayLessons?.length ? (
+								<div className="text-center py-12 text-gray-500">
+									<Calendar className="w-12 h-12 mx-auto mb-4" />
+									<p className="font-semibold text-white">Bugun darslar yo'q</p>
+									<p className="text-sm">
+										Dam oling yoki rejalashtirish bo'limiga o'ting
+									</p>
+								</div>
+							) : (
+								<Table>
+									<TableHeader>
+										<TableRow className="bg-black/40 border-white/10">
+											<TableHead className="text-gray-400">Guruh</TableHead>
+											<TableHead className="text-gray-400">
+												O'qituvchi
+											</TableHead>
+											<TableHead className="text-gray-400 text-right">
+												Vaqt
+											</TableHead>
 										</TableRow>
-									))
+									</TableHeader>
+									<TableBody>
+										{todayLessons.map((l) => (
+											<TableRow
+												key={l.id}
+												onClick={() => navigate(`/${tenant}/groups/${l.id}`)}
+												className="border-white/5 hover:bg-amber-400/5 cursor-pointer group/row"
+											>
+												<TableCell>
+													<p className="font-medium text-white truncate max-w-32">
+														{l.group_name}
+													</p>
+													<p className="text-xs text-gray-500 italic">
+														{l.course_type}
+													</p>
+												</TableCell>
+												<TableCell className="text-gray-300 text-sm">
+													<div className="flex items-center gap-2">
+														<Avatar className="w-6 h-6 border border-white/10">
+															<AvatarFallback className="text-xs bg-amber-400/20 text-amber-400">
+																{initials(l.teacher_name)}
+															</AvatarFallback>
+														</Avatar>
+														<span className="truncate max-w-24">
+															{l.teacher_name}
+														</span>
+													</div>
+												</TableCell>
+												<TableCell className="text-right">
+													<Badge
+														variant="outline"
+														className={`${colors.amber} font-mono text-xs`}
+													>
+														{l.lesson_time}
+													</Badge>
+												</TableCell>
+											</TableRow>
+										))}
+									</TableBody>
+								</Table>
+							)}
+						</CardContent>
+					</Card>
+
+					{/* Absent Students */}
+					<Card className="bg-[#1f1f1f]/80 border-white/10 backdrop-blur-xl">
+						<CardHeader className="pb-4">
+							<div className="flex items-center justify-between">
+								<div className="flex items-center gap-3">
+									<div
+										className={`p-2 rounded-lg border ${absentStudents?.length ? "bg-red-400/10 border-red-400/20" : "bg-emerald-400/10 border-emerald-400/20"}`}
+									>
+										{absentStudents?.length ? (
+											<AlertCircle className="text-red-400 w-5 h-5" />
+										) : (
+											<Check className="text-emerald-400 w-5 h-5" />
+										)}
+									</div>
+									<div>
+										<CardTitle className="text-white text-lg">
+											{absentStudents?.length
+												? "Bugun kelmaganlar"
+												: "Davomat a'lo!"}
+										</CardTitle>
+										<CardDescription className="text-gray-500">
+											{absentStudents?.length
+												? `${absentStudents.length} o'quvchi darsga kelmadi`
+												: "Barcha o'quvchilar bugun darsda ✓"}
+										</CardDescription>
+									</div>
+								</div>
+								{absentStudents?.length > 0 && (
+									<Badge
+										variant="outline"
+										className="border-red-400/30 text-red-400 bg-red-400/10 animate-pulse"
+									>
+										{absentStudents.length}
+									</Badge>
 								)}
-							</TableBody>
-						</Table>
-					</div>
+							</div>
+						</CardHeader>
+						<CardContent>
+							{!absentStudents?.length ? (
+								<div className="text-center py-12 text-gray-500">
+									<Check className="w-12 h-12 mx-auto mb-4 text-emerald-400" />
+									<p className="font-semibold text-white">Hamma darsda! 🎉</p>
+									<p className="text-sm">A'lo natija! Davomat 100%</p>
+								</div>
+							) : (
+								<Table>
+									<TableHeader>
+										<TableRow className="bg-black/40 border-white/10">
+											<TableHead className="text-gray-400">O'quvchi</TableHead>
+											<TableHead className="text-gray-400">Guruh</TableHead>
+											<TableHead className="text-gray-400 text-right">
+												Aloqa
+											</TableHead>
+										</TableRow>
+									</TableHeader>
+									<TableBody>
+										{absentStudents.map((s) => (
+											<TableRow
+												key={s.student_id}
+												onClick={() =>
+													navigate(`/${tenant}/groups/${s.group_id}`)
+												}
+												className="border-white/5 hover:bg-red-400/5 cursor-pointer group/row"
+											>
+												<TableCell className="font-medium text-white">
+													<div className="flex items-center gap-3">
+														<Avatar className="w-8 h-8 border border-white/10 bg-red-400/20">
+															<AvatarFallback className="text-red-400 text-xs">
+																{initials(s.full_name)}
+															</AvatarFallback>
+														</Avatar>
+														<span className="truncate max-w-28">
+															{s.full_name}
+														</span>
+													</div>
+												</TableCell>
+												<TableCell className="text-gray-400 text-sm">
+													<Badge
+														variant="outline"
+														className="border-white/20 text-gray-300 text-xs"
+													>
+														{s.group_name}
+													</Badge>
+												</TableCell>
+												<TableCell className="text-right">
+													<Tooltip>
+														<TooltipTrigger asChild>
+															<button
+																onClick={(e) => {
+																	e.stopPropagation();
+																	copyPhone(s.phone);
+																}}
+																className="flex items-center justify-end gap-1.5 text-gray-300 hover:text-amber-400"
+															>
+																<span className="truncate max-w-20 font-mono text-sm">
+																	{PhoneUtils.formatPhone(s.phone)}
+																</span>
+																{copiedPhone === s.phone ? (
+																	<Check className="w-4 h-4 text-emerald-400" />
+																) : (
+																	<Phone className="w-4 h-4" />
+																)}
+															</button>
+														</TooltipTrigger>
+														<TooltipContent className="bg-[#1f1f1f] border-white/10 text-white">
+															<p>Nusxa olish</p>
+														</TooltipContent>
+													</Tooltip>
+												</TableCell>
+											</TableRow>
+										))}
+									</TableBody>
+								</Table>
+							)}
+						</CardContent>
+					</Card>
 				</div>
 			</div>
 		</div>

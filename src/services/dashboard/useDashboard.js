@@ -12,12 +12,16 @@ export const useDashboard = (
 		queryKey: ["dashboard"],
 		queryFn: () => dashboardService.get(from, to, month),
 	});
+console.log(data?.studentAndGroupData);
 
    return {
 		monthlyIncome: data?.monthlyIncome,
 		topDebtors: data?.topDebtors,
 		todayLessons: data?.todayLessons,
-		absentStudents: data?.absentStudents,
+      absentStudents: data?.absentStudents,
+      debtAnalysis:data?.debtAnalysis,
+      studentData:data?.studentAndGroupData?.students,
+      groupData:data?.studentAndGroupData?.groups,
 		error,
 		isLoading,
 	};

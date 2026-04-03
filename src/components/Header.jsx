@@ -3,7 +3,7 @@ import { FaSearch, FaTimes } from "react-icons/fa";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { useStudent } from "../services/student/useStudent";
 import { useGroups } from "../services/group/useGroups";
-import { useTeachers } from "../services/teacher/useTeachers";
+import { useWorker } from "@/services/worker/useWorker";
 import { useLeads } from "../services/lead/useLeads";
 import { useAuth } from "../context/authContext";
 import { SidebarTrigger } from "./ui/sidebar";
@@ -21,7 +21,7 @@ export default function Header() {
 	// Ma'lumotlarni olish
 	const { students = [] } = useStudent();
 	const { groups = [] } = useGroups();
-	const { teachers = [] } = useTeachers();
+	const { workerData = [] } = useWorker();
 	const { leads = [] } = useLeads();
 
 	// Click outside - qidiruv oynasini yopish
@@ -38,7 +38,7 @@ export default function Header() {
 	// Qidiruv mantiqi (Optimallashgan)
 	const searchResults = useMemo(() => {
 		const query = searchTerm.toLowerCase().trim();
-		if (!query) return { students: [], groups: [], teachers: [], leads: [] };
+		if (!query) return { students: [], groups: [], workerData: [], leads: [] };
 
 		return {
 			students: students
@@ -47,14 +47,14 @@ export default function Header() {
 			groups: groups
 				.filter((g) => g.name?.toLowerCase().includes(query))
 				.slice(0, 5),
-			teachers: teachers
+			workerData: workerData
 				.filter((t) => t.full_name?.toLowerCase().includes(query))
 				.slice(0, 5),
 			leads: leads
 				.filter((l) => l.full_name?.toLowerCase().includes(query))
 				.slice(0, 5),
 		};
-	}, [searchTerm, students, groups, teachers, leads]);
+	}, [searchTerm, students, groups, workerData, leads]);
 
 	const totalResults = Object.values(searchResults).flat().length;
 
@@ -70,8 +70,8 @@ export default function Header() {
 				<SidebarTrigger className="hover:bg-accent p-2 rounded-md transition-colors" />
 				<div className="flex items-center gap-2">
 					<img src="/logo.jpg" alt="Logo" className="w-8 h-8 rounded-md" />
-					<span className="hidden md:block font-bold text-lg tracking-tight">
-						DataSpace CRM
+					<span className="hidden md:block font-bold text-lg tracking-tight capitalize">
+						{tenant} CRM
 					</span>
 				</div>
 			</div>
@@ -131,8 +131,8 @@ export default function Header() {
 								onClick={(item) => handleNavigate(`/groups/${item.id}`)}
 							/>
 							<ResultSection
-								title="O'qituvchilar"
-								items={searchResults.teachers}
+								title="Xodimlar"
+								items={searchResults.workerData}
 								icon="👨‍🏫"
 								onClick={(item) => handleNavigate(`/workers/${item.id}`)}
 							/>
@@ -162,7 +162,7 @@ function ResultSection({ title, items, icon, onClick }) {
 	if (items.length === 0) return null;
 	return (
 		<div className="p-2 border-b border-border last:border-none">
-			<div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+			<div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-primary">
 				{title}
 			</div>
 			{items.map((item) => (
@@ -172,9 +172,19 @@ function ResultSection({ title, items, icon, onClick }) {
 					className="flex w-full items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors hover:bg-accent hover:text-accent-foreground text-left"
 				>
 					<span className="text-lg">{icon}</span>
-					<span className="truncate font-medium">
-						{item.full_name || item.name}
-					</span>
+					<div className="max-w-full w-full flex gap-2 justify-between ">
+						<span className="truncate font-medium capitalize">
+							{item.full_name || item.name}
+						</span>
+
+						<span className="truncate font-bold text-primary">
+							{item.position ||
+								item.course_type || (
+									<span className="text-green-700">{item.groups.name}</span>
+								) ||
+								null}
+						</span>
+					</div>
 				</button>
 			))}
 		</div>

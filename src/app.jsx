@@ -7,15 +7,16 @@ import GroupInfo from "./pages/GroupInfo";
 import Students from "./pages/Students";
 import StudentDetail from "./pages/StudentDetail";
 import TeacherDetail from "./pages/WorkerDetail";
-import Payments from "./pages/Payments";
+import Payments from "./pages/Payment/Payments";
 import Login from "./pages/Login";
 import Superadmin from "./pages/Superadmin";
 import Leads from "./pages/Leads";
-import Archive from "./pages/Archive";
+import Archive from "./pages/Archive/Archive";
 import Settings from "./pages/Settings";
 import Workers from "./pages/Workers";
 import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
+import NotAuthorized from "./pages/NotAuthorized";
 
 export default function App() {
 	const { tenant } = useParams();
@@ -33,7 +34,14 @@ export default function App() {
 					)
 				}
 			/>
-			<Route path="/:tenant" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
+			<Route
+				path="/:tenant"
+				element={
+					<ProtectedRoute>
+						<Layout />
+					</ProtectedRoute>
+				}
+			>
 				<Route path="dashboard" element={<Dashboard />} />
 				<Route path="leads" element={<Leads />} />
 				<Route path="archive/:category" element={<Archive />} />
@@ -47,6 +55,7 @@ export default function App() {
 				<Route path="payments/:category" element={<Payments />} />
 				<Route path="workers" element={<Workers />} />
 				<Route path="profile" element={<Profile />} />
+				<Route path="notauthorized" element={<NotAuthorized />} />
 			</Route>
 		</Routes>
 	);

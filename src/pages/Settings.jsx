@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useCourse } from "../services/course/useCourse";
 import { useRoom } from "../services/room/useRoom";
 import Loader from "../components/Loader";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 // Shadcn UI
 import {
@@ -20,6 +21,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogFooter,
+	DialogDescription,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -31,6 +33,16 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+	Card,
+	CardContent,
+	CardHeader,
+	CardTitle,
+	CardDescription,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Separator } from "@/components/ui/separator";
 
 // Ikonkalar
 import {
@@ -44,13 +56,89 @@ import {
 	Wallet,
 	Layers,
 	Settings as SettingsIcon,
-   Clock,
-   CalendarRange,
-   UsersRound,
+	Clock,
+	CalendarRange,
+	UsersRound,
+	Copy,
+	Check,
+	ExternalLink,
+	Sparkles,
+	TrendingUp,
+	Filter,
+	MoreHorizontal,
+	Save,
+	X,
 } from "lucide-react";
 import { FaEllipsisV } from "react-icons/fa";
 import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
-import { id } from "date-fns/locale";
+import { getUzDays } from "@/utils/weekday";
+
+// 🎨 Animated Background Component
+const AnimatedBackground = () => (
+	<div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+		<div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl animate-pulse" />
+		<div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
+		<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-br from-amber-500/5 via-transparent to-purple-500/5 rounded-full blur-3xl" />
+	</div>
+);
+
+// 🎨 Stats Card Component
+
+const StatsCard = ({ icon, label, value, trend, color }) => {
+	const colors = {
+		amber:
+			"from-amber-500/20 to-orange-500/20 border-amber-500/30 text-amber-400",
+		blue: "from-sky-500/20 to-blue-500/20 border-sky-500/30 text-sky-400",
+		emerald:
+			"from-emerald-500/20 to-teal-500/20 border-emerald-500/30 text-emerald-400",
+		purple:
+			"from-violet-500/20 to-fuchsia-500/20 border-violet-500/30 text-violet-400",
+	};
+
+	return (
+		<Card
+			className={`bg-gradient-to-br ${colors[color]} border backdrop-blur-xl group hover:scale-[1.02] transition-all duration-300`}
+		>
+			<CardContent className="p-4 flex items-center gap-4">
+				<div
+					className={`p-3 rounded-xl bg-white/10 border border-white/20 ${colors[color].split(" ").pop()}`}
+				>
+					{icon}
+				</div>
+				<div>
+					<p className="text-xs text-gray-400 uppercase tracking-wider">
+						{label}
+					</p>
+					<p className="text-2xl font-bold text-white">{value}</p>
+					{trend && (
+						<p
+							className={`text-xs flex items-center gap-1 ${trend > 0 ? "text-emerald-400" : "text-red-400"}`}
+						>
+							<TrendingUp
+								className={`w-3 h-3 ${trend < 0 ? "rotate-180" : ""}`}
+							/>
+							{Math.abs(trend)}%
+						</p>
+					)}
+				</div>
+			</CardContent>
+		</Card>
+	);
+};
+
+// 🎨 Day Pill Component
+const DayPill = ({ day, isToday = false }) => (
+	<span
+		className={`px-2.5 py-1 rounded-full text-[10px] font-semibold transition-all duration-200
+			${
+				isToday
+					? "bg-gradient-to-r from-amber-400 to-orange-400 text-black shadow-lg shadow-amber-500/25"
+					: "bg-white/10 text-amber-300 border border-amber-400/30 hover:bg-amber-400/20"
+			}`}
+	>
+		{day}
+	</span>
+);
 
 export default function Settings() {
 	const { courseData, isLoading, createCourse, updateCourse, removeCourse } =
@@ -63,363 +151,594 @@ export default function Settings() {
 		removeRoom,
 	} = useRoom();
 	const navigate = useNavigate();
+
 	// Modallar uchun holat
 	const [courseModal, setCourseModal] = useState({ open: false, data: null });
 	const [roomModal, setRoomModal] = useState({ open: false, data: null });
 	const [deleteId, setDeleteId] = useState({ id: null, type: null });
+	const [copiedId, setCopiedId] = useState(null);
+	const [activeTab, setActiveTab] = useState("courses");
+
+	// 📊 Stats calculations
+	const stats = useMemo(() => {
+		return {
+			courses: courseData?.length || 0,
+			rooms: roomData?.length || 0,
+			occupiedRooms: roomData?.filter((r) => r.group_name).length || 0,
+			totalCapacity:
+				roomData?.reduce((acc, r) => acc + (Number(r.capacity) || 0), 0) || 0,
+		};
+	}, [courseData, roomData]);
+
 	if (isLoading || roomLoading) return <Loader />;
 
-   const handleConfirmDelete = () => {
-      if (deleteId.type === "course") {
-         removeCourse(deleteId.id);
-         setDeleteId({ id: null, type: null });
-      } else if (deleteId.type === "room") {
-         removeRoom(deleteId.id);
-         setDeleteId({ id: null, type: null });
-      }
-   }
-		// --- Kurslar bilan ishlash ---
-		const handleCourseSubmit = (e) => {
-			e.preventDefault();
-			const formData = new FormData(e.target);
-			const data = Object.fromEntries(formData);
+	const handleConfirmDelete = () => {
+		if (deleteId.type === "course") {
+			removeCourse(deleteId.id);
+			toast.success("Kurs muvaffaqiyatli o'chirildi");
+		} else if (deleteId.type === "room") {
+			removeRoom(deleteId.id);
+			toast.success("Xona muvaffaqiyatli o'chirildi");
+		}
+		setDeleteId({ id: null, type: null });
+	};
 
-			if (courseModal.data) {
-				updateCourse({ id: courseModal.data.id, data });
-			} else {
-				createCourse(data);
-			}
-			setCourseModal({ open: false, data: null });
+	const handleCourseSubmit = (e) => {
+		e.preventDefault();
+		const formData = new FormData(e.target);
+		const data = Object.fromEntries(formData);
+
+		if (courseModal.data) {
+			updateCourse({ id: courseModal.data.id, data });
+			toast.success("Kurs muvaffaqiyatli yangilandi!");
+		} else {
+			createCourse(data);
+			toast.success("Yangi kurs qo'shildi!");
+		}
+		setCourseModal({ open: false, data: null });
+	};
+
+	const handleRoomSubmit = (e) => {
+		e.preventDefault();
+		const formData = new FormData(e.target);
+		const data = {
+			name: formData.get("name"),
+			capacity: formData.get("capacity"),
 		};
 
-		// --- Xonalar bilan ishlash ---
-		const handleRoomSubmit = (e) => {
-			e.preventDefault();
-			const formData = new FormData(e.target);
-			const data = {
-				name: formData.get("name"),
-				capacity: formData.get("capacity"),
-			};
+		if (roomModal.data) {
+			updateRoom({ id: roomModal.data.room_id, data });
+			toast.success("Xona muvaffaqiyatli yangilandi!");
+		} else {
+			createRoom(data);
+			toast.success("Yangi xona qo'shildi!");
+		}
+		setRoomModal({ open: false, data: null });
+	};
 
-			if (roomModal.data) {
-				updateRoom({ id: roomModal.data.room_id, data });
-			} else {
-				createRoom(data);
-			}
-			setRoomModal({ open: false, data: null });
-		};
+	const handleCopyId = async (id, type) => {
+		await navigator.clipboard.writeText(String(id));
+		setCopiedId(`${type}-${id}`);
+		toast.success("ID nusxalandi!");
+		setTimeout(() => setCopiedId(null), 2000);
+	};
 
-		return (
-			<div className="space-y-6 bg-background min-h-screen animate-in fade-in duration-500">
-				<div className="flex items-center justify-between">
-					<div className="fex items-center gap-4">
-						<Button onClick={() => navigate(-1)} className="btn-default">
-							<ArrowLeft className="h-4 w-4" /> Ortga qaytish
+	// 🎨 Avatar initials
+	const getInitials = (name) => {
+		if (!name) return "?";
+		const parts = name.split(" ");
+		return (parts[0]?.[0] + (parts[1]?.[0] || "")).toUpperCase();
+	};
+
+	return (
+		<div className="relative min-h-screen bg-background">
+			<AnimatedBackground />
+
+			<div className="container mx-auto px-4 py-6 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+				{/* 🧭 Header Section */}
+				<div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/10">
+					<div className="flex items-center gap-4">
+						<Button
+							onClick={() => navigate(-1)}
+							variant="ghost"
+							className="group text-gray-400 hover:text-white hover:bg-white/10 transition-all"
+						>
+							<ArrowLeft className="group-hover:-translate-x-1 transition-transform h-4 w-4" />
+							<span className="ml-2 hidden sm:inline">Ortga</span>
 						</Button>
-						<h2 className="text-3xl font-bold tracking-tight flex items-center gap-3 mt-3">
-							<SettingsIcon className="h-8 w-8 text-primary" /> Sozlamalar
-						</h2>
+						<div>
+							<h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-amber-400 via-orange-400 to-amber-400 bg-clip-text text-transparent">
+								Sozlamalar
+							</h1>
+							<p className="text-sm text-gray-500 mt-1">
+								Kurslar va xonalarni boshqaring
+							</p>
+						</div>
 					</div>
 				</div>
 
-				<Tabs defaultValue="courses" className="w-full">
-					<TabsList className="grid w-full max-w-100 grid-cols-2 bg-card!">
-						<TabsTrigger value="courses" className="gap-2">
+				{/* 📊 Stats Cards */}
+				<div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+					<StatsCard
+						icon={<BookOpen className="w-5 h-5" />}
+						label="Jami kurslar"
+						value={stats.courses}
+						color="amber"
+					/>
+					<StatsCard
+						icon={<DoorOpen className="w-5 h-5" />}
+						label="Jami xonalar"
+						value={stats.rooms}
+						color="blue"
+					/>
+					<StatsCard
+						icon={<UsersRound className="w-5 h-5" />}
+						// <tool_response>="Band xonalar"
+						value={stats.occupiedRooms}
+						trend={
+							stats.rooms > 0
+								? Math.round((stats.occupiedRooms / stats.rooms) * 100)
+								: 0
+						}
+						color="emerald"
+					/>
+					<StatsCard
+						icon={<Users className="w-5 h-5" />}
+						label="Jami sig'im"
+						value={stats.totalCapacity}
+						color="purple"
+					/>
+				</div>
+
+				{/* 📋 Main Tabs */}
+				<Tabs
+					value={activeTab}
+					onValueChange={setActiveTab}
+					className="space-y-6"
+				>
+					<TabsList className="bg-[#1f1f1f]/80 border border-white/10 p-1 backdrop-blur-xl w-full max-w-md mx-auto lg:mx-0">
+						<TabsTrigger
+							value="courses"
+							className="data-[state=active]:bg-amber-400 data-[state=active]:text-black gap-2"
+						>
 							<BookOpen className="h-4 w-4" /> Kurslar
 						</TabsTrigger>
-						<TabsTrigger value="rooms" className="gap-2">
+						<TabsTrigger
+							value="rooms"
+							className="data-[state=active]:bg-amber-400 data-[state=active]:text-black gap-2"
+						>
 							<DoorOpen className="h-4 w-4" /> Xonalar
 						</TabsTrigger>
 					</TabsList>
 
 					{/* --- KURSLAR PANEL --- */}
-					<TabsContent value="courses" className="pt-4 space-y-4">
-						<div className="flex justify-between items-center">
-							<h3 className="text-lg font-medium">Barcha kurslar</h3>
-							<Button
-								onClick={() => setCourseModal({ open: true, data: null })}
-								className="gap-2 btn-default"
-							>
-								<Plus className="h-4 w-4" /> Kurs qo'shish
-							</Button>
-						</div>
-
-						<div className="rounded-md border shadow-sm overflow-hidden">
-							<Table>
-								<TableHeader className="bg-primary">
-									<TableRow className="hover:bg-primary/95 transition-colors">
-										<TableHead className="text-black font-bold whitespace-nowrap">
-											<div className="flex items-center gap-2">
-												<BookOpen className="h-4 w-4" /> Kurs nomi
-											</div>
-										</TableHead>
-
-										<TableHead className="text-black font-bold whitespace-nowrap">
-											<div className="flex items-center gap-2">
-												<Wallet className="h-4 w-4" /> Narxi (so'm)
-											</div>
-										</TableHead>
-
-										<TableHead className="text-black font-bold whitespace-nowrap">
-											<div className="flex items-center gap-2">
-												<Layers className="h-4 w-4" /> Darslar soni
-											</div>
-										</TableHead>
-
-										<TableHead></TableHead>
-									</TableRow>
-								</TableHeader>
-								<TableBody>
-									{courseData.length === 0 ? (
-										<TableRow>
-											<TableCell
-												colSpan={6}
-												className="text-center py-10 text-gray-500"
-											>
-												Kurslar topilmadi.
-											</TableCell>
-										</TableRow>
-									) : (
-										courseData.map((course) => (
-											<TableRow key={course.id} className={"bg-card"}>
-												<TableCell className="font-medium">
-													{course.name}
-												</TableCell>
-												<TableCell>
-													{Number(course.price).toLocaleString()}
-												</TableCell>
-												<TableCell>{course.lesson_count} ta</TableCell>
-												<TableCell className={"flex justify-end"}>
-													<DropdownMenu>
-														<DropdownMenuTrigger asChild>
-															<Button
-																variant="ghost"
-																size="icon"
-																className="h-8 w-8 hover:bg-gray-700 text-white"
+					<TabsContent value="courses" className="space-y-4">
+						<Card className="bg-[#1f1f1f]/80 border-white/10 backdrop-blur-xl">
+							<CardHeader className="pb-4">
+								<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+									<div>
+										<CardTitle className="text-white flex items-center gap-2">
+											<BookOpen className="text-amber-400" />
+											Barcha kurslar
+										</CardTitle>
+										<CardDescription>
+											O'quv kurslari ro'yxati va narxlari
+										</CardDescription>
+									</div>
+									<Button
+										onClick={() => setCourseModal({ open: true, data: null })}
+										className="bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black shadow-lg shadow-amber-500/25 gap-2"
+									>
+										<Plus className="h-4 w-4" /> Kurs qo'shish
+									</Button>
+								</div>
+							</CardHeader>
+							<CardContent>
+								{courseData.length === 0 ? (
+									<EmptyState
+										type="course"
+										onAddNew={() => setCourseModal({ open: true, data: null })}
+									/>
+								) : (
+									<div className="rounded-lg border border-white/10 overflow-hidden">
+										<Table>
+											<TableHeader>
+												<TableRow className="bg-black/40 border-white/10 hover:bg-transparent">
+													<TableHead className="text-gray-400 w-12"></TableHead>
+													<TableHead className="text-gray-400">
+														<div className="flex items-center gap-2">
+															<BookOpen className="h-4 w-4" /> Kurs nomi
+														</div>
+													</TableHead>
+													<TableHead className="text-gray-400">
+														<div className="flex items-center gap-2">
+															<Wallet className="h-4 w-4" /> Narxi
+														</div>
+													</TableHead>
+													<TableHead className="text-gray-400">
+														<div className="flex items-center gap-2">
+															<Layers className="h-4 w-4" /> Darslar
+														</div>
+													</TableHead>
+													<TableHead className="text-gray-400 text-right w-20">
+														Amallar
+													</TableHead>
+												</TableRow>
+											</TableHeader>
+											<TableBody>
+												{courseData.map((course) => (
+													<TableRow
+														key={course.id}
+														className="border-white/5 hover:bg-amber-400/5 transition-all duration-200 group/row"
+													>
+														<TableCell className="py-4">
+															<Avatar className="w-10 h-10 border border-white/10 bg-gradient-to-br from-amber-400/20 to-orange-400/20">
+																<AvatarFallback className="text-amber-400 text-sm font-semibold bg-transparent">
+																	{getInitials(course.name)}
+																</AvatarFallback>
+															</Avatar>
+														</TableCell>
+														<TableCell className="font-medium text-white">
+															<div>
+																<p className="truncate max-w-40">
+																	{course.name}
+																</p>
+																<button
+																	onClick={(e) => {
+																		e.stopPropagation();
+																		handleCopyId(course.id, "course");
+																	}}
+																	className="flex items-center gap-1 text-[10px] text-gray-500 hover:text-amber-400 transition-colors mt-1"
+																>
+																	{copiedId === `course-${course.id}` ? (
+																		<Check className="w-3 h-3" />
+																	) : (
+																		<span className="font-mono">
+																			#{String(course.id).slice(-4)}
+																		</span>
+																	)}
+																</button>
+															</div>
+														</TableCell>
+														<TableCell className="font-semibold text-amber-400">
+															{Number(course.price).toLocaleString()} so'm
+														</TableCell>
+														<TableCell className="text-gray-300">
+															<Badge
+																variant="outline"
+																className="border-amber-400/30 text-amber-400 bg-amber-400/10"
 															>
-																<FaEllipsisV />
-															</Button>
-														</DropdownMenuTrigger>
-														<DropdownMenuContent
-															align="end"
-															className="w-32 bg-card border-gray-700 text-white"
-														>
-															<DropdownMenuItem
-																className="cursor-pointer hover:bg-gray-800 focus:bg-gray-800 focus:text-white"
-																onClick={() =>
-																	setCourseModal({ open: true, data: course })
-																}
-															>
-																<Edit2 className="mr-2 text-blue-400" />{" "}
-																Tahrirlash
-															</DropdownMenuItem>
-															<DropdownMenuSeparator />
-															<DropdownMenuItem
-																className="cursor-pointer text-red-500 hover:bg-gray-800 focus:bg-gray-800 "
-																onClick={() =>
-																	setDeleteId({ id: course.id, type: "course" })
-																}
-															>
-																<Trash2 className="mr-2 text-red-500" />{" "}
-																O'chirish
-															</DropdownMenuItem>
-														</DropdownMenuContent>
-													</DropdownMenu>
-												</TableCell>
-											</TableRow>
-										))
-									)}
-								</TableBody>
-							</Table>
-						</div>
+																{course.lesson_count} ta
+															</Badge>
+														</TableCell>
+														<TableCell className="text-right">
+															<DropdownMenu>
+																<DropdownMenuTrigger asChild>
+																	<Button
+																		variant="ghost"
+																		size="icon"
+																		className="h-8 w-8 text-gray-500 hover:text-amber-400 hover:bg-amber-400/10 transition-colors opacity-0 group-hover/row:opacity-100"
+																	>
+																		<MoreHorizontal className="h-4 w-4" />
+																	</Button>
+																</DropdownMenuTrigger>
+																<DropdownMenuContent
+																	align="end"
+																	className="bg-[#1f1f1f] border-white/10 text-white w-48"
+																>
+																	<DropdownMenuItem
+																		onClick={() =>
+																			setCourseModal({
+																				open: true,
+																				data: course,
+																			})
+																		}
+																		className="cursor-pointer hover:bg-amber-400/10 focus:bg-amber-400/10"
+																	>
+																		<Edit2 className="mr-2 h-4 w-4 text-blue-400" />{" "}
+																		Tahrirlash
+																	</DropdownMenuItem>
+																	<DropdownMenuItem
+																		onClick={() =>
+																			navigate(`/courses/${course.id}`)
+																		}
+																		className="cursor-pointer hover:bg-amber-400/10 focus:bg-amber-400/10"
+																	>
+																		<ExternalLink className="mr-2 h-4 w-4 text-purple-400" />{" "}
+																		Batafsil
+																	</DropdownMenuItem>
+																	<DropdownMenuSeparator className="bg-white/10" />
+																	<DropdownMenuItem
+																		onClick={() =>
+																			setDeleteId({
+																				id: course.id,
+																				type: "course",
+																			})
+																		}
+																		className="cursor-pointer text-red-400 hover:text-red-300 hover:bg-red-400/10 focus:text-red-300 focus:bg-red-400/10"
+																	>
+																		<Trash2 className="mr-2 h-4 w-4" />{" "}
+																		O'chirish
+																	</DropdownMenuItem>
+																</DropdownMenuContent>
+															</DropdownMenu>
+														</TableCell>
+													</TableRow>
+												))}
+											</TableBody>
+										</Table>
+									</div>
+								)}
+							</CardContent>
+						</Card>
 					</TabsContent>
 
 					{/* --- XONALAR PANEL --- */}
-					<TabsContent value="rooms" className="pt-4 space-y-4">
-						<div className="flex justify-between items-center">
-							<h3 className="text-lg font-medium">O'quv xonalari</h3>
-							<Button
-								onClick={() => setRoomModal({ open: true, data: null })}
-								className="btn-default gap-2"
-							>
-								<Plus className="h-4 w-4" /> Xona qo'shish
-							</Button>
-						</div>
+					<TabsContent value="rooms" className="space-y-4">
+						<Card className="bg-[#1f1f1f]/80 border-white/10 backdrop-blur-xl">
+							<CardHeader className="pb-4">
+								<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+									<div>
+										<CardTitle className="text-white flex items-center gap-2">
+											<DoorOpen className="text-amber-400" />
+											O'quv xonalari
+										</CardTitle>
+										<CardDescription>
+											Xonalar va ularning bandlik holati
+										</CardDescription>
+									</div>
+									<Button
+										onClick={() => setRoomModal({ open: true, data: null })}
+										className="bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black shadow-lg shadow-amber-500/25 gap-2"
+									>
+										<Plus className="h-4 w-4" /> Xona qo'shish
+									</Button>
+								</div>
+							</CardHeader>
+							<CardContent>
+								{roomData.length === 0 ? (
+									<EmptyState
+										type="room"
+										onAddNew={() => setRoomModal({ open: true, data: null })}
+									/>
+								) : (
+									<div className="rounded-lg border border-white/10 overflow-hidden">
+										<Table>
+											<TableHeader>
+												<TableRow className="bg-black/40 border-white/10 hover:bg-transparent">
+													<TableHead className="text-gray-400 w-12"></TableHead>
+													<TableHead className="text-gray-400">
+														<div className="flex items-center gap-2">
+															<DoorOpen className="h-4 w-4" /> Xona nomi
+														</div>
+													</TableHead>
+													<TableHead className="text-gray-400">
+														<div className="flex items-center gap-2">
+															<Users className="h-4 w-4" /> Sig'im
+														</div>
+													</TableHead>
+													<TableHead className="text-gray-400">
+														<div className="flex items-center gap-2">
+															<UsersRound className="h-4 w-4" /> Guruh
+														</div>
+													</TableHead>
+													<TableHead className="text-gray-400">
+														<div className="flex items-center gap-2">
+															<Clock className="h-4 w-4" /> Vaqt
+														</div>
+													</TableHead>
+													<TableHead className="text-gray-400">
+														<div className="flex items-center gap-2">
+															<CalendarRange className="h-4 w-4" /> Kunlar
+														</div>
+													</TableHead>
+													<TableHead className="text-gray-400 text-right w-20">
+														Amallar
+													</TableHead>
+												</TableRow>
+											</TableHeader>
+											<TableBody>
+												{roomData.map((room) => {
+													const isOccupied = !!room.group_name;
+													const today = new Date().toLocaleDateString("uz-UZ", {
+														weekday: "short",
+													});
+													const uzToday = getUzDays(today);
 
-						<div className="rounded-md border shadow-sm overflow-hidden">
-							<Table>
-								<TableHeader className="bg-primary">
-									<TableRow className="hover:bg-primary/95 transition-colors">
-										<TableHead className="text-black font-bold whitespace-nowrap">
-											<div className="flex items-center gap-2">
-												<DoorOpen className="h-4 w-4" /> Xona nomi
-											</div>
-										</TableHead>
-
-										<TableHead className="text-black font-bold whitespace-nowrap">
-											<div className="flex items-center gap-2">
-												<Users className="h-4 w-4" /> Sig'imi (kishi)
-											</div>
-										</TableHead>
-
-										<TableHead className="text-black font-bold whitespace-nowrap">
-											<div className="flex items-center gap-2">
-												<UsersRound className="h-4 w-4" /> Guruh
-											</div>
-										</TableHead>
-										<TableHead className="text-black font-bold whitespace-nowrap">
-											<div className="flex items-center gap-2">
-												<Clock className="h-4 w-4" /> Dars vaqti
-											</div>
-										</TableHead>
-										<TableHead className="text-black font-bold whitespace-nowrap">
-											<div className="flex items-center gap-2">
-												<CalendarRange className="h-4 w-4" /> Dars kunlari
-											</div>
-										</TableHead>
-
-										<TableHead></TableHead>
-									</TableRow>
-								</TableHeader>
-								<TableBody>
-									{roomData.length === 0 ? (
-										<TableRow>
-											<TableCell
-												colSpan={6}
-												className="text-center py-10 text-gray-500"
-											>
-												Xonalar topilmadi.
-											</TableCell>
-										</TableRow>
-									) : (
-										roomData.map((room) => (
-											<TableRow key={room.room_id} className="bg-card">
-												<TableCell className="font-medium">
-													{room.room_name}
-												</TableCell>
-												<TableCell>{room.capacity} ta joy</TableCell>
-												<TableCell>
-													{room.group_name ? room.group_name : "-"}
-												</TableCell>
-												<TableCell>
-													{room.group_lesson_time
-														? room.group_lesson_time
-														: "-"}
-												</TableCell>
-												<TableCell>
-													<div className="flex gap-1">
-														{Array.isArray(room.group_lesson_days) ? (
-															room.group_lesson_days.map((day) => (
-																<span
-																	key={day}
-																	className="day-pill px-2.5 py-0.75 rounded-[10px]"
-																>
-																	{day}
-																</span>
-															))
-														) : (
-															<span className="day-pill">
-																{room.group_lesson_days
-																	? room.group_lesson_days
-																	: "-"}
-															</span>
-														)}
-													</div>
-												</TableCell>
-												<TableCell className={"flex justify-end"}>
-													<DropdownMenu>
-														<DropdownMenuTrigger asChild>
-															<Button
-																variant="ghost"
-																size="icon"
-																className="h-8 w-8 hover:bg-gray-700 text-white"
-															>
-																<FaEllipsisV />
-															</Button>
-														</DropdownMenuTrigger>
-														<DropdownMenuContent
-															align="end"
-															className="w-32 bg-card border-gray-700 text-white"
+													return (
+														<TableRow
+															key={room.room_id}
+															className={`border-white/5 hover:bg-amber-400/5 transition-all duration-200 group/row ${isOccupied ? "bg-emerald-500/5" : ""}`}
 														>
-															<DropdownMenuItem
-																className="cursor-pointer hover:bg-gray-800 focus:bg-gray-800 focus:text-white"
-																onClick={() =>
-																	setRoomModal({ open: true, data: room })
-																}
-															>
-																<Edit2 className="mr-2 text-blue-400" />{" "}
-																Tahrirlash
-															</DropdownMenuItem>
-															<DropdownMenuSeparator />
-															<DropdownMenuItem
-																className="cursor-pointer text-red-500 hover:bg-gray-800 focus:bg-gray-800 "
-																onClick={() =>
-																	setDeleteId({
-																		id: room.room_id,
-																		type: "room",
-																	})
-																}
-															>
-																<Trash2 className="mr-2 text-red-500" />{" "}
-																O'chirish
-															</DropdownMenuItem>
-														</DropdownMenuContent>
-													</DropdownMenu>
-												</TableCell>
-											</TableRow>
-										))
-									)}
-								</TableBody>
-							</Table>
-						</div>
+															<TableCell className="py-4">
+																<Avatar
+																	className={`w-10 h-10 border border-white/10 ${isOccupied ? "bg-gradient-to-br from-emerald-400/20 to-teal-400/20" : "bg-gradient-to-br from-amber-400/20 to-orange-400/20"}`}
+																>
+																	<AvatarFallback
+																		className={`${isOccupied ? "text-emerald-400" : "text-amber-400"} text-sm font-semibold bg-transparent`}
+																	>
+																		{getInitials(room.room_name)}
+																	</AvatarFallback>
+																</Avatar>
+															</TableCell>
+															<TableCell className="font-medium text-white">
+																<div>
+																	<p className="truncate max-w-32">
+																		{room.room_name}
+																	</p>
+																	{isOccupied && (
+																		<Badge
+																			variant="outline"
+																			className="mt-1 text-[10px] border-emerald-500/30 text-emerald-400 bg-emerald-500/10"
+																		>
+																			<UsersRound className="w-3 h-3 mr-1" />{" "}
+																			{room.group_name}
+																		</Badge>
+																	)}
+																</div>
+															</TableCell>
+															<TableCell className="text-gray-300">
+																<Badge
+																	variant="outline"
+																	className="border-white/20 text-gray-300"
+																>
+																	{room.capacity} kishi
+																</Badge>
+															</TableCell>
+															<TableCell className="text-gray-400 text-sm">
+																{room.group_name || (
+																	<span className="text-gray-600 italic">
+																		Bo'sh
+																	</span>
+																)}
+															</TableCell>
+															<TableCell className="text-gray-400 text-sm">
+																{room.group_lesson_time || "—"}
+															</TableCell>
+															<TableCell>
+																<div className="flex flex-wrap gap-1">
+																	{room.group_lesson_days ? (
+																		getUzDays(room.group_lesson_days).map(
+																			(day, idx) => (
+																				<DayPill
+																					key={idx}
+																					day={day}
+																					isToday={day === uzToday}
+																				/>
+																			),
+																		)
+																	) : (
+																		<span className="text-gray-600 text-xs">
+																			—
+																		</span>
+																	)}
+																</div>
+															</TableCell>
+															<TableCell className="text-right">
+																<DropdownMenu>
+																	<DropdownMenuTrigger asChild>
+																		<Button
+																			variant="ghost"
+																			size="icon"
+																			className="h-8 w-8 text-gray-500 hover:text-amber-400 hover:bg-amber-400/10 transition-colors opacity-0 group-hover/row:opacity-100"
+																		>
+																			<MoreHorizontal className="h-4 w-4" />
+																		</Button>
+																	</DropdownMenuTrigger>
+																	<DropdownMenuContent
+																		align="end"
+																		className="bg-[#1f1f1f] border-white/10 text-white w-48"
+																	>
+																		<DropdownMenuItem
+																			onClick={() =>
+																				setRoomModal({ open: true, data: room })
+																			}
+																			className="cursor-pointer hover:bg-amber-400/10 focus:bg-amber-400/10"
+																		>
+																			<Edit2 className="mr-2 h-4 w-4 text-blue-400" />{" "}
+																			Tahrirlash
+																		</DropdownMenuItem>
+																		<DropdownMenuSeparator className="bg-white/10" />
+																		<DropdownMenuItem
+																			onClick={() =>
+																				setDeleteId({
+																					id: room.room_id,
+																					type: "room",
+																				})
+																			}
+																			className="cursor-pointer text-red-400 hover:text-red-300 hover:bg-red-400/10 focus:text-red-300 focus:bg-red-400/10"
+																		>
+																			<Trash2 className="mr-2 h-4 w-4" />{" "}
+																			O'chirish
+																		</DropdownMenuItem>
+																	</DropdownMenuContent>
+																</DropdownMenu>
+															</TableCell>
+														</TableRow>
+													);
+												})}
+											</TableBody>
+										</Table>
+									</div>
+								)}
+							</CardContent>
+						</Card>
 					</TabsContent>
 				</Tabs>
 
-				{/* Kurs Modali */}
+				{/* 🎭 Course Modal */}
 				<Dialog
 					open={courseModal.open}
 					onOpenChange={(val) => setCourseModal({ ...courseModal, open: val })}
 				>
-					<DialogContent>
+					<DialogContent className="bg-[#1f1f1f] border-white/10 text-white max-w-md">
 						<DialogHeader>
-							<DialogTitle>
+							<DialogTitle className="text-xl flex items-center gap-2">
+								<BookOpen className="text-amber-400" />
 								{courseModal.data ? "Kursni tahrirlash" : "Yangi kurs yaratish"}
 							</DialogTitle>
+							<DialogDescription className="text-gray-400">
+								Kurs ma'lumotlarini to'ldiring va saqlang
+							</DialogDescription>
 						</DialogHeader>
-						<form onSubmit={handleCourseSubmit} className="space-y-4">
+						<form onSubmit={handleCourseSubmit} className="space-y-4 pt-4">
 							<div className="grid gap-2">
-								<Label htmlFor="name">Kurs nomi</Label>
+								<Label htmlFor="cname" className="text-gray-300">
+									Kurs nomi
+								</Label>
 								<Input
-									id="name"
+									id="cname"
 									name="name"
 									defaultValue={courseModal.data?.name}
 									required
+									className="bg-black/40 border-white/20 text-white placeholder:text-gray-500 focus:border-amber-400/50 focus:ring-2 focus:ring-amber-400/20"
+									placeholder="Masalan: Ingliz tili B1"
 								/>
 							</div>
 							<div className="grid grid-cols-2 gap-4">
 								<div className="grid gap-2">
-									<Label htmlFor="price">Narxi</Label>
+									<Label htmlFor="cprice" className="text-gray-300">
+										Narxi (so'm)
+									</Label>
 									<Input
-										id="price"
+										id="cprice"
 										name="price"
 										type="number"
 										defaultValue={courseModal.data?.price}
 										required
+										className="bg-black/40 border-white/20 text-white placeholder:text-gray-500 focus:border-amber-400/50 focus:ring-2 focus:ring-amber-400/20"
+										placeholder="250000"
 									/>
 								</div>
 								<div className="grid gap-2">
-									<Label htmlFor="lesson_count">Darslar soni</Label>
+									<Label htmlFor="clessons" className="text-gray-300">
+										Darslar soni
+									</Label>
 									<Input
-										id="lesson_count"
+										id="clessons"
 										name="lesson_count"
 										type="number"
 										defaultValue={courseModal.data?.lesson_count}
 										required
+										className="bg-black/40 border-white/20 text-white placeholder:text-gray-500 focus:border-amber-400/50 focus:ring-2 focus:ring-amber-400/20"
+										placeholder="12"
 									/>
 								</div>
 							</div>
-							<DialogFooter className="pt-4">
-								<Button type="submit">
+							<DialogFooter className="pt-4 flex gap-3">
+								<Button
+									type="button"
+									variant="outline"
+									onClick={() => setCourseModal({ open: false, data: null })}
+									className="border-white/20 text-gray-300 hover:bg-white/10"
+								>
+									<X className="mr-2 h-4 w-4" /> Bekor qilish
+								</Button>
+								<Button
+									type="submit"
+									className="bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black"
+								>
+									<Save className="mr-2 h-4 w-4" />{" "}
 									{courseModal.data ? "Saqlash" : "Yaratish"}
 								</Button>
 							</DialogFooter>
@@ -427,39 +746,63 @@ export default function Settings() {
 					</DialogContent>
 				</Dialog>
 
-				{/* Xona Modali */}
+				{/* 🎭 Room Modal */}
 				<Dialog
 					open={roomModal.open}
 					onOpenChange={(val) => setRoomModal({ ...roomModal, open: val })}
 				>
-					<DialogContent>
+					<DialogContent className="bg-[#1f1f1f] border-white/10 text-white max-w-md">
 						<DialogHeader>
-							<DialogTitle>
+							<DialogTitle className="text-xl flex items-center gap-2">
+								<DoorOpen className="text-amber-400" />
 								{roomModal.data ? "Xonani tahrirlash" : "Yangi xona qo'shish"}
 							</DialogTitle>
+							<DialogDescription className="text-gray-400">
+								Xona ma'lumotlarini to'ldiring va saqlang
+							</DialogDescription>
 						</DialogHeader>
-						<form onSubmit={handleRoomSubmit} className="space-y-4">
+						<form onSubmit={handleRoomSubmit} className="space-y-4 pt-4">
 							<div className="grid gap-2">
-								<Label htmlFor="rname">Xona nomi</Label>
+								<Label htmlFor="rname" className="text-gray-300">
+									Xona nomi
+								</Label>
 								<Input
 									id="rname"
 									name="name"
 									defaultValue={roomModal.data?.room_name}
 									required
+									className="bg-black/40 border-white/20 text-white placeholder:text-gray-500 focus:border-amber-400/50 focus:ring-2 focus:ring-amber-400/20"
+									placeholder="Masalan: 301-xona"
 								/>
 							</div>
 							<div className="grid gap-2">
-								<Label htmlFor="rcapacity">Sig'imi</Label>
+								<Label htmlFor="rcapacity" className="text-gray-300">
+									Sig'imi (kishi)
+								</Label>
 								<Input
 									id="rcapacity"
 									name="capacity"
 									type="number"
 									defaultValue={roomModal.data?.capacity}
 									required
+									className="bg-black/40 border-white/20 text-white placeholder:text-gray-500 focus:border-amber-400/50 focus:ring-2 focus:ring-amber-400/20"
+									placeholder="15"
 								/>
 							</div>
-							<DialogFooter className="pt-4">
-								<Button type="submit">
+							<DialogFooter className="pt-4 flex gap-3">
+								<Button
+									type="button"
+									variant="outline"
+									onClick={() => setRoomModal({ open: false, data: null })}
+									className="border-white/20 text-gray-300 hover:bg-white/10"
+								>
+									<X className="mr-2 h-4 w-4" /> Bekor qilish
+								</Button>
+								<Button
+									type="submit"
+									className="bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black"
+								>
+									<Save className="mr-2 h-4 w-4" />{" "}
 									{roomModal.data ? "Saqlash" : "Yaratish"}
 								</Button>
 							</DialogFooter>
@@ -471,7 +814,48 @@ export default function Settings() {
 					isOpen={!!deleteId.id}
 					onClose={() => setDeleteId({ id: null, type: null })}
 					onConfirm={handleConfirmDelete}
+					title={
+						deleteId.type === "course" ? "Kursni o'chirish" : "Xonani o'chirish"
+					}
+					description={
+						deleteId.type === "course"
+							? "Haqiqatdan ham ushbu kursni o'chirib tashlamoqchimisiz? Barcha bog'liq ma'lumotlar ham o'chiriladi."
+							: "Haqiqatdan ham ushbu xonani o'chirib tashlamoqchimisiz? Agar xona band bo'lsa, avval guruhni boshqa xonaga o'tkazing."
+					}
 				/>
 			</div>
-		);
-	};
+		</div>
+	);
+}
+
+// 🧩 Empty State Component
+const EmptyState = ({ type, onAddNew }) => {
+	const isCourse = type === "course";
+
+	return (
+		<div className="flex flex-col items-center justify-center text-center py-12 px-4">
+			<div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-4 text-gray-500">
+				{isCourse ? (
+					<BookOpen className="w-8 h-8" />
+				) : (
+					<DoorOpen className="w-8 h-8" />
+				)}
+			</div>
+			<h3 className="text-lg font-semibold text-white mb-2">
+				{isCourse ? "Kurslar yo'q" : "Xonalar yo'q"}
+			</h3>
+			<p className="text-gray-500 text-sm max-w-sm mb-6">
+				{isCourse
+					? "Hozircha hech qanday kurs mavjud emas. Birinchi kursni yaratishni boshlang!"
+					: "Hozircha hech qanday xona mavjud emas. Birinchi xonani qo'shishni boshlang!"}
+			</p>
+			<Button
+				onClick={onAddNew}
+				className="bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black gap-2"
+			>
+				<Plus className="w-4 h-4" />{" "}
+				{isCourse ? "Birinchi kursni yaratish" : "Birinchi xonani qo'shish"}
+			</Button>
+		</div>
+	);
+};
