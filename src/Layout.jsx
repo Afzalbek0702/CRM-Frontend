@@ -3,9 +3,8 @@ import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "./components/Sidebar";
 import Header from "./components/Header";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { routeRoles } from "./utils/authConfig";
 import { useAuth } from "./context/authContext";
-
+import { routeRoles } from "./utils/authConfig";
 export default function Layout() {
 	const location = useLocation();
 	const isLoginPage = location.pathname.endsWith("/login");
@@ -13,15 +12,17 @@ export default function Layout() {
 	const { tenant } = useParams();
 
 	const pathSegment = location.pathname.split("/").slice(2).join("/");
-	const matchedKey = Object.keys(routeRoles).find(key =>
-		pathSegment === key || pathSegment.startsWith(key + "/")
+	const matchedKey = Object.keys(routeRoles).find(
+		(key) => pathSegment === key || pathSegment.startsWith(key + "/"),
 	);
 	const allowedRoles = matchedKey ? routeRoles[matchedKey] : null;
 
-	if (allowedRoles && (allowedRoles.includes("") || !allowedRoles.includes(user?.role))) {
+	if (
+		allowedRoles &&
+		(allowedRoles.includes("") || !allowedRoles.includes(user?.role))
+	) {
 		return <Navigate to={`/${tenant}/notauthorized`} replace />;
 	}
-
 	if (isLoginPage) {
 		return <Outlet />;
 	}

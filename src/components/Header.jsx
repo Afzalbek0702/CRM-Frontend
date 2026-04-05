@@ -47,7 +47,7 @@ export default function Header() {
 				.filter((g) => g.name?.toLowerCase().includes(query))
 				.slice(0, 5),
 			workerData: workerData
-				.filter((w) => w.full_name?.toLowerCase().includes(query))
+				.filter((t) => t.full_name?.toLowerCase().includes(query))
 				.slice(0, 5),
 			leads: leads
 				.filter((l) => l.full_name?.toLowerCase().includes(query))
@@ -180,10 +180,12 @@ function ResultSection({ title, items, icon, onClick }) {
 						</span>
 
 						<span className="truncate font-bold text-primary">
-							{item.position || item.course_type || <span className="text-green-700">{item.groups.name}</span> || null}
+							{item.position ||
+								item.course_type || (
+									<span className="text-green-700">{item.groups.name}</span>
+								) ||
+								null}
 						</span>
-
-						
 					</div>
 				</button>
 			))}

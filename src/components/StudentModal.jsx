@@ -37,7 +37,6 @@ const INITIAL_STUDENT = {
 	birthday: "",
 	parents_name: "",
 	parents_phone: "",
-	balance: "",
 };
 
 export default function StudentModal({
@@ -57,7 +56,6 @@ export default function StudentModal({
 			setFormData({
 				...initialData,
 				birthday: bday,
-				balance: initialData.balance ?? "",
 			});
 			setDate(bday ? new Date(bday) : undefined);
 		} else {
@@ -92,7 +90,6 @@ export default function StudentModal({
 		e.preventDefault();
 		onSubmit({
 			...formData,
-			balance: Number(formData.balance || 0),
 			phone: PhoneUtils.cleanPhone(formData.phone),
 			parents_phone: PhoneUtils.cleanPhone(formData.parents_phone),
 		});
@@ -227,7 +224,7 @@ export default function StudentModal({
 						</div>
 
 						{/* Balans - Alohida urg'u bilan */}
-						<div className="sm:col-span-2 space-y-2 pt-2">
+						{/* <div className="sm:col-span-2 space-y-2 pt-2">
 							<Label className="flex items-center gap-2 text-zinc-400">
 								<FaWallet className="text-[10px]" /> Dastlabki balans (so'm)
 							</Label>
@@ -239,7 +236,7 @@ export default function StudentModal({
 								value={formData.balance}
 								onChange={handleChange}
 							/>
-						</div>
+						</div> */}
 					</div>
 
 					<DialogFooter className="flex-col-reverse sm:flex-row gap-2 pt-4 border-t border-zinc-800">
