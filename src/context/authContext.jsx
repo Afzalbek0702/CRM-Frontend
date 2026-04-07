@@ -15,7 +15,11 @@ export function AuthProvider({ children }) {
 			setUser(res.user);
 		} catch (err) {
 			setUser(null);
-			setError(err);
+			const errorMessage =
+				error.response?.data?.message ||
+				error.message ||
+				"Tizimga kirishda xatolik yuz berdi";
+			setError(errorMessage);
 		} finally {
 			setLoading(false);
 		}
