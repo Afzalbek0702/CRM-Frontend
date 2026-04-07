@@ -2,7 +2,6 @@ import { useState, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useStudent } from "../services/student/useStudent.js";
 import { useGroups } from "../services/group/useGroups.js";
-import { useTeachers } from "../services/teacher/useTeachers.js";
 import toast from "react-hot-toast";
 import { useAuth } from "@/context/authContext";
 // Shadcn UI
@@ -38,7 +37,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
 
 // Ikonkalar
 import {
@@ -47,7 +45,6 @@ import {
 	ArrowLeft,
 	Phone,
 	Calendar,
-	Wallet,
 	Check,
 	ChevronsUpDown,
 	GraduationCap,
@@ -57,7 +54,6 @@ import {
 	ExternalLink,
 	Sparkles,
 	TrendingUp,
-	Filter,
 	UserPlus,
 	Trash2,
 	Edit,
@@ -69,20 +65,6 @@ import StudentModal from "../components/StudentModal.jsx";
 import AddToGroupModal from "../components/AddToGroupModal.jsx";
 import ConfirmDeleteModal from "@/components/ConfirmDeleteModal.jsx";
 import PhoneUtils from "@/utils/phoneFormat.js";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipTrigger,
-} from "@/components/ui/tooltip.jsx";
-
-// 🎨 Animated Background Component
-const AnimatedBackground = () => (
-	<div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-		<div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl animate-pulse" />
-		<div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
-		<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-br from-amber-500/5 via-transparent to-purple-500/5 rounded-full blur-3xl" />
-	</div>
-);
 
 // 🎨 Stats Card Component
 const StatsCard = ({ icon, label, value, trend, color }) => {
@@ -98,7 +80,7 @@ const StatsCard = ({ icon, label, value, trend, color }) => {
 
 	return (
 		<Card
-			className={`bg-gradient-to-br ${colors[color]} border backdrop-blur-xl group hover:scale-[1.02] transition-all duration-300`}
+			className={`bg-linear-to-br ${colors[color]} border backdrop-blur-xl group hover:scale-[1.02] transition-all duration-300`}
 		>
 			<CardContent className="p-4 flex items-center gap-4">
 				<div
@@ -141,7 +123,7 @@ export default function Students() {
 	} = useStudent();
 
 	const { groups = [] } = useGroups();
-	const { teachers = [] } = useTeachers();
+	// const { teachers = [] } = useTeachers();/
 	const { user } = useAuth();
 
 	// State-lar
@@ -192,7 +174,6 @@ export default function Students() {
 		if (deleteId) {
 			await deleteStudent(deleteId);
 			setDeleteId(null);
-			toast.success("O'quvchi muvaffaqiyatli o'chirildi");
 		}
 	};
 
@@ -253,9 +234,7 @@ export default function Students() {
 		);
 
 	return (
-		<div className="relative min-h-screen bg-background">
-			<AnimatedBackground />
-
+		<div className="relative min-h-99 bg-background">
 			<div className="container mx-auto px-4 py-6 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
 				{/* 🧭 Header Section */}
 				<div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/10">
@@ -269,7 +248,7 @@ export default function Students() {
 							<span className="ml-2 hidden sm:inline">Ortga</span>
 						</Button>
 						<div>
-							<h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-amber-400 via-orange-400 to-amber-400 bg-clip-text text-transparent">
+							<h1 className="text-2xl md:text-3xl font-bold bg-linear-to-r from-amber-400 via-orange-400 to-amber-400 bg-clip-text text-transparent">
 								O'quvchilar boshqaruvi
 							</h1>
 							<p className="text-sm text-gray-500 mt-1">
@@ -284,7 +263,7 @@ export default function Students() {
 								setEditingStudent(null);
 								setIsModalOpen(true);
 							}}
-							className="bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black shadow-lg shadow-amber-500/25 gap-2 font-semibold"
+							className="bg-linear-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black shadow-lg shadow-amber-500/25 gap-2 font-semibold"
 						>
 							<Plus className="h-4 w-4" /> O'quvchi qo'shish
 						</Button>
@@ -303,7 +282,7 @@ export default function Students() {
 						icon={<Users className="w-5 h-5" />}
 						label="Guruhdagi"
 						value={stats.withGroup}
-						trend={15}
+						// trend={}
 						color="emerald"
 					/>
 					<StatsCard
@@ -345,7 +324,7 @@ export default function Students() {
 										</Button>
 									</PopoverTrigger>
 									<PopoverContent
-										className="w-[200px] p-0 bg-[#1f1f1f] border-white/10 text-white"
+										className="w-50 p-0 bg-[#1f1f1f] border-white/10 text-white"
 										align="end"
 									>
 										<Command>
@@ -453,7 +432,7 @@ export default function Students() {
 										onClick={() => navigate(`/${tenant}/students/${s.id}`)}
 									>
 										<TableCell className="py-4">
-											<Avatar className="w-10 h-10 border border-white/10 bg-gradient-to-br from-amber-400/20 to-orange-400/20">
+											<Avatar className="w-10 h-10 border border-white/10 bg-linear-to-br from-amber-400/20 to-orange-400/20">
 												<AvatarFallback className="text-amber-400 text-sm font-semibold bg-transparent">
 													{getInitials(s.full_name)}
 												</AvatarFallback>
@@ -630,7 +609,6 @@ export default function Students() {
 				onConfirm={async (groupId) => {
 					await addToGroup(addToGroupStudent.id, Number(groupId));
 					setAddToGroupOpen(false);
-					toast.success("O'quvchi guruhga qo'shildi!");
 				}}
 			/>
 
@@ -666,7 +644,7 @@ const EmptyState = ({ onAddNew, hasSearch }) => (
 		{!hasSearch && (
 			<Button
 				onClick={onAddNew}
-				className="bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black gap-2"
+				className="bg-linear-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black gap-2"
 			>
 				<Plus className="w-4 h-4" /> Birinchi o'quvchini qo'shish
 			</Button>

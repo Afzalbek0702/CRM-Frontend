@@ -103,7 +103,7 @@ export default function StatsCards({ data, type, percentage, trend, color = "blu
         </div>
         {percentage !== undefined && (
           <span className={`text-xs font-bold px-2 py-1 rounded-full ${trend === 'up' ? 'bg-green-500/20 text-green-500' : 'bg-red-500/20 text-red-500'}`}>
-            {trend === 'up' ? '+' : ''}{percentage}%
+            {trend === 'up' ? `${percentage==0 ? '':'+'}` : ''}{percentage}%
           </span>
         )}
       </div>

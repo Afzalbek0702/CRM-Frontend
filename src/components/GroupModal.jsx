@@ -29,6 +29,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { getUzDays } from "@/utils/weekday";
 
 const DAYS_OF_WEEK = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -37,7 +38,8 @@ export default function GroupModal({
 	onClose,
 	onSubmit,
 	title,
-	initialData,
+   initialData,
+   isLoading
 }) {
 	const { teachers = [] } = useTeachers();
 	const { courseData = [] } = useCourse();
@@ -253,7 +255,7 @@ export default function GroupModal({
 										)}
 										onClick={() => toggleDay(day)}
 									>
-										{day}
+										{getUzDays(day)}
 									</Button>
 								))}
 							</div>
@@ -307,7 +309,7 @@ export default function GroupModal({
 							type="submit"
 							className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-black font-bold px-8 shadow-lg shadow-yellow-600/20"
 						>
-							<FaSave className="mr-2" /> Saqlash
+							<FaSave className="mr-2" /> {isLoading ? "Saqlanmoqda...":"Saqlash"}
 						</Button>
 					</DialogFooter>
 				</form>

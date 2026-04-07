@@ -39,7 +39,6 @@ import {
 	FaChartLine,
 	FaUserGraduate,
 	FaBuilding,
-	FaClock,
 } from "react-icons/fa";
 import {
 	Clock,
@@ -50,8 +49,6 @@ import {
 	Users,
 	GraduationCap,
 	BookOpen,
-	ArrowRight,
-	Bell,
 	Calendar,
 } from "lucide-react";
 import Loader from "@/components/Loader.jsx";
@@ -103,7 +100,7 @@ export default function Dashboard() {
 			leads: leads?.length || 0,
 			absent: absentStudents?.length || 0,
 			income: monthlyIncome?.current_month_income || 0,
-			debtors: debtAnalysis?.thisMonthTotal || 0,
+			debtors: debtAnalysis?.debtorCount || 0,
 		};
 		const cfg = {
 			CEO: [
@@ -282,13 +279,7 @@ export default function Dashboard() {
 	};
 
 	return (
-		<div className="relative min-h-screen bg-background p-4">
-			{/* Simplified background */}
-			<div className="fixed inset-0 -z-10">
-				<div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl animate-pulse" />
-				<div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
-			</div>
-
+		<div className="relative min-h-99 bg-background p-4">
 			<div className="container mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4">
 				{/* Stats */}
 				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -476,7 +467,7 @@ export default function Dashboard() {
 														{s.group_name}
 													</Badge>
 												</TableCell>
-												<TableCell className="text-right">
+												<TableCell>
 													<Tooltip>
 														<TooltipTrigger asChild>
 															<button
@@ -486,7 +477,7 @@ export default function Dashboard() {
 																}}
 																className="flex items-center justify-end gap-1.5 text-gray-300 hover:text-amber-400"
 															>
-																<span className="truncate max-w-20 font-mono text-sm">
+																<span className="font-mono text-sm">
 																	{PhoneUtils.formatPhone(s.phone)}
 																</span>
 																{copiedPhone === s.phone ? (
@@ -496,7 +487,7 @@ export default function Dashboard() {
 																)}
 															</button>
 														</TooltipTrigger>
-														<TooltipContent className="bg-[#1f1f1f] border-white/10 text-white">
+														<TooltipContent>
 															<p>Nusxa olish</p>
 														</TooltipContent>
 													</Tooltip>

@@ -42,7 +42,6 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
 
 // Ikonkalar
 import {
@@ -59,28 +58,15 @@ import {
 	Clock,
 	CalendarRange,
 	UsersRound,
-	Copy,
 	Check,
 	ExternalLink,
-	Sparkles,
 	TrendingUp,
-	Filter,
 	MoreHorizontal,
 	Save,
 	X,
 } from "lucide-react";
-import { FaEllipsisV } from "react-icons/fa";
 import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
 import { getUzDays } from "@/utils/weekday";
-
-// 🎨 Animated Background Component
-const AnimatedBackground = () => (
-	<div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-		<div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl animate-pulse" />
-		<div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
-		<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-br from-amber-500/5 via-transparent to-purple-500/5 rounded-full blur-3xl" />
-	</div>
-);
 
 // 🎨 Stats Card Component
 
@@ -97,7 +83,7 @@ const StatsCard = ({ icon, label, value, trend, color }) => {
 
 	return (
 		<Card
-			className={`bg-gradient-to-br ${colors[color]} border backdrop-blur-xl group hover:scale-[1.02] transition-all duration-300`}
+			className={`bg-linear-to-br ${colors[color]} border backdrop-blur-xl group hover:scale-[1.02] transition-all duration-300`}
 		>
 			<CardContent className="p-4 flex items-center gap-4">
 				<div
@@ -132,7 +118,7 @@ const DayPill = ({ day, isToday = false }) => (
 		className={`px-2.5 py-1 rounded-full text-[10px] font-semibold transition-all duration-200
 			${
 				isToday
-					? "bg-gradient-to-r from-amber-400 to-orange-400 text-black shadow-lg shadow-amber-500/25"
+					? "bg-linear-to-r from-amber-400 to-orange-400 text-black shadow-lg shadow-amber-500/25"
 					: "bg-white/10 text-amber-300 border border-amber-400/30 hover:bg-amber-400/20"
 			}`}
 	>
@@ -175,10 +161,8 @@ export default function Settings() {
 	const handleConfirmDelete = () => {
 		if (deleteId.type === "course") {
 			removeCourse(deleteId.id);
-			toast.success("Kurs muvaffaqiyatli o'chirildi");
 		} else if (deleteId.type === "room") {
 			removeRoom(deleteId.id);
-			toast.success("Xona muvaffaqiyatli o'chirildi");
 		}
 		setDeleteId({ id: null, type: null });
 	};
@@ -190,10 +174,8 @@ export default function Settings() {
 
 		if (courseModal.data) {
 			updateCourse({ id: courseModal.data.id, data });
-			toast.success("Kurs muvaffaqiyatli yangilandi!");
 		} else {
 			createCourse(data);
-			toast.success("Yangi kurs qo'shildi!");
 		}
 		setCourseModal({ open: false, data: null });
 	};
@@ -208,10 +190,8 @@ export default function Settings() {
 
 		if (roomModal.data) {
 			updateRoom({ id: roomModal.data.room_id, data });
-			toast.success("Xona muvaffaqiyatli yangilandi!");
 		} else {
 			createRoom(data);
-			toast.success("Yangi xona qo'shildi!");
 		}
 		setRoomModal({ open: false, data: null });
 	};
@@ -231,9 +211,7 @@ export default function Settings() {
 	};
 
 	return (
-		<div className="relative min-h-screen bg-background">
-			<AnimatedBackground />
-
+		<div className="relative min-h-99 bg-background">
 			<div className="container mx-auto px-4 py-6 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
 				{/* 🧭 Header Section */}
 				<div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/10">
@@ -247,7 +225,7 @@ export default function Settings() {
 							<span className="ml-2 hidden sm:inline">Ortga</span>
 						</Button>
 						<div>
-							<h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-amber-400 via-orange-400 to-amber-400 bg-clip-text text-transparent">
+							<h1 className="text-2xl md:text-3xl font-bold bg-linear-to-r from-amber-400 via-orange-400 to-amber-400 bg-clip-text text-transparent">
 								Sozlamalar
 							</h1>
 							<p className="text-sm text-gray-500 mt-1">
@@ -258,7 +236,7 @@ export default function Settings() {
 				</div>
 
 				{/* 📊 Stats Cards */}
-				<div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+				<div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
 					<StatsCard
 						icon={<BookOpen className="w-5 h-5" />}
 						label="Jami kurslar"
@@ -271,17 +249,12 @@ export default function Settings() {
 						value={stats.rooms}
 						color="blue"
 					/>
-					<StatsCard
+					{/* <StatsCard
 						icon={<UsersRound className="w-5 h-5" />}
-						// <tool_response>="Band xonalar"
+						label="Band xonalar"
 						value={stats.occupiedRooms}
-						trend={
-							stats.rooms > 0
-								? Math.round((stats.occupiedRooms / stats.rooms) * 100)
-								: 0
-						}
 						color="emerald"
-					/>
+					/> */}
 					<StatsCard
 						icon={<Users className="w-5 h-5" />}
 						label="Jami sig'im"
@@ -327,7 +300,7 @@ export default function Settings() {
 									</div>
 									<Button
 										onClick={() => setCourseModal({ open: true, data: null })}
-										className="bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black shadow-lg shadow-amber-500/25 gap-2"
+										className="bg-linear-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black shadow-lg shadow-amber-500/25 gap-2"
 									>
 										<Plus className="h-4 w-4" /> Kurs qo'shish
 									</Button>
@@ -372,7 +345,7 @@ export default function Settings() {
 														className="border-white/5 hover:bg-amber-400/5 transition-all duration-200 group/row"
 													>
 														<TableCell className="py-4">
-															<Avatar className="w-10 h-10 border border-white/10 bg-gradient-to-br from-amber-400/20 to-orange-400/20">
+															<Avatar className="w-10 h-10 border border-white/10 bg-linear-to-br from-amber-400/20 to-orange-400/20">
 																<AvatarFallback className="text-amber-400 text-sm font-semibold bg-transparent">
 																	{getInitials(course.name)}
 																</AvatarFallback>
@@ -489,7 +462,7 @@ export default function Settings() {
 									</div>
 									<Button
 										onClick={() => setRoomModal({ open: true, data: null })}
-										className="bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black shadow-lg shadow-amber-500/25 gap-2"
+										className="bg-linear-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black shadow-lg shadow-amber-500/25 gap-2"
 									>
 										<Plus className="h-4 w-4" /> Xona qo'shish
 									</Button>
@@ -552,7 +525,7 @@ export default function Settings() {
 														>
 															<TableCell className="py-4">
 																<Avatar
-																	className={`w-10 h-10 border border-white/10 ${isOccupied ? "bg-gradient-to-br from-emerald-400/20 to-teal-400/20" : "bg-gradient-to-br from-amber-400/20 to-orange-400/20"}`}
+																	className={`w-10 h-10 border border-white/10 ${isOccupied ? "bg-linear-to-br from-emerald-400/20 to-teal-400/20" : "bg-linear-to-br from-amber-400/20 to-orange-400/20"}`}
 																>
 																	<AvatarFallback
 																		className={`${isOccupied ? "text-emerald-400" : "text-amber-400"} text-sm font-semibold bg-transparent`}
@@ -736,7 +709,7 @@ export default function Settings() {
 								</Button>
 								<Button
 									type="submit"
-									className="bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black"
+									className="bg-linear-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black"
 								>
 									<Save className="mr-2 h-4 w-4" />{" "}
 									{courseModal.data ? "Saqlash" : "Yaratish"}
@@ -800,7 +773,7 @@ export default function Settings() {
 								</Button>
 								<Button
 									type="submit"
-									className="bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black"
+									className="bg-linear-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black"
 								>
 									<Save className="mr-2 h-4 w-4" />{" "}
 									{roomModal.data ? "Saqlash" : "Yaratish"}
@@ -851,7 +824,7 @@ const EmptyState = ({ type, onAddNew }) => {
 			</p>
 			<Button
 				onClick={onAddNew}
-				className="bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black gap-2"
+				className="bg-linear-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black gap-2"
 			>
 				<Plus className="w-4 h-4" />{" "}
 				{isCourse ? "Birinchi kursni yaratish" : "Birinchi xonani qo'shish"}

@@ -11,7 +11,6 @@ import {
 	CardHeader,
 	CardTitle,
 	CardDescription,
-	CardFooter,
 } from "@/components/ui/card";
 import {
 	Table,
@@ -38,26 +37,15 @@ import {
 	Mail,
 	MapPin,
 	Clock,
-	TrendingUp,
 	Edit,
 	MoreVertical,
 	ExternalLink,
 	CheckCircle,
 	AlertCircle,
-	Building2,
 	Wallet,
 	Star,
 } from "lucide-react";
 import PhoneUtils from "@/utils/phoneFormat";
-
-// 🎨 Animated Background Component
-const AnimatedBackground = () => (
-	<div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-		<div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl animate-pulse" />
-		<div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
-		<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-amber-500/5 via-transparent to-purple-500/5 rounded-full blur-3xl" />
-	</div>
-);
 
 export default function WorkerDetail() {
 	const navigate = useNavigate();
@@ -131,7 +119,7 @@ export default function WorkerDetail() {
 
 	return (
 		<div className="relative min-h-screen bg-background">
-			<AnimatedBackground />
+			{/* <AnimatedBackground /> */}
 
 			<div className="container mx-auto px-4 py-6 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
 				{/* 🧭 Header Section */}
@@ -176,8 +164,8 @@ export default function WorkerDetail() {
 				</div>
 
 				{/* 👤 Profile Header Card */}
-				<Card className="relative overflow-hidden bg-gradient-to-br from-[#1f1f1f] to-[#161616] border-white/10 backdrop-blur-xl group hover:border-amber-400/30 transition-all duration-500">
-					<div className="absolute inset-0 bg-gradient-to-r from-amber-400/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+				<Card className="relative overflow-hidden bg-linear-to-br from-[#1f1f1f] to-[#161616] border-white/10 backdrop-blur-xl group hover:border-amber-400/30 transition-all duration-500">
+					<div className="absolute inset-0 bg-linear-to-r from-amber-400/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
 					<CardContent className="p-6">
 						<div className="flex flex-col md:flex-row md:items-center gap-6">
@@ -185,12 +173,12 @@ export default function WorkerDetail() {
 							<div className="relative group/avatar">
 								<Avatar className="w-24 h-24 border-4 border-amber-400/30 ring-4 ring-amber-400/10 transition-all group-hover/avatar:ring-amber-400/30">
 									<AvatarImage src={worker.avatar} alt={worker.full_name} />
-									<AvatarFallback className="bg-gradient-to-br from-amber-400/20 to-orange-400/20 text-amber-400 text-2xl font-bold">
+									<AvatarFallback className="bg-linear-to-br from-amber-400/20 to-orange-400/20 text-amber-400 text-2xl font-bold">
 										{getInitials(worker.full_name)}
 									</AvatarFallback>
 								</Avatar>
 								{worker.status === "active" && (
-									<div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-green-500 flex items-center justify-center border-4 border-[#1f1f1f]">
+									<div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-linear-to-br from-emerald-400 to-green-500 flex items-center justify-center border-4 border-[#1f1f1f]">
 										<CheckCircle className="text-white w-4 h-4" />
 									</div>
 								)}
@@ -243,7 +231,7 @@ export default function WorkerDetail() {
 
 							{/* Actions */}
 							<div className="flex gap-2">
-								<Button className="bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black shadow-lg shadow-amber-500/25">
+								<Button className="bg-linear-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black shadow-lg shadow-amber-500/25">
 									<Edit className="mr-2 h-4 w-4" /> Tahrirlash
 								</Button>
 								<Button
@@ -359,7 +347,7 @@ export default function WorkerDetail() {
 								</CardHeader>
 								<CardContent className="space-y-6">
 									{/* Salary Display */}
-									<div className="p-4 rounded-xl bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border border-emerald-500/20">
+									<div className="p-4 rounded-xl bg-linear-to-br from-emerald-500/10 to-teal-500/10 border border-emerald-500/20">
 										<p className="text-xs text-gray-500 uppercase tracking-wider mb-2">
 											Oylik maosh
 										</p>
@@ -480,7 +468,7 @@ export default function WorkerDetail() {
 													>
 														<TableCell className="font-medium text-white">
 															<div className="flex items-center gap-3">
-																<div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400/20 to-orange-400/20 flex items-center justify-center text-amber-400 text-xs font-bold">
+																<div className="w-8 h-8 rounded-lg bg-linear-to-br from-amber-400/20 to-orange-400/20 flex items-center justify-center text-amber-400 text-xs font-bold">
 																	{group.name?.charAt(0).toUpperCase()}
 																</div>
 																{group.name}
@@ -589,7 +577,7 @@ const DetailItem = ({
 	};
 
 	return (
-		<div className="group flex items-start justify-between p-3 rounded-xl bg-white/[0.03] border border-white/5 hover:border-amber-400/30 hover:bg-amber-400/5 transition-all duration-300">
+		<div className="group flex items-start justify-between p-3 rounded-xl bg-white/3 border border-white/5 hover:border-amber-400/30 hover:bg-amber-400/5 transition-all duration-300">
 			<div className="flex items-start gap-3 min-w-0">
 				<span className="text-amber-400/70 mt-0.5">{icon}</span>
 				<div className="min-w-0">
@@ -644,7 +632,7 @@ const QuickStat = ({ icon, label, value, color = "gray" }) => {
 };
 
 const ScheduleItem = ({ label, value, icon }) => (
-	<div className="flex items-center gap-3 p-3 rounded-lg bg-white/[0.03] border border-white/5">
+	<div className="flex items-center gap-3 p-3 rounded-lg bg-white/3 border border-white/5">
 		{icon}
 		<div>
 			<p className="text-xs text-gray-500">{label}</p>
@@ -670,7 +658,7 @@ const EmptyState = ({ icon, title, description, action }) => (
 		{action && (
 			<Button
 				onClick={action.onClick}
-				className="bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black"
+				className="bg-linear-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black"
 			>
 				{action.icon}
 				{action.label}

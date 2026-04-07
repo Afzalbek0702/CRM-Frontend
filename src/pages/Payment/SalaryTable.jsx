@@ -257,7 +257,7 @@ export default function SalaryTable() {
 	if (isLoading) return <Loader />;
 
 	return (
-		<div className="relative min-h-screen bg-background">
+		<div className="relative min-h-99 bg-background">
 			<AnimatedBackground />
 
 			<div className="container mx-auto px-4 py-6 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -268,7 +268,7 @@ export default function SalaryTable() {
 							<FaUserTie className="text-violet-400 w-6 h-6" />
 						</div>
 						<div>
-							<h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-violet-400 via-fuchsia-400 to-violet-400 bg-clip-text text-transparent">
+							<h1 className="text-2xl md:text-3xl font-bold bg-linear-to-r from-violet-400 via-fuchsia-400 to-violet-400 bg-clip-text text-transparent">
 								Ish haqi boshqaruvi
 							</h1>
 							<p className="text-sm text-gray-500 mt-1">
@@ -385,7 +385,7 @@ export default function SalaryTable() {
 							</div>
 							<Button
 								onClick={() => setModal({ isOpen: true, data: null })}
-								className="bg-gradient-to-r from-violet-400 to-fuchsia-400 hover:from-violet-500 hover:to-fuchsia-500 text-black shadow-lg shadow-violet-500/25 gap-2"
+								className="bg-linear-to-r from-violet-400 to-fuchsia-400 hover:from-violet-500 hover:to-fuchsia-500 text-black shadow-lg shadow-violet-500/25 gap-2"
 							>
 								<FaPlus className="h-4 w-4" /> Yangi ish haqi
 							</Button>
@@ -549,7 +549,7 @@ export default function SalaryTable() {
 							>
 								<CalendarDays className="mr-2 h-4 w-4" /> Hisobot
 							</Button>
-							<Button className="bg-gradient-to-r from-violet-400 to-fuchsia-400 hover:from-violet-500 hover:to-fuchsia-500 text-black shadow-lg shadow-violet-500/25">
+							<Button className="bg-linear-to-r from-violet-400 to-fuchsia-400 hover:from-violet-500 hover:to-fuchsia-500 text-black shadow-lg shadow-violet-500/25">
 								<FaChartLine className="mr-2" /> Eksport
 							</Button>
 						</div>
@@ -605,7 +605,7 @@ const EmptyState = ({ hasSearch = false }) => (
 				: "Hozircha hech qanday ish haqi to'lovi qayd etilmagan. Birinchi to'lovni qo'shishni boshlang!"}
 		</p>
 		{!hasSearch && (
-			<Button className="bg-gradient-to-r from-violet-400 to-fuchsia-400 hover:from-violet-500 hover:to-fuchsia-500 text-black gap-2">
+			<Button className="bg-linear-to-r from-violet-400 to-fuchsia-400 hover:from-violet-500 hover:to-fuchsia-500 text-black gap-2">
 				<FaPlus className="w-4 h-4" /> Birinchi to'lovni qayd etish
 			</Button>
 		)}

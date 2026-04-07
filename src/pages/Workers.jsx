@@ -24,7 +24,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
 
 import {
 	Search,
@@ -33,7 +32,6 @@ import {
 	Edit2,
 	Trash2,
 	UserCheck,
-	Phone,
 	ArrowLeft,
 	Shield,
 	UserRound,
@@ -42,12 +40,8 @@ import {
 	Copy,
 	Check,
 	ExternalLink,
-	Sparkles,
 	TrendingUp,
-	Filter,
 	Users,
-	Calendar,
-	Mail,
 } from "lucide-react";
 
 import Loader from "../components/Loader";
@@ -59,11 +53,6 @@ import {
 } from "@/components/ui/input-group";
 import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
 import PhoneUtils from "@/utils/phoneFormat";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { FaUserTie } from "react-icons/fa";
 
 // 🎨 Animated Background Component
@@ -217,8 +206,8 @@ export default function Workers() {
 	if (isLoading) return <Loader />;
 
 	return (
-		<div className="relative min-h-screen bg-background">
-			<AnimatedBackground />
+		<div className="relative min-h-99 bg-background">
+			{/* <AnimatedBackground /> */}
 
 			<div className="container mx-auto px-4 py-6 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
 				{/* 🧭 Header Section */}

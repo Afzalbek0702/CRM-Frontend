@@ -124,13 +124,7 @@ export default function Archive() {
 		);
 
 	return (
-		<div className="relative min-h-screen bg-background p-4">
-			{/* Simplified background */}
-			<div className="fixed inset-0 -z-10">
-				<div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl animate-pulse" />
-				<div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
-			</div>
-
+		<div className="relative min-h-99 bg-background p-4">
 			<div className="container mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4">
 				{/* Header */}
 				<div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/10">
@@ -222,9 +216,7 @@ export default function Archive() {
 											Tug'ilgan kun
 										</TableHead>
 										<TableHead className="text-gray-400">Ota-ona</TableHead>
-										<TableHead className="text-gray-400 text-right">
-											Amallar
-										</TableHead>
+										
 									</TableRow>
 								</TableHeader>
 								<TableBody>
@@ -256,9 +248,7 @@ export default function Archive() {
 										<TableHead className="text-gray-400">Ism</TableHead>
 										<TableHead className="text-gray-400">Telefon</TableHead>
 										<TableHead className="text-gray-400">Manba</TableHead>
-										<TableHead className="text-gray-400 text-right">
-											Amallar
-										</TableHead>
+										
 									</TableRow>
 								</TableHeader>
 								<TableBody>
@@ -294,9 +284,7 @@ export default function Archive() {
 										<TableHead className="text-gray-400 max-w-32">
 											Izoh
 										</TableHead>
-										<TableHead className="text-gray-400 text-right">
-											Amallar
-										</TableHead>
+										
 									</TableRow>
 								</TableHeader>
 								<TableBody>
@@ -332,9 +320,7 @@ export default function Archive() {
 											Miqdor
 										</TableHead>
 										<TableHead className="text-gray-400">Tur</TableHead>
-										<TableHead className="text-gray-400 text-right">
-											Amallar
-										</TableHead>
+										
 									</TableRow>
 								</TableHeader>
 								<TableBody>
@@ -362,9 +348,7 @@ export default function Archive() {
 										<TableHead className="text-gray-400">Kurs turi</TableHead>
 										<TableHead className="text-gray-400">O'qituvchi</TableHead>
 										<TableHead className="text-gray-400">Kunlar</TableHead>
-										<TableHead className="text-gray-400 text-right">
-											Amallar
-										</TableHead>
+										
 									</TableRow>
 								</TableHeader>
 								<TableBody>

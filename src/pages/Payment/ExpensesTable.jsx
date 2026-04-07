@@ -42,11 +42,9 @@ import {
 	Calendar,
 	CreditCard,
 	MoreHorizontal,
-	Copy,
 	Check,
 	Wallet,
 	Receipt,
-	TrendingUp,
 } from "lucide-react";
 
 export default function ExpensesTable() {
@@ -120,37 +118,31 @@ export default function ExpensesTable() {
 	const total = filtered.reduce((s, e) => s + (e.amount || 0), 0);
 	const maxExpense = expenses?.length
 		? Math.max(...expenses.map((e) => e.amount || 0))
-      : 0;
-   
-   if (isLoading) return <Loader />;
-   const formatMethod = (method) => {
-			switch (method) {
-				case "all":
-					return "Barchasi";
-				case "CASH":
-					return "Naqd";
-				case "CARD":
-					return "Karta";
-				case "TRANSFER":
-					return "Transfer";
-				case "CLICK":
-					return "Click";
-				case "PAYME":
-					return "Payme";
-				case "UZCARD":
-					return "Uzcard";
-				default:
-					return method;
-			}
-		};
-	return (
-		<div className="relative min-h-screen bg-background p-4">
-			{/* Simplified background */}
-			<div className="fixed inset-0 -z-10">
-				<div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl animate-pulse" />
-				<div className="absolute bottom-0 right-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
-			</div>
+		: 0;
 
+	if (isLoading) return <Loader />;
+	const formatMethod = (method) => {
+		switch (method) {
+			case "all":
+				return "Barchasi";
+			case "CASH":
+				return "Naqd";
+			case "CARD":
+				return "Karta";
+			case "TRANSFER":
+				return "Transfer";
+			case "CLICK":
+				return "Click";
+			case "PAYME":
+				return "Payme";
+			case "UZCARD":
+				return "Uzcard";
+			default:
+				return method;
+		}
+	};
+	return (
+		<div className="relative min-h-99 bg-background p-4">
 			<div className="container mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4">
 				{/* Header */}
 				<div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/10">
@@ -200,7 +192,7 @@ export default function ExpensesTable() {
 					].map((st, i) => (
 						<Card
 							key={i}
-							className={`bg-gradient-to-br from-${st.c}-500/20 to-${st.c}-500/10 border-${st.c}-500/30 border backdrop-blur-xl`}
+							className={`bg-linear-to-br from-${st.c}-500/20 to-${st.c}-500/10 border-${st.c}-500/30 border backdrop-blur-xl`}
 						>
 							<CardContent className="p-5 flex items-center gap-4">
 								<div
@@ -285,7 +277,7 @@ export default function ExpensesTable() {
 							</div>
 							<Button
 								onClick={() => setModal({ isOpen: true, data: null })}
-								className="bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black gap-2"
+								className="bg-linear-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black gap-2"
 							>
 								<FaPlus className="h-4 w-4" />
 								Xarajat qo'shish
@@ -315,7 +307,7 @@ export default function ExpensesTable() {
 										: "Hozircha hech qanday xarajat qayd etilmagan. Birinchi xarajatni qo'shishni boshlang!"}
 								</p>
 								{!(searchTerm || method !== "all") && (
-									<Button className="mt-4 bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black gap-2">
+									<Button className="mt-4 bg-linear-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black gap-2">
 										<FaPlus className="w-4 h-4" />
 										Birinchi xarajatni qo'shish
 									</Button>
@@ -459,15 +451,18 @@ export default function ExpensesTable() {
 							<span className="text-amber-400 font-semibold">{fmt(total)}</span>
 						</p>
 						<div className="flex items-center gap-3">
-                     <Button
-                        disabled
+							<Button
+								disabled
 								variant="outline"
 								className="border-white/20 text-gray-300"
 							>
 								<Calendar className="mr-2 h-4 w-4" />
 								Hisobot
 							</Button>
-							<Button disabled className="bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black">
+							<Button
+								disabled
+								className="bg-linear-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black"
+							>
 								<FaChartLine className="mr-2" />
 								Eksport
 							</Button>

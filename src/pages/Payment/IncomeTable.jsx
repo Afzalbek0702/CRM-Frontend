@@ -7,17 +7,13 @@ import toast from "react-hot-toast";
 
 // Icons
 import {
-	FaEllipsisV,
-	FaUserGraduate,
 	FaMoneyBillWave,
-	FaUsers,
 	FaEdit,
 	FaTrash,
 	FaSearch,
 	FaChartLine,
-	FaCalendarDay,
+
 } from "react-icons/fa";
-import { BsCalendar2DateFill, BsCreditCard2BackFill } from "react-icons/bs";
 
 // shadcn UI
 import {
@@ -45,41 +41,21 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 import {
 	Calendar,
-	UserCircle,
-	Users,
 	Banknote,
 	CreditCard,
 	MoreHorizontal,
-	Copy,
 	Check,
 	ExternalLink,
 	TrendingUp,
 	Receipt,
-	Sparkles,
 	Wallet,
 	ArrowUpRight,
-	Filter,
 	ArrowLeft,
 } from "lucide-react";
-
-// 🎨 Animated Background Component
-const AnimatedBackground = () => (
-	<div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-		<div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl animate-pulse" />
-		<div className="absolute bottom-0 right-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
-		<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-200 h-200 bg-linear-to-br from-emerald-500/5 via-transparent to-amber-500/5 rounded-full blur-3xl" />
-	</div>
-);
 
 // 🎨 Stats Card Component
 const StatsCard = ({
@@ -246,7 +222,7 @@ export default function IncomeTable() {
 
 	const formatCurrency = (amount) => {
 		const val = Number(amount) || 0;
-		return val >= 1000
+		return val >= 1000 && val < 1000000
 			? `${(val / 1000).toLocaleString()} ming so'm`
 			: `${val.toLocaleString()} so'm`;
 	};
@@ -272,9 +248,7 @@ export default function IncomeTable() {
 	};
 	if (isLoading) return <Loader />;
 	return (
-		<div className="relative min-h-screen bg-background">
-			<AnimatedBackground />
-
+		<div className="relative min-h-99 bg-background">
 			<div className="container mx-auto px-4 py-6 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
 				{/* 🧭 Header Section */}
 				<div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/10">

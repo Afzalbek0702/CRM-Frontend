@@ -1,10 +1,12 @@
 import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { leadsService } from "./leadService.js";
+import { useAuth } from "@/context/authContext.jsx";
 
 const LEADS_QUERY_KEY = ["leads"];
 
 export const useLeads = () => {
+   const { user } = useAuth();
 	const queryClient = useQueryClient();
 	const {
 		data: leads = [],
@@ -13,6 +15,7 @@ export const useLeads = () => {
 	} = useQuery({
 		queryKey: LEADS_QUERY_KEY,
 		queryFn: () => leadsService.getLeads(),
+		enabled: user?.role !== "TEACHER",
 	});
 	const fetchById = async (id) => {
 		const response = await leadsService.getLeadById(id);

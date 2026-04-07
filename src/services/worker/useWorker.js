@@ -1,8 +1,10 @@
 import toast from "react-hot-toast";
 import { workerService } from "./workerService";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
+import { useAuth } from "@/context/authContext";
 const WORKER_KEY = ["worker"];
 export const useWorker = () => {
+   const { user } = useAuth();
 	const queryClient = useQueryClient();
 	const {
 		data: workerData = [],
@@ -11,6 +13,7 @@ export const useWorker = () => {
 	} = useQuery({
 		queryKey: WORKER_KEY,
 		queryFn: () => workerService.get(),
+		enabled: user?.role !== "TEACHER",
 	});
 
 	const create = useMutation({

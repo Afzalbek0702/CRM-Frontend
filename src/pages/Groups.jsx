@@ -31,18 +31,14 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
 
 // Icons
 import {
-	FaEllipsisV,
 	FaUsers,
 	FaSearch,
 	FaEdit,
 	FaTrash,
-	FaChartPie,
 	FaMoneyBillWave,
-	FaClock,
 } from "react-icons/fa";
 import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
 
@@ -56,23 +52,13 @@ import {
 	Presentation,
 	CalendarRange,
 	MoreHorizontal,
-	Copy,
 	Check,
-	Sparkles,
 	TrendingUp,
 	Filter,
 	ExternalLink,
 } from "lucide-react";
 import { getUzDays } from "@/utils/weekday";
 
-// 🎨 Animated Background Component
-const AnimatedBackground = () => (
-	<div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-		<div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl animate-pulse" />
-		<div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
-		<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-200 h-200 bg-linear-to-br from-amber-500/5 via-transparent to-purple-500/5 rounded-full blur-3xl" />
-	</div>
-);
 
 // 🎨 Stats Card Component
 const StatsCard = ({ icon, label, value, trend, color }) => {
@@ -134,7 +120,7 @@ const DayPill = ({ day, isToday = false }) => (
 export default function Groups() {
 	const navigate = useNavigate();
 	const { tenant } = useParams();
-	const { groups, loading, createGroup, deleteGroup, updateGroup } =
+	const { groups, loading, createGroup, deleteGroup, updateGroup,isCreating,isUpdating } =
 		useGroups();
 	const { students } = useStudent();
 	const { user } = useAuth();
@@ -146,10 +132,8 @@ export default function Groups() {
 	// 📊 Stats calculations
 	const stats = useMemo(() => {
 		if (!groups) return { total: 0, totalStudents: 0, avgPrice: 0 };
-		const totalStudents = groups.reduce(
-			(acc, g) => acc + (g.studentCount || 0),
-			0,
-		);
+		const totalStudents =students.filter((s) => s.groups || s.group_id).length
+			
 		const avgPrice = groups.length
 			? Math.round(
 					groups.reduce((acc, g) => acc + (g.price || 0), 0) / groups.length,
@@ -186,22 +170,23 @@ export default function Groups() {
 		);
 	}, [groupsWithCount, searchTerm]);
 
-	const handleSubmit = (formData) => {
-		if (modal.edit) {
-			updateGroup(modal.data.id, formData);
-			toast.success("Guruh muvaffaqiyatli yangilandi!");
-		} else {
-			createGroup(formData);
-			toast.success("Yangi guruh qo'shildi!");
+	const handleSubmit = async (formData) => {
+		try {
+			if (modal.edit) {
+				await updateGroup({ id: modal.data.id, data: formData });
+			} else {
+				await createGroup(formData);
+			}
+			setModal({ open: false, edit: false, data: null });
+		} catch (error) {
+			console.error("Mutation error:", error);
 		}
-		setModal({ open: false, edit: false, data: null });
 	};
 
 	const handleConfirmDelete = () => {
 		if (deleteId) {
 			deleteGroup(deleteId);
 			setDeleteId(null);
-			toast.success("Guruh muvaffaqiyatli o'chirildi");
 		}
 	};
 
@@ -231,9 +216,7 @@ export default function Groups() {
 	if (loading) return <Loader />;
 
 	return (
-		<div className="relative min-h-screen bg-background">
-			<AnimatedBackground />
-
+		<div className="relative min-h-99 bg-background">
 			<div className="container mx-auto px-4 py-6 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
 				{/* 🧭 Header Section */}
 				<div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/10">
@@ -278,7 +261,7 @@ export default function Groups() {
 						icon={<GraduationCap className="w-5 h-5" />}
 						label="Jami o'quvchilar"
 						value={stats.totalStudents}
-						trend={8}
+						// trend={8}
 						color="emerald"
 					/>
 					<StatsCard
@@ -563,7 +546,8 @@ export default function Groups() {
 				onClose={() => setModal({ open: false, edit: false, data: null })}
 				onSubmit={handleSubmit}
 				title={modal.edit ? "Guruhni tahrirlash" : "Yangi guruh yaratish"}
-				initialData={modal.data}
+            initialData={modal.data}
+            isLoading={isCreating || isUpdating}
 			/>
 
 			<ConfirmDeleteModal

@@ -20,8 +20,8 @@ export default function Header() {
 	// Ma'lumotlarni olish
 	const { students = [] } = useStudent();
 	const { groups = [] } = useGroups();
-	const { workerData = [] } = useWorker();
-	const { leads = [] } = useLeads();
+	const { workerData = [] } = useWorker({ enabled: user.role !== "TEACHER" });
+	const { leads = [] } = useLeads({ enabled: user.role !== "TEACHER" });
 
 	// Click outside - qidiruv oynasini yopish
 	useEffect(() => {
@@ -46,14 +46,26 @@ export default function Header() {
 			groups: groups
 				.filter((g) => g.name?.toLowerCase().includes(query))
 				.slice(0, 5),
-			workerData: workerData
-				.filter((t) => t.full_name?.toLowerCase().includes(query))
-				.slice(0, 5),
-			leads: leads
-				.filter((l) => l.full_name?.toLowerCase().includes(query))
-				.slice(0, 5),
+			workerData:
+				user?.role === "CEO"
+					? workerData
+							.filter((t) => t.full_name?.toLowerCase().includes(query))
+							.slice(0, 5)
+					: "",
+			leads:
+				user?.role === "CEO"
+					? leads
+							.filter((l) => l.full_name?.toLowerCase().includes(query))
+							.slice(0, 5)
+					: "",
 		};
-	}, [searchTerm, students, groups, workerData, leads]);
+	}, [
+		searchTerm,
+		students,
+		groups,
+		user?.role === "CEO" ? workerData : "",
+		user?.role === "CEO" ? leads : "",
+	]);
 
 	const totalResults = Object.values(searchResults).flat().length;
 
@@ -62,9 +74,6 @@ export default function Header() {
 		setSearchTerm("");
 		setIsSearchOpen(false);
 	};
-
-	console.log(students);
-	
 
 	return (
 		<header className="fixed top-0 left-0 z-50 flex h-16 w-full items-center justify-between px-5 bg-background border-b border-border shadow-sm">

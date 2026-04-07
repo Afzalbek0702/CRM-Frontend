@@ -106,17 +106,63 @@ export default function GuruhlarInfo() {
 		};
 	}, [attendance]);
 
-	const months = useMemo(
-		() =>
-			Array.from({ length: 12 }, (_, i) => {
-				const d = new Date(new Date().getFullYear(), i, 1);
-				return {
-					value: d.toISOString().slice(0, 7),
-					label: d.toLocaleString("uz-UZ", { month: "long", year: "numeric" }),
-				};
-			}),
-		[],
-	);
+const months = useMemo(() => {
+	return Array.from({ length: 12 }, (_, i) => {
+		const currentYear = new Date().getFullYear();
+		const monthIndex = i + 1; // 1 dan 12 gacha
+
+		// Value: "2026-01", "2026-02" ...
+		const value = `${currentYear}-${String(monthIndex).padStart(2, "0")}`;
+
+		let monthName = "";
+		switch (monthIndex) {
+			case 1:
+				monthName = "Yanvar";
+				break;
+			case 2:
+				monthName = "Fevral";
+				break;
+			case 3:
+				monthName = "Mart";
+				break;
+			case 4:
+				monthName = "Aprel";
+				break;
+			case 5:
+				monthName = "May";
+				break;
+			case 6:
+				monthName = "Iyun";
+				break;
+			case 7:
+				monthName = "Iyul";
+				break;
+			case 8:
+				monthName = "Avgust";
+				break;
+			case 9:
+				monthName = "Sentabr";
+				break;
+			case 10:
+				monthName = "Oktabr";
+				break;
+			case 11:
+				monthName = "Noyabr";
+				break;
+			case 12:
+				monthName = "Dekabr";
+				break;
+			default:
+				monthName = "";
+		}
+
+		return {
+			value: value,
+			// Label: "2026-yil Yanvar" yoki "Yanvar, 2026"
+			label: `${currentYear}-yil ${monthName}`,
+		};
+	});
+}, []);
 	const todayStr = new Date().toISOString().slice(0, 10);
 	const lessonDates = attendance[0]?.days.map((d) => d.date) || [];
 	const todayIdx = lessonDates.findIndex((d) => d >= todayStr);
@@ -133,7 +179,7 @@ export default function GuruhlarInfo() {
 	};
 	const initials = (n) => n?.charAt(0).toUpperCase() || "?";
 	const dayPill = (day, active) =>
-		`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${active ? "bg-gradient-to-r from-amber-400 to-orange-400 text-black shadow-lg shadow-amber-500/25 scale-105" : "bg-white/10 text-amber-300 border border-amber-400/30 hover:bg-amber-400/20"}`;
+		`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${active ? "bg-linear-to-r from-amber-400 to-orange-400 text-black shadow-lg shadow-amber-500/25 scale-105" : "bg-white/10 text-amber-300 border border-amber-400/30 hover:bg-amber-400/20"}`;
 	const statBox = (label, value, color, progress) => {
 		const c = {
 			gray: "text-gray-300",
@@ -149,7 +195,7 @@ export default function GuruhlarInfo() {
 				{progress !== undefined && (
 					<div className="absolute bottom-2 left-2 right-2 h-1 bg-white/10 rounded-full overflow-hidden">
 						<div
-							className="h-full bg-gradient-to-r from-amber-400 to-orange-400 rounded-full transition-all"
+							className="h-full bg-linear-to-r from-amber-400 to-orange-400 rounded-full transition-all"
 							style={{ width: `${progress}%` }}
 						/>
 					</div>
@@ -157,7 +203,8 @@ export default function GuruhlarInfo() {
 			</div>
 		);
 	};
-
+	console.log("month", month);
+	console.log("months", months);
 	if (loading || !group) return <Loader />;
 	if (error)
 		return (
@@ -178,12 +225,6 @@ export default function GuruhlarInfo() {
 
 	return (
 		<div className="relative min-h-screen bg-background p-4">
-			{/* Simplified background */}
-			<div className="fixed inset-0 -z-10">
-				<div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl animate-pulse" />
-				<div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
-			</div>
-
 			<div className="container mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4">
 				{/* Header */}
 				<div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
@@ -197,7 +238,7 @@ export default function GuruhlarInfo() {
 							<span className="ml-2 hidden sm:inline">Ortga</span>
 						</Button>
 						<div>
-							<h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-amber-400 via-orange-400 to-amber-400 bg-clip-text text-transparent">
+							<h1 className="text-2xl md:text-3xl font-bold bg-linear-to-r from-amber-400 via-orange-400 to-amber-400 bg-clip-text text-transparent">
 								{group.name}
 							</h1>
 							<p className="text-sm text-gray-500 mt-1">{group.course_type}</p>
@@ -218,13 +259,13 @@ export default function GuruhlarInfo() {
 							</Badge>
 						)}
 					</div>
-				</div> 
+				</div>
 
-				<div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
+				<div className="grid grid-cols-1 xl:grid-cols-12 gap-6 pb-4">
 					{/* Left Panel */}
 					<div className="xl:col-span-4 space-y-6">
 						{/* Group Info */}
-						<Card className="bg-gradient-to-br from-[#1f1f1f] to-[#161616] border-white/10 backdrop-blur-xl">
+						<Card className="bg-linear-to-br from-[#1f1f1f] to-[#161616] border-white/10 backdrop-blur-xl">
 							<CardHeader className="pb-4">
 								<div className="flex items-center justify-between">
 									<CardTitle className="text-xl text-white">
@@ -414,7 +455,7 @@ export default function GuruhlarInfo() {
 										<Button
 											onClick={saveAttendance}
 											disabled={isSaving || !isDirty}
-											className={`min-w-32 transition-all ${isDirty ? "bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black shadow-lg shadow-amber-500/25" : "bg-white/10 text-gray-400 border border-white/20"}`}
+											className={`min-w-32 transition-all ${isDirty ? "bg-linear-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black shadow-lg shadow-amber-500/25" : "bg-white/10 text-gray-400 border border-white/20"}`}
 										>
 											{isSaving ? (
 												<span className="flex items-center gap-2">
@@ -487,7 +528,7 @@ export default function GuruhlarInfo() {
 											{attendance.map((s, rowIdx) => (
 												<TableRow
 													key={s.student_id}
-													className={`border-white/5 hover:bg-white/5 ${rowIdx % 2 === 0 ? "bg-white/[0.02]" : ""}`}
+													className={`border-white/5 hover:bg-white/5 ${rowIdx % 2 === 0 ? "bg-white/2" : ""}`}
 												>
 													<TableCell className="sticky left-0 z-10 bg-[#1f1f1f] border-r border-white/10 font-medium text-white">
 														<div className="flex items-center gap-3">
@@ -510,8 +551,9 @@ export default function GuruhlarInfo() {
 														return (
 															<TableCell
 																key={idx}
-																className={`p-2 text-center ${isToday ? "bg-amber-400/5" : ""}`}
-															>
+																className={`${isToday ? "bg-amber-400/5" : ""} p-0`}
+                                             >
+                                                <div className="flex justify-center items-center">
 																{isNotEnrolled || outOfRange ? (
 																	<span className="text-zinc-700 text-xs">
 																		—
@@ -527,9 +569,10 @@ export default function GuruhlarInfo() {
 																				val,
 																			)
 																		}
-																		className={`border-white/30 data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-amber-400 data-[state=checked]:to-orange-400 data-[state=checked]:text-black transition-all ${isFuture ? "opacity-30 cursor-not-allowed" : "hover:border-amber-400"} ${isToday ? "ring-2 ring-amber-400/30" : ""}`}
+																		className={`border-white/30 data-[state=checked]:bg-linear-to-r data-[state=checked]:from-amber-400 data-[state=checked]:to-orange-400 data-[state=checked]:text-black transition-all ${isFuture ? "opacity-30 cursor-not-allowed" : "hover:border-amber-400"} ${isToday ? "ring-2 ring-amber-400/30" : ""}`}
 																	/>
 																)}
+                                                </div>
 															</TableCell>
 														);
 													})}

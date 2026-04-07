@@ -50,8 +50,8 @@ export default function Login() {
 		const e = {};
 		if (PhoneUtils.cleanPhone(form.phone).length < 12)
 			e.phone = "To'g'ri telefon raqam kiriting";
-		if (form.password.length < 4)
-			e.password = "Parol kamida 4 ta belgidan iborat bo'lishi kerak";
+		if (form.password.length < 6)
+			e.password = "Parol kamida 6 ta belgidan iborat bo'lishi kerak";
 		setErrors(e);
 		return !Object.keys(e).length;
 	};
@@ -86,19 +86,19 @@ export default function Login() {
 	return (
 		<div className="relative flex min-h-screen items-center justify-center bg-background p-4">
 			{/* Simplified background */}
-			<div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+			{/* <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
 				<div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl animate-pulse" />
 				<div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse delay-1000" />
-			</div>
+			</div> */}
 
 			<div className="w-full max-w-md animate-in fade-in slide-in-from-bottom-8 duration-700">
-				<Card className="relative overflow-hidden border-white/10 bg-gradient-to-br from-[#1f1f1f]/95 to-[#161616]/95 backdrop-blur-xl shadow-2xl">
+				<Card className="relative overflow-hidden border-white/10 bg-linear-to-br from-[#1f1f1f]/95 to-[#161616]/95 backdrop-blur-xl shadow-2xl">
 					<CardHeader className="space-y-4 text-center pb-6">
-						<div className="relative mx-auto rounded-2xl bg-gradient-to-br from-amber-400/20 to-blue-400/20 p-4 border border-white/10">
+						<div className="relative mx-auto rounded-2xl bg-linear-to-br from-amber-400/20 to-blue-400/20 p-4 border border-white/10">
 							<LockKeyhole className="h-8 w-8 text-amber-400" />
 						</div>
 						<div>
-							<CardTitle className="text-3xl font-bold bg-gradient-to-r from-amber-400 via-orange-400 to-amber-400 bg-clip-text text-transparent">
+							<CardTitle className="text-3xl font-bold bg-linear-to-r from-amber-400 via-orange-400 to-amber-400 bg-clip-text text-transparent">
 								Data Space
 							</CardTitle>
 							<CardDescription className="text-gray-400">
@@ -226,7 +226,7 @@ export default function Login() {
 							<Button
 								type="submit"
 								disabled={loading || !phoneValid || !pwdValid}
-								className="w-full h-12 bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black font-semibold shadow-lg shadow-amber-500/25 disabled:opacity-50"
+								className="w-full h-12 bg-linear-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black font-semibold shadow-lg shadow-amber-500/25 disabled:opacity-50"
 							>
 								{loading ? (
 									<>

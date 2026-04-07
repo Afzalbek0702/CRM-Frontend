@@ -87,11 +87,11 @@ export default function StudentDirectory() {
 				<Table>
 					<TableHeader className="bg-primary">
 						<TableRow>
-							<TableHead className="w-[150px]">ID raqami</TableHead>
+							<TableHead className="w-37.5">ID raqami</TableHead>
 							<TableHead>F.I.SH</TableHead>
 							<TableHead>Holati</TableHead>
-							<TableHead className="w-[200px]">Davomat</TableHead>
-							<TableHead className="w-[50px]"></TableHead>
+							<TableHead className="w-50">Davomat</TableHead>
+							<TableHead className="w-12.5"></TableHead>
 						</TableRow>
 					</TableHeader>
 					<TableBody>

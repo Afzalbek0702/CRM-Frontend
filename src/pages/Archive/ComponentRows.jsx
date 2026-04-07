@@ -1,10 +1,6 @@
 import { fmtDate, initials } from "./config";
 import { getUzDays } from "@/utils/weekday";
 import {
-	Search,
-	Filter,
-	Download,
-	UserCheck,
 	MoreHorizontal,
 } from "lucide-react";
 import {
@@ -13,21 +9,14 @@ import {
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
 import {
-	Table,
-	TableBody,
 	TableCell,
-	TableHead,
-	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
-import {
-	FaClock,
-	FaUsers,
-} from "react-icons/fa";
+import { FaClock, FaUsers } from "react-icons/fa";
 
 export const StudentRow = ({ s, onCopy, copied }) => (
 	<TableRow
@@ -103,24 +92,17 @@ export const StudentRow = ({ s, onCopy, copied }) => (
 				</button>
 			)}
 		</TableCell>
-		<TableCell className="text-right">
-			<Button
-				variant="ghost"
-				size="icon"
-				className="h-8 w-8 text-gray-500 hover:text-amber-400 opacity-0 group-hover/row:opacity-100"
-			>
-				<MoreHorizontal className="h-4 w-4" />
-			</Button>
-		</TableCell>
+		
 	</TableRow>
 );
 
 const DayPill = ({ day, isToday = false }) => (
 	<span
 		className={`px-2.5 py-1 rounded-full text-[10px] font-semibold transition-all duration-200
-			${isToday
-				? "bg-gradient-to-r from-amber-400 to-orange-400 text-black shadow-lg shadow-amber-500/25"
-				: "bg-white/10 text-amber-300 border border-amber-400/30 hover:bg-amber-400/20"
+			${
+				isToday
+					? "bg-linear-to-r from-amber-400 to-orange-400 text-black shadow-lg shadow-amber-500/25"
+					: "bg-white/10 text-amber-300 border border-amber-400/30 hover:bg-amber-400/20"
 			}`}
 	>
 		{day}
@@ -166,15 +148,7 @@ export const TeacherRow = ({ t, onCopy, copied }) => (
 		<TableCell>
 			<SourceBadge source={t.source} />
 		</TableCell>
-		<TableCell className="text-right">
-			<Button
-				variant="ghost"
-				size="icon"
-				className="h-8 w-8 text-gray-500 hover:text-emerald-400 opacity-0 group-hover/row:opacity-100"
-			>
-				<MoreHorizontal className="h-4 w-4" />
-			</Button>
-		</TableCell>
+		
 	</TableRow>
 );
 
@@ -223,15 +197,7 @@ export const LeadRow = ({ l, courseData, onCopy, copied }) => (
 		<TableCell className="max-w-32 text-gray-400 text-sm truncate">
 			{l.comment || "—"}
 		</TableCell>
-		<TableCell className="text-right">
-			<Button
-				variant="ghost"
-				size="icon"
-				className="h-8 w-8 text-gray-500 hover:text-sky-400 opacity-0 group-hover/row:opacity-100"
-			>
-				<MoreHorizontal className="h-4 w-4" />
-			</Button>
-		</TableCell>
+		
 	</TableRow>
 );
 
@@ -261,15 +227,7 @@ export const PaymentRow = ({ p }) => (
 				{p.method}
 			</Badge>
 		</TableCell>
-		<TableCell className="text-right">
-			<Button
-				variant="ghost"
-				size="icon"
-				className="h-8 w-8 text-gray-500 hover:text-purple-400 opacity-0 group-hover/row:opacity-100"
-			>
-				<MoreHorizontal className="h-4 w-4" />
-			</Button>
-		</TableCell>
+		
 	</TableRow>
 );
 
@@ -325,16 +283,7 @@ export const GroupRow = ({ g, navigate }) => {
 					))}{" "}
 				</div>
 			</TableCell>
-			<TableCell className="text-right">
-				<Button
-					variant="ghost"
-					size="icon"
-					className="h-8 w-8 text-gray-500 hover:text-amber-400 opacity-0 group-hover/row:opacity-100"
-					onClick={(e) => e.stopPropagation()}
-				>
-					<MoreHorizontal className="h-4 w-4" />
-				</Button>
-			</TableCell>
+			
 		</TableRow>
 	);
 };

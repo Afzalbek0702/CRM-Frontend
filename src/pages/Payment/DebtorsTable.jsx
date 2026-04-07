@@ -1,6 +1,4 @@
 import { useMemo, useState } from "react";
-import { usePayments } from "@/services/payment/usePayments";
-import { useStudent } from "@/services/student/useStudent";
 import toast from "react-hot-toast";
 import Loader from "@/components/Loader";
 import {
@@ -38,79 +36,31 @@ import {
 	AlertCircle,
 	Calendar,
 	ExternalLink,
-	Copy,
 	Check,
-	TrendingUp,
 } from "lucide-react";
+import { useDashboard } from "@/services/dashboard/useDashboard";
 
 export default function DebtorsTable({ searchTerm = "" }) {
-	const { payments, isLoading: paymentsLoading } = usePayments();
-	const { students, isLoading: studentsLoading } = useStudent();
 	const [copiedId, setCopiedId] = useState(null);
-	const isLoading = paymentsLoading || studentsLoading;
-
-	const debtorsData = useMemo(() => {
-		const now = new Date();
-		const currentMonth = now.getMonth();
-		const currentYear = now.getFullYear();
-
-		return (students || [])
-			.map((s) => {
-				const sp = (payments || []).filter((p) => p.student_id === s.id);
-				const paid = sp.reduce((sum, p) => sum + (p.amount || 0), 0);
-
-				const paidThisMonth = sp.some((p) => {
-					const d = new Date(p.paid_at);
-					return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
-				});
-
-				const lastPayment = sp.sort(
-					(a, b) => new Date(b.paid_at) - new Date(a.paid_at)
-				)[0];
-
-				const monthsOverdue = (() => {
-					if (!lastPayment) return null;
-					const last = new Date(lastPayment.paid_at);
-					const diffMonths =
-						(currentYear - last.getFullYear()) * 12 +
-						(currentMonth - last.getMonth());
-					return diffMonths;
-				})();
-
-				return {
-					id: s.id,
-					student_name: s.full_name,
-					group_name: s.group_name,
-					course_price: s.course_price || 0,
-					total_paid: paid,
-					remaining: s.course_price || 0, // still useful for badge severity
-					last_payment: lastPayment?.paid_at,
-					payment_count: sp.length,
-					paidThisMonth,
-					monthsOverdue,
-				};
-			})
-			.filter((d) => !d.paidThisMonth)
-			.sort((a, b) => (b.monthsOverdue ?? 99) - (a.monthsOverdue ?? 99));
-	}, [students, payments]);
+	const { topDebtors, isLoading } = useDashboard();
 
 	const filtered = useMemo(
 		() =>
-			debtorsData.filter(
+			topDebtors?.filter(
 				(d) =>
-					d.student_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+					d.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
 					d.group_name?.toLowerCase().includes(searchTerm.toLowerCase()),
 			),
-		[debtorsData, searchTerm],
+		[topDebtors, searchTerm],
 	);
 
 	const stats = useMemo(() => {
-		const total = filtered.reduce((s, d) => s + d.course_price, 0); // total owed this month
+		const total = filtered?.reduce((s, d) => s + d.debt_amount, 0);
 		return {
 			total,
-			count: filtered.length,
-			avg: filtered.length ? Math.round(total / filtered.length) : 0,
-			max: filtered.reduce((m, d) => Math.max(m, d.course_price), 0),
+			count: filtered?.length,
+			avg: filtered?.length ? Math.round(total / filtered?.length) : 0,
+			max: filtered?.reduce((m, d) => Math.max(m, d.debt_amount), 0),
 		};
 	}, [filtered]);
 
@@ -123,10 +73,10 @@ export default function DebtorsTable({ searchTerm = "" }) {
 	const initials = (n) =>
 		n
 			? n
-				.split(" ")
-				.map((p) => p[0])
-				.join("")
-				.toUpperCase()
+					.split(" ")
+					.map((p) => p[0])
+					.join("")
+					.toUpperCase()
 			: "?";
 	const fmt = (a) => `${a.toLocaleString()} so'm`;
 	const fmtDate = (d) => (d ? new Date(d).toLocaleDateString("uz-UZ") : "—");
@@ -134,20 +84,17 @@ export default function DebtorsTable({ searchTerm = "" }) {
 		if (monthsOverdue === null || monthsOverdue >= 3)
 			return { l: "Jiddiy", c: "text-red-400 border-red-500/30 bg-red-500/10" };
 		if (monthsOverdue === 2)
-			return { l: "O'rtacha", c: "text-amber-400 border-amber-500/30 bg-amber-500/10" };
+			return {
+				l: "O'rtacha",
+				c: "text-amber-400 border-amber-500/30 bg-amber-500/10",
+			};
 		return { l: "Yengil", c: "text-sky-400 border-sky-500/30 bg-sky-500/10" };
 	};
 
 	if (isLoading) return <Loader />;
 
 	return (
-		<div className="relative min-h-screen bg-background p-4">
-			{/* Simplified background */}
-			<div className="fixed inset-0 -z-10">
-				<div className="absolute top-0 left-1/4 w-96 h-96 bg-red-500/10 rounded-full blur-3xl animate-pulse" />
-				<div className="absolute bottom-0 right-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
-			</div>
-
+		<div className="relative min-h-99 bg-background p-4">
 			<div className="container mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4">
 				{/* Header */}
 				<div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/10">
@@ -156,7 +103,7 @@ export default function DebtorsTable({ searchTerm = "" }) {
 							<FaExclamationTriangle className="text-red-400 w-6 h-6" />
 						</div>
 						<div>
-							<h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-red-400 via-pink-400 to-red-400 bg-clip-text text-transparent">
+							<h1 className="text-2xl md:text-3xl font-bold bg-linear-to-r from-red-400 via-pink-400 to-red-400 bg-clip-text text-transparent">
 								Qarzdorlar ro'yxati
 							</h1>
 							<p className="text-sm text-gray-500 mt-1">
@@ -197,7 +144,7 @@ export default function DebtorsTable({ searchTerm = "" }) {
 					].map((st, i) => (
 						<Card
 							key={i}
-							className={`bg-gradient-to-br from-${st.c}-500/20 to-${st.c}-500/10 border-${st.c}-500/30 border backdrop-blur-xl`}
+							className={`bg-linear-to-br from-${st.c}-500/20 to-${st.c}-500/10 border-${st.c}-500/30 border backdrop-blur-xl`}
 						>
 							<CardContent className="p-5 flex items-center gap-4">
 								<div
@@ -303,27 +250,21 @@ export default function DebtorsTable({ searchTerm = "" }) {
 												<TableCell className="py-4">
 													<Avatar className="w-10 h-10 border border-white/10 bg-red-400/20">
 														<AvatarFallback className="text-red-400 text-sm">
-															{initials(d.student_name)}
+															{initials(d.full_name)}
 														</AvatarFallback>
 													</Avatar>
 												</TableCell>
 												<TableCell className="font-medium text-white">
-													<p className="truncate max-w-32">{d.student_name}</p>
-													<button
-														onClick={(e) => {
-															e.stopPropagation();
-															copyId(d.id);
-														}}
-														className="flex items-center gap-1 text-[10px] text-gray-500 hover:text-red-400 mt-1"
-													>
-														{copiedId === d.id ? (
+													<p className="truncate max-w-32">{d.full_name}</p>
+													<span className="flex items-center gap-1 text-[10px] text-gray-500 mt-1">
+														{copiedId === d.student_id ? (
 															<Check className="w-3 h-3" />
 														) : (
 															<span className="font-mono">
-																#{String(d.id).slice(-4)}
+																#{String(d.student_id)}
 															</span>
 														)}
-													</button>
+													</span>
 												</TableCell>
 												<TableCell>
 													<Badge
@@ -341,15 +282,15 @@ export default function DebtorsTable({ searchTerm = "" }) {
 														<span className="text-emerald-400 font-mono text-sm">
 															{fmt(d.total_paid)}
 														</span>
-														<span className="text-xs text-gray-500">
+														{/* <span className="text-xs text-gray-500">
 															{d.payment_count} to'lov
-														</span>
+														</span> */}
 													</div>
 												</TableCell>
 												<TableCell className="text-right">
 													<div className="flex flex-col items-end gap-1">
 														<span className="text-red-400 font-bold font-mono text-sm">
-															{fmt(d.remaining)}
+															{fmt(d.debt_amount)}
 														</span>
 														<div className="space-y-1">
 															<div className="flex items-center justify-between text-xs gap-1">
@@ -386,7 +327,7 @@ export default function DebtorsTable({ searchTerm = "" }) {
 												</TableCell>
 												<TableCell className="text-gray-400 text-sm flex items-center gap-1.5">
 													<Calendar className="w-4 h-4 text-gray-500" />
-													{fmtDate(d.last_payment)}
+													{fmtDate(d.last_payment_date)}
 												</TableCell>
 												<TableCell className="text-right">
 													<Tooltip>
@@ -434,9 +375,9 @@ export default function DebtorsTable({ searchTerm = "" }) {
 								<Calendar className="mr-2 h-4 w-4" />
 								Hisobot
 							</Button>
-							<Button className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white">
+							<Button className="bg-linear-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white">
 								<FaMoneyCheckAlt className="mr-2" />
-								Jamaviy eslatma
+								Jamoviy eslatma
 							</Button>
 						</div>
 					</div>

@@ -7,7 +7,7 @@ import { FaSearch } from "react-icons/fa";
 
 export const StatsCard = ({ icon, label, value, trend, color }) => (
 	<Card
-		className={`bg-gradient-to-br ${COLORS[color]} border backdrop-blur-xl hover:scale-[1.02] transition-all`}
+		className={`bg-linear-to-br ${COLORS[color]} border backdrop-blur-xl hover:scale-[1.02] transition-all`}
 	>
 		<CardContent className="p-4 flex items-center gap-4">
 			<div
@@ -35,7 +35,7 @@ export const StatsCard = ({ icon, label, value, trend, color }) => (
 
 export const DayPill = ({ day, active }) => (
 	<span
-		className={`px-2.5 py-1 rounded-full text-[10px] font-semibold transition-all ${active ? "bg-gradient-to-r from-amber-400 to-orange-400 text-black shadow-lg" : "bg-white/10 text-amber-300 border border-amber-400/30 hover:bg-amber-400/20"}`}
+		className={`px-2.5 py-1 rounded-full text-[10px] font-semibold transition-all ${active ? "bg-linear-to-r from-amber-400 to-orange-400 text-black shadow-lg" : "bg-white/10 text-amber-300 border border-amber-400/30 hover:bg-amber-400/20"}`}
 	>
 		{day}
 	</span>
@@ -61,7 +61,10 @@ export const EmptyState = ({ config, hasSearch }) => {
 					: "Ushbu kategoriyada hozircha hech qanday ma'lumot mavjud emas."}
 			</p>
 			{!hasSearch && (
-				<Button variant="outline" className="border-white/20 text-gray-400 flex">
+				<Button
+					variant="outline"
+					className="border-white/20 text-gray-400 flex"
+				>
 					<ArchiveIcon className="mr-2 w-4 h-4" />
 					Boshqa arxivlarni ko'rish
 				</Button>

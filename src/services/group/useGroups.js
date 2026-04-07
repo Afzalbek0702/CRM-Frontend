@@ -37,8 +37,8 @@ export const useGroups = () => {
 			toast.success("Guruh muvaffaqiyatli qo'shildi");
 		},
 		onError: (err) => {
-			toast.error("Guruh qo'shishda xatolik yuz berdi");
-			console.error(err.response?.data);
+			toast.error(err ? err.response?.data.message : "Guruh qo'shishda xatolik yuz berdi");
+			console.error(err.response?.data.message);
 		},
 	});
 
@@ -72,8 +72,8 @@ export const useGroups = () => {
 		error,
 		fetchAll,
 		fetchById,
-		createGroup: create.mutate,
-		updateGroup: update.mutate,
+		createGroup: create.mutateAsync,
+		updateGroup: update.mutateAsync,
 		deleteGroup: deleteById.mutate,
 
 		isCreating: create.isPending,

@@ -7,7 +7,7 @@ export function AuthProvider({ children }) {
 	const [user, setUser] = useState(null);
 	const [tenant, setTenant] = useState(null);
 	const [loading, setLoading] = useState(true);
-
+	const [error, setError] = useState(null);
 	const fetchUser = async () => {
 		try {
 			const res = await authService.me();
@@ -15,6 +15,7 @@ export function AuthProvider({ children }) {
 			setUser(res.user);
 		} catch (err) {
 			setUser(null);
+			setError(err);
 		} finally {
 			setLoading(false);
 		}
@@ -27,36 +28,45 @@ export function AuthProvider({ children }) {
 	const login = async (data) => {
 		try {
 			setLoading(true);
+			setError(null);
 			const res = await authService.login(data);
 			setTenant(res.tenant);
 			setUser(res.user);
 			return { user: res.user, tenant: res.tenant };
 		} catch (error) {
+			console.log(error.response.data.message);
+			const errorMessage =
+				error.response?.data?.message ||
+				error.message ||
+				"Tizimga kirishda xatolik yuz berdi";
+
+			setError(errorMessage);
 			setUser(null);
 		} finally {
 			setLoading(false);
 		}
 	};
 
-	// const logout = async () => {
-	// 	try {
-	// 		await authService.logout();
-	// 		setUser(null);
-	// 		setTenant(null);
-	// 		window.location.href = "/login";
-	// 	} catch (error) {
-	// 		console.error("Logout failed:", error);
-	// 	}
-	// };
+	const logout = async () => {
+		try {
+			await authService.logout();
+			setUser(null);
+			setTenant(null);
+			window.location.href = "/login";
+		} catch (error) {
+			console.error("Logout failed:", error);
+		}
+	};
 
 	return (
 		<AuthContext.Provider
 			value={{
 				user,
 				tenant,
+				error,
 				setUser,
 				login,
-				// logout,
+				logout,
 				loading,
 			}}
 		>
