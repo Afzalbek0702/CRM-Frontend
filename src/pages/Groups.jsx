@@ -103,7 +103,6 @@ const StatsCard = ({ icon, label, value, trend, color }) => {
 	);
 };
 
-// 🎨 Day Pill Component
 const DayPill = ({ day, isToday = false }) => (
 	<span
 		className={`px-2.5 py-1 rounded-full text-[10px] font-semibold transition-all duration-200

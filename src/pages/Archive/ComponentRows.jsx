@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useParams } from "react-router-dom"; 
 
 import { FaClock, FaUsers } from "react-icons/fa";
 
@@ -235,11 +236,12 @@ export const GroupRow = ({ g, navigate }) => {
 	const today = getUzDays(
 		new Date().toLocaleDateString("uz-UZ", { weekday: "short" }),
 	);
+	const { tenant } = useParams();
 	return (
 		<TableRow
 			key={g.id}
 			className="border-white/5 hover:bg-amber-400/5 transition-all group/row cursor-pointer"
-			onClick={() => navigate(`/groups/${g.id}`)}
+			onClick={() => navigate(`/${tenant}/groups/${g.id}`)}
 		>
 			<TableCell className="py-4">
 				<Avatar className="w-10 h-10 border border-white/10 bg-amber-400/20">
@@ -261,8 +263,7 @@ export const GroupRow = ({ g, navigate }) => {
 			<TableCell className="font-semibold text-amber-400">
 				{g.price} ming so'm
 			</TableCell>
-			<TableCell className="text-gray-300 flex items-center gap-1.5">
-				<FaClock className="w-4 h-4 text-gray-500" />
+			<TableCell className="text-gray-300">
 				{g.lesson_time}
 			</TableCell>
 			<TableCell>
@@ -274,7 +275,7 @@ export const GroupRow = ({ g, navigate }) => {
 				</Badge>
 			</TableCell>
 			<TableCell className="text-gray-300 text-sm">
-				{g.teachers?.full_name || "—"}
+				{g.teachers?.full_name || "-"}
 			</TableCell>
 			<TableCell>
 				<div className="flex flex-wrap gap-1">

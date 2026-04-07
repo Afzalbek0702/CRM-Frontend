@@ -76,7 +76,7 @@ export default function StudentDetail() {
 		</div>
 	);
 
-	const formatDate = (d) => d ? String(d).split("T")[0] : "Kiritilmagan";
+	const formatDate = (d) => d ? String(d).split("T")[0] : "-";
 	const formatCurrency = (amount) => `${(amount || 0).toLocaleString()} so'm`;
 
 	// 🎨 Avatar initials
@@ -240,7 +240,7 @@ export default function StudentDetail() {
 									<DetailItem
 										icon={<User className="w-4 h-4" />}
 										label="Ota-ona ismi"
-										value={student.parents_name || "—"}
+										value={student.parents_name || "-"}
 									/>
 									{student.email && (
 										<DetailItem

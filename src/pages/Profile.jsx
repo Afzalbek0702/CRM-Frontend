@@ -36,6 +36,11 @@ export default function Profile() {
 		navigate("/login");
 	};
 
+	console.log(user);
+	console.log(user.phone);
+	
+	
+
 	if (!user) {
 		return (
 			<div className="flex h-[50vh] items-center justify-center">
@@ -101,10 +106,11 @@ export default function Profile() {
 						<div className="grid grid-cols-1 sm:grid-cols-2 gap-6 ml-6">
 							<ProfileField
 								label="Telefon"
-								value={PhoneUtils.formatPhone(user.phone)}
+								// value={PhoneUtils.formatPhone(user.phone) && undefined ? "Kiritilmagan" : "Kiritilmagan"}
+								value={PhoneUtils.formatPhone(user.phone) || "Kiritilmagan"}
 								icon={<Phone className="h-4 w-4" />}
 							/>
-							<ProfileField label="Roli" value={user.role} />
+							<ProfileField label="Roli" value={user.role ?? "Kiritilmagan"} />
 						</div>
 					</div>
 

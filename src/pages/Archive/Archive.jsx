@@ -153,6 +153,8 @@ export default function Archive() {
 					</Badge>
 				</div>
 
+				<p className="text-center text-red-600">Bu sahifadagi barcha narsa arxivlangan va ishlatib bo'lmaydi!</p>
+
 				{/* Stats */}
 				<div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
 					<StatsCard

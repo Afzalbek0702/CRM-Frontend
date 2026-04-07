@@ -77,6 +77,7 @@ export default function GuruhlarInfo() {
 	const [showPaymentModal, setShowPaymentModal] = useState(false);
 	const [selectedStudent, setSelectedStudent] = useState(null);
 	const [deleteId, setDeleteId] = useState(null);
+	
 	const {
 		attendance,
 		updateLocalAttendance,
@@ -295,8 +296,8 @@ const months = useMemo(() => {
 										},
 										{
 											i: <FaCalendarAlt />,
-											l: "Davomiyligi",
-											v: `${group.duration} oy`,
+											l: "Xona ID",
+											v: `#${group.room_id}`,
 										},
 									].map((it, i) => (
 										<div key={i} className="space-y-1.5">
@@ -368,7 +369,7 @@ const months = useMemo(() => {
 												key={s.id}
 												className="group flex items-center justify-between p-3 rounded-xl bg-white/3 border border-white/5 hover:border-amber-400/30 hover:bg-amber-400/5 transition-all"
 											>
-												<div className="flex items-center gap-3 min-w-0">
+												<div className="flex items-center gap-3 min-w-0 h-4">
 													<div className="w-9 h-9 rounded-full bg-amber-400/20 flex items-center justify-center text-amber-400 text-sm font-bold shrink-0">
 														{initials(s.full_name)}
 													</div>
