@@ -201,7 +201,6 @@ export default function SalaryTable() {
 	const handleConfirmDelete = async () => {
 		if (deleteId) {
 			await deleteSalary(deleteId);
-			toast.success("Ish haqi muvaffaqiyatli o'chirildi");
 			setDeleteId(null);
 		}
 	};
@@ -565,10 +564,8 @@ export default function SalaryTable() {
 				onSubmit={(data) => {
 					if (modal.data) {
 						updateSalary(modal.data.id, data);
-						toast.success("Ish haqi muvaffaqiyatli yangilandi!");
 					} else {
 						createSalary(data);
-						toast.success("Yangi ish haqi qayd etildi!");
 					}
 					setModal({ isOpen: false, data: null });
 				}}

@@ -188,7 +188,6 @@ export default function IncomeTable() {
 	const handleConfirmDelete = () => {
 		if (deleteId) {
 			deletePayment(deleteId);
-			toast.success("To'lov muvaffaqiyatli o'chirildi");
 			setDeleteId(null);
 		}
 	};

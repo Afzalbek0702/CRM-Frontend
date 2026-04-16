@@ -152,7 +152,6 @@ export default function Workers() {
 		if (deleteId) {
 			await removeWorker(deleteId);
 			setDeleteId(null);
-			toast.success("Xodim muvaffaqiyatli o'chirildi");
 		}
 	};
 
@@ -515,10 +514,8 @@ export default function Workers() {
 				onSubmit={async (formData) => {
 					if (editingWorker) {
 						await updateWorker({ id: editingWorker.id, data: formData });
-						toast.success("Xodim ma'lumotlari yangilandi!");
 					} else {
 						await createWorker(formData);
-						toast.success("Yangi xodim qo'shildi!");
 					}
 					setIsModalOpen(false);
 					setEditingWorker(null);

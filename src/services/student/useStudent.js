@@ -110,7 +110,15 @@ export const useStudent = () => {
 		mutationFn: ({ studentId, toGroupId }) =>
 			studentService.transferToGroup(studentId, toGroupId),
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: STUDENTS_QUERY_KEY });
+         queryClient.invalidateQueries({ queryKey: STUDENTS_QUERY_KEY });
+         queryClient.invalidateQueries({
+						queryKey: ["dashboard"],
+						refetchType: "none",
+					});
+         queryClient.invalidateQueries({
+						queryKey: ["groups"],
+						refetchType: "none",
+					});
 			toast.success("Talaba muvaffaqiyatli boshqa guruhga ko'chirildi");
 		},
 		onError: (error) => {

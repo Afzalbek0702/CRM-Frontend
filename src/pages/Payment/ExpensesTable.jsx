@@ -478,11 +478,6 @@ export default function ExpensesTable() {
 				initialData={modal.data}
 				onSubmit={(fd) => {
 					modal.data ? updateExpense(modal.data.id, fd) : createExpense(fd);
-					toast.success(
-						modal.data
-							? "Xarajat muvaffaqiyatli yangilandi!"
-							: "Yangi xarajat qo'shildi!",
-					);
 					setModal({ isOpen: false, data: null });
 				}}
 			/>
@@ -491,7 +486,6 @@ export default function ExpensesTable() {
 				onClose={() => setDeleteId(null)}
 				onConfirm={() => {
 					deleteExpense(deleteId);
-					toast.success("Xarajat muvaffaqiyatli o'chirildi");
 					setDeleteId(null);
 				}}
 				title="Xarajatni o'chirish"

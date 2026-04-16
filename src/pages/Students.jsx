@@ -537,7 +537,7 @@ export default function Students() {
 														className="cursor-pointer hover:bg-emerald-400/10 focus:bg-emerald-400/10"
 													>
 														<UserPlus className="mr-2 h-4 w-4 text-emerald-400" />{" "}
-														Guruhga qo'shish
+														{s.groups ? "Guruhni almashtirish" : "Guruhga qo'shish"}
 													</DropdownMenuItem>
 													<DropdownMenuSeparator className="bg-white/10" />
 													<DropdownMenuItem
@@ -593,10 +593,8 @@ export default function Students() {
 				onSubmit={async (formData) => {
 					if (editingStudent) {
 						await updateStudent(editingStudent.id, formData);
-						toast.success("O'quvchi ma'lumotlari yangilandi!");
 					} else {
 						await createStudent(formData);
-						toast.success("Yangi o'quvchi qo'shildi!");
 					}
 					setIsModalOpen(false);
 				}}

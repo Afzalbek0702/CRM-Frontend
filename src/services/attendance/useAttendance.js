@@ -48,7 +48,7 @@ export const useAttendance = ({ group_id, month }) => {
 		attendance.forEach((student) => {
 			student.days.forEach((day) => {
 				// null bo'lmagan barcha kunlarni massivga yig'amiz
-				if (day.status !== null) {
+				if (day.status !== null && day.status !== "NOT_ENROLLED") {
 					changedData.push({
 						group_id: group_id,
 						student_id: student.student_id,

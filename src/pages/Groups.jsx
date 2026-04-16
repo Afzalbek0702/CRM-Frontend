@@ -207,7 +207,7 @@ export default function Groups() {
 			Frontend: "bg-sky-500/20 text-sky-400 border-sky-500/30",
 			Backend: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
 			IT: "bg-purple-500/20 text-purple-400 border-purple-500/30",
-			"Computer Science": "bg-amber-500/20 text-amber-400 border-amber-500/30",
+			"Computer science": "bg-amber-500/20 text-amber-400 border-amber-500/30",
 		};
 		return colors[type] || "bg-gray-500/20 text-gray-400 border-gray-500/30";
 	};
@@ -266,7 +266,7 @@ export default function Groups() {
 					<StatsCard
 						icon={<FaMoneyBillWave className="w-5 h-5" />}
 						label="O'rtacha narx"
-						value={`${(stats.avgPrice / 1000).toLocaleString()}k so'm`}
+						value={`${(stats.avgPrice / 1000).toLocaleString()} ming so'm`}
 						color="blue"
 					/>
 				</div>
@@ -408,7 +408,7 @@ export default function Groups() {
 											</TableCell>
 											<TableCell className="font-semibold text-amber-400">
 												{g.price
-													? `${(Number(g.price) / 1000).toLocaleString()}k`
+													? `${(Number(g.price) / 1000).toLocaleString()} ming`
 													: "0"}{" "}
 												so'm
 											</TableCell>
