@@ -204,8 +204,6 @@ const months = useMemo(() => {
 			</div>
 		);
 	};
-	console.log("month", month);
-	console.log("months", months);
 	if (loading || !group) return <Loader />;
 	if (error)
 		return (

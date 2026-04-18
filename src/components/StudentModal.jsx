@@ -98,7 +98,7 @@ export default function StudentModal({
 
 	return (
 		<Dialog open={isOpen} onOpenChange={onClose}>
-			<DialogContent className="max-w-[95vw] sm:max-w-xl bg-zinc-950 border-zinc-800 text-white overflow-y-auto max-h-[95vh]">
+			<DialogContent className="max-w-[95vw] sm:max-w-xl bg-zinc-950 border-zinc-800 text-white max-h-[95vh]">
 				<DialogHeader>
 					<DialogTitle className="text-xl font-bold flex items-center gap-2">
 						{initialData ? (

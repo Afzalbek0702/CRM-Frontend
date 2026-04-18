@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 
 const STUDENTS_QUERY_KEY = ["students"];
 
-export const useStudent = () => {
+export const useStudent = (page,limit) => {
 	const queryClient = useQueryClient();
 	// 1. Barcha talabalarni yuklash (avtomatik)
 	const {

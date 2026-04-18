@@ -10,9 +10,8 @@ export const useDashboard = (
 ) => {
 	const { data, error, isLoading } = useQuery({
 		queryKey: ["dashboard"],
-		queryFn: () => dashboardService.get(from, to, month),
+		queryFn: () => dashboardService.get(),
 	});
-	console.log(data?.studentAndGroupData);
 
 	return {
 		monthlyIncome: data?.monthlyIncome,

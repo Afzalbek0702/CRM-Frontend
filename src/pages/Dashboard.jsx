@@ -196,10 +196,6 @@ export default function Dashboard() {
 		tenant,
 	]);
 
-	console.log("debtors", topDebtors);
-	console.log("analysys", debtAnalysis);
-
-
 
 	const quickActions = useMemo(() => {
 		const actions = {

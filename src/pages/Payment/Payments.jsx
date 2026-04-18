@@ -45,11 +45,8 @@ export default function Payments() {
 	}
 
 	return (
-		<div className="space-y-6 bg-background animate-in fade-in duration-500">
-			{/* Jadval qismi */}
-			<div className="rounded-xl ">
-				<div className="overflow-x-auto">{activeConfig.component}</div>
-			</div>
-		</div>
+		// <div className="space-y-6 bg-background animate-in fade-in duration-200">
+		<>{activeConfig.component}</>
+		// </div>
 	);
 }

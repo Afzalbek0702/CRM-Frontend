@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import { FaSearch, FaTimes } from "react-icons/fa";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
-import { useStudent } from "../services/student/useStudent";
-import { useGroups } from "../services/group/useGroups";
+import { useStudent } from "@/services/student/useStudent";
+import { useGroups } from "@/services/group/useGroups";
 import { useWorker } from "@/services/worker/useWorker";
-import { useLeads } from "../services/lead/useLeads";
-import { useAuth } from "../context/authContext";
+import { useLeads } from "@/services/lead/useLeads";
+import { useAuth } from "@/context/authContext";
 import { SidebarTrigger } from "./ui/sidebar";
 import { cn } from "@/lib/utils";
 
@@ -105,7 +105,7 @@ export default function Header() {
 								setSearchTerm(e.target.value);
 								if (e.target.value.trim()) setIsSearchOpen(true);
 							}}
-							className="w-full bg-transparent border-none outline-none text-sm placeholder:text-muted-foreground"
+							className="w-full bg-transparent border-none outline-none text-sm placeholder:text-muted-foreground focus-within:border-none"
 						/>
 						{searchTerm && (
 							<button

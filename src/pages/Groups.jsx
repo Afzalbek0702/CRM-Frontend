@@ -121,7 +121,7 @@ export default function Groups() {
 	const { tenant } = useParams();
 	const { groups, loading, createGroup, deleteGroup, updateGroup,isCreating,isUpdating } =
 		useGroups();
-	const { students } = useStudent();
+	const { students = { data: [] } } = useStudent();
 	const { user } = useAuth();
 	const [searchTerm, setSearchTerm] = useState("");
 	const [deleteId, setDeleteId] = useState(null);
@@ -131,7 +131,7 @@ export default function Groups() {
 	// 📊 Stats calculations
 	const stats = useMemo(() => {
 		if (!groups) return { total: 0, totalStudents: 0, avgPrice: 0 };
-		const totalStudents =students.filter((s) => s.groups || s.group_id).length
+		const totalStudents =students?.filter((s) => s.groups || s.group_id).length
 			
 		const avgPrice = groups.length
 			? Math.round(
@@ -146,8 +146,10 @@ export default function Groups() {
 	}, [groups]);
 
 	// Studentlar sonini hisoblashni optimallashtirish
-	const groupsWithCount = useMemo(() => {
-		const countMap = students.reduce((acc, s) => {
+   const groupsWithCount = useMemo(() => {
+      // console.log(students?.data);
+      
+		const countMap = students?.reduce((acc, s) => {
 			const gIds = Array.isArray(s.groups) ? s.groups : [s.groups];
 			gIds.forEach((g) => {
 				const id = g?.id ?? g;

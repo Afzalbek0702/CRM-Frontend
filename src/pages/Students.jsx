@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useStudent } from "../services/student/useStudent.js";
 import { useGroups } from "../services/group/useGroups.js";
 import toast from "react-hot-toast";
@@ -13,6 +13,15 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import {
+	Pagination,
+	PaginationContent,
+	PaginationEllipsis,
+	PaginationItem,
+	PaginationLink,
+	PaginationNext,
+	PaginationPrevious,
+} from "@/components/ui/pagination";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -22,18 +31,6 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-	Command,
-	CommandEmpty,
-	CommandGroup,
-	CommandInput,
-	CommandItem,
-} from "@/components/ui/command";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -46,18 +43,18 @@ import {
 	Phone,
 	Calendar,
 	Check,
-	ChevronsUpDown,
 	GraduationCap,
 	Users,
 	Settings,
 	Copy,
 	ExternalLink,
-	Sparkles,
 	TrendingUp,
 	UserPlus,
 	Trash2,
 	Edit,
 	MoreHorizontal,
+   Sparkles,
+   ChevronsUpDown,
 } from "lucide-react";
 
 import Loader from "../components/Loader.jsx";
@@ -65,6 +62,8 @@ import StudentModal from "../components/StudentModal.jsx";
 import AddToGroupModal from "../components/AddToGroupModal.jsx";
 import ConfirmDeleteModal from "@/components/ConfirmDeleteModal.jsx";
 import PhoneUtils from "@/utils/phoneFormat.js";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover.jsx";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command.jsx";
 
 // 🎨 Stats Card Component
 const StatsCard = ({ icon, label, value, trend, color }) => {
@@ -110,22 +109,6 @@ const StatsCard = ({ icon, label, value, trend, color }) => {
 };
 
 export default function Students() {
-	const navigate = useNavigate();
-	const { tenant } = useParams();
-	const {
-		students = [],
-		loading,
-		error,
-		createStudent,
-		updateStudent,
-		deleteStudent,
-		addToGroup,
-	} = useStudent();
-
-	const { groups = [] } = useGroups();
-	// const { teachers = [] } = useTeachers();/
-	const { user } = useAuth();
-
 	// State-lar
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [editingStudent, setEditingStudent] = useState(null);
@@ -137,6 +120,25 @@ export default function Students() {
 	const [openGroup, setOpenGroup] = useState(false);
 	const [deleteId, setDeleteId] = useState(null);
 	const [copiedPhone, setCopiedPhone] = useState(null);
+	const [searchParams, setSearchParams] = useSearchParams();
+
+	// URL dan sahifa raqamini olish (default: 1)
+	const page = Number(searchParams.get("page")) || 1;
+	// const [page, setPage] = useState(1);
+	const limit = 10;
+	const navigate = useNavigate();
+	const { tenant } = useParams();
+	const { groups = [] } = useGroups();
+	const { user } = useAuth();
+	const {
+		students = [],
+		loading,
+		error,
+		createStudent,
+		updateStudent,
+		deleteStudent,
+		addToGroup,
+	} = useStudent(page, limit);
 
 	// 📊 Stats calculations
 	const stats = useMemo(() => {
@@ -146,29 +148,62 @@ export default function Students() {
 		return {
 			total: students.length,
 			withGroup: students.filter((s) => s.groups || s.group_id).length,
-			newThisMonth: students.filter((s) => new Date(s.created_at) >= monthStart)
-				.length,
+			newThisMonth: students.filter((s) => new Date(s.created_at) >= monthStart).length,
 		};
 	}, [students]);
 
 	// Filtrlash mantiqi
 	const filteredStudents = useMemo(() => {
-		return students
-			.filter((s) =>
+		return students?.filter(s =>
 				s.full_name?.toLowerCase().includes(searchTerm.toLowerCase()),
 			)
-			.filter((s) => {
+			.filter(s => {
 				if (!selectedTeacher) return true;
 				const groupObj = groups.find(
-					(g) => g.id === (s.groups?.id || s.group_id),
+					g => g.id === (s.groups?.id || s.group_id),
 				);
 				return groupObj?.teacher_id === selectedTeacher;
 			})
-			.filter((s) => {
+			.filter(s => {
 				if (!selectedGroup) return true;
 				return (s.groups?.id || s.group_id) === selectedGroup;
 			});
 	}, [students, searchTerm, selectedTeacher, selectedGroup, groups]);
+
+	const handlePageChange = newPage => {
+		// URL dagi ?page=X qismini yangilaydi
+		setSearchParams(prev => {
+			prev.set("page", newPage.toString());
+			return prev;
+		});
+	};
+
+	const renderPageNumbers = () => {
+		const pages = [];
+		for (let i = 1; i <= students?.meta?.totalPages; i++) {
+			if (
+				i === 1 ||
+				i === students?.meta?.totalPages ||
+				(i >= page - 1 && i <= page + 1)
+			) {
+				pages.push(
+					<PaginationItem key={i}>
+						<PaginationLink
+							// href={`/${tenant}/students&page=${page}`}
+							isActive={page === i}
+							onClick={() => handlePageChange(i + 1)}
+							className="cursor-pointer"
+						>
+							{i}
+						</PaginationLink>
+					</PaginationItem>,
+				);
+			} else if (i === page - 2 || i === page + 2) {
+				pages.push(<PaginationEllipsis key={i} />);
+			}
+		}
+		return pages;
+	};
 
 	const handleConfirmDelete = async () => {
 		if (deleteId) {
@@ -177,7 +212,7 @@ export default function Students() {
 		}
 	};
 
-	const handleCopyPhone = async (phone) => {
+	const handleCopyPhone = async phone => {
 		await navigator.clipboard.writeText(PhoneUtils.formatPhone(phone));
 		setCopiedPhone(phone);
 		toast.success("Raqam nusxalandi!");
@@ -185,14 +220,14 @@ export default function Students() {
 	};
 
 	// 🎨 Avatar initials
-	const getInitials = (name) => {
+	const getInitials = name => {
 		if (!name) return "?";
 		const parts = name.split(" ");
 		return (parts[0]?.[0] + (parts[1]?.[0] || "")).toUpperCase();
 	};
 
 	// 🎨 Group badge color
-	const getGroupColor = (groupName) => {
+	const getGroupColor = groupName => {
 		const colors = ["amber", "blue", "emerald", "purple", "pink", "cyan"];
 		const index = groupName?.charCodeAt(0) % colors.length || 0;
 		const map = {
@@ -296,86 +331,83 @@ export default function Students() {
 				{/* 🔍 Search & Filters */}
 				<Card className="bg-card border-white/10 backdrop-blur-xl">
 					<CardContent className="p-4">
-						<div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
-							{/* Search */}
-							<div className="relative w-full lg:w-80">
-								<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-								<Input
-									placeholder="Ism bo'yicha qidirish..."
-									className="pl-10 bg-black/40 border-white/20 text-white placeholder:text-gray-500 focus:border-amber-400/50 focus:ring-2 focus:ring-amber-400/20 transition-all"
-									value={searchTerm}
-									onChange={(e) => setSearchTerm(e.target.value)}
-								/>
-							</div>
+				<div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
+					{/* Search */}
+					<div className="relative w-full lg:w-80">
+						<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+						<Input
+							placeholder="Ism bo'yicha qidirish..."
+							className="pl-10 bg-black/40 border-white/20 text-white placeholder:text-gray-500 focus:border-amber-400/50 focus:ring-2 focus:ring-amber-400/20 transition-all"
+							value={searchTerm}
+							onChange={e => setSearchTerm(e.target.value)}
+						/>
+					</div>
 
-							{/* Filters */}
-							<div className="flex flex-wrap items-center gap-3">
-								{/* Group Filter */}
-								<Popover open={openGroup} onOpenChange={setOpenGroup}>
-									<PopoverTrigger asChild>
-										<Button
-											variant="outline"
-											className="justify-between border-white/20 text-gray-300 hover:bg-white/10 hover:text-white"
-										>
-											{selectedGroup
-												? groups.find((g) => g.id === selectedGroup)?.name
-												: "Barcha guruhlar"}
-											<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-										</Button>
-									</PopoverTrigger>
-									<PopoverContent
-										className="w-50 p-0 bg-[#1f1f1f] border-white/10 text-white"
-										align="end"
-									>
-										<Command>
-											<CommandInput
-												placeholder="Guruhni qidirish..."
-												className="text-white placeholder:text-gray-500"
-											/>
-											<CommandEmpty className="text-gray-500 py-4">
-												Topilmadi.
-											</CommandEmpty>
-											<CommandGroup>
-												<CommandItem
-													onSelect={() => {
-														setSelectedGroup("");
-														setOpenGroup(false);
-													}}
-													className="cursor-pointer hover:bg-amber-400/10 focus:bg-amber-400/10"
-												>
-													<Check
-														className={`mr-2 h-4 w-4 ${!selectedGroup ? "opacity-100 text-amber-400" : "opacity-0"}`}
-													/>
-													Barcha guruhlar
-												</CommandItem>
-												{groups.map((g) => (
-													<CommandItem
-														key={g.id}
-														onSelect={() => {
-															setSelectedGroup(g.id);
-															setOpenGroup(false);
-														}}
-														className="cursor-pointer hover:bg-amber-400/10 focus:bg-amber-400/10"
-													>
-														<Check
-															className={`mr-2 h-4 w-4 ${selectedGroup === g.id ? "opacity-100 text-amber-400" : "opacity-0"}`}
-														/>
-														{g.name}
-													</CommandItem>
-												))}
-											</CommandGroup>
-										</Command>
-									</PopoverContent>
-								</Popover>
-
-								<Badge
+					{/* Filters */}
+					<div className="flex flex-wrap items-center gap-3">
+						{/* Group Filter */}
+						<Popover open={openGroup} onOpenChange={setOpenGroup}>
+							<PopoverTrigger asChild>
+								<Button
 									variant="outline"
-									className="border-white/20 text-gray-400"
+									className="justify-between border-white/20 text-gray-300 hover:bg-white/10 hover:text-white"
 								>
-									{filteredStudents.length} natija
-								</Badge>
-							</div>
-						</div>
+									{selectedGroup
+										? groups.find(g => g.id === selectedGroup)?.name
+										: "Barcha guruhlar"}
+									<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+								</Button>
+							</PopoverTrigger>
+							<PopoverContent
+								className="w-50 p-0 bg-[#1f1f1f] border-white/10 text-white"
+								align="end"
+							>
+								<Command>
+									<CommandInput
+										placeholder="Guruhni qidirish..."
+										className="text-white placeholder:text-gray-500 outline-none border-none"
+									/>
+									<CommandEmpty className="text-gray-500 py-4">
+										Topilmadi.
+									</CommandEmpty>
+									<CommandGroup>
+										<CommandItem
+											onSelect={() => {
+												setSelectedGroup("");
+												setOpenGroup(false);
+											}}
+											className="cursor-pointer hover:bg-amber-400/10 focus:bg-amber-400/10"
+										>
+											<Check
+												className={`mr-2 h-4 w-4 ${!selectedGroup ? "opacity-100 text-amber-400" : "opacity-0"}`}
+											/>
+											Barcha guruhlar
+										</CommandItem>
+										{groups.map(g => (
+											<CommandItem
+												key={g.id}
+												onSelect={() => {
+													setSelectedGroup(g.id);
+													setOpenGroup(false);
+												}}
+												className="cursor-pointer hover:bg-amber-400/10 focus:bg-amber-400/10"
+											>
+												<Check
+													className={`mr-2 h-4 w-4 ${selectedGroup === g.id ? "opacity-100 text-amber-400" : "opacity-0"}`}
+												/>
+												{g.name}
+											</CommandItem>
+										))}
+									</CommandGroup>
+								</Command>
+							</PopoverContent>
+						</Popover>
+
+						<Badge variant="outline" className="border-white/20 text-gray-400">
+							{filteredStudents.length} natija
+						</Badge>
+					</div>
+				</div>
 					</CardContent>
 				</Card>
 
@@ -425,7 +457,7 @@ export default function Students() {
 									</TableCell>
 								</TableRow>
 							) : (
-								filteredStudents.map((s) => (
+								filteredStudents.map(s => (
 									<TableRow
 										key={s.id}
 										className="border-white/5 hover:bg-amber-400/5 transition-all duration-200 group/row cursor-pointer"
@@ -471,7 +503,7 @@ export default function Students() {
 										</TableCell>
 										<TableCell>
 											<button
-												onClick={(e) => {
+												onClick={e => {
 													e.stopPropagation();
 													handleCopyPhone(s.phone);
 												}}
@@ -497,7 +529,7 @@ export default function Students() {
 														variant="ghost"
 														size="icon"
 														className="h-8 w-8 text-gray-500 hover:text-amber-400 hover:bg-amber-400/10 transition-colors opacity-0 group-hover/row:opacity-100"
-														onClick={(e) => e.stopPropagation()}
+														onClick={e => e.stopPropagation()}
 													>
 														<MoreHorizontal className="h-4 w-4" />
 													</Button>
@@ -507,7 +539,7 @@ export default function Students() {
 													className="bg-[#1f1f1f] border-white/10 text-white w-52"
 												>
 													<DropdownMenuItem
-														onClick={(e) => {
+														onClick={e => {
 															e.stopPropagation();
 															setEditingStudent(s);
 															setIsModalOpen(true);
@@ -518,7 +550,7 @@ export default function Students() {
 														Tahrirlash
 													</DropdownMenuItem>
 													<DropdownMenuItem
-														onClick={(e) => {
+														onClick={e => {
 															e.stopPropagation();
 															navigate(`/${tenant}/students/${s.id}`);
 														}}
@@ -529,7 +561,7 @@ export default function Students() {
 													</DropdownMenuItem>
 													<DropdownMenuSeparator className="bg-white/10" />
 													<DropdownMenuItem
-														onClick={(e) => {
+														onClick={e => {
 															e.stopPropagation();
 															setAddToGroupStudent(s);
 															setAddToGroupOpen(true);
@@ -537,11 +569,13 @@ export default function Students() {
 														className="cursor-pointer hover:bg-emerald-400/10 focus:bg-emerald-400/10"
 													>
 														<UserPlus className="mr-2 h-4 w-4 text-emerald-400" />{" "}
-														{s.groups ? "Guruhni almashtirish" : "Guruhga qo'shish"}
+														{s.groups
+															? "Guruhni almashtirish"
+															: "Guruhga qo'shish"}
 													</DropdownMenuItem>
 													<DropdownMenuSeparator className="bg-white/10" />
 													<DropdownMenuItem
-														onClick={(e) => {
+														onClick={e => {
 															e.stopPropagation();
 															setDeleteId(s.id);
 														}}
@@ -560,10 +594,48 @@ export default function Students() {
 				</Card>
 
 				{/* 📄 Footer Info */}
-				{filteredStudents.length > 0 && (
-					<div className="flex items-center justify-between text-sm text-gray-500">
-						<p>{filteredStudents.length} o'quvchi ko'rsatilmoqda</p>
-						<div className="flex items-center gap-2">
+				<div className="flex items-center justify-end text-sm">
+					{/* <p>{filteredStudents.length} o'quvchi ko'rsatilmoqda</p> */}
+					{/* <Pagination className={"mx-1 w-100"}>
+						<PaginationContent>
+							<PaginationItem>
+								<PaginationPrevious
+									className={
+										page === 1
+											? "pointer-events-none opacity-50"
+											: "cursor-pointer"
+									}
+									onClick={() => handlePageChange(page - 1)}
+									text="Oldingi"
+								/>
+							</PaginationItem>
+
+							{/* {renderPageNumbers()} 
+							{[...Array(students?.meta?.totalPages)].map((_, i) => (
+								<PaginationItem key={i + 1}>
+									<PaginationLink
+										isActive={page === i + 1}
+										onClick={() => handlePageChange(i + 1)}
+										className="cursor-pointer"
+									>
+										{i + 1}
+									</PaginationLink>
+								</PaginationItem>
+							))}
+							<PaginationItem>
+								<PaginationNext
+									className={
+										page === students?.meta?.totalPages
+											? "pointer-events-none opacity-50"
+											: "cursor-pointer"
+									}
+									onClick={() => handlePageChange(page + 1)}
+									text="Keyingi"
+								/>
+							</PaginationItem>
+						</PaginationContent>
+					</Pagination> 
+					{/* <div className="flex items-center gap-2">
 							<Button
 								variant="outline"
 								size="sm"
@@ -580,9 +652,8 @@ export default function Students() {
 							>
 								Keyingi
 							</Button>
-						</div>
-					</div>
-				)}
+						</div> */}
+				</div>
 			</div>
 
 			{/* 🎭 Modals */}
@@ -590,7 +661,7 @@ export default function Students() {
 				isOpen={isModalOpen}
 				onClose={() => setIsModalOpen(false)}
 				initialData={editingStudent}
-				onSubmit={async (formData) => {
+				onSubmit={async formData => {
 					if (editingStudent) {
 						await updateStudent(editingStudent.id, formData);
 					} else {
@@ -604,7 +675,7 @@ export default function Students() {
 				isOpen={addToGroupOpen}
 				onClose={() => setAddToGroupOpen(false)}
 				initialGroupId={addToGroupStudent?.group_id}
-				onConfirm={async (groupId) => {
+				onConfirm={async groupId => {
 					await addToGroup(addToGroupStudent.id, Number(groupId));
 					setAddToGroupOpen(false);
 				}}

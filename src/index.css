@@ -137,38 +137,6 @@
 	color: black;
 	cursor: pointer;
 }
-/* Custom Scrollbar */
-.custom-scrollbar::-webkit-scrollbar {
-	width: 6px;
-	height: 6px;
-}
-.custom-scrollbar::-webkit-scrollbar-track {
-	background: rgba(255, 255, 255, 0.05);
-	border-radius: 3px;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb {
-	background: rgba(251, 191, 36, 0.3);
-	border-radius: 3px;
-	transition: background 0.2s;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-	background: rgba(251, 191, 36, 0.5);
-}
-
-/* Smooth animations */
-@keyframes fadeInUp {
-	from {
-		opacity: 0;
-		transform: translateY(12px);
-	}
-	to {
-		opacity: 1;
-		transform: translateY(0);
-	}
-}
-.animate-fade-in-up {
-	animation: fadeInUp 0.4s ease-out forwards;
-}
 
 /* Checkbox custom */
 [data-radix-checkbox] {
@@ -180,22 +148,6 @@
 }
 .animate-pulse {
   animation: pulse-badge 2s infinite;
-}
-
- @keyframes progressFill {
-  from { width: 0; }
-  to { width: var(--progress-width); }
-}
-.progress-animate {
-  animation: progressFill 0.5s ease-out forwards;
-}
-/* Grid pattern animation */
-@keyframes gridMove {
-  0% { background-position: 0 0; }
-  100% { background-position: 40px 40px; }
-}
-.bg-grid-animated {
-  animation: gridMove 20s linear infinite;
 }
 
 /* Custom Scrollbar */
@@ -214,38 +166,14 @@
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(251, 191, 36, 0.5);
 }
-
-/* Smooth animations */
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.animate-fade-in-up {
-  animation: fadeInUp 0.6s ease-out forwards;
-}
-
-/* Floating particles animation */
-@keyframes float {
-  0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
-  50% { transform: translateY(-20px) translateX(10px); opacity: 0.6; }
-}
-.animate-float {
-  animation: float 4s ease-in-out infinite;
-}
-
-/* Input focus glow */
-input:focus {
-  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.2);
-}
-
 /* Button shine animation */
-@keyframes shine {
+/* @keyframes shine {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(200%); }
 }
 .group-hover\:translate-x-full:hover {
   animation: shine 0.7s ease-out;
-}
+} */
 
 /* Gradient border mask trick */
 [style*="mask:"] {

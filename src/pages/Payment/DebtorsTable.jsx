@@ -35,23 +35,24 @@ import {
 	CreditCard,
 	AlertCircle,
 	Calendar,
-	ExternalLink,
 	Check,
 } from "lucide-react";
-import { useDashboard } from "@/services/dashboard/useDashboard";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDebtor} from "@/services/debtor/useDebtors";
 
 export default function DebtorsTable({ searchTerm = "" }) {
 	const [copiedId, setCopiedId] = useState(null);
-	const { topDebtors, isLoading } = useDashboard();
-
+	const { tenant } = useParams();
+	const { debtors, debtorsLoading } = useDebtor();
+	const navigate = useNavigate();
 	const filtered = useMemo(
 		() =>
-			topDebtors?.filter(
-				(d) =>
+			debtors?.filter(
+				d =>
 					d.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
 					d.group_name?.toLowerCase().includes(searchTerm.toLowerCase()),
 			),
-		[topDebtors, searchTerm],
+		[debtors, searchTerm],
 	);
 
 	const stats = useMemo(() => {
@@ -64,23 +65,24 @@ export default function DebtorsTable({ searchTerm = "" }) {
 		};
 	}, [filtered]);
 
-	const copyId = async (id) => {
+	const copyId = async id => {
 		await navigator.clipboard.writeText(String(id));
 		setCopiedId(id);
 		toast.success("ID nusxalandi!");
 		setTimeout(() => setCopiedId(null), 2000);
 	};
-	const initials = (n) =>
+	const initials = n =>
 		n
 			? n
 					.split(" ")
-					.map((p) => p[0])
+					.map(p => p[0])
 					.join("")
 					.toUpperCase()
 			: "?";
-	const fmt = (a) => `${a.toLocaleString()} so'm`;
-	const fmtDate = (d) => (d ? new Date(d).toLocaleDateString("uz-UZ") : "—");
-	const debtBadge = (monthsOverdue) => {
+	const fmt = a => `${a.toLocaleString()} so'm`;
+	const fmtDate = d =>
+		d !== null ? new Date(d).toLocaleDateString("uz-UZ") : "To'lov yo'q";
+	const debtBadge = monthsOverdue => {
 		if (monthsOverdue === null || monthsOverdue >= 3)
 			return { l: "Jiddiy", c: "text-red-400 border-red-500/30 bg-red-500/10" };
 		if (monthsOverdue === 2)
@@ -91,10 +93,10 @@ export default function DebtorsTable({ searchTerm = "" }) {
 		return { l: "Yengil", c: "text-sky-400 border-sky-500/30 bg-sky-500/10" };
 	};
 
-	if (isLoading) return <Loader />;
+	if (debtorsLoading) return <Loader />;
 
 	return (
-		<div className="relative min-h-99 bg-background p-4">
+		<div className="relative min-h-99 p-4">
 			<div className="container mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4">
 				{/* Header */}
 				<div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/10">
@@ -211,112 +213,116 @@ export default function DebtorsTable({ searchTerm = "" }) {
 								</p>
 							</div>
 						) : (
-							<Table>
-								<TableHeader>
-									<TableRow className="bg-black/40 border-white/10">
-										<TableHead className="text-gray-400 w-12" />
-										<TableHead className="text-gray-400">O'quvchi</TableHead>
-										<TableHead className="text-gray-400">Guruh</TableHead>
-										<TableHead className="text-gray-400 text-right">
-											Kurs narxi
-										</TableHead>
-										<TableHead className="text-gray-400 text-right">
-											To'langan
-										</TableHead>
-										<TableHead className="text-gray-400 text-right">
-											Qolgan qarz
-										</TableHead>
-										<TableHead className="text-gray-400">Holat</TableHead>
-										<TableHead className="text-gray-400">
-											Oxirgi to'lov
-										</TableHead>
-										<TableHead className="text-gray-400 text-right w-20">
+							<div className="rounded-lg border border-white/10 overflow-hidden">
+								<Table>
+									<TableHeader>
+										<TableRow className="bg-black/40 border-white/10">
+											<TableHead className="text-gray-400 w-12" />
+											<TableHead className="text-gray-400">O'quvchi</TableHead>
+											<TableHead className="text-gray-400">Guruh</TableHead>
+											<TableHead className="text-gray-400 text-right">
+												Kurs narxi
+											</TableHead>
+											<TableHead className="text-gray-400 text-right">
+												To'langan
+											</TableHead>
+											<TableHead className="text-gray-400 text-right">
+												Qolgan qarz
+											</TableHead>
+											{/* <TableHead className="text-gray-400">Holat</TableHead> */}
+											<TableHead className="text-gray-400">
+												Oxirgi to'lov
+											</TableHead>
+											{/* <TableHead className="text-gray-400 text-right w-20">
 											Amallar
-										</TableHead>
-									</TableRow>
-								</TableHeader>
-								<TableBody>
-									{filtered.map((d) => {
-										const b = debtBadge(d.monthsOverdue);
-										const pct =
-											d.course_price > 0
-												? Math.round((d.total_paid / d.course_price) * 100)
-												: 0;
-										return (
-											<TableRow
-												key={d.id}
-												className="border-white/5 hover:bg-red-400/5 group/row"
-											>
-												<TableCell className="py-4">
-													<Avatar className="w-10 h-10 border border-white/10 bg-red-400/20">
-														<AvatarFallback className="text-red-400 text-sm">
-															{initials(d.full_name)}
-														</AvatarFallback>
-													</Avatar>
-												</TableCell>
-												<TableCell className="font-medium text-white">
-													<p className="truncate max-w-32">{d.full_name}</p>
-													<span className="flex items-center gap-1 text-[10px] text-gray-500 mt-1">
-														{copiedId === d.student_id ? (
-															<Check className="w-3 h-3" />
-														) : (
-															<span className="font-mono">
-																#{String(d.student_id)}
-															</span>
-														)}
-													</span>
-												</TableCell>
-												<TableCell>
-													<Badge
-														variant="outline"
-														className="border-amber-400/30 text-amber-400 bg-amber-400/10"
-													>
-														{d.group_name || "—"}
-													</Badge>
-												</TableCell>
-												<TableCell className="text-right text-gray-300 font-mono text-sm">
-													{fmt(d.course_price)}
-												</TableCell>
-												<TableCell className="text-right">
-													<div className="flex flex-col items-end gap-1">
-														<span className="text-emerald-400 font-mono text-sm">
-															{fmt(d.total_paid)}
+										</TableHead> */}
+										</TableRow>
+									</TableHeader>
+									<TableBody>
+										{filtered.map(d => {
+											const b = debtBadge(d.monthsOverdue);
+											const pct =
+												d.course_price > 0
+													? Math.round((d.total_paid / d.course_price) * 100)
+													: 0;
+											return (
+												<TableRow
+													key={d.id}
+													className="border-white/5 hover:bg-red-400/5 group/row"
+													onClick={() =>
+														navigate(`/${tenant}/students/${d.student_id}`)
+													}
+												>
+													<TableCell className="py-4">
+														<Avatar className="w-10 h-10 border border-white/10 bg-red-400/20">
+															<AvatarFallback className="text-red-400 text-sm">
+																{initials(d.full_name)}
+															</AvatarFallback>
+														</Avatar>
+													</TableCell>
+													<TableCell className="font-medium text-white">
+														<p className="truncate max-w-32">{d.full_name}</p>
+														<span className="flex items-center gap-1 text-[10px] text-gray-500 mt-1">
+															{copiedId === d.student_id ? (
+																<Check className="w-3 h-3" />
+															) : (
+																<span className="font-mono">
+																	#{String(d.student_id)}
+																</span>
+															)}
 														</span>
-														{/* <span className="text-xs text-gray-500">
+													</TableCell>
+													<TableCell>
+														<Badge
+															variant="outline"
+															className="border-amber-400/30 text-amber-400 bg-amber-400/10"
+														>
+															{d.group_name || "—"}
+														</Badge>
+													</TableCell>
+													<TableCell className="text-right text-gray-300 font-mono text-sm">
+														{fmt(d.course_price)}
+													</TableCell>
+													<TableCell className="text-right">
+														<div className="flex flex-col items-end gap-1">
+															<span className="text-emerald-400 font-mono text-sm">
+																{fmt(d.total_paid)}
+															</span>
+															{/* <span className="text-xs text-gray-500">
 															{d.payment_count} to'lov
 														</span> */}
-													</div>
-												</TableCell>
-												<TableCell className="text-right">
-													<div className="flex flex-col items-end gap-1">
-														<span className="text-red-400 font-bold font-mono text-sm">
-															{fmt(d.debt_amount)}
-														</span>
-														<div className="space-y-1">
-															<div className="flex items-center justify-between text-xs gap-1">
-																<span className="text-gray-400">To'lov</span>
-																<span
-																	className={`font-semibold ${pct >= 100 ? "text-emerald-400" : "text-amber-400"}`}
-																>
-																	{pct}%
-																</span>
-															</div>
-															<div className="h-2 bg-white/10 rounded-full overflow-hidden flex">
-																<div
-																	className="h-full bg-emerald-400 transition-all"
-																	style={{ width: `${Math.min(pct, 100)}%` }}
-																/>
-																<div
-																	className="h-full bg-red-400/50"
-																	style={{
-																		width: `${100 - Math.min(pct, 100)}%`,
-																	}}
-																/>
+														</div>
+													</TableCell>
+													<TableCell className="text-right">
+														<div className="flex flex-col items-end gap-1">
+															<span className="text-red-400 font-bold font-mono text-sm">
+																{fmt(d.debt_amount)}
+															</span>
+															<div className="space-y-1">
+																<div className="flex items-center justify-between text-xs gap-1">
+																	<span className="text-gray-400">To'lov</span>
+																	<span
+																		className={`font-semibold ${pct >= 100 ? "text-emerald-400" : "text-amber-400"}`}
+																	>
+																		{pct}%
+																	</span>
+																</div>
+																<div className="h-2 bg-white/10 rounded-full overflow-hidden flex">
+																	<div
+																		className="h-full bg-emerald-400 transition-all"
+																		style={{ width: `${Math.min(pct, 100)}%` }}
+																	/>
+																	<div
+																		className="h-full bg-red-400/50"
+																		style={{
+																			width: `${100 - Math.min(pct, 100)}%`,
+																		}}
+																	/>
+																</div>
 															</div>
 														</div>
-													</div>
-												</TableCell>
-												<TableCell>
+													</TableCell>
+													{/* <TableCell>
 													<Badge
 														variant="outline"
 														className={`border gap-1.5 ${b.c}`}
@@ -324,19 +330,19 @@ export default function DebtorsTable({ searchTerm = "" }) {
 														<AlertCircle className="w-3 h-3" />
 														{b.l}
 													</Badge>
-												</TableCell>
-												<TableCell className="text-gray-400 text-sm flex items-center gap-1.5">
-													<Calendar className="w-4 h-4 text-gray-500" />
-													{fmtDate(d.last_payment_date)}
-												</TableCell>
-												<TableCell className="text-right">
+												</TableCell> */}
+													<TableCell className="text-gray-400 text-sm flex items-center gap-1.5">
+														<Calendar className="w-4 h-4 text-gray-500" />
+														{fmtDate(d.last_payment_date)}
+													</TableCell>
+													{/* <TableCell className="text-right">
 													<Tooltip>
 														<TooltipTrigger asChild>
 															<Button
 																variant="ghost"
 																size="icon"
 																className="h-8 w-8 text-gray-500 hover:text-red-400 opacity-0 group-hover/row:opacity-100"
-																onClick={(e) => {
+																onClick={e => {
 																	e.stopPropagation();
 																	toast.success("Eslatma yuborildi!");
 																}}
@@ -348,12 +354,13 @@ export default function DebtorsTable({ searchTerm = "" }) {
 															<p>Eslatma yuborish</p>
 														</TooltipContent>
 													</Tooltip>
-												</TableCell>
-											</TableRow>
-										);
-									})}
-								</TableBody>
-							</Table>
+												</TableCell> */}
+												</TableRow>
+											);
+										})}
+									</TableBody>
+								</Table>
+							</div>
 						)}
 					</CardContent>
 				</Card>
@@ -371,11 +378,15 @@ export default function DebtorsTable({ searchTerm = "" }) {
 							<Button
 								variant="outline"
 								className="border-white/20 text-gray-300"
+								disabled
 							>
 								<Calendar className="mr-2 h-4 w-4" />
 								Hisobot
 							</Button>
-							<Button className="bg-linear-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white">
+							<Button
+								disabled
+								className="bg-linear-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white"
+							>
 								<FaMoneyCheckAlt className="mr-2" />
 								Jamoviy eslatma
 							</Button>

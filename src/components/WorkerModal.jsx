@@ -113,7 +113,7 @@ export default function WorkerModal({
 
 	return (
 		<Dialog open={isOpen} onOpenChange={onClose}>
-			<DialogContent className="max-w-[95vw] sm:max-w-2xl bg-zinc-950 border-zinc-800 text-white overflow-y-auto max-h-[90vh]">
+			<DialogContent className="max-w-[95vw] sm:max-w-2xl bg-zinc-950 border-zinc-800 text-white max-h-[90vh]">
 				<DialogHeader>
 					<DialogTitle className="text-xl font-bold flex items-center gap-2">
 						<div className="p-2 bg-yellow-600/20 rounded-lg text-primary text-sm">

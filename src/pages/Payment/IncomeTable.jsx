@@ -12,7 +12,6 @@ import {
 	FaTrash,
 	FaSearch,
 	FaChartLine,
-
 } from "react-icons/fa";
 
 // shadcn UI
@@ -120,7 +119,7 @@ export default function IncomeTable() {
 	const [selectedMethod, setSelectedMethod] = useState("all");
 	const [copiedId, setCopiedId] = useState(null);
 
-	const formatDate = (d) =>
+	const formatDate = d =>
 		d
 			? new Date(d).toLocaleDateString("uz-UZ", {
 					year: "numeric",
@@ -141,7 +140,7 @@ export default function IncomeTable() {
 
 		const today = new Date().toISOString().split("T")[0];
 		const todayTotal = payments
-			?.filter((p) => p.paid_at?.startsWith(today))
+			?.filter(p => p.paid_at?.startsWith(today))
 			.reduce((sum, p) => sum + (p.amount || 0), 0);
 
 		return {
@@ -163,11 +162,11 @@ export default function IncomeTable() {
 	const filteredPayments = useMemo(() => {
 		return (payments || [])
 			.filter(
-				(p) =>
+				p =>
 					p.student_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
 					p.group_name?.toLowerCase().includes(searchTerm.toLowerCase()),
 			)
-			.filter((p) => selectedMethod === "all" || p.method === selectedMethod)
+			.filter(p => selectedMethod === "all" || p.method === selectedMethod)
 			.sort((a, b) => new Date(b.paid_at) - new Date(a.paid_at)); // Newest first
 	}, [payments, searchTerm, selectedMethod]);
 
@@ -176,7 +175,7 @@ export default function IncomeTable() {
 		0,
 	);
 
-	const handleFormSubmit = (formData) => {
+	const handleFormSubmit = formData => {
 		if (modal.data) {
 			updatePayment(modal.data.id, formData);
 		} else {
@@ -192,7 +191,7 @@ export default function IncomeTable() {
 		}
 	};
 
-	const handleCopyId = (id) => {
+	const handleCopyId = id => {
 		navigator.clipboard.writeText(String(id));
 		setCopiedId(id);
 		toast.success("ID nusxalandi!");
@@ -200,14 +199,14 @@ export default function IncomeTable() {
 	};
 
 	// 🎨 Avatar initials
-	const getInitials = (name) => {
+	const getInitials = name => {
 		if (!name) return "?";
 		const parts = name.split(" ");
 		return (parts[0]?.[0] + (parts[1]?.[0] || "")).toUpperCase();
 	};
 
 	// 🎨 Method badge color
-	const getMethodColor = (method) => {
+	const getMethodColor = method => {
 		const colors = {
 			CASH: "border-emerald-500/30 text-emerald-400 bg-emerald-500/10",
 			CARD: "border-sky-500/30 text-sky-400 bg-sky-500/10",
@@ -219,31 +218,31 @@ export default function IncomeTable() {
 		return colors[method] || "border-gray-500/30 text-gray-400 bg-gray-500/10";
 	};
 
-	const formatCurrency = (amount) => {
+	const formatCurrency = amount => {
 		const val = Number(amount) || 0;
 		return val >= 1000 && val < 1000000
 			? `${(val / 1000).toLocaleString()} ming so'm`
 			: `${val.toLocaleString()} so'm`;
 	};
-	const formatMethod = (method) => {
+	const formatMethod = method => {
 		switch (method) {
-         case "all":
-            return "Barchasi";
-         case "CASH":
-            return "Naqd";
-         case "CARD":
-            return "Karta";
-         case "TRANSFER":
-            return "Transfer";
-         case "CLICK":
-            return "Click";
-         case "PAYME":
-            return "Payme";
-         case "UZCARD":
-            return "Uzcard";
-         default:
-            return method;
-      }
+			case "all":
+				return "Barchasi";
+			case "CASH":
+				return "Naqd";
+			case "CARD":
+				return "Karta";
+			case "TRANSFER":
+				return "Transfer";
+			case "CLICK":
+				return "Click";
+			case "PAYME":
+				return "Payme";
+			case "UZCARD":
+				return "Uzcard";
+			default:
+				return method;
+		}
 	};
 	if (isLoading) return <Loader />;
 	return (
@@ -307,9 +306,7 @@ export default function IncomeTable() {
 						label="Eng katta to'lov"
 						value={
 							payments?.length
-								? formatCurrency(
-										Math.max(...payments.map((p) => p.amount || 0)),
-									)
+								? formatCurrency(Math.max(...payments.map(p => p.amount || 0)))
 								: "0 so'm"
 						}
 						color="purple"
@@ -326,7 +323,7 @@ export default function IncomeTable() {
 								<Input
 									placeholder="O'quvchi yoki guruh bo'yicha qidirish..."
 									value={searchTerm}
-									onChange={(e) => setSearchTerm(e.target.value)}
+									onChange={e => setSearchTerm(e.target.value)}
 									className="pl-10 bg-black/40 border-white/20 text-white placeholder:text-gray-500 focus:border-emerald-400/50 focus:ring-2 focus:ring-emerald-400/20 transition-all"
 								/>
 							</div>
@@ -341,7 +338,7 @@ export default function IncomeTable() {
 									"CLICK",
 									"PAYME",
 									"UZCARD",
-								].map((method) => (
+								].map(method => (
 									<Button
 										key={method}
 										variant={selectedMethod === method ? "default" : "outline"}
@@ -381,7 +378,6 @@ export default function IncomeTable() {
 									Sana, o'quvchi va to'lov usuli bo'yicha tafsilotlar
 								</CardDescription>
 							</div>
-							
 						</div>
 					</CardHeader>
 					<CardContent>
@@ -395,25 +391,23 @@ export default function IncomeTable() {
 									<TableHeader>
 										<TableRow className="bg-black/40 border-white/10 hover:bg-transparent">
 											<TableHead className="text-gray-400 w-12"></TableHead>
-											<TableHead className="text-gray-400">Sana</TableHead>
 											<TableHead className="text-gray-400">O'quvchi</TableHead>
 											<TableHead className="text-gray-400">Guruh</TableHead>
-											<TableHead className="text-gray-400 text-right">
-												Miqdor
-											</TableHead>
+											<TableHead className="text-gray-400">Miqdor</TableHead>
 											<TableHead className="text-gray-400">
 												To'lov turi
 											</TableHead>
+											<TableHead className="text-gray-400">Sana</TableHead>
 											<TableHead className="text-gray-400 text-right w-20">
 												Amallar
 											</TableHead>
 										</TableRow>
 									</TableHeader>
 									<TableBody>
-										{filteredPayments.map((p) => (
+										{filteredPayments.map(p => (
 											<TableRow
 												key={p.id}
-												className="border-white/5 hover:bg-emerald-400/5 transition-all duration-200 group/row"
+												className="border-white/5 hover:bg-emerald-400/5 group/row"
 											>
 												<TableCell className="py-4">
 													<Avatar className="w-10 h-10 border border-white/10 bg-linear-to-br from-emerald-400/20 to-teal-400/20">
@@ -422,17 +416,13 @@ export default function IncomeTable() {
 														</AvatarFallback>
 													</Avatar>
 												</TableCell>
-												<TableCell className="text-gray-400 text-sm flex items-center gap-2">
-													<Calendar className="w-4 h-4 text-emerald-400/70" />
-													{formatDate(p.paid_at)}
-												</TableCell>
 												<TableCell className="font-medium text-white">
 													<div>
 														<p className="truncate max-w-32">
 															{p.student_name}
 														</p>
 														<button
-															onClick={(e) => {
+															onClick={e => {
 																e.stopPropagation();
 																handleCopyId(p.id);
 															}}
@@ -448,6 +438,7 @@ export default function IncomeTable() {
 														</button>
 													</div>
 												</TableCell>
+
 												<TableCell>
 													<Badge
 														variant="outline"
@@ -456,12 +447,10 @@ export default function IncomeTable() {
 														{p.group_name || "—"}
 													</Badge>
 												</TableCell>
-												<TableCell className="text-right">
-													<div className="flex flex-col items-end gap-1">
-														<span className="text-emerald-400 font-bold font-mono">
-															{formatCurrency(p.amount)}
-														</span>
-													</div>
+												<TableCell>
+													<span className="text-emerald-400 font-bold font-mono">
+														{formatCurrency(p.amount)}
+													</span>
 												</TableCell>
 												<TableCell>
 													<Badge
@@ -471,6 +460,12 @@ export default function IncomeTable() {
 														<CreditCard className="w-3 h-3" />
 														{formatMethod(p.method)}
 													</Badge>
+												</TableCell>
+												<TableCell>
+													<div className="text-gray-400 text-sm flex items-center gap-2">
+														<Calendar className="w-4 h-4 text-emerald-400/70" />
+														{formatDate(p.paid_at)}
+													</div>
 												</TableCell>
 												<TableCell className="text-right">
 													<DropdownMenu>
@@ -534,14 +529,17 @@ export default function IncomeTable() {
 							</span>
 						</p>
 						<div className="flex items-center gap-3">
-                     <Button
-                        disabled
+							<Button
+								disabled
 								variant="outline"
 								className="border-white/20 text-gray-300 hover:bg-white/10"
 							>
 								<Calendar className="mr-2 h-4 w-4" /> Hisobot
 							</Button>
-							<Button disabled className="bg-linear-to-r from-emerald-400 to-teal-400 hover:from-emerald-500 hover:to-teal-500 text-black shadow-lg shadow-emerald-500/25">
+							<Button
+								disabled
+								className="bg-linear-to-r from-emerald-400 to-teal-400 hover:from-emerald-500 hover:to-teal-500 text-black shadow-lg shadow-emerald-500/25"
+							>
 								<FaChartLine className="mr-2" /> Eksport
 							</Button>
 						</div>

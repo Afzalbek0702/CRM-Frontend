@@ -257,7 +257,7 @@ export default function SalaryTable() {
 
 	return (
 		<div className="relative min-h-99 bg-background">
-			<AnimatedBackground />
+			{/* <AnimatedBackground /> */}
 
 			<div className="container mx-auto px-4 py-6 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
 				{/* 🧭 Header Section */}
