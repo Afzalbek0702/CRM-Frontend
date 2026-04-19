@@ -15,7 +15,6 @@ export const useDashboard = (
 
 	return {
 		monthlyIncome: data?.monthlyIncome,
-		topDebtors: data?.topDebtors,
 		todayLessons: data?.todayLessons,
 		absentStudents: data?.absentStudents,
 		debtAnalysis: data?.debtAnalysis,

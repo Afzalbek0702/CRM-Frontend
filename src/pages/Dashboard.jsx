@@ -64,7 +64,6 @@ export default function Dashboard() {
 		absentStudents,
 		monthlyIncome,
 		todayLessons,
-		topDebtors,
 		groupData,
 		studentData,
 		debtAnalysis,
@@ -167,15 +166,15 @@ export default function Dashboard() {
 				},
 				{
 					data:
-						students?.filter((s) =>
-							s.registered_at?.startsWith(new Date().toISOString().slice(0, 7)),
+						students?.filter(s =>
+							s.created_at?.startsWith(new Date().toISOString().slice(0, 7)),
 						)?.length || 0,
 					type: "Yangi o'quvchilar",
 					color: "cyan",
 				},
 				{ data: base.absent, type: "Bugun kelmaganlar", color: "orange" },
 				{
-					data: base.students,
+					data: base.students?.total,
 					type: "Jami O'quvchilar",
 					color: "blue",
 					href: `/${tenant}/students`,

@@ -74,6 +74,8 @@ import { Wallet, Users, AlertCircle, LayoutGrid, Target, UserPlus } from "lucide
 
 export default function StatsCards({ data, type, percentage, trend, color = "blue", description }) {
   const count = useCountUp(data, 1500, 0);
+   console.log(count);
+   console.log(data);
 
   // Ranglar sxemasi
   const colorMap = {
