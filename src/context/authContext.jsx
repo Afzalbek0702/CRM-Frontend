@@ -60,7 +60,14 @@ export function AuthProvider({ children }) {
 		} catch (error) {
 			console.error("Logout failed:", error);
 		}
-	};
+   };
+   const changePassword = async (data) => {
+      try {
+         await authService.changePassword(data)
+      } catch (error) {
+         console.error("Password changing Error")
+      }
+   }
 
 	return (
 		<AuthContext.Provider
@@ -70,7 +77,8 @@ export function AuthProvider({ children }) {
 				error,
 				setUser,
 				login,
-				logout,
+            logout,
+            changePassword,
 				loading,
 			}}
 		>

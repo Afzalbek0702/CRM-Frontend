@@ -15,31 +15,26 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import {
 	LogOut,
-	ChevronLeft,
 	User,
 	Phone,
 	Globe,
 	Calendar,
+	KeyRound,
+   ArrowLeft,
 } from "lucide-react";
 import PhoneUtils from "@/utils/phoneFormat";
+import { useState } from "react";
+import { PasswordChangeModal } from "@/components/PasswordChangeModal";
 
 export default function Profile() {
-	const { user,
-		logout
-	} = useAuth();
+	const { user, logout, changePassword } = useAuth();
 	const { tenant } = useParams();
 	const navigate = useNavigate();
-	console.log(user);
-
+	const [isModalOpen, setIsModalOpen] = useState(false);
 	const handleLogout = () => {
 		logout();
 		navigate("/login");
 	};
-
-	console.log(user);
-	console.log(user.phone);
-	
-	
 
 	if (!user) {
 		return (
@@ -55,11 +50,12 @@ export default function Profile() {
 		<div className="max-w-4xl w-full mx-auto space-y-6 bg-background min-h-99 animate-in fade-in duration-500 p-2">
 			{/* Ortga qaytish tugmasi */}
 			<Button
-
 				onClick={() => navigate(-1)}
-				className="btn-default"
+				variant="ghost"
+				className="group text-gray-400 hover:text-white hover:bg-white/10 transition-all"
 			>
-				<ChevronLeft className="h-4 w-4" /> Ortga qaytish
+				<ArrowLeft className="group-hover:-translate-x-1 transition-transform h-4 w-4" />
+				<span className="ml-2 hidden sm:inline">Ortga</span>
 			</Button>
 
 			<Card className="border-border/50 bg-card/50 backdrop-blur-sm">
@@ -133,17 +129,34 @@ export default function Profile() {
 					</div>
 
 					{/* Logout tugmasi */}
-					<div className="pt-4">
-						<Button
-							variant="destructive"
-							className="w-full sm:w-auto gap-2 shadow-lg shadow-destructive/20"
-							onClick={handleLogout}
-						>
-							<LogOut className="h-4 w-4" /> Tizimdan chiqish
-						</Button>
+					<div className="flex justify-between">
+						<div className="pt-4">
+							<Button
+								className="bg-linear-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black shadow-lg shadow-amber-500/25 gap-2 font-semibold"
+								onClick={() => setIsModalOpen(true)}
+							>
+								<KeyRound className="h-4 w-4" /> Parolni almashtirish
+							</Button>
+						</div>
+						<div className="pt-4">
+							<Button
+								variant="destructive"
+								className="w-full sm:w-auto gap-2 shadow-lg shadow-destructive/20"
+								onClick={handleLogout}
+							>
+								<LogOut className="h-4 w-4" /> Tizimdan chiqish
+							</Button>
+						</div>
 					</div>
 				</CardContent>
 			</Card>
+			<PasswordChangeModal
+				isOpen={isModalOpen}
+				onClose={() => setIsModalOpen(false)}
+				// onSubmit={async data => {
+				// 	await changePassword(data);
+				// }}
+			/>
 		</div>
 	);
 }
