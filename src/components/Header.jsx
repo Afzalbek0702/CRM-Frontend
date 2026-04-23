@@ -8,6 +8,7 @@ import { useLeads } from "@/services/lead/useLeads";
 import { useAuth } from "@/context/authContext";
 import { SidebarTrigger } from "./ui/sidebar";
 import { cn } from "@/lib/utils";
+import { Avatar, AvatarFallback } from "./ui/avatar";
 
 export default function Header() {
 	const [searchTerm, setSearchTerm] = useState("");
@@ -101,7 +102,7 @@ export default function Header() {
 							type="text"
 							placeholder="Tizim bo'ylab qidirish..."
 							value={searchTerm}
-							onChange={(e) => {
+							onChange={e => {
 								setSearchTerm(e.target.value);
 								if (e.target.value.trim()) setIsSearchOpen(true);
 							}}
@@ -127,25 +128,25 @@ export default function Header() {
 								title="Lidlar"
 								items={searchResults.leads}
 								icon="🎯"
-								onClick={(item) => handleNavigate(`/leads`)}
+								onClick={item => handleNavigate(`/leads`)}
 							/>
 							<ResultSection
 								title="O'quvchilar"
 								items={searchResults.students}
 								icon="👤"
-								onClick={(item) => handleNavigate(`/students/${item.id}`)}
+								onClick={item => handleNavigate(`/students/${item.id}`)}
 							/>
 							<ResultSection
 								title="Guruhlar"
 								items={searchResults.groups}
 								icon="👥"
-								onClick={(item) => handleNavigate(`/groups/${item.id}`)}
+								onClick={item => handleNavigate(`/groups/${item.id}`)}
 							/>
 							<ResultSection
 								title="Xodimlar"
 								items={searchResults.workerData}
 								icon="👨‍🏫"
-								onClick={(item) => handleNavigate(`/workers/${item.id}`)}
+								onClick={item => handleNavigate(`/workers/${item.id}`)}
 							/>
 						</div>
 					)}
@@ -155,13 +156,11 @@ export default function Header() {
 			{/* Right Actions */}
 			<div className="flex items-center gap-4">
 				<NavLink to={`/${tenant}/profile`} className="group">
-					<div className="p-0.5 rounded-full border border-border group-hover:border-primary transition-colors">
-						<img
-							src="/logo.jpg"
-							alt="Profile"
-							className="w-8 h-8 rounded-full object-cover"
-						/>
-					</div>
+					<Avatar className="w-10 h-10 border border-white/10 bg-linear-to-br from-amber-400/20 to-orange-400/20">
+						<AvatarFallback className="text-amber-400 text-sm font-semibold bg-transparent">
+							{user?.username?.charAt(0).toUpperCase()}
+						</AvatarFallback>
+					</Avatar>
 				</NavLink>
 			</div>
 		</header>

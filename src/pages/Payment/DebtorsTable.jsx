@@ -81,7 +81,8 @@ export default function DebtorsTable({ searchTerm = "" }) {
 			: "?";
 	const fmt = a => `${a.toLocaleString()} so'm`;
 	const fmtDate = d =>
-		d !== null ? new Date(d).toLocaleDateString("uz-UZ") : "To'lov yo'q";
+      d !== null ? new Date(d).toLocaleDateString("uz-UZ") : "To'lov yo'q";
+   const capitalize = str => str.replace(/\b\w/g, char => char.toUpperCase());
 	const debtBadge = monthsOverdue => {
 		if (monthsOverdue === null || monthsOverdue >= 3)
 			return { l: "Jiddiy", c: "text-red-400 border-red-500/30 bg-red-500/10" };
@@ -96,7 +97,7 @@ export default function DebtorsTable({ searchTerm = "" }) {
 	if (debtorsLoading) return <Loader />;
 
 	return (
-		<div className="relative min-h-99 p-4">
+		<div className="relative min-h-99">
 			<div className="container mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4">
 				{/* Header */}
 				<div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/10">
@@ -261,7 +262,7 @@ export default function DebtorsTable({ searchTerm = "" }) {
 														</Avatar>
 													</TableCell>
 													<TableCell className="font-medium text-white">
-														<p className="truncate max-w-32">{d.full_name}</p>
+														<p className="truncate max-w-32">{capitalize(d.full_name)}</p>
 														<span className="flex items-center gap-1 text-[10px] text-gray-500 mt-1">
 															{copiedId === d.student_id ? (
 																<Check className="w-3 h-3" />

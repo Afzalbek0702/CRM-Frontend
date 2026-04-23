@@ -8,6 +8,7 @@ import {
 	FaBirthdayCake,
 	FaLock,
 	FaShieldAlt,
+   FaPlus,
 } from "react-icons/fa";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
@@ -116,10 +117,14 @@ export default function WorkerModal({
 			<DialogContent className="max-w-[95vw] sm:max-w-2xl bg-zinc-950 border-zinc-800 text-white max-h-[90vh]">
 				<DialogHeader>
 					<DialogTitle className="text-xl font-bold flex items-center gap-2">
-						<div className="p-2 bg-yellow-600/20 rounded-lg text-primary text-sm">
-							{initialData ? <FaSave /> : <FaBriefcase />}
-						</div>
-						{initialData ? "Xodimni tahrirlash" : "Yangi xodim qo'shish"}
+						{initialData ? (
+							<FaSave className="text-primary" />
+						) : (
+							<FaPlus className="text-green-500" />
+						)}
+						{initialData
+							? "Xodimni ma'lumotlarini tahrirlash"
+							: "Yangi Xodim qo'shish"}
 					</DialogTitle>
 				</DialogHeader>
 
@@ -132,7 +137,8 @@ export default function WorkerModal({
 							</Label>
 							<Input
 								name="full_name"
-								required
+                        required
+                        placeholder="Aliyev Vali"
 								className="bg-zinc-900 border-zinc-800"
 								value={formData.full_name}
 								onChange={handleChange}
@@ -145,7 +151,8 @@ export default function WorkerModal({
 							</Label>
 							<Input
 								name="phone"
-								required
+                        required
+                        placeholder="+998 90 123 45 67"
 								className="bg-zinc-900 border-zinc-800"
 								value={formData.phone}
 								onChange={handlePhoneChange}
@@ -166,7 +173,9 @@ export default function WorkerModal({
 											!date && "text-muted-foreground",
 										)}
 									>
-										<CalendarIcon className="mr-2 h-4 w-4 text-primary" />
+										<CalendarIcon
+											className={`mr-2 h-4 w-4 ${initialData ? "text-primary" : "text-green-500"}`}
+										/>
 										{date ? format(date, "dd-MM-yyyy") : "Sanani tanlang"}
 									</Button>
 								</PopoverTrigger>
@@ -174,9 +183,9 @@ export default function WorkerModal({
 									<Calendar
 										mode="single"
 										selected={date}
-										onSelect={(d) => {
+										onSelect={d => {
 											setDate(d);
-											setFormData((p) => ({
+											setFormData(p => ({
 												...p,
 												birthday: d ? format(d, "yyyy-MM-dd") : "",
 											}));
@@ -209,9 +218,9 @@ export default function WorkerModal({
 							</Label>
 							<Select
 								value={formData.role}
-								onValueChange={(v) => setFormData((p) => ({ ...p, role: v }))}
+								onValueChange={v => setFormData(p => ({ ...p, role: v }))}
 							>
-								<SelectTrigger className="bg-zinc-900 border-zinc-800">
+								<SelectTrigger className="w-full bg-zinc-900 border-zinc-800">
 									<SelectValue placeholder="Tanlang" />
 								</SelectTrigger>
 								<SelectContent className="bg-zinc-900 border-zinc-800 text-white">
@@ -240,11 +249,11 @@ export default function WorkerModal({
 							<Label className="text-zinc-400 text-[12px]">To'lov turi</Label>
 							<Select
 								value={formData.salary_type}
-								onValueChange={(v) =>
-									setFormData((p) => ({ ...p, salary_type: v }))
+								onValueChange={v =>
+									setFormData(p => ({ ...p, salary_type: v }))
 								}
 							>
-								<SelectTrigger className="bg-zinc-900 border-zinc-800">
+								<SelectTrigger className="w-full bg-zinc-900 border-zinc-800">
 									<SelectValue />
 								</SelectTrigger>
 								<SelectContent className="bg-zinc-900 border-zinc-800 text-white">
@@ -288,7 +297,7 @@ export default function WorkerModal({
 						</Button>
 						<Button
 							type="submit"
-							className="bg-primary hover:bg-primary/90 text-black font-bold px-10"
+							className={`text-black font-bold px-10 ${initialData ? "bg-primary hover:bg-primary/80" : "bg-green-500 hover:bg-green-500/80"}`}
 						>
 							{initialData ? "Saqlash" : "Yaratish"}
 						</Button>

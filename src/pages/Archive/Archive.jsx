@@ -18,12 +18,23 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 // Icons
 import { FaBook, FaChalkboardTeacher } from "react-icons/fa";
-import { ArchiveIcon, ArrowLeft, GraduationCap, Receipt, Users } from "lucide-react";
+import {
+	ArchiveIcon,
+	ArrowLeft,
+	GraduationCap,
+	Receipt,
+	Users,
+} from "lucide-react";
 import { StudentFilters } from "./ComponentFilter.jsx";
-import { LeadRow, PaymentRow, StudentRow, TeacherRow, GroupRow } from "./ComponentRows.jsx";
+import {
+	LeadRow,
+	PaymentRow,
+	StudentRow,
+	TeacherRow,
+	GroupRow,
+} from "./ComponentRows.jsx";
 import { CATEGORY_CONFIG, copyPhone } from "./config.js";
 import { EmptyState, StatsCard } from "./Components.jsx";
-
 
 export default function Archive() {
 	const { category } = useParams();
@@ -42,14 +53,14 @@ export default function Archive() {
 		useAllArchivedTeachers,
 	} = useArchive();
 	const { courseData } = useCourse();
-   const config = CATEGORY_CONFIG[category];
-   const IconComponent = config.icon;
-	const { students = [], isLoading: loadingStudents } =
+	const config = CATEGORY_CONFIG[category];
+	const IconComponent = config.icon;
+	const { data: students = [], isLoading: loadingStudents } =
 		useAllArchivedStudents();
-	const { leads = [], isLoading: loadingLeads } = useAllArchivedLeads();
-	const { payments = [], isLoading: loadingPayments } =
+	const { data: leads = [], isLoading: loadingLeads } = useAllArchivedLeads();
+	const { data: payments = [], isLoading: loadingPayments } =
 		useAllArchivedPayments();
-	const { teachers = [], isLoading: loadingTeachers } =
+	const { data: teachers = [], isLoading: loadingTeachers } =
 		useAllArchivedTeachers();
 
 	// 📊 Stats
@@ -69,23 +80,23 @@ export default function Archive() {
 	const filteredStudents = useMemo(
 		() =>
 			(students || [])
-				.filter((s) =>
+				.filter(s =>
 					s.full_name?.toLowerCase().includes(searchTerm.toLowerCase()),
 				)
 				.filter(
-					(s) =>
+					s =>
 						!selectedTeacher ||
 						s.groups?.some(
-							(gn) =>
-								archivedGroups.find((g) => g.name === gn)?.teacher_id ===
+							gn =>
+								archivedGroups.find(g => g.name === gn)?.teacher_id ===
 								selectedTeacher,
 						),
 				)
 				.filter(
-					(s) =>
+					s =>
 						!selectedGroup ||
 						s.archivedGroups?.includes(
-							archivedGroups.find((g) => g.id === selectedGroup)?.name,
+							archivedGroups.find(g => g.id === selectedGroup)?.name,
 						),
 				),
 		[students, searchTerm, selectedTeacher, selectedGroup, archivedGroups],
@@ -124,7 +135,7 @@ export default function Archive() {
 		);
 
 	return (
-		<div className="relative min-h-99 bg-background p-4">
+		<div className="relative min-h-99 bg-background">
 			<div className="container mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4">
 				{/* Header */}
 				<div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/10">
@@ -153,7 +164,9 @@ export default function Archive() {
 					</Badge>
 				</div>
 
-				<p className="text-center text-red-600">Bu sahifadagi barcha narsa arxivlangan va ishlatib bo'lmaydi!</p>
+				<p className="text-center text-red-600">
+					Bu sahifadagi barcha narsa arxivlangan va ishlatib bo'lmaydi!
+				</p>
 
 				{/* Stats */}
 				<div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
@@ -204,170 +217,161 @@ export default function Archive() {
 				)}
 
 				{/* Table */}
-				<Card className="bg-card/80 backdrop-blur-xl overflow-hidden p-0">
+				<Card className="bg-card/80 backdrop-blur-xs overflow-hidden p-0">
 					{/* <CardContent className="p-0"> */}
-						{category === "students" && (
-							<Table>
-								<TableHeader>
-									<TableRow className="bg-black/40 border-white/10">
-										<TableHead className="text-gray-400 w-12" />
-										<TableHead className="text-gray-400">Ism</TableHead>
-										<TableHead className="text-gray-400">Guruh</TableHead>
-										<TableHead className="text-gray-400">Telefon</TableHead>
-										<TableHead className="text-gray-400">
-											Tug'ilgan kun
-										</TableHead>
-										<TableHead className="text-gray-400">Ota-ona</TableHead>
-										
+					{category === "students" && (
+						<Table>
+							<TableHeader>
+								<TableRow className="bg-black/40 border-white/10">
+									<TableHead className="text-gray-400 w-12" />
+									<TableHead className="text-gray-400">Ism</TableHead>
+									<TableHead className="text-gray-400">Guruh</TableHead>
+									<TableHead className="text-gray-400">Telefon</TableHead>
+									<TableHead className="text-gray-400">Tug'ilgan kun</TableHead>
+									<TableHead className="text-gray-400">Ota-ona</TableHead>
+								</TableRow>
+							</TableHeader>
+							<TableBody>
+								{filteredStudents.length === 0 ? (
+									<TableRow>
+										<TableCell colSpan={7} className="py-16">
+											<EmptyState config={config} hasSearch={!!searchTerm} />
+										</TableCell>
 									</TableRow>
-								</TableHeader>
-								<TableBody>
-									{filteredStudents.length === 0 ? (
-										<TableRow>
-											<TableCell colSpan={7} className="py-16">
-												<EmptyState config={config} hasSearch={!!searchTerm} />
-											</TableCell>
-										</TableRow>
-									) : (
-										filteredStudents.map((s) => (
-											<StudentRow
-												key={s.id}
-												s={s}
-												onCopy={(p) => copyPhone(p, setCopiedPhone)}
-												copied={copiedPhone}
-											/>
-										))
-									)}
-								</TableBody>
-							</Table>
-						)}
+								) : (
+									filteredStudents.map(s => (
+										<StudentRow
+											key={s.id}
+											s={s}
+											onCopy={p => copyPhone(p, setCopiedPhone)}
+											copied={copiedPhone}
+										/>
+									))
+								)}
+							</TableBody>
+						</Table>
+					)}
 
-						{category === "teachers" && (
-							<Table>
-								<TableHeader>
-									<TableRow className="bg-black/40 border-white/10">
-										<TableHead className="text-gray-400 w-12" />
-										<TableHead className="text-gray-400">Ism</TableHead>
-										<TableHead className="text-gray-400">Telefon</TableHead>
-										<TableHead className="text-gray-400">Manba</TableHead>
-										
+					{category === "teachers" && (
+						<Table>
+							<TableHeader>
+								<TableRow className="bg-black/40 border-white/10">
+									<TableHead className="text-gray-400 w-12" />
+									<TableHead className="text-gray-400">Ism</TableHead>
+									<TableHead className="text-gray-400">Telefon</TableHead>
+									<TableHead className="text-gray-400">Manba</TableHead>
+								</TableRow>
+							</TableHeader>
+							<TableBody>
+								{teachers.length === 0 ? (
+									<TableRow>
+										<TableCell colSpan={5} className="py-16">
+											<EmptyState config={config} />
+										</TableCell>
 									</TableRow>
-								</TableHeader>
-								<TableBody>
-									{teachers.length === 0 ? (
-										<TableRow>
-											<TableCell colSpan={5} className="py-16">
-												<EmptyState config={config} />
-											</TableCell>
-										</TableRow>
-									) : (
-										teachers.map((t) => (
-											<TeacherRow
-												key={t.id}
-												t={t}
-												onCopy={(p) => copyPhone(p, setCopiedPhone)}
-												copied={copiedPhone}
-											/>
-										))
-									)}
-								</TableBody>
-							</Table>
-						)}
+								) : (
+									teachers.map(t => (
+										<TeacherRow
+											key={t.id}
+											t={t}
+											onCopy={p => copyPhone(p, setCopiedPhone)}
+											copied={copiedPhone}
+										/>
+									))
+								)}
+							</TableBody>
+						</Table>
+					)}
 
-						{category === "leads" && (
-							<Table>
-								<TableHeader>
-									<TableRow className="bg-black/40 border-white/10">
-										<TableHead className="text-gray-400 w-12" />
-										<TableHead className="text-gray-400">Ism</TableHead>
-										<TableHead className="text-gray-400">Telefon</TableHead>
-										<TableHead className="text-gray-400">Manba</TableHead>
-										<TableHead className="text-gray-400">Kurs</TableHead>
-										<TableHead className="text-gray-400 max-w-32">
-											Izoh
-										</TableHead>
-										
+					{category === "leads" && (
+						<Table>
+							<TableHeader>
+								<TableRow className="bg-black/40 border-white/10">
+									<TableHead className="text-gray-400 w-12" />
+									<TableHead className="text-gray-400">Ism</TableHead>
+									<TableHead className="text-gray-400">Telefon</TableHead>
+									<TableHead className="text-gray-400">Manba</TableHead>
+									<TableHead className="text-gray-400">Kurs</TableHead>
+									<TableHead className="text-gray-400 max-w-32">Izoh</TableHead>
+								</TableRow>
+							</TableHeader>
+							<TableBody>
+								{leads.length === 0 ? (
+									<TableRow>
+										<TableCell colSpan={7} className="py-16">
+											<EmptyState config={config} />
+										</TableCell>
 									</TableRow>
-								</TableHeader>
-								<TableBody>
-									{leads.length === 0 ? (
-										<TableRow>
-											<TableCell colSpan={7} className="py-16">
-												<EmptyState config={config} />
-											</TableCell>
-										</TableRow>
-									) : (
-										leads.map((l) => (
-											<LeadRow
-												key={l.id}
-												l={l}
-												courseData={courseData}
-												onCopy={(p) => copyPhone(p, setCopiedPhone)}
-												copied={copiedPhone}
-											/>
-										))
-									)}
-								</TableBody>
-							</Table>
-						)}
+								) : (
+									leads.map(l => (
+										<LeadRow
+											key={l.id}
+											l={l}
+											courseData={courseData}
+											onCopy={p => copyPhone(p, setCopiedPhone)}
+											copied={copiedPhone}
+										/>
+									))
+								)}
+							</TableBody>
+						</Table>
+					)}
 
-						{category === "payments" && (
-							<Table>
-								<TableHeader>
-									<TableRow className="bg-black/40 border-white/10">
-										<TableHead className="text-gray-400">Sana</TableHead>
-										<TableHead className="text-gray-400">O'quvchi</TableHead>
-										<TableHead className="text-gray-400">Guruh</TableHead>
-										<TableHead className="text-gray-400 text-right">
-											Miqdor
-										</TableHead>
-										<TableHead className="text-gray-400">Tur</TableHead>
-										
+					{category === "payments" && (
+						<Table>
+							<TableHeader>
+								<TableRow className="bg-black/40 border-white/10">
+									<TableHead className="text-gray-400">Sana</TableHead>
+									<TableHead className="text-gray-400">O'quvchi</TableHead>
+									<TableHead className="text-gray-400">Guruh</TableHead>
+									<TableHead className="text-gray-400 text-right">
+										Miqdor
+									</TableHead>
+									<TableHead className="text-gray-400">Tur</TableHead>
+								</TableRow>
+							</TableHeader>
+							<TableBody>
+								{payments.length === 0 ? (
+									<TableRow>
+										<TableCell colSpan={6} className="py-16">
+											<EmptyState config={config} />
+										</TableCell>
 									</TableRow>
-								</TableHeader>
-								<TableBody>
-									{payments.length === 0 ? (
-										<TableRow>
-											<TableCell colSpan={6} className="py-16">
-												<EmptyState config={config} />
-											</TableCell>
-										</TableRow>
-									) : (
-										payments.map((p) => <PaymentRow key={p.id} p={p} />)
-									)}
-								</TableBody>
-							</Table>
-						)}
+								) : (
+									payments.map(p => <PaymentRow key={p.id} p={p} />)
+								)}
+							</TableBody>
+						</Table>
+					)}
 
-						{category === "groups" && (
-							<Table>
-								<TableHeader>
-									<TableRow className="bg-black/40 border-white/10">
-										<TableHead className="text-gray-400 w-12" />
-										<TableHead className="text-gray-400">Nomi</TableHead>
-										<TableHead className="text-gray-400">Narx</TableHead>
-										<TableHead className="text-gray-400">Dars vaqti</TableHead>
-										<TableHead className="text-gray-400">Kurs turi</TableHead>
-										<TableHead className="text-gray-400">O'qituvchi</TableHead>
-										<TableHead className="text-gray-400">Kunlar</TableHead>
-										
+					{category === "groups" && (
+						<Table>
+							<TableHeader>
+								<TableRow className="bg-black/40 border-white/10">
+									<TableHead className="text-gray-400 w-12" />
+									<TableHead className="text-gray-400">Nomi</TableHead>
+									<TableHead className="text-gray-400">Narx</TableHead>
+									<TableHead className="text-gray-400">Dars vaqti</TableHead>
+									<TableHead className="text-gray-400">Kurs turi</TableHead>
+									<TableHead className="text-gray-400">O'qituvchi</TableHead>
+									<TableHead className="text-gray-400">Kunlar</TableHead>
+								</TableRow>
+							</TableHeader>
+							<TableBody>
+								{archivedGroups.length === 0 ? (
+									<TableRow>
+										<TableCell colSpan={8} className="py-16">
+											<EmptyState config={config} />
+										</TableCell>
 									</TableRow>
-								</TableHeader>
-								<TableBody>
-									{archivedGroups.length === 0 ? (
-										<TableRow>
-											<TableCell colSpan={8} className="py-16">
-												<EmptyState config={config} />
-											</TableCell>
-										</TableRow>
-									) : (
-										archivedGroups.map((g) => (
-											<GroupRow key={g.id} g={g} navigate={navigate} />
-										))
-									)}
-								</TableBody>
-							</Table>
-						)}
+								) : (
+									archivedGroups.map(g => (
+										<GroupRow key={g.id} g={g} navigate={navigate} />
+									))
+								)}
+							</TableBody>
+						</Table>
+					)}
 					{/* </CardContent> */}
 				</Card>
 			</div>

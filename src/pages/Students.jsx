@@ -53,8 +53,8 @@ import {
 	Trash2,
 	Edit,
 	MoreHorizontal,
-   Sparkles,
-   ChevronsUpDown,
+	Sparkles,
+	ChevronsUpDown,
 } from "lucide-react";
 
 import Loader from "../components/Loader.jsx";
@@ -62,8 +62,18 @@ import StudentModal from "../components/StudentModal.jsx";
 import AddToGroupModal from "../components/AddToGroupModal.jsx";
 import ConfirmDeleteModal from "@/components/ConfirmDeleteModal.jsx";
 import PhoneUtils from "@/utils/phoneFormat.js";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover.jsx";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command.jsx";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover.jsx";
+import {
+	Command,
+	CommandEmpty,
+	CommandGroup,
+	CommandInput,
+	CommandItem,
+} from "@/components/ui/command.jsx";
 
 // 🎨 Stats Card Component
 const StatsCard = ({ icon, label, value, trend, color }) => {
@@ -147,14 +157,16 @@ export default function Students() {
 		const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
 		return {
 			total: students.length,
-			withGroup: students.filter((s) => s.groups || s.group_id).length,
-			newThisMonth: students.filter((s) => new Date(s.created_at) >= monthStart).length,
+			withGroup: students.filter(s => s.groups || s.group_id).length,
+			newThisMonth: students.filter(s => new Date(s.created_at) >= monthStart)
+				.length,
 		};
 	}, [students]);
 
 	// Filtrlash mantiqi
 	const filteredStudents = useMemo(() => {
-		return students?.filter(s =>
+		return students
+			?.filter(s =>
 				s.full_name?.toLowerCase().includes(searchTerm.toLowerCase()),
 			)
 			.filter(s => {
@@ -240,7 +252,7 @@ export default function Students() {
 		};
 		return map[colors[index]];
 	};
-
+	const capitalize = str => str.replace(/\b\w/g, char => char.toUpperCase());
 	if (loading) return <Loader />;
 	if (error)
 		return (
@@ -270,7 +282,7 @@ export default function Students() {
 
 	return (
 		<div className="relative min-h-99 bg-background">
-			<div className="container mx-auto px-4 py-6 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+			<div className="container mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-200">
 				{/* 🧭 Header Section */}
 				<div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/10">
 					<div className="flex items-center gap-4">
@@ -331,83 +343,86 @@ export default function Students() {
 				{/* 🔍 Search & Filters */}
 				<Card className="bg-card border-white/10 backdrop-blur-xl">
 					<CardContent className="p-4">
-				<div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
-					{/* Search */}
-					<div className="relative w-full lg:w-80">
-						<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-						<Input
-							placeholder="Ism bo'yicha qidirish..."
-							className="pl-10 bg-black/40 border-white/20 text-white placeholder:text-gray-500 focus:border-amber-400/50 focus:ring-2 focus:ring-amber-400/20 transition-all"
-							value={searchTerm}
-							onChange={e => setSearchTerm(e.target.value)}
-						/>
-					</div>
+						<div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
+							{/* Search */}
+							<div className="relative w-full lg:w-80">
+								<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+								<Input
+									placeholder="Ism bo'yicha qidirish..."
+									className="pl-10 bg-black/40 border-white/20 text-white placeholder:text-gray-500 focus:border-amber-400/50 focus:ring-2 focus:ring-amber-400/20 transition-all"
+									value={searchTerm}
+									onChange={e => setSearchTerm(e.target.value)}
+								/>
+							</div>
 
-					{/* Filters */}
-					<div className="flex flex-wrap items-center gap-3">
-						{/* Group Filter */}
-						<Popover open={openGroup} onOpenChange={setOpenGroup}>
-							<PopoverTrigger asChild>
-								<Button
-									variant="outline"
-									className="justify-between border-white/20 text-gray-300 hover:bg-white/10 hover:text-white"
-								>
-									{selectedGroup
-										? groups.find(g => g.id === selectedGroup)?.name
-										: "Barcha guruhlar"}
-									<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-								</Button>
-							</PopoverTrigger>
-							<PopoverContent
-								className="w-50 p-0 bg-[#1f1f1f] border-white/10 text-white"
-								align="end"
-							>
-								<Command>
-									<CommandInput
-										placeholder="Guruhni qidirish..."
-										className="text-white placeholder:text-gray-500 outline-none border-none"
-									/>
-									<CommandEmpty className="text-gray-500 py-4">
-										Topilmadi.
-									</CommandEmpty>
-									<CommandGroup>
-										<CommandItem
-											onSelect={() => {
-												setSelectedGroup("");
-												setOpenGroup(false);
-											}}
-											className="cursor-pointer hover:bg-amber-400/10 focus:bg-amber-400/10"
+							{/* Filters */}
+							<div className="flex flex-wrap items-center gap-3">
+								{/* Group Filter */}
+								<Popover open={openGroup} onOpenChange={setOpenGroup}>
+									<PopoverTrigger asChild>
+										<Button
+											variant="outline"
+											className="justify-between border-white/20 text-gray-300 hover:bg-white/10 hover:text-white"
 										>
-											<Check
-												className={`mr-2 h-4 w-4 ${!selectedGroup ? "opacity-100 text-amber-400" : "opacity-0"}`}
+											{selectedGroup
+												? groups.find(g => g.id === selectedGroup)?.name
+												: "Barcha guruhlar"}
+											<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+										</Button>
+									</PopoverTrigger>
+									<PopoverContent
+										className="w-50 p-0 bg-[#1f1f1f] border-white/10 text-white"
+										align="end"
+									>
+										<Command>
+											<CommandInput
+												placeholder="Guruhni qidirish..."
+												className="text-white placeholder:text-gray-500 outline-none border-none"
 											/>
-											Barcha guruhlar
-										</CommandItem>
-										{groups.map(g => (
-											<CommandItem
-												key={g.id}
-												onSelect={() => {
-													setSelectedGroup(g.id);
-													setOpenGroup(false);
-												}}
-												className="cursor-pointer hover:bg-amber-400/10 focus:bg-amber-400/10"
-											>
-												<Check
-													className={`mr-2 h-4 w-4 ${selectedGroup === g.id ? "opacity-100 text-amber-400" : "opacity-0"}`}
-												/>
-												{g.name}
-											</CommandItem>
-										))}
-									</CommandGroup>
-								</Command>
-							</PopoverContent>
-						</Popover>
+											<CommandEmpty className="text-gray-500 py-4">
+												Topilmadi.
+											</CommandEmpty>
+											<CommandGroup>
+												<CommandItem
+													onSelect={() => {
+														setSelectedGroup("");
+														setOpenGroup(false);
+													}}
+													className="cursor-pointer hover:bg-amber-400/10 focus:bg-amber-400/10"
+												>
+													<Check
+														className={`mr-2 h-4 w-4 ${!selectedGroup ? "opacity-100 text-amber-400" : "opacity-0"}`}
+													/>
+													Barcha guruhlar
+												</CommandItem>
+												{groups.map(g => (
+													<CommandItem
+														key={g.id}
+														onSelect={() => {
+															setSelectedGroup(g.id);
+															setOpenGroup(false);
+														}}
+														className="cursor-pointer hover:bg-amber-400/10 focus:bg-amber-400/10"
+													>
+														<Check
+															className={`mr-2 h-4 w-4 ${selectedGroup === g.id ? "opacity-100 text-amber-400" : "opacity-0"}`}
+														/>
+														{g.name}
+													</CommandItem>
+												))}
+											</CommandGroup>
+										</Command>
+									</PopoverContent>
+								</Popover>
 
-						<Badge variant="outline" className="border-white/20 text-gray-400">
-							{filteredStudents.length} natija
-						</Badge>
-					</div>
-				</div>
+								<Badge
+									variant="outline"
+									className="border-white/20 text-gray-400"
+								>
+									{filteredStudents.length} natija
+								</Badge>
+							</div>
+						</div>
 					</CardContent>
 				</Card>
 
@@ -460,7 +475,7 @@ export default function Students() {
 								filteredStudents.map(s => (
 									<TableRow
 										key={s.id}
-										className="border-white/5 hover:bg-amber-400/5 transition-all duration-200 group/row cursor-pointer"
+										className="border-white/5 hover:bg-amber-400/5 transition-all duration-200 group/row"
 										onClick={() => navigate(`/${tenant}/students/${s.id}`)}
 									>
 										<TableCell className="py-4">
@@ -472,7 +487,9 @@ export default function Students() {
 										</TableCell>
 										<TableCell className="font-medium text-white">
 											<div>
-												<p className="truncate max-w-40">{s.full_name}</p>
+												<p className="truncate max-w-40">
+													{capitalize(s.full_name)}
+												</p>
 												{s.balance < 0 && (
 													<Badge
 														variant="outline"
@@ -484,18 +501,16 @@ export default function Students() {
 											</div>
 										</TableCell>
 										<TableCell>
-											{s.groups?.name ||
-											(Array.isArray(s.groups)
-												? s.groups[0]?.name
-												: s.group?.name) ? (
+											{s.groups ? (
 												<Badge
 													variant="outline"
-													className={`border ${getGroupColor(s.groups?.name || s.group?.name)}`}
+													className={`border ${getGroupColor(s.groups?.name || s.group?.name)} hover:scale-110 hover:cursor-pointer`}
+													onClick={e => {
+														e.stopPropagation();
+														navigate(`/${tenant}/groups/${s.groups?.id}`);
+													}}
 												>
-													{s.groups?.name ||
-														(Array.isArray(s.groups)
-															? s.groups[0]?.name
-															: s.group?.name)}
+													{s.groups?.name}
 												</Badge>
 											) : (
 												<span className="text-gray-500 text-sm">Guruhsiz</span>
@@ -507,7 +522,7 @@ export default function Students() {
 													e.stopPropagation();
 													handleCopyPhone(s.phone);
 												}}
-												className="flex items-center gap-1.5 text-gray-300 hover:text-amber-400 transition-colors group/btn"
+												className="flex items-center gap-1.5 text-gray-300 hover:text-amber-400 hover:cursor-pointer transition-colors group/btn"
 											>
 												<span className=" font-mono text-sm">
 													{PhoneUtils.formatPhone(s.phone)}

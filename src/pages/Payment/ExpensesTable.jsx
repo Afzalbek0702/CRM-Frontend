@@ -142,7 +142,7 @@ export default function ExpensesTable() {
 		}
 	};
 	return (
-		<div className="relative min-h-99 bg-background p-4">
+		<div className="relative min-h-99 bg-background">
 			<div className="container mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4">
 				{/* Header */}
 				<div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/10">

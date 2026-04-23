@@ -35,7 +35,7 @@ export default function Layout() {
 					<div className="flex flex-1 pt-17.5 h-screen w-full">
 						<AppSidebar className="mt-17.5" />
 
-						<SidebarInset className="flex-1 min-w-0 overflow-y-auto overflow-x-hidden p-6">
+						<SidebarInset className="flex-1 min-w-0 overflow-y-auto overflow-x-hidden p-8">
 							<Outlet />
 						</SidebarInset>
 					</div>

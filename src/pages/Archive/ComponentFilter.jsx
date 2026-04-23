@@ -26,7 +26,7 @@ export const StudentFilters = ({
 	archivedGroups,
 	resultCount,
 }) => (
-	<Card className="bg-[#1f1f1f]/80 border-white/10 backdrop-blur-xl">
+	<Card className="bg-[#1f1f1f]/80 border-white/10 backdrop-blur-xs">
 		<CardContent className="p-4">
 			<div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
 				<InputGroup className="max-w-md">

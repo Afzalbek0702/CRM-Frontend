@@ -138,7 +138,7 @@ export default function ExpenseModal({
 								value={form.method}
 								onValueChange={(val) => setForm((p) => ({ ...p, method: val }))}
 							>
-								<SelectTrigger className="bg-zinc-900 border-zinc-800 text-white">
+								<SelectTrigger className="w-full bg-zinc-900 border-zinc-800 text-white">
 									<SelectValue placeholder="Turini tanlang" />
 								</SelectTrigger>
 								<SelectContent className="bg-zinc-900 border-zinc-800 text-white">

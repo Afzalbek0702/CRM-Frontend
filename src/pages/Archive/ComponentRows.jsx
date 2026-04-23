@@ -1,6 +1,8 @@
 import { fmtDate, initials } from "./config";
 import { getUzDays } from "@/utils/weekday";
 import {
+   Check,
+   Copy,
 	MoreHorizontal,
 } from "lucide-react";
 import {
@@ -18,7 +20,8 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useParams } from "react-router-dom"; 
 
 import { FaClock, FaUsers } from "react-icons/fa";
-
+import PhoneUtils from "@/utils/phoneFormat";
+const capitalize = str => str.replace(/\b\w/g, char => char.toUpperCase());
 export const StudentRow = ({ s, onCopy, copied }) => (
 	<TableRow
 		key={s.id}
@@ -32,15 +35,15 @@ export const StudentRow = ({ s, onCopy, copied }) => (
 			</Avatar>
 		</TableCell>
 		<TableCell className="font-medium text-white truncate max-w-32">
-			{s.full_name}
+			{capitalize(s.full_name)}
 		</TableCell>
 		<TableCell>
-			{s.groups?.[0] ? (
+			{s.groups ? (
 				<Badge
 					variant="outline"
 					className="border-amber-400/30 text-amber-400 bg-amber-400/10"
 				>
-					{s.groups[0]}
+					{s.groups?.name}
 				</Badge>
 			) : (
 				<span className="text-gray-500 text-sm">—</span>
@@ -56,7 +59,7 @@ export const StudentRow = ({ s, onCopy, copied }) => (
 						}}
 						className="flex items-center gap-1.5 text-gray-300 hover:text-amber-400"
 					>
-						<span className="truncate max-w-24 font-mono text-sm">
+						<span className="font-mono text-sm">
 							{PhoneUtils.formatPhone(s.phone)}
 						</span>
 						{copied === s.phone ? (
@@ -66,7 +69,7 @@ export const StudentRow = ({ s, onCopy, copied }) => (
 						)}
 					</button>
 				</TooltipTrigger>
-				<TooltipContent className="bg-[#1f1f1f] border-white/10 text-white">
+				<TooltipContent>
 					<p>Nusxa olish</p>
 				</TooltipContent>
 			</Tooltip>
@@ -122,7 +125,7 @@ export const TeacherRow = ({ t, onCopy, copied }) => (
 				</AvatarFallback>
 			</Avatar>
 		</TableCell>
-		<TableCell className="font-medium text-white">{t.full_name}</TableCell>
+		<TableCell className="font-medium text-white">{capitalize(t.full_name)}</TableCell>
 		<TableCell>
 			<Tooltip>
 				<TooltipTrigger asChild>
@@ -165,7 +168,7 @@ export const LeadRow = ({ l, courseData, onCopy, copied }) => (
 				</AvatarFallback>
 			</Avatar>
 		</TableCell>
-		<TableCell className="font-medium text-white">{l.full_name}</TableCell>
+		<TableCell className="font-medium text-white">{capitalize(l.full_name)}</TableCell>
 		<TableCell>
 			<Tooltip>
 				<TooltipTrigger asChild>
@@ -211,7 +214,7 @@ export const PaymentRow = ({ p }) => (
 			<Calendar className="w-4 h-4 text-purple-400/70" />
 			{fmtDate(p.paid_at)}
 		</TableCell>
-		<TableCell className="font-medium text-white">{p.student_name}</TableCell>
+		<TableCell className="font-medium text-white">{capitalize(p.student_name)}</TableCell>
 		<TableCell>
 			<Badge
 				variant="outline"
@@ -251,7 +254,7 @@ export const GroupRow = ({ g, navigate }) => {
 				</Avatar>
 			</TableCell>
 			<TableCell className="font-medium text-white">
-				<p className="truncate max-w-32">{g.name}</p>
+				<p className="truncate max-w-32">{capitalize(g.name)}</p>
 				<Badge
 					variant="outline"
 					className="mt-1 text-[10px] border-amber-400/30 text-amber-400 bg-amber-400/10"
@@ -275,7 +278,7 @@ export const GroupRow = ({ g, navigate }) => {
 				</Badge>
 			</TableCell>
 			<TableCell className="text-gray-300 text-sm">
-				{g.teachers?.full_name || "-"}
+				{capitalize(g.teachers?.full_name) || "-"}
 			</TableCell>
 			<TableCell>
 				<div className="flex flex-wrap gap-1">

@@ -55,7 +55,7 @@ export default function WorkerDetail() {
 
 	const worker = useMemo(() => {
 		if (!id || !Array.isArray(workerData)) return null;
-		return workerData.find((w) => String(w.id) === String(id));
+		return workerData.find(w => String(w.id) === String(id));
 	}, [id, workerData]);
 
 	// 📊 Stats calculations
@@ -71,7 +71,7 @@ export default function WorkerDetail() {
 	if (isLoading) return <Loader />;
 	if (error)
 		return (
-			<div className="min-h-screen flex items-center justify-center p-4">
+			<div className="min-h-screen flex items-center justify-center">
 				<Card className="bg-red-500/10 border-red-500/30 p-6 max-w-md w-full backdrop-blur-xl">
 					<div className="flex flex-col items-center text-center">
 						<div className="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mb-4">
@@ -111,7 +111,7 @@ export default function WorkerDetail() {
 		);
 
 	// 🎨 Avatar initials
-	const getInitials = (name) => {
+	const getInitials = name => {
 		if (!name) return "?";
 		const parts = name.split(" ");
 		return (parts[0]?.[0] + (parts[1]?.[0] || "")).toUpperCase();
@@ -121,7 +121,7 @@ export default function WorkerDetail() {
 		<div className="relative min-h-screen bg-background">
 			{/* <AnimatedBackground /> */}
 
-			<div className="container mx-auto px-4 py-6 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+			<div className="container mx-auto px-4 py-6 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-200">
 				{/* 🧭 Header Section */}
 				<div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/10">
 					<div className="flex items-center gap-4">
@@ -164,8 +164,8 @@ export default function WorkerDetail() {
 				</div>
 
 				{/* 👤 Profile Header Card */}
-				<Card className="relative overflow-hidden bg-linear-to-br from-[#1f1f1f] to-[#161616] border-white/10 backdrop-blur-xl group hover:border-amber-400/30 transition-all duration-500">
-					<div className="absolute inset-0 bg-linear-to-r from-amber-400/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+				<Card className="relative overflow-hidden bg-linear-to-br from-[#1f1f1f] to-[#161616] border-white/10 backdrop-blur-xl group hover:border-amber-400/30 transition-all duration-200">
+					<div className="absolute inset-0 bg-linear-to-r from-amber-400/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
 
 					<CardContent className="p-6">
 						<div className="flex flex-col md:flex-row md:items-center gap-6">
@@ -460,7 +460,7 @@ export default function WorkerDetail() {
 												</TableRow>
 											</TableHeader>
 											<TableBody>
-												{worker.groups.map((group) => (
+												{worker.groups.map(group => (
 													<TableRow
 														key={group.id}
 														className="border-white/5 hover:bg-amber-400/5 transition-colors cursor-pointer group/row"

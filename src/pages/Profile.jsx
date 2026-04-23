@@ -20,7 +20,7 @@ import {
 	Globe,
 	Calendar,
 	KeyRound,
-   ArrowLeft,
+	ArrowLeft,
 } from "lucide-react";
 import PhoneUtils from "@/utils/phoneFormat";
 import { useState } from "react";
@@ -47,7 +47,7 @@ export default function Profile() {
 	}
 
 	return (
-		<div className="max-w-4xl w-full mx-auto space-y-6 bg-background min-h-99 animate-in fade-in duration-500 p-2">
+		<div className="max-w-4xl w-full mx-auto space-y-6 bg-background min-h-99 animate-in fade-in duration-200">
 			{/* Ortga qaytish tugmasi */}
 			<Button
 				onClick={() => navigate(-1)}
@@ -58,7 +58,7 @@ export default function Profile() {
 				<span className="ml-2 hidden sm:inline">Ortga</span>
 			</Button>
 
-			<Card className="border-border/50 bg-card/50 backdrop-blur-sm">
+			<Card className="border-border/50 bg-card/50 backdrop-blur-xs">
 				<CardHeader className="pb-8">
 					<div className="flex flex-col sm:flex-row items-center gap-6">
 						{/* Avatar qismi */}

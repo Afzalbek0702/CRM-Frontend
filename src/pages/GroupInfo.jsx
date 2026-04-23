@@ -170,7 +170,8 @@ const months = useMemo(() => {
 	const anchorIdx = todayIdx === -1 ? lessonDates.length - 1 : todayIdx;
 	const filtered = students.filter((s) =>
 		s.full_name?.toLowerCase().includes(searchTerm.toLowerCase()),
-	);
+   );
+   const capitalize = str => str.replace(/\b\w/g, char => char.toUpperCase());
 	const removeStudent = async () => {
 		if (deleteId) {
 			await removeFromGroup(deleteId, id);
@@ -223,7 +224,7 @@ const months = useMemo(() => {
 		);
 
 	return (
-		<div className="relative min-h-screen bg-background p-4">
+		<div className="relative min-h-screen bg-background">
 			<div className="container mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4">
 				{/* Header */}
 				<div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
@@ -289,8 +290,8 @@ const months = useMemo(() => {
 											i: <FaChalkboardTeacher />,
 											l: "O'qituvchi",
 											v:
-												teachers.find((t) => t.id === group.teacher_id)
-													?.full_name || "—",
+												capitalize(teachers.find((t) => t.id === group.teacher_id)
+													?.full_name) || "—",
 										},
 										{
 											i: <FaCalendarAlt />,
@@ -373,7 +374,7 @@ const months = useMemo(() => {
 													</div>
 													<div className="min-w-0">
 														<p className="font-medium text-white truncate">
-															{s.full_name}
+															{capitalize(s.full_name)}
 														</p>
 														<p className="text-xs text-gray-500">ID: #{s.id}</p>
 													</div>
@@ -535,7 +536,7 @@ const months = useMemo(() => {
 																{initials(s.full_name)}
 															</div>
 															<span className="truncate max-w-32">
-																{s.full_name}
+																{capitalize(s.full_name)}
 															</span>
 														</div>
 													</TableCell>

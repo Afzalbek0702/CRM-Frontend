@@ -48,7 +48,7 @@ export default function StudentDirectory() {
 	];
 
 	return (
-		<div className="space-y-6 bg-background min-h-screen animate-in fade-in duration-500">
+		<div className="space-y-6 bg-background min-h-screen animate-in fade-in duration-200">
 			{/* Header & Actions */}
 			<div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
 				<div>
@@ -67,7 +67,7 @@ export default function StudentDirectory() {
 							placeholder="ID yoki ism bo'yicha..."
 							className="pl-9 h-10"
 							value={searchTerm}
-							onChange={(e) => setSearchTerm(e.target.value)}
+							onChange={e => setSearchTerm(e.target.value)}
 						/>
 					</div>
 
@@ -96,7 +96,7 @@ export default function StudentDirectory() {
 					</TableHeader>
 					<TableBody>
 						{students.length > 0 ? (
-							students.map((student) => (
+							students.map(student => (
 								<TableRow
 									key={student.id}
 									className="group bg-card transition-colors"

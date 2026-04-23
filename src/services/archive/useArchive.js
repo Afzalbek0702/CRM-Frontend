@@ -36,12 +36,12 @@ export const useArchive = () => {
 
 	const useAllArchivedStudents = () =>
 		useQuery({
-			queryKey: [ARCHIVE_QUERY_KEY, "teachers"],
+			queryKey: [ARCHIVE_QUERY_KEY, "students"],
 			queryFn: () => archiveService.getAllArchivedStudents(),
 		});
 	const useAllArchivedTeachers = () =>
 		useQuery({
-			queryKey: [ARCHIVE_QUERY_KEY, "students"],
+			queryKey: [ARCHIVE_QUERY_KEY, "teachers"],
 			queryFn: () => archiveService.getAllArchivedTeachers(),
 		});
 	const useAllArchivedPayments = () =>

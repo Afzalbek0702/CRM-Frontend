@@ -91,7 +91,8 @@ export default function StudentModal({
 		onSubmit({
 			...formData,
 			phone: PhoneUtils.cleanPhone(formData.phone),
-			parents_phone: PhoneUtils.cleanPhone(formData.parents_phone),
+         parents_phone: PhoneUtils.cleanPhone(formData.parents_phone),
+         parents_name:formData.parents_name.length == 0 ? null : formData.parents_name
 		});
 		onClose();
 	};
@@ -143,7 +144,7 @@ export default function StudentModal({
 								placeholder="+998 90 123 45 67"
 								className="bg-zinc-900 border-zinc-800"
 								value={formData.phone}
-								onChange={(e) => {
+								onChange={e => {
 									const formatted = PhoneUtils.formatPhone(e.target.value);
 									setFormData({ ...formData, phone: formatted });
 								}}
@@ -164,7 +165,9 @@ export default function StudentModal({
 											!date && "text-muted-foreground",
 										)}
 									>
-										<CalendarIcon className="mr-2 h-4 w-4 text-primary" />
+										<CalendarIcon
+											className={`mr-2 h-4 w-4 ${initialData ? "text-primary" : "text-green-500"}`}
+										/>
 										{date ? format(date, "dd-MM-yyyy") : "Sanani tanlang"}
 									</Button>
 								</PopoverTrigger>
@@ -215,7 +218,7 @@ export default function StudentModal({
 								placeholder="+998 99 888 77 66"
 								className="bg-zinc-900 border-zinc-800"
 								value={formData.parents_phone}
-								onChange={(e) => {
+								onChange={e => {
 									const formatted = PhoneUtils.formatPhone(e.target.value);
 									setFormData({ ...formData, parents_phone: formatted });
 								}}
@@ -239,7 +242,7 @@ export default function StudentModal({
 						</div> */}
 					</div>
 
-					<DialogFooter className="flex-col-reverse sm:flex-row gap-2 pt-4 border-t border-zinc-800">
+					<DialogFooter className="gap-2 pt-4 border-t border-zinc-800">
 						<Button
 							type="button"
 							variant="ghost"
@@ -250,7 +253,7 @@ export default function StudentModal({
 						</Button>
 						<Button
 							type="submit"
-							className="bg-primary hover:bg-primary/90 text-black font-bold px-8"
+							className={`${initialData ? "bg-primary hover:bg-primary/80" : "bg-green-500 hover:bg-green-500/80"} text-black font-bold px-8`}
 						>
 							{initialData ? "Saqlash" : "Ro'yxatga olish"}
 						</Button>

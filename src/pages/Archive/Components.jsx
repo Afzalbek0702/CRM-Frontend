@@ -7,7 +7,7 @@ import { FaSearch } from "react-icons/fa";
 
 export const StatsCard = ({ icon, label, value, trend, color }) => (
 	<Card
-		className={`bg-linear-to-br ${COLORS[color]} border backdrop-blur-xl hover:scale-[1.02] transition-all`}
+		className={`bg-linear-to-br ${COLORS[color]} border backdrop-blur-xs hover:scale-[1.02] transition-all`}
 	>
 		<CardContent className="p-4 flex items-center gap-4">
 			<div

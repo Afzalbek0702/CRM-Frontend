@@ -143,15 +143,15 @@ export default function LeadModal({ isOpen, onClose, onSubmit, initialData }) {
 							<Label className="text-zinc-400 text-xs">Qiziqgan kursi</Label>
 							<Select
 								value={formData.interested_course}
-								onValueChange={(val) =>
-									setFormData((p) => ({ ...p, interested_course: val }))
+								onValueChange={val =>
+									setFormData(p => ({ ...p, interested_course: val }))
 								}
 							>
 								<SelectTrigger className="w-full bg-zinc-900 border-zinc-800">
 									<SelectValue placeholder="Kursni tanlang" />
 								</SelectTrigger>
 								<SelectContent className="bg-zinc-900 border-zinc-800">
-									{courseData.map((course) => (
+									{courseData.map(course => (
 										<SelectItem key={course.id} value={String(course.name)}>
 											{course.name}
 										</SelectItem>
@@ -187,7 +187,7 @@ export default function LeadModal({ isOpen, onClose, onSubmit, initialData }) {
 						</Button>
 						<Button
 							type="submit"
-							className="bg-primary hover:bg-primary text-black font-bold px-8"
+							className={`${initialData ? "bg-primary hover:bg-primary/80" : "bg-green-500 hover:bg-green-500/80"} text-black font-bold px-8`}
 						>
 							{initialData ? "Saqlash" : "Yaratish"}
 						</Button>

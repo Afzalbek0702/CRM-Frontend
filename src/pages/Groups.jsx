@@ -59,7 +59,6 @@ import {
 } from "lucide-react";
 import { getUzDays } from "@/utils/weekday";
 
-
 // 🎨 Stats Card Component
 const StatsCard = ({ icon, label, value, trend, color }) => {
 	const colors = {
@@ -119,8 +118,15 @@ const DayPill = ({ day, isToday = false }) => (
 export default function Groups() {
 	const navigate = useNavigate();
 	const { tenant } = useParams();
-	const { groups, loading, createGroup, deleteGroup, updateGroup,isCreating,isUpdating } =
-		useGroups();
+	const {
+		groups,
+		loading,
+		createGroup,
+		deleteGroup,
+		updateGroup,
+		isCreating,
+		isUpdating,
+	} = useGroups();
 	const { students = { data: [] } } = useStudent();
 	const { user } = useAuth();
 	const [searchTerm, setSearchTerm] = useState("");
@@ -131,8 +137,8 @@ export default function Groups() {
 	// 📊 Stats calculations
 	const stats = useMemo(() => {
 		if (!groups) return { total: 0, totalStudents: 0, avgPrice: 0 };
-		const totalStudents =students?.filter((s) => s.groups || s.group_id).length
-			
+		const totalStudents = students?.filter(s => s.groups || s.group_id).length;
+
 		const avgPrice = groups.length
 			? Math.round(
 					groups.reduce((acc, g) => acc + (g.price || 0), 0) / groups.length,
@@ -146,32 +152,32 @@ export default function Groups() {
 	}, [groups]);
 
 	// Studentlar sonini hisoblashni optimallashtirish
-   const groupsWithCount = useMemo(() => {
-      // console.log(students?.data);
-      
+	const groupsWithCount = useMemo(() => {
+		// console.log(students?.data);
+
 		const countMap = students?.reduce((acc, s) => {
 			const gIds = Array.isArray(s.groups) ? s.groups : [s.groups];
-			gIds.forEach((g) => {
+			gIds.forEach(g => {
 				const id = g?.id ?? g;
 				if (id != null) acc[id] = (acc[id] || 0) + 1;
 			});
 			return acc;
 		}, {});
 
-		return groups.map((g) => ({ ...g, studentCount: countMap[g.id] || 0 }));
+		return groups.map(g => ({ ...g, studentCount: countMap[g.id] || 0 }));
 	}, [groups, students]);
 
 	// Qidiruvni optimallashtirish
 	const filteredGroups = useMemo(() => {
 		return groupsWithCount.filter(
-			(g) =>
+			g =>
 				g.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
 				g.course_type?.toLowerCase().includes(searchTerm.toLowerCase()) ||
 				g.teachers?.full_name?.toLowerCase().includes(searchTerm.toLowerCase()),
 		);
 	}, [groupsWithCount, searchTerm]);
 
-	const handleSubmit = async (formData) => {
+	const handleSubmit = async formData => {
 		try {
 			if (modal.edit) {
 				await updateGroup({ id: modal.data.id, data: formData });
@@ -191,20 +197,20 @@ export default function Groups() {
 		}
 	};
 
-	const handleCopyId = async (id) => {
+	const handleCopyId = async id => {
 		await navigator.clipboard.writeText(String(id));
 		setCopiedId(id);
 		toast.success("ID nusxalandi!");
 		setTimeout(() => setCopiedId(null), 2000);
 	};
 
-	const getTeacherInitials = (name) => {
+	const getTeacherInitials = name => {
 		if (!name) return "?";
 		const parts = name.split(" ");
 		return (parts[0]?.[0] + (parts[1]?.[0] || "")).toUpperCase();
 	};
 
-	const getCourseColor = (type) => {
+	const getCourseColor = type => {
 		const colors = {
 			Frontend: "bg-sky-500/20 text-sky-400 border-sky-500/30",
 			Backend: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
@@ -213,12 +219,12 @@ export default function Groups() {
 		};
 		return colors[type] || "bg-gray-500/20 text-gray-400 border-gray-500/30";
 	};
-
+	const capitalize = str => str.replace(/\b\w/g, char => char.toUpperCase());
 	if (loading) return <Loader />;
 
 	return (
 		<div className="relative min-h-99 bg-background">
-			<div className="container mx-auto px-4 py-6 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+			<div className="container mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-200">
 				{/* 🧭 Header Section */}
 				<div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/10">
 					<div className="flex items-center gap-4">
@@ -281,7 +287,7 @@ export default function Groups() {
 								<InputGroupInput
 									placeholder="Guruh, kurs yoki o'qituvchi bo'yicha qidirish..."
 									value={searchTerm}
-									onChange={(e) => setSearchTerm(e.target.value)}
+									onChange={e => setSearchTerm(e.target.value)}
 									className="bg-transparent text-white placeholder:text-gray-500 border-0 focus:ring-0"
 								/>
 								<InputGroupAddon className="text-gray-500">
@@ -362,7 +368,7 @@ export default function Groups() {
 									</TableCell>
 								</TableRow>
 							) : (
-								filteredGroups.map((g) => {
+								filteredGroups.map(g => {
 									const today = new Date().toLocaleDateString("uz-UZ", {
 										weekday: "short",
 									});
@@ -371,7 +377,7 @@ export default function Groups() {
 									return (
 										<TableRow
 											key={g.id}
-											className="border-white/5 hover:bg-amber-400/5 transition-all duration-200 group/row cursor-pointer"
+											className="border-white/5 hover:bg-amber-400/5 transition-all duration-200 group/row"
 											onClick={() => navigate(`/${tenant}/groups/${g.id}`)}
 										>
 											<TableCell className="font-medium text-white">
@@ -390,7 +396,7 @@ export default function Groups() {
 																{g.studentCount}
 															</Badge>
 															<button
-																onClick={(e) => {
+																onClick={e => {
 																	e.stopPropagation();
 																	handleCopyId(g.id);
 																}}
@@ -437,7 +443,7 @@ export default function Groups() {
 															</AvatarFallback>
 														</Avatar>
 														<span className="text-gray-300 text-sm truncate max-w-24">
-															{g.teachers.full_name}
+															{capitalize(g.teachers.full_name)}
 														</span>
 													</div>
 												) : (
@@ -462,7 +468,7 @@ export default function Groups() {
 															variant="ghost"
 															size="icon"
 															className="h-8 w-8 text-gray-500 hover:text-amber-400 hover:bg-amber-400/10 transition-colors opacity-0 group-hover/row:opacity-100"
-															onClick={(e) => e.stopPropagation()}
+															onClick={e => e.stopPropagation()}
 														>
 															<MoreHorizontal className="h-4 w-4" />
 														</Button>
@@ -472,7 +478,7 @@ export default function Groups() {
 														className="bg-[#1f1f1f] border-white/10 text-white w-48"
 													>
 														<DropdownMenuItem
-															onClick={(e) => {
+															onClick={e => {
 																e.stopPropagation();
 																setModal({ open: true, edit: true, data: g });
 															}}
@@ -482,7 +488,7 @@ export default function Groups() {
 															Tahrirlash
 														</DropdownMenuItem>
 														<DropdownMenuItem
-															onClick={(e) => {
+															onClick={e => {
 																e.stopPropagation();
 																navigate(`/${tenant}/groups/${g.id}`);
 															}}
@@ -493,7 +499,7 @@ export default function Groups() {
 														</DropdownMenuItem>
 														<DropdownMenuSeparator className="bg-white/10" />
 														<DropdownMenuItem
-															onClick={(e) => {
+															onClick={e => {
 																e.stopPropagation();
 																setDeleteId(g.id);
 															}}
@@ -547,8 +553,8 @@ export default function Groups() {
 				onClose={() => setModal({ open: false, edit: false, data: null })}
 				onSubmit={handleSubmit}
 				title={modal.edit ? "Guruhni tahrirlash" : "Yangi guruh yaratish"}
-            initialData={modal.data}
-            isLoading={isCreating || isUpdating}
+				initialData={modal.data}
+				isLoading={isCreating || isUpdating}
 			/>
 
 			<ConfirmDeleteModal

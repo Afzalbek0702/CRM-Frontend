@@ -244,10 +244,11 @@ export default function IncomeTable() {
 				return method;
 		}
 	};
+	const capitalize = str => str.replace(/\b\w/g, char => char.toUpperCase());
 	if (isLoading) return <Loader />;
 	return (
 		<div className="relative min-h-99 bg-background">
-			<div className="container mx-auto px-4 py-6 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+			<div className="container mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-200">
 				{/* 🧭 Header Section */}
 				<div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/10">
 					<div className="flex items-center gap-4">
@@ -419,7 +420,7 @@ export default function IncomeTable() {
 												<TableCell className="font-medium text-white">
 													<div>
 														<p className="truncate max-w-32">
-															{p.student_name}
+															{capitalize(p.student_name)}
 														</p>
 														<button
 															onClick={e => {

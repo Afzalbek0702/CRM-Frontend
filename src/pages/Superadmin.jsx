@@ -19,7 +19,7 @@ import { ArrowLeft, Building2, ShieldCheck, Globe } from "lucide-react";
 import toast from "react-hot-toast";
 
 function Superadmin() {
-   const navigate = useNavigate();
+	const navigate = useNavigate();
 	const [formData, setFormData] = useState({
 		password: "",
 		phone: "+(998)",
@@ -29,22 +29,22 @@ function Superadmin() {
 		adminPassword: "",
 	});
 
-	const handleInputChange = (e) => {
+	const handleInputChange = e => {
 		const { id, value } = e.target;
-		setFormData((prev) => ({
+		setFormData(prev => ({
 			...prev,
 			[id]: id === "subdomain" ? value.toLowerCase() : value,
 		}));
 	};
 
 	const handlePhoneChange = (e, field) => {
-		setFormData((prev) => ({
+		setFormData(prev => ({
 			...prev,
 			[field]: phoneFormat.formatPhone(e.target.value),
 		}));
 	};
 
-	const handleSubmit = async (e) => {
+	const handleSubmit = async e => {
 		e.preventDefault();
 		try {
 			const payload = {
@@ -60,7 +60,7 @@ function Superadmin() {
 	};
 
 	return (
-		<div className="space-y-6 bg-background min-h-screen animate-in fade-in duration-500 flex flex-col items-center justify-center p-4">
+		<div className="space-y-6 bg-background min-h-screen animate-in fade-in duration-200 flex flex-col items-center justify-center">
 			{/* Orqaga qaytish tugmasi */}
 			<div className="w-full max-w-lg mb-4">
 				<Button onClick={() => navigate(-1)} className="btn-default">
@@ -68,7 +68,7 @@ function Superadmin() {
 				</Button>
 			</div>
 
-			<Card className="w-full max-w-lg shadow-2xl border-primary/10 bg-card/50 backdrop-blur-sm">
+			<Card className="w-full max-w-lg shadow-2xl border-primary/10 bg-card/50 backdrop-blur-xs">
 				<CardHeader className="text-center space-y-1">
 					<div className="flex justify-center mb-2">
 						<img
@@ -98,7 +98,7 @@ function Superadmin() {
 									<Input
 										id="phone"
 										value={formData.phone}
-										onChange={(e) => handlePhoneChange(e, "phone")}
+										onChange={e => handlePhoneChange(e, "phone")}
 										className="bg-background/50 focus-visible:ring-primary"
 									/>
 								</div>
@@ -127,7 +127,7 @@ function Superadmin() {
 									<Input
 										id="adminPhone"
 										value={formData.adminPhone}
-										onChange={(e) => handlePhoneChange(e, "adminPhone")}
+										onChange={e => handlePhoneChange(e, "adminPhone")}
 									/>
 								</div>
 								<div className="space-y-2 col-span-2 sm:col-span-1">

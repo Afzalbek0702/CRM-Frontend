@@ -6,6 +6,7 @@ import {
 	FaMoneyBillWave,
 	FaChalkboardTeacher,
 	FaDoorOpen,
+   FaPlus,
 } from "react-icons/fa";
 import { useTeachers } from "../services/teacher/useTeachers";
 import { useCourse } from "../services/course/useCourse";
@@ -125,11 +126,20 @@ export default function GroupModal({
 		<Dialog open={isOpen} onOpenChange={onClose}>
 			<DialogContent className="max-w-[95vw] sm:max-w-2xl bg-zinc-950 border-zinc-800 text-white max-h-[90vh] overflow-y-auto shadow-2xl">
 				<DialogHeader className="border-b border-zinc-800 pb-4">
-					<DialogTitle className="text-xl font-bold flex items-center gap-3 text-primary">
-						<div className="p-2 bg-yellow-500/10 rounded-full">
+					<DialogTitle className="text-xl font-bold flex items-center gap-3">
+						{/* <div className="p-2 bg-yellow-500/10 rounded-full">
 							<FaUsers className="text-xl" />
 						</div>
-						{title}
+                  {title} */}
+                  {initialData ? (
+                     <>
+                        <FaSave className="text-primary" /> Guruhni tahrirlash
+                     </>
+                  ) : (
+                     <>
+                        <FaPlus className="text-green-500" /> Yangi Guruh qo'shish
+                     </>
+                  )}
 					</DialogTitle>
 				</DialogHeader>
 
@@ -250,7 +260,7 @@ export default function GroupModal({
 										className={cn(
 											"h-10 text-xs sm:text-sm font-semibold transition-all duration-200",
 											formData.lesson_days?.includes(day)
-												? "bg-primary text-black hover:bg-primary/90 shadow-lg shadow-yellow-600/20"
+												? `text-black shadow-lg shadow-yellow-600/20 ${initialData? "bg-primary hover:bg-primary/80":"bg-green-500 hover:bg-green-500/80"}`
 												: "border-zinc-800 hover:bg-zinc-800 text-zinc-400",
 										)}
 										onClick={() => toggleDay(day)}
@@ -264,7 +274,7 @@ export default function GroupModal({
 						{/* Dars vaqti oralig'i */}
 						<div className="sm:col-span-2 space-y-3 p-4 bg-zinc-900/50 rounded-xl border border-zinc-900">
 							<Label className="text-zinc-400 font-medium flex items-center gap-2">
-								<FaClock className="text-primary" /> Dars vaqti oralig'i
+								<FaClock className={`${initialData? "text-primary":"text-green-500"}`} /> Dars vaqti oralig'i
 							</Label>
 							<div className="flex items-center gap-4">
 								<div className="flex-1 space-y-1">
@@ -306,8 +316,8 @@ export default function GroupModal({
 							Bekor qilish
 						</Button>
 						<Button
-							type="submit"
-							className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-black font-bold px-8 shadow-lg shadow-yellow-600/20"
+                     type="submit"
+                     className={`w-full sm:w-auto text-black font-bold px-8 ${initialData ? "bg-primary hover:bg-primary/80" : "bg-green-500 hover:bg-green-500/80"}`}
 						>
 							<FaSave className="mr-2" /> {isLoading ? "Saqlanmoqda...":"Saqlash"}
 						</Button>
