@@ -21,6 +21,7 @@ import { useParams } from "react-router-dom";
 
 import { FaClock, FaUsers } from "react-icons/fa";
 import PhoneUtils from "@/utils/phoneFormat";
+import { SourceBadge } from "./Components";
 const capitalize = str => str.replace(/\b\w/g, char => char.toUpperCase());
 export const StudentRow = ({ s, onCopy, copied }) => (
 	<TableRow
