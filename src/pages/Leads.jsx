@@ -147,9 +147,15 @@ export default function Leads() {
 		);
 	}, [leads, searchTerm]);
 
-	const handleConfirmDelete = () => {
+	const handleConfirmDelete = async () => {
 		if (deleteId) {
-			deleteLead(deleteId);
+			await toast.promise(deleteLead(deleteId), {
+				loading: "Lead o'chirilmoqda...",
+				success: "Lead o'chirildi.",
+				error: err => {
+					return err.response?.data?.message || "Xatolik yuz berdi.";
+				},
+			});
 			setDeleteId(null);
 		}
 	};
@@ -161,12 +167,30 @@ export default function Leads() {
 		setTimeout(() => setCopiedPhone(null), 2000);
 	};
 
-	const handleConvertToGroup = groupId => {
+	const handleConvertToStudent = async studentId => {
+		await toast.promise(convertLeadToStudent(studentId), {
+			loading: "O'quvchilarga qo'shilmoqda...",
+			error: err => {
+				return err.response?.data?.message || "Xatolik yuz berdi.";
+			},
+			success: "O'quvchilarga qo'shildi.",
+		});
+	};
+	const handleConvertToGroup = async groupId => {
 		if (convertModal.leadData && groupId) {
-			convertLeadToGroup({
-				id: convertModal.leadData.id,
-				group_id: groupId,
-			});
+			await toast.promise(
+				convertLeadToGroup({
+					id: convertModal.leadData.id,
+					group_id: groupId,
+				}),
+				{
+					loading: "Guruhga qo'shilmoqda...",
+					error: err => {
+						return err.response?.data?.message || "Xatolik yuz berdi.";
+					},
+					success: "Guruhga qo'shildi.",
+				},
+			);
 			setConvertModal({ isOpen: false, leadData: null });
 		}
 	};
@@ -328,7 +352,7 @@ export default function Leads() {
 									</TableCell>
 								</TableRow>
 							) : (
-								filteredLeads.map((l) => (
+								filteredLeads.map(l => (
 									<TableRow
 										key={l.id}
 										className="bg-card hover:bg-card/50 transition-all duration-200 group/row"
@@ -430,6 +454,14 @@ export default function Leads() {
 													</DropdownMenuItem>
 													<DropdownMenuSeparator className="bg-white/10" />
 													<DropdownMenuItem
+														onClick={() => handleConvertToStudent(l.id)}
+														className="cursor-pointer hover:bg-emerald-400/10 focus:bg-emerald-400/10"
+													>
+														<UserPlus className="mr-2 h-4 w-4 text-emerald-400" />{" "}
+														O'quvchiga qo'shish
+													</DropdownMenuItem>
+													<DropdownMenuSeparator className="bg-white/10" />
+													<DropdownMenuItem
 														onClick={() => setDeleteId(l.id)}
 														className="cursor-pointer text-red-400 hover:text-red-300 hover:bg-red-400/10 focus:text-red-300 focus:bg-red-400/10"
 													>
@@ -478,9 +510,21 @@ export default function Leads() {
 				initialData={modal.data}
 				onSubmit={async data => {
 					if (modal.data) {
-						await updateLead({ id: modal.data.id, data });
+						await toast.promise(updateLead({ id: modal.data.id, data }), {
+							loading: "Lead yangilanmoqda...",
+							success: "Lead yangilandi.",
+							error: err => {
+								return err.response?.data?.message || "Xatolik yuz berdi.";
+							},
+						});
 					} else {
-						await createLead(data);
+						await toast.promise(createLead(data), {
+							loading: "Lead saqlanmoqda...",
+							success: "Lead yaratildi.",
+							error: err => {
+								return err.response?.data?.message || "Xatolik yuz berdi.";
+							},
+						});
 					}
 					setModal({ isOpen: false, data: null });
 				}}
@@ -491,7 +535,7 @@ export default function Leads() {
 				onClose={() => setDeleteId(null)}
 				onConfirm={handleConfirmDelete}
 				title="Lidni o'chirish"
-				description="Haqiqatdan ham ushbu lidni o'chirib tashlamoqchimisiz? Bu amal bekor qilinmaydi."
+				description="Haqiqatdan ham ushbu lidni o'chirib tashlamoqchimisiz?"
 			/>
 
 			<AddToGroupModal

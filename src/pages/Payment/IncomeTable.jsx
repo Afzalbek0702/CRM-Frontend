@@ -175,18 +175,36 @@ export default function IncomeTable() {
 		0,
 	);
 
-	const handleFormSubmit = formData => {
+	const handleFormSubmit = async formData => {
 		if (modal.data) {
-			updatePayment(modal.data.id, formData);
+			await toast.promise(updatePayment(modal.data.id, formData), {
+				loading: "Saqlanmoqda...",
+				success: "To'lov yangilandi.",
+				error: err => {
+					return err.response?.data?.message || "Xatolik yuz berdi.";
+				},
+			});
 		} else {
-			createPayment(formData);
+			await toast.promise(createPayment(formData), {
+				loading: "Saqlanmoqda...",
+				success: "To'lov qo'shildi.",
+				error: err => {
+					return err.response?.data?.message || "Xatolik yuz berdi.";
+				},
+			});
 		}
 		setModal({ isOpen: false, data: null });
 	};
 
-	const handleConfirmDelete = () => {
+	const handleConfirmDelete = async () => {
 		if (deleteId) {
-			deletePayment(deleteId);
+			await toast.promise(deletePayment(deleteId), {
+				loading: "O'chirilmoqda...",
+				success: "To'lov o'chirildi.",
+				error: err => {
+					return err.response?.data?.message || "Xatolik yuz berdi.";
+				},
+			});
 			setDeleteId(null);
 		}
 	};

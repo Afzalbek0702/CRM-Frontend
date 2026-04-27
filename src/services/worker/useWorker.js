@@ -1,4 +1,3 @@
-import toast from "react-hot-toast";
 import { workerService } from "./workerService";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/context/authContext";
@@ -20,10 +19,8 @@ export const useWorker = () => {
 		mutationFn: (data) => workerService.create(data),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: WORKER_KEY });
-			toast.success("Ishchi muvaffaqiyatli qo'shildi");
 		},
 		onError: (error) => {
-			toast.error("Ishchi qo'shishda xatolik yuz berdi");
 			console.error(error.response);
 		},
 	});
@@ -32,10 +29,8 @@ export const useWorker = () => {
 		mutationFn: ({ id, data }) => workerService.update(id, data),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: WORKER_KEY });
-			toast.success("Ishchi muvaffaqiyatli yangilandi");
 		},
 		onError: (error) => {
-			toast.error("Ishchi yangilashda xatolik yuz berdi");
 			console.error(error.response);
 		},
 	});
@@ -43,10 +38,8 @@ export const useWorker = () => {
 		mutationFn: (id) => workerService.delete(id),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: WORKER_KEY });
-			toast.success("Ishchi muvaffaqiyatli o'chirildi");
 		},
 		onError: (error) => {
-			toast.error("Ishchi o'chirishda xatolik yuz berdi");
 			console.error(error.response);
 		},
 	});
@@ -55,8 +48,8 @@ export const useWorker = () => {
 		workerData,
 		isLoading,
 		error,
-		createWorker: create.mutate,
-		updateWorker: update.mutate,
-		removeWorker: deleteById.mutate,
+		createWorker: create.mutateAsync,
+		updateWorker: update.mutateAsync,
+		removeWorker: deleteById.mutateAsync,
 	};
 };

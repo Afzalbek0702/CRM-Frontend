@@ -1,4 +1,3 @@
-import toast from "react-hot-toast";
 import { roomService } from "./roomService";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 const ROOM_KEY = ["room"];
@@ -17,10 +16,8 @@ export const useRoom = () => {
 		mutationFn: (data) => roomService.create(data),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ROOM_KEY });
-			toast.success("Xona muvaffaqiyatli qo'shildi");
 		},
 		onError: (error) => {
-			toast.error("Xona qo'shishda xatolik yuz berdi");
 			console.error(error.response);
 		},
 	});
@@ -29,10 +26,8 @@ export const useRoom = () => {
 		mutationFn: ({ id, data }) => roomService.update(id, data),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ROOM_KEY });
-			toast.success("Xona muvaffaqiyatli yangilandi");
 		},
 		onError: (error) => {
-			toast.error("Xona yangilashda xatolik yuz berdi");
 			console.error(error.response);
 		},
 	});
@@ -40,11 +35,9 @@ export const useRoom = () => {
 		mutationFn: (id) => roomService.delete(id),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ROOM_KEY });
-			toast.success("Xona muvaffaqiyatli o'chirildi");
 		},
 		onError: (error) => {
 			console.error(error.response);
-			toast.error("Xona o'chirishda xatolik yuz berdi");
 		},
 	});
 
@@ -53,8 +46,8 @@ export const useRoom = () => {
 		isLoading,
 		error,
 
-		createRoom: create.mutate,
-		updateRoom: update.mutate,
-		removeRoom: deleteById.mutate,
+		createRoom: create.mutateAsync,
+		updateRoom: update.mutateAsync,
+		removeRoom: deleteById.mutateAsync,
 	};
 };

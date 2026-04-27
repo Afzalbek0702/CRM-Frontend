@@ -1,4 +1,3 @@
-import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { leadsService } from "./leadService.js";
 import { useAuth } from "@/context/authContext.jsx";
@@ -26,10 +25,8 @@ export const useLeads = () => {
 		mutationFn: (data) => leadsService.createLead(data),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: LEADS_QUERY_KEY });
-			toast.success("Lead muffafaqqiyatli yaratildi");
 		},
 		onError: (error) => {
-			toast.error("Lead yaratishda xatolik yuz berdi");
 			console.error(error.response?.data);
 		},
 	});
@@ -38,10 +35,8 @@ export const useLeads = () => {
 		mutationFn: ({ id, data }) => leadsService.updateLead(id, data),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: LEADS_QUERY_KEY });
-			toast.success("Lead muffafaqqiyatli yangilandi");
 		},
 		onError: (error) => {
-			toast.error("Lead yangilashda xatolik yuz berdi");
 			console.error(error.response?.data);
 		},
 	});
@@ -50,10 +45,8 @@ export const useLeads = () => {
 		mutationFn: (id) => leadsService.deleteLead(id),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: LEADS_QUERY_KEY });
-			toast.success("Lead muffafaqqiyatli o'chirildi");
 		},
 		onError: (error) => {
-			toast.error("Leadni o'chirishda xatolik yuz berdi");
 			console.error(error.response?.data);
 		},
 	});
@@ -61,11 +54,9 @@ export const useLeads = () => {
 		mutationFn: ({ id, group_id }) =>
          leadsService.convertLeadToGroup(id, group_id),
 		onSuccess: () => {
-			toast.success("Lead muffafaqqiyatli guruhga qo'shildi");
 			queryClient.invalidateQueries({ queryKey: LEADS_QUERY_KEY });
 		},
 		onError: (error) => {
-			toast.error("Leadni guruhga qo'shishda xatolik yuz berdi");
 			console.error(error.response?.data);
 		},
 	});
@@ -73,11 +64,9 @@ export const useLeads = () => {
 		mutationFn: (id) =>
          leadsService.convertLeadToStudent(id),
 		onSuccess: () => {
-			toast.success("Lead muffafaqqiyatli Talabalarga qo'shildi");
 			queryClient.invalidateQueries({ queryKey: LEADS_QUERY_KEY });
 		},
 		onError: (error) => {
-			toast.error("Leadni Talabalarga qo'shishda xatolik yuz berdi");
 			console.error(error.response?.data);
 		},
 	});
@@ -86,10 +75,10 @@ export const useLeads = () => {
 		isLoading,
 		error,
 		fetchById,
-		createLead: createLeadMutation.mutate,
-		updateLead: updateLeadMutation.mutate,
-		deleteLead: deleteLeadMutation.mutate,
-		convertLeadToGroup: convertLeadToGroupMutation.mutate,
-		convertLeadToStudent: convertLeadToStudentMutation.mutate,
+		createLead: createLeadMutation.mutateAsync,
+		updateLead: updateLeadMutation.mutateAsync,
+		deleteLead: deleteLeadMutation.mutateAsync,
+		convertLeadToGroup: convertLeadToGroupMutation.mutateAsync,
+		convertLeadToStudent: convertLeadToStudentMutation.mutateAsync,
 	};
 };

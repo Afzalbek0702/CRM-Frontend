@@ -178,21 +178,35 @@ export default function Groups() {
 	}, [groupsWithCount, searchTerm]);
 
 	const handleSubmit = async formData => {
-		try {
-			if (modal.edit) {
-				await updateGroup({ id: modal.data.id, data: formData });
-			} else {
-				await createGroup(formData);
-			}
-			setModal({ open: false, edit: false, data: null });
-		} catch (error) {
-			console.error("Mutation error:", error);
+		if (modal.edit) {
+			await toast.promise(updateGroup({ id: modal.data.id, data: formData }), {
+				loading: "Saqlanmoqda...",
+				success: "Guruh yangilandi.",
+				error: err => {
+					return err.response?.data?.message || "Xatolik yuz berdi.";
+				},
+			});
+		} else {
+			await toast.promise(createGroup(formData), {
+				loading: "Saqlanmoqda...",
+				success: "Guruh yaratildi.",
+				error: err => {
+					return err.response?.data?.message || "Xatolik yuz berdi.";
+				},
+			});
 		}
+		setModal({ open: false, edit: false, data: null });
 	};
 
-	const handleConfirmDelete = () => {
+	const handleConfirmDelete = async () => {
 		if (deleteId) {
-			deleteGroup(deleteId);
+			await toast.promise(deleteGroup(deleteId), {
+				loading: "O'chirilmoqda...",
+				success: "Guruh o'chirildi.",
+				error: err => {
+					return err.response?.data?.message || "Xatolik yuz berdi.";
+				},
+			});
 			setDeleteId(null);
 		}
 	};

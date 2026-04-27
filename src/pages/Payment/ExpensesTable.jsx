@@ -56,7 +56,7 @@ export default function ExpensesTable() {
 	const [copiedId, setCopiedId] = useState(null);
 	const [method, setMethod] = useState("all");
 
-	const fmtDate = (d) =>
+	const fmtDate = d =>
 		d
 			? new Date(d).toLocaleDateString("uz-UZ", {
 					year: "numeric",
@@ -64,22 +64,22 @@ export default function ExpensesTable() {
 					day: "2-digit",
 				})
 			: "—";
-	const fmt = (a) => `${(a || 0).toLocaleString()} so'm`;
-	const initials = (n) =>
+	const fmt = a => `${(a || 0).toLocaleString()} so'm`;
+	const initials = n =>
 		n
 			? n
 					.split(" ")
-					.map((p) => p[0])
+					.map(p => p[0])
 					.join("")
 					.toUpperCase()
 			: "?";
-	const copyId = async (id) => {
+	const copyId = async id => {
 		await navigator.clipboard.writeText(String(id));
 		setCopiedId(id);
 		toast.success("ID nusxalandi!");
 		setTimeout(() => setCopiedId(null), 2000);
 	};
-	const methodColor = (m) =>
+	const methodColor = m =>
 		({
 			CASH: "text-emerald-400 border-emerald-500/30 bg-emerald-500/10",
 			CARD: "text-sky-400 border-sky-500/30 bg-sky-500/10",
@@ -107,21 +107,21 @@ export default function ExpensesTable() {
 		() =>
 			(expenses || [])
 				.filter(
-					(e) =>
+					e =>
 						e.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
 						e.created_by?.toLowerCase().includes(searchTerm.toLowerCase()),
 				)
-				.filter((e) => method === "all" || e.method === method),
+				.filter(e => method === "all" || e.method === method),
 		[expenses, searchTerm, method],
 	);
 
 	const total = filtered.reduce((s, e) => s + (e.amount || 0), 0);
 	const maxExpense = expenses?.length
-		? Math.max(...expenses.map((e) => e.amount || 0))
+		? Math.max(...expenses.map(e => e.amount || 0))
 		: 0;
 
 	if (isLoading) return <Loader />;
-	const formatMethod = (method) => {
+	const formatMethod = method => {
 		switch (method) {
 			case "all":
 				return "Barchasi";
@@ -223,7 +223,7 @@ export default function ExpensesTable() {
 								<Input
 									placeholder="Tavsif yoki foydalanuvchi bo'yicha qidirish..."
 									value={searchTerm}
-									onChange={(e) => setSearchTerm(e.target.value)}
+									onChange={e => setSearchTerm(e.target.value)}
 									className="pl-10 bg-black/40 border-white/20 text-white"
 								/>
 							</div>
@@ -236,7 +236,7 @@ export default function ExpensesTable() {
 									"CLICK",
 									"PAYME",
 									"UZCARD",
-								].map((m) => (
+								].map(m => (
 									<Button
 										key={m}
 										variant={method === m ? "default" : "outline"}
@@ -331,7 +331,7 @@ export default function ExpensesTable() {
 									</TableRow>
 								</TableHeader>
 								<TableBody>
-									{filtered.map((e) => (
+									{filtered.map(e => (
 										<TableRow
 											key={e.id}
 											className="border-white/5 hover:bg-amber-400/5 group/row"
@@ -350,7 +350,7 @@ export default function ExpensesTable() {
 											<TableCell className="font-medium text-white">
 												<p className="truncate max-w-48">{e.description}</p>
 												<button
-													onClick={(ev) => {
+													onClick={ev => {
 														ev.stopPropagation();
 														copyId(e.id);
 													}}
@@ -476,16 +476,36 @@ export default function ExpensesTable() {
 				isOpen={modal.isOpen}
 				onClose={() => setModal({ isOpen: false, data: null })}
 				initialData={modal.data}
-				onSubmit={(fd) => {
-					modal.data ? updateExpense(modal.data.id, fd) : createExpense(fd);
+				onSubmit={async fd => {
+					modal.data
+						? await toast.promise(updateExpense(modal.data.id, fd), {
+								loading: "Saqlanmoqda...",
+								success: "Xarajat yangilandi.",
+								error: err => {
+									return err.response?.data?.message || "Xatolik yuz berdi.";
+								},
+							})
+						: await toast.promise(createExpense(fd), {
+								loading: "Saqlanmoqda...",
+								success: "xarajat qo'shildi.",
+								error: err => {
+									return err.response?.data?.message || "Xatolik yuz berdi.";
+								},
+							});
 					setModal({ isOpen: false, data: null });
 				}}
 			/>
 			<ConfirmDeleteModal
 				isOpen={!!deleteId}
 				onClose={() => setDeleteId(null)}
-				onConfirm={() => {
-					deleteExpense(deleteId);
+				onConfirm={async () => {
+					await toast.promise(deleteExpense(deleteId), {
+						loading: "O'chirilmoqda...",
+						success: "Xarajat o'chirildi.",
+						error: err => {
+							return err.response?.data?.message || "Xatolik yuz berdi.";
+						},
+					});
 					setDeleteId(null);
 				}}
 				title="Xarajatni o'chirish"

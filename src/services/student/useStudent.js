@@ -1,6 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { studentService } from "./studentService.js";
-import toast from "react-hot-toast";
 
 const STUDENTS_QUERY_KEY = ["students"];
 
@@ -26,10 +25,8 @@ export const useStudent = (page,limit) => {
 
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: STUDENTS_QUERY_KEY });
-			toast.success("Talaba muvaffaqiyatli qo'shildi");
 		},
 		onError: (err) => {
-			toast.error("Talaba qo'shishda xatolik yuz berdi");
 			console.error(err.response?.data);
 		},
 	});
@@ -39,10 +36,8 @@ export const useStudent = (page,limit) => {
 		mutationFn: ({ id, data }) => studentService.update(id, data),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: STUDENTS_QUERY_KEY });
-			toast.success("Talaba muvaffaqiyatli yangilandi");
 		},
 		onError: (error) => {
-			toast.error("Talaba yangilashda xatolik yuz berdi");
 			console.error(error.response?.data);
 		},
 	});
@@ -52,10 +47,8 @@ export const useStudent = (page,limit) => {
 		mutationFn: ({ id, status }) => studentService.updateStatus(id, status),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: STUDENTS_QUERY_KEY });
-			toast.success("Talaba statusi muvaffaqiyatli yangilandi");
 		},
 		onError: (error) => {
-			toast.error("Talaba statusini yangilashda xatolik yuz berdi");
 			console.error(error.response?.data);
 		},
 	});
@@ -65,10 +58,8 @@ export const useStudent = (page,limit) => {
 		mutationFn: (id) => studentService.delete(id),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: STUDENTS_QUERY_KEY });
-			toast.success("Talaba muvaffaqiyatli o'chirildi");
 		},
 		onError: (err, id, context) => {
-			toast.error("Talaba o'chirishda xatolik yuz berdi");
 			console.error(err.response?.data);
 			queryClient.setQueryData(STUDENTS_QUERY_KEY, context.previousStudents);
 		},
@@ -83,10 +74,8 @@ export const useStudent = (page,limit) => {
 			studentService.addToGroup(studentId, groupId),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: STUDENTS_QUERY_KEY });
-			toast.success("Talaba guruhga muvaffaqiyatli qo'shildi");
 		},
 		onError: (error) => {
-			toast.error("Talaba guruhga qo'shishda xatolik yuz berdi");
 			console.error(error.response?.data);
 		},
 	});
@@ -97,10 +86,8 @@ export const useStudent = (page,limit) => {
 			studentService.removeFromGroup(studentId, groupId),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: STUDENTS_QUERY_KEY });
-			toast.success("Talaba guruhdan muvaffaqiyatli olib tashlandi");
 		},
 		onError: (error) => {
-			toast.error("Talaba guruhdan olib tashlashda xatolik yuz berdi");
 			console.error(error.response?.data);
 		},
 	});
@@ -119,10 +106,8 @@ export const useStudent = (page,limit) => {
 						queryKey: ["groups"],
 						refetchType: "none",
 					});
-			toast.success("Talaba muvaffaqiyatli boshqa guruhga ko'chirildi");
 		},
 		onError: (error) => {
-			toast.error("Talabani boshqa guruhga ko'chirishda xatolik yuz berdi");
 			console.error(error.response?.data);
 		},
 	});
@@ -137,7 +122,7 @@ export const useStudent = (page,limit) => {
 		updateStudent: (id, data) =>
 			updateStudentMutation.mutateAsync({ id, data }),
 		updateStatus: (id, status) =>
-			updateStatusMutation.mutate({ id, status }),
+			updateStatusMutation.mutateAsync({ id, status }),
 		deleteStudent: deleteStudentMutation.mutateAsync,
 		addToGroup: (studentId, groupId) =>
 			addToGroupMutation.mutateAsync({ studentId, groupId }),

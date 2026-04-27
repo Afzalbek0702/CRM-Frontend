@@ -1,4 +1,3 @@
-import toast from "react-hot-toast";
 import { courseService } from "./courseService";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 const COURSE_KEY = ["course"];
@@ -17,10 +16,8 @@ export const useCourse = () => {
 		mutationFn: (data) => courseService.create(data),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: COURSE_KEY });
-			toast.success("Kurs muvaffaqiyatli qo'shildi");
 		},
 		onError: (error) => {
-			toast.error("Kurs qo'shishda xatolik yuz berdi");
 			console.error(error.response);
 		},
 	});
@@ -29,10 +26,8 @@ export const useCourse = () => {
 		mutationFn: ({ id, data }) => courseService.update(id, data),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: COURSE_KEY });
-			toast.success("Kurs muvaffaqiyatli yangilandi");
 		},
 		onError: (error) => {
-			toast.error("Kurs yangilashda xatolik yuz berdi");
 			console.error(error.response);
 		},
 	});
@@ -40,10 +35,8 @@ export const useCourse = () => {
 		mutationFn: (id) => courseService.delete(id),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: COURSE_KEY });
-			toast.success("Kurs muvaffaqiyatli o'chirildi");
 		},
 		onError: (error) => {
-			toast.error("Kurs o'chirishda xatolik yuz berdi");
 			console.error(error.response);
 		},
 	});
@@ -53,8 +46,8 @@ export const useCourse = () => {
 		isLoading,
 		error,
 
-		createCourse: create.mutate,
-		updateCourse: update.mutate,
-		removeCourse: deleteById.mutate,
+		createCourse: create.mutateAsync,
+		updateCourse: update.mutateAsync,
+		removeCourse: deleteById.mutateAsync,
 	};
 };

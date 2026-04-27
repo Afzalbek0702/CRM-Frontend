@@ -219,7 +219,13 @@ export default function Students() {
 
 	const handleConfirmDelete = async () => {
 		if (deleteId) {
-			await deleteStudent(deleteId);
+			await toast.promise(deleteStudent(deleteId), {
+				loading: "O'chirilmoqda...",
+				success: "O'quvchi o'chirildi.",
+				error: err => {
+					return err.response?.data?.message || "Xatolik yuz berdi.";
+				},
+			});
 			setDeleteId(null);
 		}
 	};
@@ -678,9 +684,21 @@ export default function Students() {
 				initialData={editingStudent}
 				onSubmit={async formData => {
 					if (editingStudent) {
-						await updateStudent(editingStudent.id, formData);
+						await toast.promise(updateStudent(editingStudent.id, formData), {
+							loading: "Saqlanmoqda...",
+							success: "O'quvchi yangilandi.",
+							error: err => {
+								return err.response?.data?.message || "Xatolik yuz berdi.";
+							},
+						});
 					} else {
-						await createStudent(formData);
+						await toast.promise(createStudent(formData), {
+							loading: "Saqlanmoqda...",
+							success: "O'quvchi qo'shildi.",
+							error: err => {
+								return err.response?.data?.message || "Xatolik yuz berdi.";
+							},
+						});
 					}
 					setIsModalOpen(false);
 				}}
@@ -691,7 +709,14 @@ export default function Students() {
 				onClose={() => setAddToGroupOpen(false)}
 				initialGroupId={addToGroupStudent?.group_id}
 				onConfirm={async groupId => {
-					await addToGroup(addToGroupStudent.id, Number(groupId));
+					await toast.promise(
+						addToGroup(addToGroupStudent.id, Number(groupId)),
+						{
+							loading: "Saqlanmoqda...",
+							success: "Guruhga qo'shildi.",
+							error: "Xatolik yuz berdi.",
+						},
+					);
 					setAddToGroupOpen(false);
 				}}
 			/>

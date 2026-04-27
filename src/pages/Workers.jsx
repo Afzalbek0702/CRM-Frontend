@@ -150,7 +150,13 @@ export default function Workers() {
 	// O'chirish funksiyasi
 	const handleConfirmDelete = async () => {
 		if (deleteId) {
-			await removeWorker(deleteId);
+			await toast.promise(removeWorker(deleteId), {
+				loading: "O'chirilmoqda...",
+				success: "Xodim o'chirildi.",
+				error: err => {
+					return err.response?.data?.message || "Xatolik yuz berdi.";
+				},
+			});
 			setDeleteId(null);
 		}
 	};
@@ -513,9 +519,24 @@ export default function Workers() {
 				initialData={editingWorker}
 				onSubmit={async formData => {
 					if (editingWorker) {
-						await updateWorker({ id: editingWorker.id, data: formData });
+						await toast.promise(
+							updateWorker({ id: editingWorker.id, data: formData }),
+							{
+								loading: "Saqlanmoqda...",
+								success: "Xodim yangilandi.",
+								error: err => {
+									return err.response?.data?.message || "Xatolik yuz berdi.";
+								},
+							},
+						);
 					} else {
-						await createWorker(formData);
+						await toast.promise(createWorker(formData), {
+							loading: "Saqlanmoqda...",
+							success: "Xodim yaratildi.",
+							error: err => {
+								return err.response?.data?.message || "Xatolik yuz berdi.";
+							},
+						});
 					}
 					setIsModalOpen(false);
 					setEditingWorker(null);

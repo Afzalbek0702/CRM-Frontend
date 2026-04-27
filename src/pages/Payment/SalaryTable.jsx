@@ -200,7 +200,13 @@ export default function SalaryTable() {
 
 	const handleConfirmDelete = async () => {
 		if (deleteId) {
-			await deleteSalary(deleteId);
+			await toast.promise(deleteSalary(deleteId), {
+				loading: "O'chirilmoqda...",
+				success: "Maosh o'chirildi.",
+				error: err => {
+					return err.response?.data?.message || "Xatolik yuz berdi.";
+				},
+			});
 			setDeleteId(null);
 		}
 	};
@@ -561,11 +567,23 @@ export default function SalaryTable() {
 				isOpen={modal.isOpen}
 				initialData={modal.data}
 				onClose={() => setModal({ isOpen: false })}
-				onSubmit={data => {
+				onSubmit={async data => {
 					if (modal.data) {
-						updateSalary(modal.data.id, data);
+						await toast.promise(updateSalary(modal.data.id, data), {
+							loading: "Saqlanmoqda...",
+							success: "Maosh yangilandi.",
+							error: err => {
+								return err.response?.data?.message || "Xatolik yuz berdi.";
+							},
+						});
 					} else {
-						createSalary(data);
+						await toast.promise(createSalary(data), {
+							loading: "Saqlanmoqda...",
+							success: "Maosh qo'shildi.",
+							error: err => {
+								return err.response?.data?.message || "Xatolik yuz berdi.";
+							},
+						});
 					}
 					setModal({ isOpen: false, data: null });
 				}}

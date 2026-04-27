@@ -158,29 +158,53 @@ export default function Settings() {
 
 	if (isLoading || roomLoading) return <Loader />;
 
-	const handleConfirmDelete = () => {
+	const handleConfirmDelete = async () => {
 		if (deleteId.type === "course") {
-			removeCourse(deleteId.id);
+			await toast.promise(removeCourse(deleteId.id), {
+				loading: "O'chirilmoqda...",
+				success: "Kurs o'chirildi.",
+				error: err => {
+					return err.response?.data?.message || "Xatolik yuz berdi.";
+				},
+			});
 		} else if (deleteId.type === "room") {
-			removeRoom(deleteId.id);
+			await toast.promise(removeRoom(deleteId.id), {
+				loading: "O'chirilmoqda...",
+				success: "Xona o'chirildi.",
+				error: err => {
+					return err.response?.data?.message || "Xatolik yuz berdi.";
+				},
+			});
 		}
 		setDeleteId({ id: null, type: null });
 	};
 
-	const handleCourseSubmit = e => {
+	const handleCourseSubmit = async e => {
 		e.preventDefault();
 		const formData = new FormData(e.target);
 		const data = Object.fromEntries(formData);
 
 		if (courseModal.data) {
-			updateCourse({ id: courseModal.data.id, data });
+			await toast.promise(updateCourse({ id: courseModal.data.id, data }), {
+				loading: "Saqlanmoqda...",
+				success: "Kurs yangilandi.",
+				error: err => {
+					return err.response?.data?.message || "Xatolik yuz berdi.";
+				},
+			});
 		} else {
-			createCourse(data);
+			await toast.promise(createCourse(data), {
+				loading: "Saqlanmoqda...",
+				success: "Kurs qo'shildi.",
+				error: err => {
+					return err.response?.data?.message || "Xatolik yuz berdi.";
+				},
+			});
 		}
 		setCourseModal({ open: false, data: null });
 	};
 
-	const handleRoomSubmit = e => {
+	const handleRoomSubmit = async e => {
 		e.preventDefault();
 		const formData = new FormData(e.target);
 		const data = {
@@ -189,9 +213,21 @@ export default function Settings() {
 		};
 
 		if (roomModal.data) {
-			updateRoom({ id: roomModal.data.room_id, data });
+			await toast.promise(updateRoom({ id: roomModal.data.room_id, data }), {
+				loading: "Saqlanmoqda...",
+				success: "Xona yangilandi.",
+				error: err => {
+					return err.response?.data?.message || "Xatolik yuz berdi.";
+				},
+			});
 		} else {
-			createRoom(data);
+			await toast.promise(createRoom(data), {
+				loading: "Saqlanmoqda...",
+				success: "Xona Qo'shildi.",
+				error: err => {
+					return err.response?.data?.message || "Xatolik yuz berdi.";
+				},
+			});
 		}
 		setRoomModal({ open: false, data: null });
 	};
