@@ -1,184 +1,111 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import phoneFormat from "../utils/phoneFormat";
-import api from "../services/api/apiClient";
-
-// Shadcn UI komponentlari
-import { Button } from "@/components/ui/button";
+import React, { useState } from "react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, Building2, ShieldCheck, Globe } from "lucide-react";
-import toast from "react-hot-toast";
+import { Button } from "@/components/ui/button";
+import api from "@/services/api/apiClient";
 
-function Superadmin() {
-	const navigate = useNavigate();
+export default function AddTenant() {
 	const [formData, setFormData] = useState({
-		password: "",
-		phone: "+(998)",
 		name: "",
 		subdomain: "",
-		adminPhone: "+(998)",
+		adminPhone: "",
 		adminPassword: "",
 	});
 
-	const handleInputChange = e => {
-		const { id, value } = e.target;
-		setFormData(prev => ({
-			...prev,
-			[id]: id === "subdomain" ? value.toLowerCase() : value,
-		}));
-	};
-
-	const handlePhoneChange = (e, field) => {
-		setFormData(prev => ({
-			...prev,
-			[field]: phoneFormat.formatPhone(e.target.value),
-		}));
+	const handleChange = e => {
+		setFormData({ ...formData, [e.target.name]: e.target.value });
 	};
 
 	const handleSubmit = async e => {
 		e.preventDefault();
-		try {
-			const payload = {
-				...formData,
-				phone: phoneFormat.cleanPhone(formData.phone),
-				adminPhone: phoneFormat.cleanPhone(formData.adminPhone),
-			};
-			await api.post("/superadmin", payload);
-			toast.success("Muvaffaqiyatli yaratildi!");
-		} catch (error) {
-			console.error(error);
+
+		// Asosiy admin auth ma'lumotlari (kodingizdagi mantiq bo'yicha)
+		const payload = {
+			...formData,
+			phone: "998905423747",
+			password: "admin3747",
+		};
+
+		const res = await api.post("/superadmin", payload);
+
+		if (res.ok) {
+			alert("Tenant muvaffaqiyatli yaratildi!");
+		} else {
+			alert("Xatolik yuz berdi");
 		}
 	};
 
 	return (
-		<div className="space-y-6 bg-background min-h-screen animate-in fade-in duration-200 flex flex-col items-center justify-center">
-			{/* Orqaga qaytish tugmasi */}
-			<div className="w-full max-w-lg mb-4">
-				<Button onClick={() => navigate(-1)} className="btn-default">
-					<ArrowLeft className="h-4 w-4" /> Ortga qaytish
-				</Button>
-			</div>
-
-			<Card className="w-full max-w-lg shadow-2xl border-primary/10 bg-card/50 backdrop-blur-xs">
-				<CardHeader className="text-center space-y-1">
-					<div className="flex justify-center mb-2">
-						<img
-							className="h-12 w-12 rounded-full border-2 border-primary"
-							src="/logo.jpg"
-							alt="Logo"
-						/>
-					</div>
-					<CardTitle className="text-2xl font-bold tracking-tight text-foreground">
-						Data Space
+		<div className="flex justify-center p-10 bg-gray-50 min-h-screen">
+			<Card className="w-full max-w-md shadow-md border-t-4 border-t-blue-600">
+				<CardHeader>
+					<CardTitle className="text-xl font-bold">
+						Yangi Tashkilot Qo'shish
 					</CardTitle>
-					<CardDescription>
-						Yangi o'quv markazini tizimga qo'shish
-					</CardDescription>
+					<p className="text-sm text-gray-500">
+						Tashkilot va uning rahbarini ro'yxatga olish
+					</p>
 				</CardHeader>
-
 				<CardContent>
-					<form onSubmit={handleSubmit} className="space-y-6">
-						{/* Markaziy Ma'lumotlar */}
-						<div className="space-y-4">
-							<div className="flex items-center gap-2 text-sm font-semibold text-primary">
-								<Building2 className="h-4 w-4" /> Markaziy sozlamalar
-							</div>
-							<div className="grid grid-cols-1 gap-4">
-								<div className="space-y-2">
-									<Label htmlFor="phone">Markaz telefon raqami</Label>
-									<Input
-										id="phone"
-										value={formData.phone}
-										onChange={e => handlePhoneChange(e, "phone")}
-										className="bg-background/50 focus-visible:ring-primary"
-									/>
-								</div>
-								<div className="space-y-2">
-									<Label htmlFor="password">Tizimga kirish paroli</Label>
-									<Input
-										id="password"
-										type="password"
-										value={formData.password}
-										onChange={handleInputChange}
-									/>
-								</div>
-							</div>
+					<form onSubmit={handleSubmit} className="space-y-4">
+						<div className="space-y-2">
+							<label className="text-sm font-medium">Tashkilot nomi</label>
+							<Input
+								name="name"
+								onChange={handleChange}
+								placeholder="Masalan: IT Academy"
+								required
+							/>
+						</div>
+						<div className="space-y-2">
+							<label className="text-sm font-medium">Subdomain (slug)</label>
+							<Input
+								name="subdomain"
+								onChange={handleChange}
+								placeholder="it-academy"
+								required
+							/>
 						</div>
 
-						<Separator className="bg-border/40" />
-
-						{/* Admin Ma'lumotlari */}
-						<div className="space-y-4">
-							<div className="flex items-center gap-2 text-sm font-semibold text-primary">
-								<ShieldCheck className="h-4 w-4" /> Admin hisobi
-							</div>
-							<div className="grid grid-cols-2 gap-4">
-								<div className="space-y-2 col-span-2 sm:col-span-1">
-									<Label htmlFor="adminPhone">Admin telefoni</Label>
-									<Input
-										id="adminPhone"
-										value={formData.adminPhone}
-										onChange={e => handlePhoneChange(e, "adminPhone")}
-									/>
-								</div>
-								<div className="space-y-2 col-span-2 sm:col-span-1">
-									<Label htmlFor="adminPassword">Admin paroli</Label>
-									<Input
-										id="adminPassword"
-										type="password"
-										value={formData.adminPassword}
-										onChange={handleInputChange}
-									/>
-								</div>
-							</div>
-						</div>
-
-						<Separator className="bg-border/40" />
-
-						{/* Brending */}
-						<div className="space-y-4">
-							<div className="flex items-center gap-2 text-sm font-semibold text-primary">
-								<Globe className="h-4 w-4" /> Identifikatsiya
-							</div>
+						<div className="border-t my-4 pt-4">
+							<h4 className="text-sm font-semibold mb-3 text-blue-700">
+								Admin (CEO) ma'lumotlari
+							</h4>
 							<div className="space-y-2">
-								<Label htmlFor="name">O'quv markaz nomi</Label>
+								<label className="text-sm font-medium">Admin ismi</label>
 								<Input
-									id="name"
-									placeholder="Alpha Education"
-									value={formData.name}
-									onChange={handleInputChange}
+									name="adminname"
+									onChange={handleChange}
+									placeholder="Ali valiyev"
+									required
 								/>
 							</div>
 							<div className="space-y-2">
-								<Label htmlFor="subdomain">Subdomain</Label>
-								<div className="flex items-center gap-2">
-									<Input
-										id="subdomain"
-										placeholder="alpha"
-										value={formData.subdomain}
-										onChange={handleInputChange}
-									/>
-									<span className="text-muted-foreground font-medium">
-										.dataspace.uz
-									</span>
-								</div>
+								<label className="text-sm font-medium">Admin telefoni</label>
+								<Input
+									name="adminPhone"
+									onChange={handleChange}
+									placeholder="998901234567"
+									required
+								/>
+							</div>
+							<div className="space-y-2 mt-2">
+								<label className="text-sm font-medium">Admin paroli</label>
+								<Input
+									type="password"
+									name="adminPassword"
+									onChange={handleChange}
+									placeholder="******"
+									required
+								/>
 							</div>
 						</div>
 
 						<Button
 							type="submit"
-							className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold py-6 text-lg shadow-lg shadow-primary/20"
+							className="w-full bg-blue-600 hover:bg-blue-700 text-white"
 						>
-							O'quv markazni yaratish
+							Yaratish va Saqlash
 						</Button>
 					</form>
 				</CardContent>
@@ -186,5 +113,3 @@ function Superadmin() {
 		</div>
 	);
 }
-
-export default Superadmin;
