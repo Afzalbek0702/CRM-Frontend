@@ -4,7 +4,7 @@ import { navigateTo } from "@/utils/navigate";
 const api = axios.create({
 //   baseURL: "http://localhost:7000",
   baseURL: "https://api-crm-data-space.vercel.app",
-  timeout: 7000,
+  timeout: 10000,
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",

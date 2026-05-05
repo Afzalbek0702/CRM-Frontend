@@ -132,54 +132,78 @@ export default function Leads() {
 		if (!leads) return { total: 0, new: 0, converted: 0 };
 		return {
 			total: leads.length,
-			new: leads.filter((l) => !l.converted_at).length,
-			converted: leads.filter((l) => l.converted_at).length,
+			new: leads.filter(l => !l.converted_at).length,
+			converted: leads.filter(l => l.converted_at).length,
 		};
 	}, [leads]);
 
 	// Qidiruvni optimallashtirish
 	const filteredLeads = useMemo(() => {
 		return (leads || []).filter(
-			(l) =>
+			l =>
 				l.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
 				l.phone?.includes(searchTerm) ||
 				l.source?.toLowerCase().includes(searchTerm.toLowerCase()),
 		);
 	}, [leads, searchTerm]);
 
-	const handleConfirmDelete = () => {
+	const handleConfirmDelete = async () => {
 		if (deleteId) {
-			deleteLead(deleteId);
+			await toast.promise(deleteLead(deleteId), {
+				loading: "Lead o'chirilmoqda...",
+				success: "Lead o'chirildi.",
+				error: err => {
+					return err.response?.data?.message || "Xatolik yuz berdi.";
+				},
+			});
 			setDeleteId(null);
 		}
 	};
 
-	const handleCopyPhone = async (phone) => {
+	const handleCopyPhone = async phone => {
 		await navigator.clipboard.writeText(phone);
 		setCopiedPhone(phone);
 		toast.success("Raqam nusxalandi!");
 		setTimeout(() => setCopiedPhone(null), 2000);
 	};
 
-	const handleConvertToGroup = (groupId) => {
+	const handleConvertToStudent = async studentId => {
+		await toast.promise(convertLeadToStudent(studentId), {
+			loading: "O'quvchilarga qo'shilmoqda...",
+			error: err => {
+				return err.response?.data?.message || "Xatolik yuz berdi.";
+			},
+			success: "O'quvchilarga qo'shildi.",
+		});
+	};
+	const handleConvertToGroup = async groupId => {
 		if (convertModal.leadData && groupId) {
-			convertLeadToGroup({
-				id: convertModal.leadData.id,
-				group_id: groupId,
-			});
+			await toast.promise(
+				convertLeadToGroup({
+					id: convertModal.leadData.id,
+					group_id: groupId,
+				}),
+				{
+					loading: "Guruhga qo'shilmoqda...",
+					error: err => {
+						return err.response?.data?.message || "Xatolik yuz berdi.";
+					},
+					success: "Guruhga qo'shildi.",
+				},
+			);
 			setConvertModal({ isOpen: false, leadData: null });
 		}
 	};
-
+	const capitalize = str => str.replace(/\b\w/g, char => char.toUpperCase());
 	// 🎨 Avatar initials
-	const getInitials = (name) => {
+	const getInitials = name => {
 		if (!name) return "?";
 		const parts = name.split(" ");
 		return (parts[0]?.[0] + (parts[1]?.[0] || "")).toUpperCase();
 	};
 
 	// 🎨 Source badge color
-	const getSourceColor = (source) => {
+	const getSourceColor = source => {
 		const colors = {
 			Instagram: "bg-pink-500/20 text-pink-400 border-pink-500/30",
 			Telegram: "bg-sky-500/20 text-sky-400 border-sky-500/30",
@@ -194,7 +218,7 @@ export default function Leads() {
 
 	return (
 		<div className="relative min-h-99 bg-background">
-			<div className="container mx-auto px-4 py-6 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+			<div className="container mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-200">
 				{/* 🧭 Header Section */}
 				<div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/10">
 					<div className="flex items-center gap-4">
@@ -255,7 +279,7 @@ export default function Leads() {
 								<InputGroupInput
 									placeholder="Ism, telefon yoki manba bo'yicha qidirish..."
 									value={searchTerm}
-									onChange={(e) => setSearchTerm(e.target.value)}
+									onChange={e => setSearchTerm(e.target.value)}
 									className="bg-transparent text-white placeholder:text-gray-500 border-0 focus:ring-0"
 								/>
 								<InputGroupAddon className="text-gray-500">
@@ -328,7 +352,7 @@ export default function Leads() {
 									</TableCell>
 								</TableRow>
 							) : (
-								filteredLeads.map((l, idx) => (
+								filteredLeads.map(l => (
 									<TableRow
 										key={l.id}
 										className="bg-card hover:bg-card/50 transition-all duration-200 group/row"
@@ -342,7 +366,9 @@ export default function Leads() {
 										</TableCell>
 										<TableCell className="font-medium text-white">
 											<div>
-												<p className="truncate max-w-32">{l.full_name}</p>
+												<p className="truncate max-w-32">
+													{capitalize(l.full_name)}
+												</p>
 												{l.converted_at && (
 													<Badge
 														variant="outline"
@@ -355,11 +381,11 @@ export default function Leads() {
 										</TableCell>
 										<TableCell>
 											<button
-												onClick={(e) => {
+												onClick={e => {
 													e.stopPropagation();
 													handleCopyPhone(PhoneUtils.formatPhone(l.phone));
 												}}
-												className="flex items-center gap-1.5 text-gray-300 hover:text-amber-400 transition-colors group/btn"
+												className="flex items-center gap-1.5 text-gray-300 hover:text-amber-400 transition-colors group/btn hover:cursor-pointer"
 											>
 												<span className="">
 													{PhoneUtils.formatPhone(l.phone)}
@@ -380,7 +406,7 @@ export default function Leads() {
 											</Badge>
 										</TableCell>
 										<TableCell className="text-gray-300">
-											{courseData.find((c) => c.name === l.interested_course)
+											{courseData.find(c => c.name === l.interested_course)
 												?.name || <span className="text-gray-500">—</span>}
 										</TableCell>
 										<TableCell className="max-w-40">
@@ -425,6 +451,14 @@ export default function Leads() {
 													>
 														<UserPlus className="mr-2 h-4 w-4 text-emerald-400" />{" "}
 														Guruhga o'tkazish
+													</DropdownMenuItem>
+													<DropdownMenuSeparator className="bg-white/10" />
+													<DropdownMenuItem
+														onClick={() => handleConvertToStudent(l.id)}
+														className="cursor-pointer hover:bg-emerald-400/10 focus:bg-emerald-400/10"
+													>
+														<UserPlus className="mr-2 h-4 w-4 text-emerald-400" />{" "}
+														O'quvchiga qo'shish
 													</DropdownMenuItem>
 													<DropdownMenuSeparator className="bg-white/10" />
 													<DropdownMenuItem
@@ -474,11 +508,23 @@ export default function Leads() {
 				isOpen={modal.isOpen}
 				onClose={() => setModal({ isOpen: false, data: null })}
 				initialData={modal.data}
-				onSubmit={async (data) => {
+				onSubmit={async data => {
 					if (modal.data) {
-						await updateLead({ id: modal.data.id, data });
+						await toast.promise(updateLead({ id: modal.data.id, data }), {
+							loading: "Lead yangilanmoqda...",
+							success: "Lead yangilandi.",
+							error: err => {
+								return err.response?.data?.message || "Xatolik yuz berdi.";
+							},
+						});
 					} else {
-						await createLead(data);
+						await toast.promise(createLead(data), {
+							loading: "Lead saqlanmoqda...",
+							success: "Lead yaratildi.",
+							error: err => {
+								return err.response?.data?.message || "Xatolik yuz berdi.";
+							},
+						});
 					}
 					setModal({ isOpen: false, data: null });
 				}}
@@ -489,7 +535,7 @@ export default function Leads() {
 				onClose={() => setDeleteId(null)}
 				onConfirm={handleConfirmDelete}
 				title="Lidni o'chirish"
-				description="Haqiqatdan ham ushbu lidni o'chirib tashlamoqchimisiz? Bu amal bekor qilinmaydi."
+				description="Haqiqatdan ham ushbu lidni o'chirib tashlamoqchimisiz?"
 			/>
 
 			<AddToGroupModal

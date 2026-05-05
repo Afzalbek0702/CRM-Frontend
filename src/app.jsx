@@ -17,24 +17,40 @@ import Workers from "./pages/Workers";
 import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotAuthorized from "./pages/NotAuthorized";
+import SuperadminLayout from "./pages/SuperadminLayout";
+import TenantList from "./pages/TenantList";
 
 export default function App() {
 	const { tenant } = useParams();
 
 	return (
 		<Routes>
+			{/* 1. Login har doim ochiq */}
 			<Route path="/login" element={<Login />} />
-			<Route path="/superadmin" element={<Superadmin />} />
+
+			{/* 2. Superadmin paneli - Barcha qat'iy route-lar tepada bo'lishi kerak */}
+			<Route path="/superadmin" element={<TenantList />}>
+				{/* <Route index element={<DashboardHome />} /> */}
+				{/* <Route path="tenants" element={<TenantList />} /> */}
+				{/* <Route path="tenants/create" element={<Superadmin />} /> */}
+				{/* MANA BU YERDA SETTINGS ROUTE-NI QO'SHISH KERAK */}
+				{/* <Route path="settings" element={<SuperadminSettings />} />
+				<Route path="users" element={<SuperadminUsers />} /> */}
+			</Route>
+
+			{/* 3. Asosiy sahifa logikasi */}
 			<Route
 				path="/"
 				element={
 					tenant ? (
-						<Navigate to={`/${tenant}/dashboard`} />
+						<Navigate to={`/${tenant}/dashboard`} replace />
 					) : (
-						<Navigate to={"login"} />
+						<Navigate to="/login" replace />
 					)
 				}
 			/>
+
+			{/* 4. Dinamik Tenant Route - BU ENG OXIRIDA BO'LISHI SHART */}
 			<Route
 				path="/:tenant"
 				element={
@@ -58,6 +74,9 @@ export default function App() {
 				<Route path="profile" element={<Profile />} />
 				<Route path="notauthorized" element={<NotAuthorized />} />
 			</Route>
+
+			{/* 5. 404 sahifasi (ixtiyoriy) */}
+			{/* <Route path="*" element={<NotFound />} /> */}
 		</Routes>
 	);
 }

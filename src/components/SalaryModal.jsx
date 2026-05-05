@@ -105,16 +105,14 @@ export default function SalaryModal({
 							</Label>
 							<Select
 								value={form.worker_id}
-								onValueChange={(val) =>
-									setForm((p) => ({ ...p, worker_id: val }))
-								}
+								onValueChange={val => setForm(p => ({ ...p, worker_id: val }))}
 								disabled={isLoading || !!initialData}
 							>
-								<SelectTrigger className="bg-zinc-900 border-zinc-800 focus:ring-primary">
+								<SelectTrigger className="w-full bg-zinc-900 border-zinc-800 focus:ring-primary">
 									<SelectValue placeholder="Xodimni tanlang" />
 								</SelectTrigger>
 								<SelectContent className="bg-zinc-900 border-zinc-800 text-white">
-									{workerData?.map((worker) => (
+									{workerData?.map(worker => (
 										<SelectItem key={worker.id} value={String(worker.id)}>
 											{worker.full_name}
 										</SelectItem>
@@ -162,11 +160,9 @@ export default function SalaryModal({
 								</Label>
 								<Select
 									value={form.method}
-									onValueChange={(val) =>
-										setForm((p) => ({ ...p, method: val }))
-									}
+									onValueChange={val => setForm(p => ({ ...p, method: val }))}
 								>
-									<SelectTrigger className="bg-zinc-900 border-zinc-800 focus:ring-yellow-600">
+									<SelectTrigger className="w-full bg-zinc-900 border-zinc-800 focus:ring-yellow-600">
 										<SelectValue />
 									</SelectTrigger>
 									<SelectContent className="bg-zinc-900 border-zinc-800 text-white">

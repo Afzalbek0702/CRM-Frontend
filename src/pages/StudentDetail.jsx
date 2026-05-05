@@ -7,10 +7,20 @@ import { useGroups } from "../services/group/useGroups";
 // Shadcn UI
 import { Button } from "@/components/ui/button";
 import {
-	Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter,
+	Card,
+	CardContent,
+	CardHeader,
+	CardTitle,
+	CardDescription,
+	CardFooter,
 } from "@/components/ui/card";
 import {
-	Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -19,15 +29,29 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // Ikonkalar
 import {
-	User, Phone, Calendar, Users, Wallet, Info, ArrowLeft,
-	CreditCard, History, MapPin, Mail, GraduationCap, TrendingUp,
-	Edit, MoreVertical, ExternalLink, CheckCircle, AlertCircle
+	User,
+	Phone,
+	Calendar,
+	Users,
+	Wallet,
+	Info,
+	ArrowLeft,
+	CreditCard,
+	History,
+	MapPin,
+	Mail,
+	GraduationCap,
+	TrendingUp,
+	Edit,
+	MoreVertical,
+	ExternalLink,
+	CheckCircle,
+	AlertCircle,
 } from "lucide-react";
 import PhoneUtils from "@/utils/phoneFormat";
 
-
 export default function StudentDetail() {
-   const { id, tenant } = useParams();
+	const { id, tenant } = useParams();
 	const navigate = useNavigate();
 	const { fetchById, loading, error } = useStudent();
 	const [student, setStudent] = useState(null);
@@ -40,7 +64,7 @@ export default function StudentDetail() {
 			const data = await fetchById(id);
 			setStudent(data);
 			if (data?.group && groups) {
-				const mapped = groups.filter((g) => g.id === data.group.id);
+				const mapped = groups.filter(g => g.id === data.group.id);
 				setFullGroups(mapped);
 			}
 		};
@@ -59,28 +83,35 @@ export default function StudentDetail() {
 	}, [student, fullGroups]);
 
 	if (loading || !student) return <Loader />;
-	if (error) return (
-		<div className="min-h-screen flex items-center justify-center p-4">
-			<Card className="bg-red-500/10 border-red-500/30 p-6 max-w-md w-full backdrop-blur-xl">
-				<div className="flex flex-col items-center text-center">
-					<div className="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mb-4">
-						<AlertCircle className="text-red-400 w-8 h-8" />
+	if (error)
+		return (
+			<div className="min-h-screen flex items-center justify-center p-4">
+				<Card className="bg-red-500/10 border-red-500/30 p-6 max-w-md w-full backdrop-blur-xl">
+					<div className="flex flex-col items-center text-center">
+						<div className="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mb-4">
+							<AlertCircle className="text-red-400 w-8 h-8" />
+						</div>
+						<h3 className="text-lg font-semibold text-white mb-2">
+							Xatolik yuz berdi
+						</h3>
+						<p className="text-red-400/80 text-sm mb-4">{error}</p>
+						<Button
+							onClick={() => navigate(-1)}
+							variant="outline"
+							className="w-full border-red-500/30 text-red-400 hover:bg-red-500/10"
+						>
+							<ArrowLeft className="mr-2 h-4 w-4" /> Ortga qaytish
+						</Button>
 					</div>
-					<h3 className="text-lg font-semibold text-white mb-2">Xatolik yuz berdi</h3>
-					<p className="text-red-400/80 text-sm mb-4">{error}</p>
-					<Button onClick={() => navigate(-1)} variant="outline" className="w-full border-red-500/30 text-red-400 hover:bg-red-500/10">
-						<ArrowLeft className="mr-2 h-4 w-4" /> Ortga qaytish
-					</Button>
-				</div>
-			</Card>
-		</div>
-	);
+				</Card>
+			</div>
+		);
 
-	const formatDate = (d) => d ? String(d).split("T")[0] : "-";
-	const formatCurrency = (amount) => `${(amount || 0).toLocaleString()} so'm`;
+	const formatDate = d => (d ? String(d).split("T")[0] : "-");
+	const formatCurrency = amount => `${(amount || 0).toLocaleString()} so'm`;
 
 	// 🎨 Avatar initials
-	const getInitials = (name) => {
+	const getInitials = name => {
 		if (!name) return "?";
 		const parts = name.split(" ");
 		return (parts[0]?.[0] + (parts[1]?.[0] || "")).toUpperCase();
@@ -88,13 +119,12 @@ export default function StudentDetail() {
 
 	return (
 		<div className="relative min-h-screen bg-background">
-			<div className="container mx-auto px-4 py-6 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-				
+			<div className="container mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-200">
 				{/* 🧭 Header Section */}
 				<div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/10">
 					<div className="flex items-center gap-4">
-						<Button 
-							onClick={() => navigate(-1)} 
+						<Button
+							onClick={() => navigate(-1)}
 							variant="ghost"
 							className="group text-gray-400 hover:text-white hover:bg-white/10 transition-all"
 						>
@@ -102,13 +132,13 @@ export default function StudentDetail() {
 							<span className="ml-2 hidden sm:inline">Ortga</span>
 						</Button>
 					</div>
-					
+
 					<div className="flex items-center gap-3">
-						<Badge 
-							variant="outline" 
+						<Badge
+							variant="outline"
 							className={`border-2 transition-all ${
-								stats?.balanceStatus === "positive" 
-									? "border-emerald-500/50 text-emerald-400 bg-emerald-500/10" 
+								stats?.balanceStatus === "positive"
+									? "border-emerald-500/50 text-emerald-400 bg-emerald-500/10"
 									: "border-red-500/50 text-red-400 bg-red-500/10"
 							}`}
 						>
@@ -119,16 +149,20 @@ export default function StudentDetail() {
 							)}
 							{stats?.balanceStatus === "positive" ? "Faol" : "Qarzdor"}
 						</Badge>
-						<Button variant="ghost" size="icon" className="text-gray-400 hover:text-white">
+						<Button
+							variant="ghost"
+							size="icon"
+							className="text-gray-400 hover:text-white"
+						>
 							<MoreVertical className="h-4 w-4" />
 						</Button>
 					</div>
 				</div>
 
 				{/* 👤 Profile Header Card */}
-				<Card className="relative overflow-hidden bg-linear-to-br from-[#1f1f1f] to-[#161616] border-white/10 backdrop-blur-xl group hover:border-amber-400/30 transition-all duration-500">
-					<div className="absolute inset-0 bg-linear-to-r from-amber-400/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-					
+				<Card className="relative overflow-hidden bg-linear-to-br from-[#1f1f1f] to-[#161616] border-white/10 backdrop-blur-xl group hover:border-amber-400/30 transition-all duration-200">
+					<div className="absolute inset-0 bg-linear-to-r from-amber-400/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+
 					<CardContent className="p-6">
 						<div className="flex flex-col md:flex-row md:items-center gap-6">
 							{/* Avatar */}
@@ -151,28 +185,33 @@ export default function StudentDetail() {
 								</h1>
 								<p className="text-gray-400 mt-1 flex items-center gap-2">
 									<GraduationCap className="w-4 h-4 text-amber-400" />
-									Talaba • ID: <span className="font-mono text-amber-400">#{id.slice(-8)}</span>
+									Talaba • ID:{" "}
+									<span className="font-mono text-amber-400">
+										#{id.slice(-8)}
+									</span>
 								</p>
-								
+
 								{/* Quick Stats */}
 								<div className="flex flex-wrap gap-4 mt-4">
-									<QuickStat 
-										icon={<Users className="w-4 h-4" />} 
-										label="Guruhlar" 
-										value={stats?.groupsCount || 0} 
+									<QuickStat
+										icon={<Users className="w-4 h-4" />}
+										label="Guruhlar"
+										value={stats?.groupsCount || 0}
 										color="blue"
 									/>
-									<QuickStat 
-										icon={<Wallet className="w-4 h-4" />} 
-										label="Balans" 
-										value={formatCurrency(student.balance)} 
-										color={stats?.balanceStatus === "positive" ? "emerald" : "red"}
+									<QuickStat
+										icon={<Wallet className="w-4 h-4" />}
+										label="Balans"
+										value={formatCurrency(student.balance)}
+										color={
+											stats?.balanceStatus === "positive" ? "emerald" : "red"
+										}
 										negative={stats?.balanceStatus === "negative"}
 									/>
-									<QuickStat 
-										icon={<Calendar className="w-4 h-4" />} 
-										label="Ro'yxatdan" 
-										value={formatDate(student.created_at)} 
+									<QuickStat
+										icon={<Calendar className="w-4 h-4" />}
+										label="Ro'yxatdan"
+										value={formatDate(student.created_at)}
 										color="purple"
 									/>
 								</div>
@@ -183,7 +222,10 @@ export default function StudentDetail() {
 								<Button className="bg-linear-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black shadow-lg shadow-amber-500/25">
 									<Edit className="mr-2 h-4 w-4" /> Tahrirlash
 								</Button>
-								<Button variant="outline" className="border-white/20 text-gray-300 hover:bg-white/10">
+								<Button
+									variant="outline"
+									className="border-white/20 text-gray-300 hover:bg-white/10"
+								>
 									<ExternalLink className="mr-2 h-4 w-4" /> Hisobot
 								</Button>
 							</div>
@@ -192,15 +234,28 @@ export default function StudentDetail() {
 				</Card>
 
 				{/* 📋 Main Content Tabs */}
-				<Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+				<Tabs
+					value={activeTab}
+					onValueChange={setActiveTab}
+					className="space-y-6"
+				>
 					<TabsList className="bg-[#1f1f1f]/80 border border-white/10 p-1 backdrop-blur-xl">
-						<TabsTrigger value="info" className="data-[state=active]:bg-amber-400 data-[state=active]:text-black">
+						<TabsTrigger
+							value="info"
+							className="data-[state=active]:bg-amber-400 data-[state=active]:text-black"
+						>
 							<Info className="mr-2 h-4 w-4" /> Ma'lumotlar
 						</TabsTrigger>
-						<TabsTrigger value="groups" className="data-[state=active]:bg-amber-400 data-[state=active]:text-black">
+						<TabsTrigger
+							value="groups"
+							className="data-[state=active]:bg-amber-400 data-[state=active]:text-black"
+						>
 							<Users className="mr-2 h-4 w-4" /> Guruhlar ({fullGroups.length})
 						</TabsTrigger>
-						<TabsTrigger value="payments" className="data-[state=active]:bg-amber-400 data-[state=active]:text-black">
+						<TabsTrigger
+							value="payments"
+							className="data-[state=active]:bg-amber-400 data-[state=active]:text-black"
+						>
 							<CreditCard className="mr-2 h-4 w-4" /> To'lovlar
 						</TabsTrigger>
 						{/* <TabsTrigger value="history" className="data-[state=active]:bg-amber-400 data-[state=active]:text-black">
@@ -211,7 +266,6 @@ export default function StudentDetail() {
 					{/* 📄 Info Tab */}
 					<TabsContent value="info" className="space-y-6">
 						<div className="grid gap-6 md:grid-cols-2">
-							
 							{/* Personal Info Card */}
 							<Card className="bg-[#1f1f1f]/80 border-white/10 backdrop-blur-xl group hover:border-amber-400/30 transition-all">
 								<CardHeader className="pb-4">
@@ -220,8 +274,12 @@ export default function StudentDetail() {
 											<User className="text-amber-400 w-4 h-4" />
 										</div>
 										<div>
-											<CardTitle className="text-lg text-white">Shaxsiy ma'lumotlar</CardTitle>
-											<CardDescription>Kontakt va identifikatsiya ma'lumotlari</CardDescription>
+											<CardTitle className="text-lg text-white">
+												Shaxsiy ma'lumotlar
+											</CardTitle>
+											<CardDescription>
+												Kontakt va identifikatsiya ma'lumotlari
+											</CardDescription>
 										</div>
 									</div>
 								</CardHeader>
@@ -264,41 +322,59 @@ export default function StudentDetail() {
 							<Card className="bg-[#1f1f1f]/80 border-white/10 backdrop-blur-xl group hover:border-amber-400/30 transition-all">
 								<CardHeader className="pb-4">
 									<div className="flex items-center gap-2">
-										<div className={`p-2 rounded-lg border ${
-											stats?.balanceStatus === "positive" 
-												? "bg-emerald-400/10 border-emerald-400/20" 
-												: "bg-red-400/10 border-red-400/20"
-										}`}>
-											<Wallet className={`w-4 h-4 ${
-												stats?.balanceStatus === "positive" ? "text-emerald-400" : "text-red-400"
-											}`} />
+										<div
+											className={`p-2 rounded-lg border ${
+												stats?.balanceStatus === "positive"
+													? "bg-emerald-400/10 border-emerald-400/20"
+													: "bg-red-400/10 border-red-400/20"
+											}`}
+										>
+											<Wallet
+												className={`w-4 h-4 ${
+													stats?.balanceStatus === "positive"
+														? "text-emerald-400"
+														: "text-red-400"
+												}`}
+											/>
 										</div>
 										<div>
-											<CardTitle className="text-lg text-white">Moliyaviy holat</CardTitle>
-											<CardDescription>To'lovlar va balans ma'lumotlari</CardDescription>
+											<CardTitle className="text-lg text-white">
+												Moliyaviy holat
+											</CardTitle>
+											<CardDescription>
+												To'lovlar va balans ma'lumotlari
+											</CardDescription>
 										</div>
 									</div>
 								</CardHeader>
 								<CardContent className="space-y-6">
-									
 									{/* Balance Display */}
-									<div className={`p-4 rounded-xl border ${
-										stats?.balanceStatus === "positive" 
-											? "bg-emerald-500/10 border-emerald-500/20" 
-											: "bg-red-500/10 border-red-500/20"
-									}`}>
-										<p className="text-xs text-gray-500 uppercase tracking-wider mb-2">Joriy balans</p>
+									<div
+										className={`p-4 rounded-xl border ${
+											stats?.balanceStatus === "positive"
+												? "bg-emerald-500/10 border-emerald-500/20"
+												: "bg-red-500/10 border-red-500/20"
+										}`}
+									>
+										<p className="text-xs text-gray-500 uppercase tracking-wider mb-2">
+											Joriy balans
+										</p>
 										<div className="flex items-baseline gap-2">
-											<span className={`text-3xl font-bold ${
-												stats?.balanceStatus === "positive" ? "text-emerald-400" : "text-red-400"
-											}`}>
+											<span
+												className={`text-3xl font-bold ${
+													stats?.balanceStatus === "positive"
+														? "text-emerald-400"
+														: "text-red-400"
+												}`}
+											>
 												{stats?.balanceStatus === "negative" && "-"}
 												{formatCurrency(stats?.balanceAbs)}
 											</span>
 										</div>
 										{stats?.balanceStatus === "negative" && (
 											<p className="text-xs text-red-400/80 mt-2 flex items-center gap-1">
-												<AlertCircle className="w-3 h-3" /> To'lov amalga oshirish tavsiya etiladi
+												<AlertCircle className="w-3 h-3" /> To'lov amalga
+												oshirish tavsiya etiladi
 											</p>
 										)}
 									</div>
@@ -307,20 +383,34 @@ export default function StudentDetail() {
 
 									{/* Quick Actions */}
 									<div className="space-y-3">
-										<p className="text-xs text-gray-500 uppercase tracking-wider">Tezkor harakatlar</p>
+										<p className="text-xs text-gray-500 uppercase tracking-wider">
+											Tezkor harakatlar
+										</p>
 										<div className="grid grid-cols-2 gap-3">
-											<Button variant="outline" disabled className="justify-start border-white/20 text-gray-300 hover:bg-white/10 h-auto py-3">
+											<Button
+												variant="outline"
+												disabled
+												className="justify-start border-white/20 text-gray-300 hover:bg-white/10 h-auto py-3"
+											>
 												<CreditCard className="mr-2 h-4 w-4 text-amber-400" />
 												<div className="text-left">
 													<p className="text-sm font-medium">To'lov qilish</p>
-													<p className="text-xs text-gray-500">Onlayn yoki naqd</p>
+													<p className="text-xs text-gray-500">
+														Onlayn yoki naqd
+													</p>
 												</div>
 											</Button>
-											<Button variant="outline" disabled className="justify-start border-white/20 text-gray-300 hover:bg-white/10 h-auto py-3">
+											<Button
+												variant="outline"
+												disabled
+												className="justify-start border-white/20 text-gray-300 hover:bg-white/10 h-auto py-3"
+											>
 												<History className="mr-2 h-4 w-4 text-blue-400" />
 												<div className="text-left">
 													<p className="text-sm font-medium">Tarix</p>
-													<p className="text-xs text-gray-500">Barcha operatsiyalar</p>
+													<p className="text-xs text-gray-500">
+														Barcha operatsiyalar
+													</p>
 												</div>
 											</Button>
 										</div>
@@ -330,10 +420,19 @@ export default function StudentDetail() {
 
 									{/* Metadata */}
 									<div className="space-y-3 text-sm">
-										<MetaItem label="Talaba ID" value={`#${id.slice(-8).toUpperCase()}`} />
-										<MetaItem label="Ro'yxatdan o'tgan" value={formatDate(student.created_at)} />
+										<MetaItem
+											label="Talaba ID"
+											value={`#${id.slice(-8).toUpperCase()}`}
+										/>
+										<MetaItem
+											label="Ro'yxatdan o'tgan"
+											value={formatDate(student.created_at)}
+										/>
 										{student.updated_at && (
-											<MetaItem label="Oxirgi yangilash" value={formatDate(student.updated_at)} />
+											<MetaItem
+												label="Oxirgi yangilash"
+												value={formatDate(student.updated_at)}
+											/>
 										)}
 									</div>
 								</CardContent>
@@ -349,7 +448,9 @@ export default function StudentDetail() {
 									<Users className="text-amber-400" />
 									Biriktirilgan guruhlar
 								</CardTitle>
-								<CardDescription>Talaba qatnashayotgan barcha guruhlar</CardDescription>
+								<CardDescription>
+									Talaba qatnashayotgan barcha guruhlar
+								</CardDescription>
 							</CardHeader>
 							<CardContent>
 								{fullGroups.length > 0 ? (
@@ -357,19 +458,29 @@ export default function StudentDetail() {
 										<Table>
 											<TableHeader>
 												<TableRow className="bg-black/40 border-white/10 hover:bg-transparent">
-													<TableHead className="text-gray-400">Guruh nomi</TableHead>
-													<TableHead className="text-gray-400">Kurs turi</TableHead>
-													<TableHead className="text-gray-400 text-right">Narxi</TableHead>
-													<TableHead className="text-gray-400">Dars vaqti</TableHead>
+													<TableHead className="text-gray-400">
+														Guruh nomi
+													</TableHead>
+													<TableHead className="text-gray-400">
+														Kurs turi
+													</TableHead>
+													<TableHead className="text-gray-400 text-right">
+														Narxi
+													</TableHead>
+													<TableHead className="text-gray-400">
+														Dars vaqti
+													</TableHead>
 													<TableHead className="text-right"></TableHead>
 												</TableRow>
 											</TableHeader>
 											<TableBody>
 												{fullGroups.map((group, idx) => (
-													<TableRow 
-														key={group.id} 
+													<TableRow
+														key={group.id}
 														className="border-white/5 hover:bg-amber-400/5 transition-colors cursor-pointer group/row"
-														onClick={() => navigate(`/${tenant}/groups/${group.id}`)}
+														onClick={() =>
+															navigate(`/${tenant}/groups/${group.id}`)
+														}
 													>
 														<TableCell className="font-medium text-white">
 															<div className="flex items-center gap-3">
@@ -380,7 +491,10 @@ export default function StudentDetail() {
 															</div>
 														</TableCell>
 														<TableCell>
-															<Badge variant="outline" className="border-amber-400/30 text-amber-300 bg-amber-400/10">
+															<Badge
+																variant="outline"
+																className="border-amber-400/30 text-amber-300 bg-amber-400/10"
+															>
 																{group.course_type}
 															</Badge>
 														</TableCell>
@@ -391,7 +505,11 @@ export default function StudentDetail() {
 															{group.lesson_time}
 														</TableCell>
 														<TableCell className="text-right">
-															<Button variant="ghost" size="icon" className="opacity-0 group-hover/row:opacity-100 transition-opacity text-gray-400 hover:text-amber-400">
+															<Button
+																variant="ghost"
+																size="icon"
+																className="opacity-0 group-hover/row:opacity-100 transition-opacity text-gray-400 hover:text-amber-400"
+															>
 																<ExternalLink className="h-4 w-4" />
 															</Button>
 														</TableCell>
@@ -408,7 +526,7 @@ export default function StudentDetail() {
 										action={{
 											label: "Guruh qo'shish",
 											onClick: () => navigate("/groups"),
-											icon: <Users className="mr-2 h-4 w-4" />
+											icon: <Users className="mr-2 h-4 w-4" />,
 										}}
 									/>
 								)}
@@ -449,7 +567,13 @@ export default function StudentDetail() {
 
 // 🧩 Reusable Components
 
-const DetailItem = ({ icon, label, value, valueClass = "", copyable = false }) => {
+const DetailItem = ({
+	icon,
+	label,
+	value,
+	valueClass = "",
+	copyable = false,
+}) => {
 	const [copied, setCopied] = useState(false);
 
 	const handleCopy = async () => {
@@ -465,16 +589,20 @@ const DetailItem = ({ icon, label, value, valueClass = "", copyable = false }) =
 			<div className="flex items-start gap-3 min-w-0">
 				<span className="text-amber-400/70 mt-0.5">{icon}</span>
 				<div className="min-w-0">
-					<p className="text-xs text-gray-500 uppercase tracking-wider">{label}</p>
-					<p className={`text-base font-medium text-white truncate ${valueClass}`}>
+					<p className="text-xs text-gray-500 uppercase tracking-wider">
+						{label}
+					</p>
+					<p
+						className={`text-base font-medium text-white truncate ${valueClass}`}
+					>
 						{value || "—"}
 					</p>
 				</div>
 			</div>
 			{copyable && value && (
-				<Button 
-					variant="ghost" 
-					size="icon" 
+				<Button
+					variant="ghost"
+					size="icon"
 					onClick={handleCopy}
 					className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-500 hover:text-amber-400 h-8 w-8"
 					title="Nusxa olish"
@@ -490,7 +618,13 @@ const DetailItem = ({ icon, label, value, valueClass = "", copyable = false }) =
 	);
 };
 
-const QuickStat = ({ icon, label, value, color = "gray", negative = false }) => {
+const QuickStat = ({
+	icon,
+	label,
+	value,
+	color = "gray",
+	negative = false,
+}) => {
 	const colors = {
 		gray: "text-gray-400",
 		blue: "text-sky-400",
@@ -505,7 +639,9 @@ const QuickStat = ({ icon, label, value, color = "gray", negative = false }) => 
 			<span className={colors[color]}>{icon}</span>
 			<div className="text-left">
 				<p className="text-xs text-gray-500">{label}</p>
-				<p className={`text-sm font-semibold ${negative ? "text-red-400" : "text-white"}`}>
+				<p
+					className={`text-sm font-semibold ${negative ? "text-red-400" : "text-white"}`}
+				>
 					{value}
 				</p>
 			</div>
@@ -528,8 +664,12 @@ const EmptyState = ({ icon, title, description, action }) => (
 		<h3 className="text-lg font-semibold text-white mb-2">{title}</h3>
 		<p className="text-gray-500 text-sm max-w-sm mb-6">{description}</p>
 		{action && (
-			<Button onClick={action.onClick} className="bg-linear-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black">
-				{action.icon}{action.label}
+			<Button
+				onClick={action.onClick}
+				className="bg-linear-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black"
+			>
+				{action.icon}
+				{action.label}
 			</Button>
 		)}
 	</div>

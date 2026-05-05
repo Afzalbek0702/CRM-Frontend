@@ -150,7 +150,7 @@ export default function Settings() {
 		return {
 			courses: courseData?.length || 0,
 			rooms: roomData?.length || 0,
-			occupiedRooms: roomData?.filter((r) => r.group_name).length || 0,
+			occupiedRooms: roomData?.filter(r => r.group_name).length || 0,
 			totalCapacity:
 				roomData?.reduce((acc, r) => acc + (Number(r.capacity) || 0), 0) || 0,
 		};
@@ -158,29 +158,53 @@ export default function Settings() {
 
 	if (isLoading || roomLoading) return <Loader />;
 
-	const handleConfirmDelete = () => {
+	const handleConfirmDelete = async () => {
 		if (deleteId.type === "course") {
-			removeCourse(deleteId.id);
+			await toast.promise(removeCourse(deleteId.id), {
+				loading: "O'chirilmoqda...",
+				success: "Kurs o'chirildi.",
+				error: err => {
+					return err.response?.data?.message || "Xatolik yuz berdi.";
+				},
+			});
 		} else if (deleteId.type === "room") {
-			removeRoom(deleteId.id);
+			await toast.promise(removeRoom(deleteId.id), {
+				loading: "O'chirilmoqda...",
+				success: "Xona o'chirildi.",
+				error: err => {
+					return err.response?.data?.message || "Xatolik yuz berdi.";
+				},
+			});
 		}
 		setDeleteId({ id: null, type: null });
 	};
 
-	const handleCourseSubmit = (e) => {
+	const handleCourseSubmit = async e => {
 		e.preventDefault();
 		const formData = new FormData(e.target);
 		const data = Object.fromEntries(formData);
 
 		if (courseModal.data) {
-			updateCourse({ id: courseModal.data.id, data });
+			await toast.promise(updateCourse({ id: courseModal.data.id, data }), {
+				loading: "Saqlanmoqda...",
+				success: "Kurs yangilandi.",
+				error: err => {
+					return err.response?.data?.message || "Xatolik yuz berdi.";
+				},
+			});
 		} else {
-			createCourse(data);
+			await toast.promise(createCourse(data), {
+				loading: "Saqlanmoqda...",
+				success: "Kurs qo'shildi.",
+				error: err => {
+					return err.response?.data?.message || "Xatolik yuz berdi.";
+				},
+			});
 		}
 		setCourseModal({ open: false, data: null });
 	};
 
-	const handleRoomSubmit = (e) => {
+	const handleRoomSubmit = async e => {
 		e.preventDefault();
 		const formData = new FormData(e.target);
 		const data = {
@@ -189,9 +213,21 @@ export default function Settings() {
 		};
 
 		if (roomModal.data) {
-			updateRoom({ id: roomModal.data.room_id, data });
+			await toast.promise(updateRoom({ id: roomModal.data.room_id, data }), {
+				loading: "Saqlanmoqda...",
+				success: "Xona yangilandi.",
+				error: err => {
+					return err.response?.data?.message || "Xatolik yuz berdi.";
+				},
+			});
 		} else {
-			createRoom(data);
+			await toast.promise(createRoom(data), {
+				loading: "Saqlanmoqda...",
+				success: "Xona Qo'shildi.",
+				error: err => {
+					return err.response?.data?.message || "Xatolik yuz berdi.";
+				},
+			});
 		}
 		setRoomModal({ open: false, data: null });
 	};
@@ -204,7 +240,7 @@ export default function Settings() {
 	};
 
 	// 🎨 Avatar initials
-	const getInitials = (name) => {
+	const getInitials = name => {
 		if (!name) return "?";
 		const parts = name.split(" ");
 		return (parts[0]?.[0] + (parts[1]?.[0] || "")).toUpperCase();
@@ -212,7 +248,7 @@ export default function Settings() {
 
 	return (
 		<div className="relative min-h-99 bg-background">
-			<div className="container mx-auto px-4 py-6 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+			<div className="container mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-200">
 				{/* 🧭 Header Section */}
 				<div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/10">
 					<div className="flex items-center gap-4">
@@ -339,7 +375,7 @@ export default function Settings() {
 												</TableRow>
 											</TableHeader>
 											<TableBody>
-												{courseData.map((course) => (
+												{courseData.map(course => (
 													<TableRow
 														key={course.id}
 														className="border-white/5 hover:bg-amber-400/5 transition-all duration-200 group/row"
@@ -357,7 +393,7 @@ export default function Settings() {
 																	{course.name}
 																</p>
 																<button
-																	onClick={(e) => {
+																	onClick={e => {
 																		e.stopPropagation();
 																		handleCopyId(course.id, "course");
 																	}}
@@ -500,18 +536,18 @@ export default function Settings() {
 															<Clock className="h-4 w-4" /> Vaqt
 														</div>
 													</TableHead>
-													<TableHead className="text-gray-400">
+													{/* <TableHead className="text-gray-400">
 														<div className="flex items-center gap-2">
 															<CalendarRange className="h-4 w-4" /> Kunlar
 														</div>
-													</TableHead>
+													</TableHead> */}
 													<TableHead className="text-gray-400 text-right w-20">
 														Amallar
 													</TableHead>
 												</TableRow>
 											</TableHeader>
 											<TableBody>
-												{roomData.map((room) => {
+												{roomData.map(room => {
 													const isOccupied = !!room.group_name;
 													const today = new Date().toLocaleDateString("uz-UZ", {
 														weekday: "short",
@@ -559,16 +595,38 @@ export default function Settings() {
 																</Badge>
 															</TableCell>
 															<TableCell className="text-gray-400 text-sm">
-																{room.group_name || (
+																{room.daily_schedule?.length !== 0 ? (
+																	room.daily_schedule?.map(gr => (
+																		<>
+																			<span className="text-gray-600 italic">
+																				{gr.group_name}
+																			</span>
+																			<br />
+																		</>
+																	))
+																) : (
 																	<span className="text-gray-600 italic">
 																		Bo'sh
 																	</span>
 																)}
 															</TableCell>
 															<TableCell className="text-gray-400 text-sm">
-																{room.group_lesson_time || "—"}
+																{room.daily_schedule?.length !== 0 ? (
+																	room.daily_schedule?.map(gr => (
+																		<>
+																			<span className="text-gray-600 italic">
+																				{gr.time}
+																			</span>
+																			<br />
+																		</>
+																	))
+																) : (
+																	<span className="text-gray-600 italic">
+																		Bo'sh
+																	</span>
+																)}
 															</TableCell>
-															<TableCell>
+															{/* <TableCell>
 																<div className="flex flex-wrap gap-1">
 																	{room.group_lesson_days ? (
 																		getUzDays(room.group_lesson_days).map(
@@ -586,7 +644,7 @@ export default function Settings() {
 																		</span>
 																	)}
 																</div>
-															</TableCell>
+															</TableCell> */}
 															<TableCell className="text-right">
 																<DropdownMenu>
 																	<DropdownMenuTrigger asChild>
@@ -642,19 +700,21 @@ export default function Settings() {
 				{/* 🎭 Course Modal */}
 				<Dialog
 					open={courseModal.open}
-					onOpenChange={(val) => setCourseModal({ ...courseModal, open: val })}
+					onOpenChange={val => setCourseModal({ ...courseModal, open: val })}
 				>
-					<DialogContent className="bg-[#1f1f1f] border-white/10 text-white max-w-md">
+					<DialogContent className="sm:max-w-106.25 bg-zinc-950 border-zinc-800 text-white">
 						<DialogHeader>
-							<DialogTitle className="text-xl flex items-center gap-2">
-								<BookOpen className="text-amber-400" />
+							<DialogTitle className="flex items-center gap-2 text-xl">
+								<BookOpen
+									className={`${courseModal.data ? "text-primary" : "text-green-500"}`}
+								/>
 								{courseModal.data ? "Kursni tahrirlash" : "Yangi kurs yaratish"}
 							</DialogTitle>
 							<DialogDescription className="text-gray-400">
 								Kurs ma'lumotlarini to'ldiring va saqlang
 							</DialogDescription>
 						</DialogHeader>
-						<form onSubmit={handleCourseSubmit} className="space-y-4 pt-4">
+						<form onSubmit={handleCourseSubmit} className="space-y-6 pt-4">
 							<div className="grid gap-2">
 								<Label htmlFor="cname" className="text-gray-300">
 									Kurs nomi
@@ -698,18 +758,20 @@ export default function Settings() {
 									/>
 								</div>
 							</div>
-							<DialogFooter className="pt-4 flex gap-3">
+							<DialogFooter className="pt-4 border-t border-zinc-800 gap-2">
 								<Button
 									type="button"
-									variant="outline"
+									variant="ghost"
 									onClick={() => setCourseModal({ open: false, data: null })}
-									className="border-white/20 text-gray-300 hover:bg-white/10"
+									className="text-zinc-400 "
+									// className="text-zinc-400 hover:text-white hover:bg-zinc-900"
 								>
-									<X className="mr-2 h-4 w-4" /> Bekor qilish
+									{/* <X className="mr-2 h-4 w-4" /> Bekor qilish */}
+									Bekor qilish
 								</Button>
 								<Button
 									type="submit"
-									className="bg-linear-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black"
+									className={`text-black font-semibold min-w-30 ${courseModal.data ? "bg-primary hover:bg-primary/80" : "bg-green-500 hover:bg-green-500/80"}`}
 								>
 									<Save className="mr-2 h-4 w-4" />{" "}
 									{courseModal.data ? "Saqlash" : "Yaratish"}
@@ -722,19 +784,21 @@ export default function Settings() {
 				{/* 🎭 Room Modal */}
 				<Dialog
 					open={roomModal.open}
-					onOpenChange={(val) => setRoomModal({ ...roomModal, open: val })}
+					onOpenChange={val => setRoomModal({ ...roomModal, open: val })}
 				>
-					<DialogContent className="bg-[#1f1f1f] border-white/10 text-white max-w-md">
+					<DialogContent className="sm:max-w-106.25 bg-zinc-950 border-zinc-800 text-white">
 						<DialogHeader>
-							<DialogTitle className="text-xl flex items-center gap-2">
-								<DoorOpen className="text-amber-400" />
+							<DialogTitle className="flex items-center gap-2 text-xl">
+								<DoorOpen
+									className={`${roomModal.data ? "text-primary" : "text-green-500"}`}
+								/>
 								{roomModal.data ? "Xonani tahrirlash" : "Yangi xona qo'shish"}
 							</DialogTitle>
 							<DialogDescription className="text-gray-400">
 								Xona ma'lumotlarini to'ldiring va saqlang
 							</DialogDescription>
 						</DialogHeader>
-						<form onSubmit={handleRoomSubmit} className="space-y-4 pt-4">
+						<form onSubmit={handleRoomSubmit} className="space-y-6 pt-4">
 							<div className="grid gap-2">
 								<Label htmlFor="rname" className="text-gray-300">
 									Xona nomi
@@ -762,18 +826,19 @@ export default function Settings() {
 									placeholder="15"
 								/>
 							</div>
-							<DialogFooter className="pt-4 flex gap-3">
+							<DialogFooter className="pt-4 border-t border-zinc-800 gap-2">
 								<Button
 									type="button"
-									variant="outline"
+									variant="ghost"
 									onClick={() => setRoomModal({ open: false, data: null })}
-									className="border-white/20 text-gray-300 hover:bg-white/10"
+									className="text-zinc-400"
 								>
-									<X className="mr-2 h-4 w-4" /> Bekor qilish
+									{/* <X className="mr-2 h-4 w-4" /> Bekor qilish */}
+									Bekor qilish
 								</Button>
 								<Button
 									type="submit"
-									className="bg-linear-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-black"
+									className={`text-black font-semibold min-w-30 ${roomModal.data ? "bg-primary hover:bg-primary/80" : "bg-green-500 hover:bg-green-500/80"}`}
 								>
 									<Save className="mr-2 h-4 w-4" />{" "}
 									{roomModal.data ? "Saqlash" : "Yaratish"}

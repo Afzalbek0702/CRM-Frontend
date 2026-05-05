@@ -59,7 +59,6 @@ import {
 } from "lucide-react";
 import { getUzDays } from "@/utils/weekday";
 
-
 // 🎨 Stats Card Component
 const StatsCard = ({ icon, label, value, trend, color }) => {
 	const colors = {
@@ -119,9 +118,16 @@ const DayPill = ({ day, isToday = false }) => (
 export default function Groups() {
 	const navigate = useNavigate();
 	const { tenant } = useParams();
-	const { groups, loading, createGroup, deleteGroup, updateGroup,isCreating,isUpdating } =
-		useGroups();
-	const { students } = useStudent();
+	const {
+		groups,
+		loading,
+		createGroup,
+		deleteGroup,
+		updateGroup,
+		isCreating,
+		isUpdating,
+	} = useGroups();
+	const { students = { data: [] } } = useStudent();
 	const { user } = useAuth();
 	const [searchTerm, setSearchTerm] = useState("");
 	const [deleteId, setDeleteId] = useState(null);
@@ -131,8 +137,8 @@ export default function Groups() {
 	// 📊 Stats calculations
 	const stats = useMemo(() => {
 		if (!groups) return { total: 0, totalStudents: 0, avgPrice: 0 };
-		const totalStudents =students.filter((s) => s.groups || s.group_id).length
-			
+		const totalStudents = students?.filter(s => s.groups || s.group_id).length;
+
 		const avgPrice = groups.length
 			? Math.round(
 					groups.reduce((acc, g) => acc + (g.price || 0), 0) / groups.length,
@@ -147,76 +153,92 @@ export default function Groups() {
 
 	// Studentlar sonini hisoblashni optimallashtirish
 	const groupsWithCount = useMemo(() => {
-		const countMap = students.reduce((acc, s) => {
+		// console.log(students?.data);
+
+		const countMap = students?.reduce((acc, s) => {
 			const gIds = Array.isArray(s.groups) ? s.groups : [s.groups];
-			gIds.forEach((g) => {
+			gIds.forEach(g => {
 				const id = g?.id ?? g;
 				if (id != null) acc[id] = (acc[id] || 0) + 1;
 			});
 			return acc;
 		}, {});
 
-		return groups.map((g) => ({ ...g, studentCount: countMap[g.id] || 0 }));
+		return groups.map(g => ({ ...g, studentCount: countMap[g.id] || 0 }));
 	}, [groups, students]);
 
 	// Qidiruvni optimallashtirish
 	const filteredGroups = useMemo(() => {
 		return groupsWithCount.filter(
-			(g) =>
+			g =>
 				g.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
 				g.course_type?.toLowerCase().includes(searchTerm.toLowerCase()) ||
 				g.teachers?.full_name?.toLowerCase().includes(searchTerm.toLowerCase()),
 		);
 	}, [groupsWithCount, searchTerm]);
 
-	const handleSubmit = async (formData) => {
-		try {
-			if (modal.edit) {
-				await updateGroup({ id: modal.data.id, data: formData });
-			} else {
-				await createGroup(formData);
-			}
-			setModal({ open: false, edit: false, data: null });
-		} catch (error) {
-			console.error("Mutation error:", error);
+	const handleSubmit = async formData => {
+		if (modal.edit) {
+			await toast.promise(updateGroup({ id: modal.data.id, data: formData }), {
+				loading: "Saqlanmoqda...",
+				success: "Guruh yangilandi.",
+				error: err => {
+					return err.response?.data?.message || "Xatolik yuz berdi.";
+				},
+			});
+		} else {
+			await toast.promise(createGroup(formData), {
+				loading: "Saqlanmoqda...",
+				success: "Guruh yaratildi.",
+				error: err => {
+					return err.response?.data?.message || "Xatolik yuz berdi.";
+				},
+			});
 		}
+		setModal({ open: false, edit: false, data: null });
 	};
 
-	const handleConfirmDelete = () => {
+	const handleConfirmDelete = async () => {
 		if (deleteId) {
-			deleteGroup(deleteId);
+			await toast.promise(deleteGroup(deleteId), {
+				loading: "O'chirilmoqda...",
+				success: "Guruh o'chirildi.",
+				error: err => {
+					return err.response?.data?.message || "Xatolik yuz berdi.";
+				},
+			});
 			setDeleteId(null);
 		}
 	};
 
-	const handleCopyId = async (id) => {
+	const handleCopyId = async id => {
 		await navigator.clipboard.writeText(String(id));
 		setCopiedId(id);
 		toast.success("ID nusxalandi!");
 		setTimeout(() => setCopiedId(null), 2000);
 	};
 
-	const getTeacherInitials = (name) => {
+	const getTeacherInitials = name => {
 		if (!name) return "?";
 		const parts = name.split(" ");
 		return (parts[0]?.[0] + (parts[1]?.[0] || "")).toUpperCase();
 	};
 
-	const getCourseColor = (type) => {
+	const getCourseColor = type => {
 		const colors = {
 			Frontend: "bg-sky-500/20 text-sky-400 border-sky-500/30",
 			Backend: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
 			IT: "bg-purple-500/20 text-purple-400 border-purple-500/30",
-			"Computer Science": "bg-amber-500/20 text-amber-400 border-amber-500/30",
+			"Computer science": "bg-amber-500/20 text-amber-400 border-amber-500/30",
 		};
 		return colors[type] || "bg-gray-500/20 text-gray-400 border-gray-500/30";
 	};
-
+	const capitalize = str => str.replace(/\b\w/g, char => char.toUpperCase());
 	if (loading) return <Loader />;
 
 	return (
 		<div className="relative min-h-99 bg-background">
-			<div className="container mx-auto px-4 py-6 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+			<div className="container mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-200">
 				{/* 🧭 Header Section */}
 				<div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/10">
 					<div className="flex items-center gap-4">
@@ -266,7 +288,7 @@ export default function Groups() {
 					<StatsCard
 						icon={<FaMoneyBillWave className="w-5 h-5" />}
 						label="O'rtacha narx"
-						value={`${(stats.avgPrice / 1000).toLocaleString()}k so'm`}
+						value={`${(stats.avgPrice / 1000).toLocaleString()} ming so'm`}
 						color="blue"
 					/>
 				</div>
@@ -279,7 +301,7 @@ export default function Groups() {
 								<InputGroupInput
 									placeholder="Guruh, kurs yoki o'qituvchi bo'yicha qidirish..."
 									value={searchTerm}
-									onChange={(e) => setSearchTerm(e.target.value)}
+									onChange={e => setSearchTerm(e.target.value)}
 									className="bg-transparent text-white placeholder:text-gray-500 border-0 focus:ring-0"
 								/>
 								<InputGroupAddon className="text-gray-500">
@@ -360,7 +382,7 @@ export default function Groups() {
 									</TableCell>
 								</TableRow>
 							) : (
-								filteredGroups.map((g) => {
+								filteredGroups.map(g => {
 									const today = new Date().toLocaleDateString("uz-UZ", {
 										weekday: "short",
 									});
@@ -369,7 +391,7 @@ export default function Groups() {
 									return (
 										<TableRow
 											key={g.id}
-											className="border-white/5 hover:bg-amber-400/5 transition-all duration-200 group/row cursor-pointer"
+											className="border-white/5 hover:bg-amber-400/5 transition-all duration-200 group/row"
 											onClick={() => navigate(`/${tenant}/groups/${g.id}`)}
 										>
 											<TableCell className="font-medium text-white">
@@ -388,7 +410,7 @@ export default function Groups() {
 																{g.studentCount}
 															</Badge>
 															<button
-																onClick={(e) => {
+																onClick={e => {
 																	e.stopPropagation();
 																	handleCopyId(g.id);
 																}}
@@ -408,7 +430,7 @@ export default function Groups() {
 											</TableCell>
 											<TableCell className="font-semibold text-amber-400">
 												{g.price
-													? `${(Number(g.price) / 1000).toLocaleString()}k`
+													? `${(Number(g.price) / 1000).toLocaleString()} ming`
 													: "0"}{" "}
 												so'm
 											</TableCell>
@@ -435,7 +457,7 @@ export default function Groups() {
 															</AvatarFallback>
 														</Avatar>
 														<span className="text-gray-300 text-sm truncate max-w-24">
-															{g.teachers.full_name}
+															{capitalize(g.teachers.full_name)}
 														</span>
 													</div>
 												) : (
@@ -460,7 +482,7 @@ export default function Groups() {
 															variant="ghost"
 															size="icon"
 															className="h-8 w-8 text-gray-500 hover:text-amber-400 hover:bg-amber-400/10 transition-colors opacity-0 group-hover/row:opacity-100"
-															onClick={(e) => e.stopPropagation()}
+															onClick={e => e.stopPropagation()}
 														>
 															<MoreHorizontal className="h-4 w-4" />
 														</Button>
@@ -470,7 +492,7 @@ export default function Groups() {
 														className="bg-[#1f1f1f] border-white/10 text-white w-48"
 													>
 														<DropdownMenuItem
-															onClick={(e) => {
+															onClick={e => {
 																e.stopPropagation();
 																setModal({ open: true, edit: true, data: g });
 															}}
@@ -480,7 +502,7 @@ export default function Groups() {
 															Tahrirlash
 														</DropdownMenuItem>
 														<DropdownMenuItem
-															onClick={(e) => {
+															onClick={e => {
 																e.stopPropagation();
 																navigate(`/${tenant}/groups/${g.id}`);
 															}}
@@ -491,7 +513,7 @@ export default function Groups() {
 														</DropdownMenuItem>
 														<DropdownMenuSeparator className="bg-white/10" />
 														<DropdownMenuItem
-															onClick={(e) => {
+															onClick={e => {
 																e.stopPropagation();
 																setDeleteId(g.id);
 															}}
@@ -545,8 +567,8 @@ export default function Groups() {
 				onClose={() => setModal({ open: false, edit: false, data: null })}
 				onSubmit={handleSubmit}
 				title={modal.edit ? "Guruhni tahrirlash" : "Yangi guruh yaratish"}
-            initialData={modal.data}
-            isLoading={isCreating || isUpdating}
+				initialData={modal.data}
+				isLoading={isCreating || isUpdating}
 			/>
 
 			<ConfirmDeleteModal

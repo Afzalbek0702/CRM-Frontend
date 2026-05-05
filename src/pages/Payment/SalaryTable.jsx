@@ -139,7 +139,7 @@ export default function SalaryTable() {
 	const [selectedMethod, setSelectedMethod] = useState("all");
 	const [copiedId, setCopiedId] = useState(null);
 
-	const formatDate = (d) =>
+	const formatDate = d =>
 		d
 			? new Date(d).toLocaleDateString("uz-UZ", {
 					year: "numeric",
@@ -183,13 +183,13 @@ export default function SalaryTable() {
 	const filteredSalary = useMemo(() => {
 		return (salary || [])
 			.filter(
-				(s) =>
+				s =>
 					s.worker?.full_name
 						?.toLowerCase()
 						.includes(searchTerm.toLowerCase()) ||
 					s.description?.toLowerCase().includes(searchTerm.toLowerCase()),
 			)
-			.filter((s) => selectedMethod === "all" || s.method === selectedMethod)
+			.filter(s => selectedMethod === "all" || s.method === selectedMethod)
 			.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)); // Newest first
 	}, [salary, searchTerm, selectedMethod]);
 
@@ -200,13 +200,18 @@ export default function SalaryTable() {
 
 	const handleConfirmDelete = async () => {
 		if (deleteId) {
-			await deleteSalary(deleteId);
-			toast.success("Ish haqi muvaffaqiyatli o'chirildi");
+			await toast.promise(deleteSalary(deleteId), {
+				loading: "O'chirilmoqda...",
+				success: "Maosh o'chirildi.",
+				error: err => {
+					return err.response?.data?.message || "Xatolik yuz berdi.";
+				},
+			});
 			setDeleteId(null);
 		}
 	};
 
-	const handleCopyId = async (id) => {
+	const handleCopyId = async id => {
 		await navigator.clipboard.writeText(String(id));
 		setCopiedId(id);
 		toast.success("ID nusxalandi!");
@@ -214,14 +219,14 @@ export default function SalaryTable() {
 	};
 
 	// 🎨 Avatar initials
-	const getInitials = (name) => {
+	const getInitials = name => {
 		if (!name) return "?";
 		const parts = name.split(" ");
 		return (parts[0]?.[0] + (parts[1]?.[0] || "")).toUpperCase();
 	};
 
 	// 🎨 Method badge color
-	const getMethodColor = (method) => {
+	const getMethodColor = method => {
 		const colors = {
 			CASH: "border-emerald-500/30 text-emerald-400 bg-emerald-500/10",
 			CARD: "border-sky-500/30 text-sky-400 bg-sky-500/10",
@@ -233,8 +238,8 @@ export default function SalaryTable() {
 		return colors[method] || "border-gray-500/30 text-gray-400 bg-gray-500/10";
 	};
 
-	const formatCurrency = (amount) => `${(amount || 0).toLocaleString()} so'm`;
-	const formatMethod = (method) => {
+	const formatCurrency = amount => `${(amount || 0).toLocaleString()} so'm`;
+	const formatMethod = method => {
 		switch (method) {
 			case "all":
 				return "Barchasi";
@@ -258,9 +263,9 @@ export default function SalaryTable() {
 
 	return (
 		<div className="relative min-h-99 bg-background">
-			<AnimatedBackground />
+			{/* <AnimatedBackground /> */}
 
-			<div className="container mx-auto px-4 py-6 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+			<div className="container mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-200">
 				{/* 🧭 Header Section */}
 				<div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/10">
 					<div className="flex items-center gap-4">
@@ -311,7 +316,7 @@ export default function SalaryTable() {
 						label="Eng katta to'lov"
 						value={
 							salary?.length
-								? formatCurrency(Math.max(...salary.map((s) => s.amount || 0)))
+								? formatCurrency(Math.max(...salary.map(s => s.amount || 0)))
 								: "0 so'm"
 						}
 						color="amber"
@@ -328,7 +333,7 @@ export default function SalaryTable() {
 								<Input
 									placeholder="Xodim yoki izoh bo'yicha qidirish..."
 									value={searchTerm}
-									onChange={(e) => setSearchTerm(e.target.value)}
+									onChange={e => setSearchTerm(e.target.value)}
 									className="pl-10 bg-black/40 border-white/20 text-white placeholder:text-gray-500 focus:border-violet-400/50 focus:ring-2 focus:ring-violet-400/20 transition-all"
 								/>
 							</div>
@@ -343,7 +348,7 @@ export default function SalaryTable() {
 									"CLICK",
 									"PAYME",
 									"UZCARD",
-								].map((method) => (
+								].map(method => (
 									<Button
 										key={method}
 										variant={selectedMethod === method ? "default" : "outline"}
@@ -419,7 +424,7 @@ export default function SalaryTable() {
 										</TableRow>
 									</TableHeader>
 									<TableBody>
-										{filteredSalary.map((s) => (
+										{filteredSalary.map(s => (
 											<TableRow
 												key={s.id}
 												className="border-white/5 hover:bg-violet-400/5 transition-all duration-200 group/row"
@@ -441,7 +446,7 @@ export default function SalaryTable() {
 															{s.worker?.full_name}
 														</p>
 														<button
-															onClick={(e) => {
+															onClick={e => {
 																e.stopPropagation();
 																handleCopyId(s.id);
 															}}
@@ -562,13 +567,23 @@ export default function SalaryTable() {
 				isOpen={modal.isOpen}
 				initialData={modal.data}
 				onClose={() => setModal({ isOpen: false })}
-				onSubmit={(data) => {
+				onSubmit={async data => {
 					if (modal.data) {
-						updateSalary(modal.data.id, data);
-						toast.success("Ish haqi muvaffaqiyatli yangilandi!");
+						await toast.promise(updateSalary(modal.data.id, data), {
+							loading: "Saqlanmoqda...",
+							success: "Maosh yangilandi.",
+							error: err => {
+								return err.response?.data?.message || "Xatolik yuz berdi.";
+							},
+						});
 					} else {
-						createSalary(data);
-						toast.success("Yangi ish haqi qayd etildi!");
+						await toast.promise(createSalary(data), {
+							loading: "Saqlanmoqda...",
+							success: "Maosh qo'shildi.",
+							error: err => {
+								return err.response?.data?.message || "Xatolik yuz berdi.";
+							},
+						});
 					}
 					setModal({ isOpen: false, data: null });
 				}}

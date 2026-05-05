@@ -1,4 +1,3 @@
-import toast from "react-hot-toast";
 import { groupsService } from "./groupsService.js";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -34,10 +33,8 @@ export const useGroups = () => {
 		mutationFn: (data) => groupsService.create(data),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: GROUPS_QUERY_KEY });
-			toast.success("Guruh muvaffaqiyatli qo'shildi");
 		},
 		onError: (err) => {
-			toast.error(err ? err.response?.data.message : "Guruh qo'shishda xatolik yuz berdi");
 			console.error(err.response?.data.message);
 		},
 	});
@@ -46,10 +43,8 @@ export const useGroups = () => {
 		mutationFn: ({ id, data }) => groupsService.update(id, data),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: GROUPS_QUERY_KEY });
-			toast.success("Guruh muvaffaqiyatli yangilandi");
 		},
 		onError: (error) => {
-			toast.error("Guruhni yangilashda xatolik yuz berdi");
 			console.error(error.response?.data);
 		},
 	});
@@ -58,10 +53,8 @@ export const useGroups = () => {
 		mutationFn: (id) => groupsService.delete(id),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: GROUPS_QUERY_KEY });
-			toast.success("Guruh muvaffaqiyatli o'chirildi");
 		},
 		onError: (err) => {
-			toast.error("Guruhni o'chirishda xatolik yuz berdi");
 			console.error(err.response);
 		},
 	});
@@ -74,7 +67,7 @@ export const useGroups = () => {
 		fetchById,
 		createGroup: create.mutateAsync,
 		updateGroup: update.mutateAsync,
-		deleteGroup: deleteById.mutate,
+		deleteGroup: deleteById.mutateAsync,
 
 		isCreating: create.isPending,
 		isUpdating: update.isPending,

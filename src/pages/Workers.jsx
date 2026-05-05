@@ -125,15 +125,15 @@ export default function Workers() {
 		if (!workerData) return { total: 0, teachers: 0, admins: 0, managers: 0 };
 		return {
 			total: workerData.length,
-			teachers: workerData.filter((w) => w.role === "TEACHER").length,
-			admins: workerData.filter((w) => w.role === "ADMIN").length,
-			managers: workerData.filter((w) => w.role === "MANAGER").length,
+			teachers: workerData.filter(w => w.role === "TEACHER").length,
+			admins: workerData.filter(w => w.role === "ADMIN").length,
+			managers: workerData.filter(w => w.role === "MANAGER").length,
 		};
 	}, [workerData]);
 
 	// Filtrlash mantiqi
 	const filteredWorkers = useMemo(() => {
-		return (workerData || []).filter((w) => {
+		return (workerData || []).filter(w => {
 			const matchesSearch =
 				w.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
 				w.phone?.includes(searchTerm) ||
@@ -150,13 +150,18 @@ export default function Workers() {
 	// O'chirish funksiyasi
 	const handleConfirmDelete = async () => {
 		if (deleteId) {
-			await removeWorker(deleteId);
+			await toast.promise(removeWorker(deleteId), {
+				loading: "O'chirilmoqda...",
+				success: "Xodim o'chirildi.",
+				error: err => {
+					return err.response?.data?.message || "Xatolik yuz berdi.";
+				},
+			});
 			setDeleteId(null);
-			toast.success("Xodim muvaffaqiyatli o'chirildi");
 		}
 	};
 
-	const handleCopyPhone = async (phone) => {
+	const handleCopyPhone = async phone => {
 		await navigator.clipboard.writeText(PhoneUtils.formatPhone(phone));
 		setCopiedPhone(phone);
 		toast.success("Raqam nusxalandi!");
@@ -164,14 +169,14 @@ export default function Workers() {
 	};
 
 	// 🎨 Avatar initials
-	const getInitials = (name) => {
+	const getInitials = name => {
 		if (!name) return "?";
 		const parts = name.split(" ");
 		return (parts[0]?.[0] + (parts[1]?.[0] || "")).toUpperCase();
 	};
 
 	// 🎨 Role badge config
-	const getRoleConfig = (role) => {
+	const getRoleConfig = role => {
 		const configs = {
 			CEO: {
 				label: "Bosh direktor",
@@ -202,14 +207,14 @@ export default function Workers() {
 			}
 		);
 	};
-
+	const capitalize = str => str.replace(/\b\w/g, char => char.toUpperCase());
 	if (isLoading) return <Loader />;
 
 	return (
 		<div className="relative min-h-99 bg-background">
 			{/* <AnimatedBackground /> */}
 
-			<div className="container mx-auto px-4 py-6 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+			<div className="container mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-200">
 				{/* 🧭 Header Section */}
 				<div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/10">
 					<div className="flex items-center gap-4">
@@ -281,7 +286,7 @@ export default function Workers() {
 									<InputGroupInput
 										placeholder="Ism, telefon yoki lavozim bo'yicha qidirish..."
 										value={searchTerm}
-										onChange={(e) => setSearchTerm(e.target.value)}
+										onChange={e => setSearchTerm(e.target.value)}
 										className="bg-black/40 border-white/20 text-white placeholder:text-gray-500 border-0 focus:ring-0 pl-10"
 									/>
 									<InputGroupAddon className="text-gray-500">
@@ -377,13 +382,13 @@ export default function Workers() {
 									</TableCell>
 								</TableRow>
 							) : (
-								filteredWorkers.map((w) => {
+								filteredWorkers.map(w => {
 									const roleConfig = getRoleConfig(w.role);
 
 									return (
 										<TableRow
 											key={w.id}
-											className="border-white/5 hover:bg-amber-400/5 transition-all duration-200 group/row cursor-pointer"
+											className="border-white/5 hover:bg-amber-400/5 transition-all duration-200 group/row"
 											onClick={() => navigate(`/${tenant}/workers/${w.id}`)}
 										>
 											<TableCell className="py-4">
@@ -394,15 +399,15 @@ export default function Workers() {
 												</Avatar>
 											</TableCell>
 											<TableCell className="font-medium text-white truncate max-w-40">
-												{w.full_name}
+												{capitalize(w.full_name)}
 											</TableCell>
 											<TableCell>
 												<button
-													onClick={(e) => {
+													onClick={e => {
 														e.stopPropagation();
 														handleCopyPhone(w.phone);
 													}}
-													className="flex items-center gap-1.5 text-gray-300 hover:text-amber-400 transition-colors group/btn"
+													className="flex items-center gap-1.5 text-gray-300 hover:text-amber-400 transition-colors group/btn hover:cursor-pointer"
 												>
 													<span className="font-mono text-sm">
 														{PhoneUtils.formatPhone(w.phone)}
@@ -430,7 +435,7 @@ export default function Workers() {
 															variant="ghost"
 															size="icon"
 															className="h-8 w-8 text-gray-500 hover:text-amber-400 hover:bg-amber-400/10 transition-colors opacity-0 group-hover/row:opacity-100"
-															onClick={(e) => e.stopPropagation()}
+															onClick={e => e.stopPropagation()}
 														>
 															<MoreVertical className="h-4 w-4" />
 														</Button>
@@ -440,7 +445,7 @@ export default function Workers() {
 														className="bg-[#1f1f1f] border-white/10 text-white w-48"
 													>
 														<DropdownMenuItem
-															onClick={(e) => {
+															onClick={e => {
 																e.stopPropagation();
 																setEditingWorker(w);
 																setIsModalOpen(true);
@@ -451,7 +456,7 @@ export default function Workers() {
 															Tahrirlash
 														</DropdownMenuItem>
 														<DropdownMenuItem
-															onClick={(e) => {
+															onClick={e => {
 																e.stopPropagation();
 																navigate(`/${tenant}/workers/${w.id}`);
 															}}
@@ -462,7 +467,7 @@ export default function Workers() {
 														</DropdownMenuItem>
 														<DropdownMenuSeparator className="bg-white/10" />
 														<DropdownMenuItem
-															onClick={(e) => {
+															onClick={e => {
 																e.stopPropagation();
 																setDeleteId(w.id);
 															}}
@@ -512,13 +517,26 @@ export default function Workers() {
 				isOpen={isModalOpen}
 				onClose={() => setIsModalOpen(false)}
 				initialData={editingWorker}
-				onSubmit={async (formData) => {
+				onSubmit={async formData => {
 					if (editingWorker) {
-						await updateWorker({ id: editingWorker.id, data: formData });
-						toast.success("Xodim ma'lumotlari yangilandi!");
+						await toast.promise(
+							updateWorker({ id: editingWorker.id, data: formData }),
+							{
+								loading: "Saqlanmoqda...",
+								success: "Xodim yangilandi.",
+								error: err => {
+									return err.response?.data?.message || "Xatolik yuz berdi.";
+								},
+							},
+						);
 					} else {
-						await createWorker(formData);
-						toast.success("Yangi xodim qo'shildi!");
+						await toast.promise(createWorker(formData), {
+							loading: "Saqlanmoqda...",
+							success: "Xodim yaratildi.",
+							error: err => {
+								return err.response?.data?.message || "Xatolik yuz berdi.";
+							},
+						});
 					}
 					setIsModalOpen(false);
 					setEditingWorker(null);

@@ -6,8 +6,10 @@ import {
 	AlertDialogDescription,
 	AlertDialogFooter,
 	AlertDialogHeader,
+	AlertDialogMedia,
 	AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Trash2Icon } from "lucide-react";
 
 export default function ConfirmDeleteModal({
 	isOpen,
@@ -17,28 +19,52 @@ export default function ConfirmDeleteModal({
 	description,
 }) {
 	return (
+		// <AlertDialog open={isOpen} onOpenChange={onClose}>
+		// 	<AlertDialogContent>
+		// 		<AlertDialogHeader>
+		// 			<AlertDialogTitle className="text-xl">
+		// 				{title || "Haqiqatdan ham o'chirmoqchimisiz?"}
+		// 			</AlertDialogTitle>
+		// 			<AlertDialogDescription className="text-gray-400">
+		// 				{description ||
+		// 					"Ushbu amalni ortga qaytarib bo'lmaydi. Ma'lumot bazadan butunlay o'chiriladi."}
+		// 			</AlertDialogDescription>
+		// 		</AlertDialogHeader>
+		// 		<AlertDialogFooter className="gap-2 bg-card">
+		// 			<AlertDialogCancel
+		// 				onClick={onClose}
+		// 				className=" text-black hover:bg-gray-200 border-none rounded-md"
+		// 			>
+		// 				Bekor qilish
+		// 			</AlertDialogCancel>
+		// 			<AlertDialogAction
+		// 				onClick={onConfirm}
+		// 				className="bg-red-600 text-white hover:bg-red-700 border-none rounded-md"
+		// 			>
+		// 				O'chirish
+		// 			</AlertDialogAction>
+		// 		</AlertDialogFooter>
+		// 	</AlertDialogContent>
+		// </AlertDialog>
 		<AlertDialog open={isOpen} onOpenChange={onClose}>
-			<AlertDialogContent className="bg-[#1F1F1F] border-gray-700 text-white">
+			<AlertDialogContent size="sm">
 				<AlertDialogHeader>
-					<AlertDialogTitle className="text-xl">
+					<AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
+						<Trash2Icon />
+					</AlertDialogMedia>
+					<AlertDialogTitle>
 						{title || "Haqiqatdan ham o'chirmoqchimisiz?"}
 					</AlertDialogTitle>
-					<AlertDialogDescription className="text-gray-400">
+					<AlertDialogDescription>
 						{description ||
 							"Ushbu amalni ortga qaytarib bo'lmaydi. Ma'lumot bazadan butunlay o'chiriladi."}
 					</AlertDialogDescription>
 				</AlertDialogHeader>
-				<AlertDialogFooter className="gap-2">
-					<AlertDialogCancel
-						onClick={onClose}
-						className="bg-white text-black hover:bg-gray-200 border-none rounded-md"
-					>
+				<AlertDialogFooter className={'bg-card'}>
+					<AlertDialogCancel variant="outline" onClick={onClose}>
 						Bekor qilish
 					</AlertDialogCancel>
-					<AlertDialogAction
-						onClick={onConfirm}
-						className="bg-red-600 text-white hover:bg-red-700 border-none rounded-md"
-					>
+					<AlertDialogAction variant="destructive" onClick={onConfirm}>
 						O'chirish
 					</AlertDialogAction>
 				</AlertDialogFooter>

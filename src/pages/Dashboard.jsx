@@ -64,7 +64,6 @@ export default function Dashboard() {
 		absentStudents,
 		monthlyIncome,
 		todayLessons,
-		topDebtors,
 		groupData,
 		studentData,
 		debtAnalysis,
@@ -93,6 +92,7 @@ export default function Dashboard() {
 				.toUpperCase()
 			: "?";
 
+   const capitalize = str => str.replace(/\b\w/g, char => char.toUpperCase());
 	const roleStats = useMemo(() => {
 		const base = {
 			students: studentData || 0,
@@ -167,15 +167,15 @@ export default function Dashboard() {
 				},
 				{
 					data:
-						students?.filter((s) =>
-							s.registered_at?.startsWith(new Date().toISOString().slice(0, 7)),
+						students?.filter(s =>
+							s.created_at?.startsWith(new Date().toISOString().slice(0, 7)),
 						)?.length || 0,
 					type: "Yangi o'quvchilar",
 					color: "cyan",
 				},
 				{ data: base.absent, type: "Bugun kelmaganlar", color: "orange" },
 				{
-					data: base.students,
+					data: base.students?.total,
 					type: "Jami O'quvchilar",
 					color: "blue",
 					href: `/${tenant}/students`,
@@ -195,10 +195,6 @@ export default function Dashboard() {
 		debtAnalysis,
 		tenant,
 	]);
-
-	console.log("debtors", topDebtors);
-	console.log("analysys", debtAnalysis);
-
 
 
 	const quickActions = useMemo(() => {
@@ -279,7 +275,7 @@ export default function Dashboard() {
 	};
 
 	return (
-		<div className="relative min-h-99 bg-background p-4">
+		<div className="relative min-h-99 bg-background">
 			<div className="container mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4">
 				{/* Stats */}
 				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -363,7 +359,7 @@ export default function Dashboard() {
 															</AvatarFallback>
 														</Avatar>
 														<span className="truncate max-w-24">
-															{l.teacher_name}
+															{capitalize(l.teacher_name)}
 														</span>
 													</div>
 												</TableCell>
@@ -455,7 +451,7 @@ export default function Dashboard() {
 															</AvatarFallback>
 														</Avatar>
 														<span className="truncate max-w-28">
-															{s.full_name}
+															{capitalize(s.full_name)}
 														</span>
 													</div>
 												</TableCell>
