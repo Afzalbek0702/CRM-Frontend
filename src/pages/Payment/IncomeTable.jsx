@@ -113,7 +113,8 @@ const StatsCard = ({
 export default function IncomeTable() {
 	const { payments, isLoading, createPayment, updatePayment, deletePayment } =
 		usePayments();
-
+	const [selectedMonth, setSelectedMonth] = useState("all");
+	const [sortOrder, setSortOrder] = useState("none");
 	const [modal, setModal] = useState({ isOpen: false, data: null });
 	const [deleteId, setDeleteId] = useState(null);
 	const [searchTerm, setSearchTerm] = useState("");
@@ -123,11 +124,29 @@ export default function IncomeTable() {
 	const formatDate = (d) =>
 		d
 			? new Date(d).toLocaleDateString("uz-UZ", {
-					year: "numeric",
-					month: "2-digit",
-					day: "2-digit",
-				})
+				year: "numeric",
+				month: "2-digit",
+				day: "2-digit",
+			})
 			: "—";
+
+	const availableMonths = useMemo(() => {
+		if (!payments) return [];
+		const months = new Set(
+			payments.map((p) => p.paid_month?.slice(0, 7)) // "2026-04"
+		);
+		return [...months].sort().reverse();
+	}, [payments]);
+
+	const formatMonthLabel = (monthStr) => {
+		if (!monthStr) return "";
+		const [year, month] = monthStr.split("-");
+		const monthNames = [
+			"Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun",
+			"Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"
+		];
+		return `${monthNames[parseInt(month, 10) - 1]} ${year}`;
+	};
 
 	// 📊 Stats calculations
 	const stats = useMemo(() => {
@@ -150,26 +169,40 @@ export default function IncomeTable() {
 			avg:
 				payments?.length > 0
 					? Math.round(
-							payments?.reduce((sum, p) => sum + (p.amount || 0), 0) /
-								payments?.length,
-						)
+						payments?.reduce((sum, p) => sum + (p.amount || 0), 0) /
+						payments?.length,
+					)
 					: 0,
 			byMethod,
 			today: todayTotal,
 		};
 	}, [payments]);
 
-	// Filtrlash mantiqi
+	// filtrlash mantiqi yangilandi :)
 	const filteredPayments = useMemo(() => {
-		return (payments || [])
+		let result = (payments || [])
 			.filter(
 				(p) =>
 					p.student_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
 					p.group_name?.toLowerCase().includes(searchTerm.toLowerCase()),
 			)
 			.filter((p) => selectedMethod === "all" || p.method === selectedMethod)
-			.sort((a, b) => new Date(b.paid_at) - new Date(a.paid_at)); // Newest first
-	}, [payments, searchTerm, selectedMethod]);
+			.filter((p) =>
+				selectedMonth === "all"
+					? true
+					: p.paid_month?.startsWith(selectedMonth),
+			);
+
+		if (sortOrder === "asc") {
+			result = result.sort((a, b) => (a.amount || 0) - (b.amount || 0));
+		} else if (sortOrder === "desc") {
+			result = result.sort((a, b) => (b.amount || 0) - (a.amount || 0));
+		} else {
+			result = result.sort((a, b) => new Date(b.paid_at) - new Date(a.paid_at));
+		}
+
+		return result;
+	}, [payments, searchTerm, selectedMethod, selectedMonth, sortOrder]);
 
 	const totalIncome = filteredPayments.reduce(
 		(sum, p) => sum + (p.amount || 0),
@@ -228,23 +261,23 @@ export default function IncomeTable() {
 	};
 	const formatMethod = (method) => {
 		switch (method) {
-         case "all":
-            return "Barchasi";
-         case "CASH":
-            return "Naqd";
-         case "CARD":
-            return "Karta";
-         case "TRANSFER":
-            return "Transfer";
-         case "CLICK":
-            return "Click";
-         case "PAYME":
-            return "Payme";
-         case "UZCARD":
-            return "Uzcard";
-         default:
-            return method;
-      }
+			case "all":
+				return "Barchasi";
+			case "CASH":
+				return "Naqd";
+			case "CARD":
+				return "Karta";
+			case "TRANSFER":
+				return "Transfer";
+			case "CLICK":
+				return "Click";
+			case "PAYME":
+				return "Payme";
+			case "UZCARD":
+				return "Uzcard";
+			default:
+				return method;
+		}
 	};
 	if (isLoading) return <Loader />;
 	return (
@@ -309,8 +342,8 @@ export default function IncomeTable() {
 						value={
 							payments?.length
 								? formatCurrency(
-										Math.max(...payments.map((p) => p.amount || 0)),
-									)
+									Math.max(...payments.map((p) => p.amount || 0)),
+								)
 								: "0 so'm"
 						}
 						color="purple"
@@ -319,30 +352,23 @@ export default function IncomeTable() {
 
 				{/* 🔍 Search & Filters */}
 				<Card className="bg-[#1f1f1f]/80 border-white/10 backdrop-blur-xl">
-					<CardContent className="p-4">
-						<div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
-							{/* Search */}
-							<div className="relative w-full lg:w-80">
-								<FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
-								<Input
-									placeholder="O'quvchi yoki guruh bo'yicha qidirish..."
-									value={searchTerm}
-									onChange={(e) => setSearchTerm(e.target.value)}
-									className="pl-10 bg-black/40 border-white/20 text-white placeholder:text-gray-500 focus:border-emerald-400/50 focus:ring-2 focus:ring-emerald-400/20 transition-all"
-								/>
-							</div>
+					<CardContent className="p-4 space-y-3">
+						{/* Row 1: Search */}
+						<div className="relative w-full">
+							<FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
+							<Input
+								placeholder="O'quvchi yoki guruh bo'yicha qidirish..."
+								value={searchTerm}
+								onChange={(e) => setSearchTerm(e.target.value)}
+								className="pl-10 bg-black/40 border-white/20 text-white placeholder:text-gray-500 focus:border-emerald-400/50 focus:ring-2 focus:ring-emerald-400/20 transition-all"
+							/>
+						</div>
 
+						{/* Row 2: Filters */}
+						<div className="flex flex-wrap items-center gap-2">
 							{/* Method Filter */}
-							<div className="flex flex-wrap items-center gap-2">
-								{[
-									"all",
-									"CASH",
-									"CARD",
-									"TRANSFER",
-									"CLICK",
-									"PAYME",
-									"UZCARD",
-								].map((method) => (
+							<div className="flex flex-wrap items-center gap-1.5">
+								{["all", "CASH", "CARD", "TRANSFER", "CLICK", "PAYME", "UZCARD"].map((method) => (
 									<Button
 										key={method}
 										variant={selectedMethod === method ? "default" : "outline"}
@@ -350,21 +376,66 @@ export default function IncomeTable() {
 										onClick={() => setSelectedMethod(method)}
 										className={
 											selectedMethod === method
-												? "bg-emerald-400 hover:bg-emerald-500 text-black"
-												: "border-white/20 text-gray-400 hover:bg-white/10 hover:text-white text-xs px-3"
+												? "bg-emerald-400 hover:bg-emerald-500 text-black text-xs px-3 h-7"
+												: "border-white/20 text-gray-400 hover:bg-white/10 hover:text-white text-xs px-3 h-7"
 										}
 									>
 										{formatMethod(method)}
 									</Button>
 								))}
-
-								<Badge
-									variant="outline"
-									className="border-white/20 text-gray-400"
-								>
-									{filteredPayments.length} natija
-								</Badge>
 							</div>
+
+							{/* Divider */}
+							<div className="w-px h-6 bg-white/10 mx-1 hidden sm:block" />
+
+							{/* Month Filter */}
+							<div className="flex items-center gap-1.5">
+								<Calendar className="w-3.5 h-3.5 text-gray-500" />
+								<select
+									value={selectedMonth}
+									onChange={(e) => setSelectedMonth(e.target.value)}
+									className="bg-black/40 border border-white/20 text-gray-300 text-xs rounded-md px-2 h-7 focus:outline-none focus:border-emerald-400/50 cursor-pointer"
+								>
+									<option value="all">Barcha oylar</option>
+									{availableMonths.map((m) => (
+										<option key={m} value={m}>
+											{formatMonthLabel(m)}
+										</option>
+									))}
+								</select>
+							</div>
+
+							{/* Divider */}
+							<div className="w-px h-6 bg-white/10 mx-1 hidden sm:block" />
+
+							{/* Amount Sort */}
+							<div className="flex items-center gap-1.5">
+								<Banknote className="w-3.5 h-3.5 text-gray-500" />
+								{[
+									{ value: "none", label: "Standart" },
+									{ value: "asc", label: "↑ Kam→Ko'p" },
+									{ value: "desc", label: "↓ Ko'p→Kam" },
+								].map((opt) => (
+									<Button
+										key={opt.value}
+										variant={sortOrder === opt.value ? "default" : "outline"}
+										size="sm"
+										onClick={() => setSortOrder(opt.value)}
+										className={
+											sortOrder === opt.value
+												? "bg-emerald-400 hover:bg-emerald-500 text-black text-xs px-3 h-7"
+												: "border-white/20 text-gray-400 hover:bg-white/10 hover:text-white text-xs px-3 h-7"
+										}
+									>
+										{opt.label}
+									</Button>
+								))}
+							</div>
+
+							{/* Result count */}
+							<Badge variant="outline" className="border-white/20 text-gray-400 ml-auto">
+								{filteredPayments.length} natija
+							</Badge>
 						</div>
 					</CardContent>
 				</Card>
@@ -382,7 +453,7 @@ export default function IncomeTable() {
 									Sana, o'quvchi va to'lov usuli bo'yicha tafsilotlar
 								</CardDescription>
 							</div>
-							
+
 						</div>
 					</CardHeader>
 					<CardContent>
@@ -399,13 +470,13 @@ export default function IncomeTable() {
 											<TableHead className="text-gray-400">Sana</TableHead>
 											<TableHead className="text-gray-400">O'quvchi</TableHead>
 											<TableHead className="text-gray-400">Guruh</TableHead>
-											<TableHead className="text-gray-400 text-right">
+											<TableHead className="text-gray-400 text-center">
 												Miqdor
 											</TableHead>
 											<TableHead className="text-gray-400">
 												To'lov turi
 											</TableHead>
-											<TableHead className="text-gray-400 text-right w-20">
+											<TableHead className="text-gray-400 text-center w-20">
 												Amallar
 											</TableHead>
 										</TableRow>
@@ -414,18 +485,20 @@ export default function IncomeTable() {
 										{filteredPayments.map((p) => (
 											<TableRow
 												key={p.id}
-												className="border-white/5 hover:bg-emerald-400/5 transition-all duration-200 group/row"
+												className="border-white/5 hover:bg-emerald-400/5 transition-all duration-200 group/row align-middle"
 											>
-												<TableCell className="py-4">
+												<TableCell className="py-3 pl-4">
 													<Avatar className="w-10 h-10 border border-white/10 bg-linear-to-br from-emerald-400/20 to-teal-400/20">
 														<AvatarFallback className="text-emerald-400 text-sm font-semibold bg-transparent">
 															{getInitials(p.student_name)}
 														</AvatarFallback>
 													</Avatar>
 												</TableCell>
-												<TableCell className="text-gray-400 text-sm flex items-center gap-2">
-													<Calendar className="w-4 h-4 text-emerald-400/70" />
-													{formatDate(p.paid_at)}
+												<TableCell className="text-gray-400 text-sm py-4">
+													<div className="flex items-center gap-2">
+														<Calendar className="w-4 h-4 text-emerald-400/70 shrink-0" />
+														{formatDate(p.paid_at)}
+													</div>
 												</TableCell>
 												<TableCell className="font-medium text-white">
 													<div>
@@ -457,8 +530,8 @@ export default function IncomeTable() {
 														{p.group_name || "—"}
 													</Badge>
 												</TableCell>
-												<TableCell className="text-right">
-													<div className="flex flex-col items-end gap-1">
+												<TableCell className="text-center">
+													<div className="flex flex-col  gap-1">
 														<span className="text-emerald-400 font-bold font-mono">
 															{formatCurrency(p.amount)}
 														</span>
@@ -473,7 +546,7 @@ export default function IncomeTable() {
 														{formatMethod(p.method)}
 													</Badge>
 												</TableCell>
-												<TableCell className="text-right">
+												<TableCell className="text-center">
 													<DropdownMenu>
 														<DropdownMenuTrigger asChild>
 															<Button
@@ -535,8 +608,8 @@ export default function IncomeTable() {
 							</span>
 						</p>
 						<div className="flex items-center gap-3">
-                     <Button
-                        disabled
+							<Button
+								disabled
 								variant="outline"
 								className="border-white/20 text-gray-300 hover:bg-white/10"
 							>
