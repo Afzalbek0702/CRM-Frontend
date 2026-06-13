@@ -1,9 +1,10 @@
 import { fmtDate, initials } from "./config";
 import { getUzDays } from "@/utils/weekday";
 import {
-   Check,
-   Copy,
+	Check,
+	Copy,
 	MoreHorizontal,
+	Calendar
 } from "lucide-react";
 import {
 	Tooltip,
@@ -17,7 +18,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { useParams } from "react-router-dom"; 
+import { useParams } from "react-router-dom";
 
 import { FaClock, FaUsers } from "react-icons/fa";
 import PhoneUtils from "@/utils/phoneFormat";
@@ -97,17 +98,16 @@ export const StudentRow = ({ s, onCopy, copied }) => (
 				</button>
 			)}
 		</TableCell>
-		
+
 	</TableRow>
 );
 
 const DayPill = ({ day, isToday = false }) => (
 	<span
 		className={`px-2.5 py-1 rounded-full text-[10px] font-semibold transition-all duration-200
-			${
-				isToday
-					? "bg-linear-to-r from-amber-400 to-orange-400 text-black shadow-lg shadow-amber-500/25"
-					: "bg-white/10 text-amber-300 border border-amber-400/30 hover:bg-amber-400/20"
+			${isToday
+				? "bg-linear-to-r from-amber-400 to-orange-400 text-black shadow-lg shadow-amber-500/25"
+				: "bg-white/10 text-amber-300 border border-amber-400/30 hover:bg-amber-400/20"
 			}`}
 	>
 		{day}
@@ -153,7 +153,7 @@ export const TeacherRow = ({ t, onCopy, copied }) => (
 		<TableCell>
 			<SourceBadge source={t.source} />
 		</TableCell>
-		
+
 	</TableRow>
 );
 
@@ -202,7 +202,7 @@ export const LeadRow = ({ l, courseData, onCopy, copied }) => (
 		<TableCell className="max-w-32 text-gray-400 text-sm truncate">
 			{l.comment || "—"}
 		</TableCell>
-		
+
 	</TableRow>
 );
 
@@ -232,7 +232,7 @@ export const PaymentRow = ({ p }) => (
 				{p.method}
 			</Badge>
 		</TableCell>
-		
+
 	</TableRow>
 );
 
@@ -288,7 +288,7 @@ export const GroupRow = ({ g, navigate }) => {
 					))}{" "}
 				</div>
 			</TableCell>
-			
+
 		</TableRow>
 	);
 };

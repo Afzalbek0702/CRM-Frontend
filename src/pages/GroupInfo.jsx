@@ -331,8 +331,8 @@ const months = useMemo(() => {
 						</Card>
 
 						{/* Students List */}
-						<Card className="bg-[#1f1f1f]/80 border-white/10 backdrop-blur-xl h-[calc(100vh-400px)] flex flex-col">
-							<CardHeader className="pb-3">
+						<Card className="bg-[#1f1f1f]/80 border-white/10 backdrop-blur-xl h-[calc(100vh-350px)] flex flex-col">
+							<CardHeader className="pb-3 shrink-0">
 								<CardTitle className="text-lg text-white flex items-center gap-2">
 									<FaUsers className="text-amber-400" />
 									O'quvchilar
@@ -344,8 +344,8 @@ const months = useMemo(() => {
 									</Badge>
 								</CardTitle>
 							</CardHeader>
-							<CardContent className="flex-1 flex flex-col px-6 pb-6">
-								<InputGroup className="bg-black/40 border-white/20 mb-4">
+							<CardContent className="flex-1 flex flex-col px-6 pb-6 min-h-0">
+								<InputGroup className="bg-black/40 border-white/20 mb-4 shrink-0">
 									<InputGroupInput
 										placeholder="O'quvchi qidirish..."
 										value={searchTerm}
@@ -356,7 +356,7 @@ const months = useMemo(() => {
 										<FaSearch className="text-gray-500" />
 									</InputGroupAddon>
 								</InputGroup>
-								<div className="flex-1 overflow-y-auto -mx-2 px-2 space-y-2">
+								<div className="flex-1 min-h-0 overflow-y-auto -mx-2 px-2 space-y-2">
 									{filtered.length === 0 ? (
 										<div className="text-center py-8 text-gray-500">
 											<FaUsers className="text-4xl mx-auto mb-3 opacity-30" />
