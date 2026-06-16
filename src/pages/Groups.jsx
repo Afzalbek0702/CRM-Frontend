@@ -288,7 +288,7 @@ export default function Groups() {
 					<StatsCard
 						icon={<FaMoneyBillWave className="w-5 h-5" />}
 						label="O'rtacha narx"
-						value={`${(stats.avgPrice / 1000).toLocaleString()} ming so'm`}
+						value={`${Math.round(stats.avgPrice / 1000).toLocaleString()} 000 so'm`}
 						color="blue"
 					/>
 				</div>
@@ -391,7 +391,7 @@ export default function Groups() {
 									return (
 										<TableRow
 											key={g.id}
-											className="border-white/5 hover:bg-amber-400/5 transition-all duration-200 group/row"
+											className="border-white/5 hover:bg-amber-400/5 transition-all duration-200 group/row cursor-pointer"
 											onClick={() => navigate(`/${tenant}/groups/${g.id}`)}
 										>
 											<TableCell className="font-medium text-white">
@@ -430,7 +430,7 @@ export default function Groups() {
 											</TableCell>
 											<TableCell className="font-semibold text-amber-400">
 												{g.price
-													? `${(Number(g.price) / 1000).toLocaleString()} ming`
+													? `${(Number(g.price) / 1000).toLocaleString()} 000`
 													: "0"}{" "}
 												so'm
 											</TableCell>

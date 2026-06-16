@@ -64,9 +64,9 @@ import {
 
 export default function GuruhlarInfo() {
 	const { role } = useAuth();
-	const { id } = useParams();
+	const { id, tenant} = useParams();
 	const navigate = useNavigate();
-	const { loading, error, fetchById } = useGroups();
+	const { loading, error, fetchById, groups } = useGroups();
 	const { removeFromGroup } = useStudent();
 	const { createPayment } = usePayments();
 	const { teachers } = useTeachers();
@@ -77,7 +77,7 @@ export default function GuruhlarInfo() {
 	const [showPaymentModal, setShowPaymentModal] = useState(false);
 	const [selectedStudent, setSelectedStudent] = useState(null);
 	const [deleteId, setDeleteId] = useState(null);
-	
+
 	const {
 		attendance,
 		updateLocalAttendance,
@@ -107,71 +107,71 @@ export default function GuruhlarInfo() {
 		};
 	}, [attendance]);
 
-const months = useMemo(() => {
-	return Array.from({ length: 12 }, (_, i) => {
-		const currentYear = new Date().getFullYear();
-		const monthIndex = i + 1; // 1 dan 12 gacha
+	const months = useMemo(() => {
+		return Array.from({ length: 12 }, (_, i) => {
+			const currentYear = new Date().getFullYear();
+			const monthIndex = i + 1; // 1 dan 12 gacha
 
-		// Value: "2026-01", "2026-02" ...
-		const value = `${currentYear}-${String(monthIndex).padStart(2, "0")}`;
+			// Value: "2026-01", "2026-02" ...
+			const value = `${currentYear}-${String(monthIndex).padStart(2, "0")}`;
 
-		let monthName = "";
-		switch (monthIndex) {
-			case 1:
-				monthName = "Yanvar";
-				break;
-			case 2:
-				monthName = "Fevral";
-				break;
-			case 3:
-				monthName = "Mart";
-				break;
-			case 4:
-				monthName = "Aprel";
-				break;
-			case 5:
-				monthName = "May";
-				break;
-			case 6:
-				monthName = "Iyun";
-				break;
-			case 7:
-				monthName = "Iyul";
-				break;
-			case 8:
-				monthName = "Avgust";
-				break;
-			case 9:
-				monthName = "Sentabr";
-				break;
-			case 10:
-				monthName = "Oktabr";
-				break;
-			case 11:
-				monthName = "Noyabr";
-				break;
-			case 12:
-				monthName = "Dekabr";
-				break;
-			default:
-				monthName = "";
-		}
+			let monthName = "";
+			switch (monthIndex) {
+				case 1:
+					monthName = "Yanvar";
+					break;
+				case 2:
+					monthName = "Fevral";
+					break;
+				case 3:
+					monthName = "Mart";
+					break;
+				case 4:
+					monthName = "Aprel";
+					break;
+				case 5:
+					monthName = "May";
+					break;
+				case 6:
+					monthName = "Iyun";
+					break;
+				case 7:
+					monthName = "Iyul";
+					break;
+				case 8:
+					monthName = "Avgust";
+					break;
+				case 9:
+					monthName = "Sentabr";
+					break;
+				case 10:
+					monthName = "Oktabr";
+					break;
+				case 11:
+					monthName = "Noyabr";
+					break;
+				case 12:
+					monthName = "Dekabr";
+					break;
+				default:
+					monthName = "";
+			}
 
-		return {
-			value: value,
-			// Label: "2026-yil Yanvar" yoki "Yanvar, 2026"
-			label: `${currentYear}-yil ${monthName}`,
-		};
-	});
-}, []);
+			return {
+				value: value,
+				// Label: "2026-yil Yanvar" yoki "Yanvar, 2026"
+				label: `${currentYear}-yil ${monthName}`,
+			};
+		});
+	}, []);
 	const todayStr = new Date().toISOString().slice(0, 10);
 	const lessonDates = attendance[0]?.days.map((d) => d.date) || [];
 	const todayIdx = lessonDates.findIndex((d) => d >= todayStr);
 	const anchorIdx = todayIdx === -1 ? lessonDates.length - 1 : todayIdx;
 	const filtered = students.filter((s) =>
 		s.full_name?.toLowerCase().includes(searchTerm.toLowerCase()),
-   );
-   const capitalize = str => str.replace(/\b\w/g, char => char.toUpperCase());
+	);
+	const capitalize = str => str.replace(/\b\w/g, char => char.toUpperCase());
 	const removeStudent = async () => {
 		if (deleteId) {
 			await removeFromGroup(deleteId, id);
@@ -528,7 +528,10 @@ const months = useMemo(() => {
 											{attendance.map((s, rowIdx) => (
 												<TableRow
 													key={s.student_id}
-													className={`border-white/5 hover:bg-white/5 ${rowIdx % 2 === 0 ? "bg-white/2" : ""}`}
+													onClick={() =>
+														navigate(`/${tenant}/students/${s.student_id}`)
+													}
+													className={`cursor-pointer border-white/5 hover:bg-white/5 ${rowIdx % 2 === 0 ? "bg-white/2" : ""}`}
 												>
 													<TableCell className="sticky left-0 z-10 bg-[#1f1f1f] border-r border-white/10 font-medium text-white">
 														<div className="flex items-center gap-3">
@@ -552,27 +555,27 @@ const months = useMemo(() => {
 															<TableCell
 																key={idx}
 																className={`${isToday ? "bg-amber-400/5" : ""} p-0`}
-                                             >
-                                                <div className="flex justify-center items-center">
-																{isNotEnrolled || outOfRange ? (
-																	<span className="text-zinc-700 text-xs">
-																		—
-																	</span>
-																) : (
-																	<Checkbox
-																		checked={!!day.status}
-																		disabled={isFuture}
-																		onCheckedChange={(val) =>
-																			updateLocalAttendance(
-																				s.student_id,
-																				day.date,
-																				val,
-																			)
-																		}
-																		className={`border-white/30 data-[state=checked]:bg-linear-to-r data-[state=checked]:from-amber-400 data-[state=checked]:to-orange-400 data-[state=checked]:text-black transition-all ${isFuture ? "opacity-30 cursor-not-allowed" : "hover:border-amber-400"} ${isToday ? "ring-2 ring-amber-400/30" : ""}`}
-																	/>
-																)}
-                                                </div>
+															>
+																<div className="flex justify-center items-center">
+																	{isNotEnrolled || outOfRange ? (
+																		<span className="text-zinc-700 text-xs">
+																			—
+																		</span>
+																	) : (
+																		<Checkbox
+																			checked={!!day.status}
+																			disabled={isFuture}
+																			onCheckedChange={(val) =>
+																				updateLocalAttendance(
+																					s.student_id,
+																					day.date,
+																					val,
+																				)
+																			}
+																			className={`border-white/30 data-[state=checked]:bg-linear-to-r data-[state=checked]:from-amber-400 data-[state=checked]:to-orange-400 data-[state=checked]:text-black transition-all ${isFuture ? "opacity-30 cursor-not-allowed" : "hover:border-amber-400"} ${isToday ? "ring-2 ring-amber-400/30" : ""}`}
+																		/>
+																	)}
+																</div>
 															</TableCell>
 														);
 													})}

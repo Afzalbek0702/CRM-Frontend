@@ -249,7 +249,7 @@ export default function DebtorsTable({ searchTerm = "" }) {
 											return (
 												<TableRow
 													key={d.id}
-													className="border-white/5 hover:bg-red-400/5 group/row"
+													className="border-white/5 hover:bg-red-400/5 group/row cursor-pointer"
 													onClick={() =>
 														navigate(`/${tenant}/students/${d.student_id}`)
 													}

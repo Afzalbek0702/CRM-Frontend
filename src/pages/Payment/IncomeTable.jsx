@@ -28,10 +28,18 @@ import {
 const StatsCard = ({ icon, label, value, subValue, color = "emerald" }) => {
 	const colors = {
 		emerald: "from-emerald-500/20 to-teal-500/20 border-emerald-500/30 text-emerald-400",
-		amber:   "from-amber-500/20 to-orange-500/20 border-amber-500/30 text-amber-400",
-		blue:    "from-sky-500/20 to-blue-500/20 border-sky-500/30 text-sky-400",
-		purple:  "from-violet-500/20 to-fuchsia-500/20 border-violet-500/30 text-violet-400",
+		amber: "from-amber-500/20 to-orange-500/20 border-amber-500/30 text-amber-400",
+		blue: "from-sky-500/20 to-blue-500/20 border-sky-500/30 text-sky-400",
+		purple: "from-violet-500/20 to-fuchsia-500/20 border-violet-500/30 text-violet-400",
 	};
+
+	const valueClass =
+	String(value).length > 16
+		? "12px"
+		: String(value).length > 10
+			? "16px"
+			: "text-xl";
+
 	return (
 		<Card className={`bg-linear-to-br ${colors[color]} border backdrop-blur-xl hover:scale-[1.02] transition-all duration-300`}>
 			<CardContent className="p-5 flex items-center gap-4">
@@ -40,7 +48,7 @@ const StatsCard = ({ icon, label, value, subValue, color = "emerald" }) => {
 				</div>
 				<div className="flex-1 min-w-0">
 					<p className="text-xs text-gray-400 uppercase tracking-wider">{label}</p>
-					<p className="text-2xl font-bold text-white truncate">{value}</p>
+					<p className={`${valueClass} font-bold text-white truncate`}>{value}</p>
 					{subValue && <p className="text-xs text-gray-500 mt-0.5">{subValue}</p>}
 				</div>
 			</CardContent>
@@ -70,13 +78,13 @@ export default function IncomeTable() {
 	const { payments, isLoading, createPayment, updatePayment, deletePayment } = usePayments();
 
 	// ── State ──
-	const [modal,          setModal]          = useState({ isOpen: false, data: null });
-	const [deleteId,       setDeleteId]       = useState(null);
-	const [searchTerm,     setSearchTerm]     = useState("");
+	const [modal, setModal] = useState({ isOpen: false, data: null });
+	const [deleteId, setDeleteId] = useState(null);
+	const [searchTerm, setSearchTerm] = useState("");
 	const [selectedMethod, setSelectedMethod] = useState("all");
-	const [selectedMonth,  setSelectedMonth]  = useState("all");
-	const [sortOrder,      setSortOrder]      = useState("none"); // "none" | "asc" | "desc"
-	const [copiedId,       setCopiedId]       = useState(null);
+	const [selectedMonth, setSelectedMonth] = useState("all");
+	const [sortOrder, setSortOrder] = useState("none"); // "none" | "asc" | "desc"
+	const [copiedId, setCopiedId] = useState(null);
 
 	// ── Formatters ──
 	const formatDate = (d) =>
@@ -97,9 +105,13 @@ export default function IncomeTable() {
 	const formatMonthLabel = (monthStr) => {
 		if (!monthStr) return "";
 		const [year, month] = monthStr.split("-");
-		const names = ["Yanvar","Fevral","Mart","Aprel","May","Iyun","Iyul","Avgust","Sentabr","Oktabr","Noyabr","Dekabr"];
+		const names = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"];
 		return `${names[parseInt(month, 10) - 1]} ${year}`;
 	};
+
+	const formatRoundedCurrency = (amount) =>
+		`${Math.round(amount / 1000).toLocaleString()} 000 so'm`;
+
 
 	const capitalize = (str) => str?.replace(/\b\w/g, (c) => c.toUpperCase()) ?? "";
 
@@ -110,12 +122,12 @@ export default function IncomeTable() {
 	};
 
 	const getMethodColor = (method) => ({
-		CASH:     "border-emerald-500/30 text-emerald-400 bg-emerald-500/10",
-		CARD:     "border-sky-500/30 text-sky-400 bg-sky-500/10",
+		CASH: "border-emerald-500/30 text-emerald-400 bg-emerald-500/10",
+		CARD: "border-sky-500/30 text-sky-400 bg-sky-500/10",
 		TRANSFER: "border-purple-500/30 text-purple-400 bg-purple-500/10",
-		CLICK:    "border-amber-500/30 text-amber-400 bg-amber-500/10",
-		PAYME:    "border-pink-500/30 text-pink-400 bg-pink-500/10",
-		UZCARD:   "border-blue-500/30 text-blue-400 bg-blue-500/10",
+		CLICK: "border-amber-500/30 text-amber-400 bg-amber-500/10",
+		PAYME: "border-pink-500/30 text-pink-400 bg-pink-500/10",
+		UZCARD: "border-blue-500/30 text-blue-400 bg-blue-500/10",
 	}[method] ?? "border-gray-500/30 text-gray-400 bg-gray-500/10");
 
 	// ── Derived data ──
@@ -150,7 +162,7 @@ export default function IncomeTable() {
 			.filter((p) => selectedMethod === "all" || p.method === selectedMethod)
 			.filter((p) => selectedMonth === "all" || p.paid_month?.startsWith(selectedMonth));
 
-		if (sortOrder === "asc")  return result.sort((a, b) => (a.amount || 0) - (b.amount || 0));
+		if (sortOrder === "asc") return result.sort((a, b) => (a.amount || 0) - (b.amount || 0));
 		if (sortOrder === "desc") return result.sort((a, b) => (b.amount || 0) - (a.amount || 0));
 		return result.sort((a, b) => new Date(b.paid_at) - new Date(a.paid_at));
 	}, [payments, searchTerm, selectedMethod, selectedMonth, sortOrder]);
@@ -214,12 +226,36 @@ export default function IncomeTable() {
 					</Badge>
 				</div>
 
-				{/* Stats */}
 				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-					<StatsCard icon={<Wallet className="w-5 h-5" />}      label="Jami tushum"     value={formatCurrency(stats.total)} subValue={`Bugun: ${formatCurrency(stats.today)}`} color="emerald" />
-					<StatsCard icon={<FaChartLine className="w-5 h-5" />} label="To'lovlar soni"  value={`${stats.count} ta`}                                                              color="blue"    />
-					<StatsCard icon={<Banknote className="w-5 h-5" />}    label="O'rtacha to'lov" value={formatCurrency(stats.avg)}                                                        color="amber"   />
-					<StatsCard icon={<ArrowUpRight className="w-5 h-5" />} label="Eng katta to'lov" value={formatCurrency(stats.max)}                                                     color="purple"  />
+					<StatsCard
+						className="font-bold text-xl lg:text-2xl leading-tight"
+						icon={<Wallet className="w-5 h-5" />}
+						label="Jami tushum"
+						value={formatRoundedCurrency(stats.total)}
+						subValue={`Bugun: ${formatRoundedCurrency(stats.today)}`}
+						color="emerald"
+					/>
+
+					<StatsCard
+						icon={<FaChartLine className="w-5 h-5" />}
+						label="To'lovlar soni"
+						value={`${stats.count} ta`}
+						color="blue"
+					/>
+
+					<StatsCard
+						icon={<Banknote className="w-5 h-5" />}
+						label="O'rtacha to'lov"
+						value={formatRoundedCurrency(stats.avg)}
+						color="amber"
+					/>
+
+					<StatsCard
+						icon={<ArrowUpRight className="w-5 h-5" />}
+						label="Eng katta to'lov"
+						value={formatRoundedCurrency(stats.max)}
+						color="purple"
+					/>
 				</div>
 
 				{/* Search & Filters */}
@@ -241,7 +277,7 @@ export default function IncomeTable() {
 						<div className="flex flex-wrap items-center gap-2">
 
 							{/* Method */}
-							{["all","CASH","CARD","TRANSFER","CLICK","PAYME","UZCARD"].map((m) => (
+							{["all", "CASH", "CARD", "TRANSFER", "CLICK", "PAYME", "UZCARD"].map((m) => (
 								<Button
 									key={m}
 									size="sm"
@@ -279,7 +315,7 @@ export default function IncomeTable() {
 								<Banknote className="w-3.5 h-3.5 text-gray-500" />
 								{[
 									{ value: "none", label: "Standart" },
-									{ value: "asc",  label: "↑ Kam→Ko'p" },
+									{ value: "asc", label: "↑ Kam→Ko'p" },
 									{ value: "desc", label: "↓ Ko'p→Kam" },
 								].map((opt) => (
 									<Button

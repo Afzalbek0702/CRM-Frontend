@@ -429,7 +429,7 @@ export default function Dashboard() {
 										<TableRow className="bg-black/40 border-white/10">
 											<TableHead className="text-gray-400">O'quvchi</TableHead>
 											<TableHead className="text-gray-400">Guruh</TableHead>
-											<TableHead className="text-gray-400 text-right">
+											<TableHead className="text-gray-400">
 												Aloqa
 											</TableHead>
 										</TableRow>
