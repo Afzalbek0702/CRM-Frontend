@@ -64,7 +64,7 @@ import {
 
 export default function GuruhlarInfo() {
 	const { role } = useAuth();
-	const { id, tenant} = useParams();
+	const { id, tenant } = useParams();
 	const navigate = useNavigate();
 	const { loading, error, fetchById, groups } = useGroups();
 	const { removeFromGroup } = useStudent();
@@ -528,12 +528,14 @@ export default function GuruhlarInfo() {
 											{attendance.map((s, rowIdx) => (
 												<TableRow
 													key={s.student_id}
-													onClick={() =>
-														navigate(`/${tenant}/students/${s.student_id}`)
-													}
 													className={`cursor-pointer border-white/5 hover:bg-white/5 ${rowIdx % 2 === 0 ? "bg-white/2" : ""}`}
 												>
-													<TableCell className="sticky left-0 z-10 bg-[#1f1f1f] border-r border-white/10 font-medium text-white">
+													<TableCell className="sticky left-0 z-10 bg-[#1f1f1f] border-r border-white/10 font-medium text-white"
+														onClick={() =>
+															navigate(`/${tenant}/students/${s.student_id}`)
+														}
+
+													>
 														<div className="flex items-center gap-3">
 															<div className="w-8 h-8 rounded-full bg-amber-400/20 flex items-center justify-center text-amber-400 text-xs font-bold">
 																{initials(s.full_name)}
