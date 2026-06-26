@@ -1,6 +1,7 @@
 const PhoneUtils = {
 	// Backendga yuborish uchun: +(998) 90-542-37-47 -> 998905423747
 	cleanPhone: (formattedPhone) => {
+		if (!formattedPhone) return null;
 		const digits = formattedPhone.replace(/\D/g, "");
 		// Agar raqamlar 998 bilan boshlanmasa, uni qo'shib qo'yamiz
 		return digits.startsWith("998") ? digits : `998${digits}`;
